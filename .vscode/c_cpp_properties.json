@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}",
+                // Note: Neon Rain uses gtest via Bazel's remote archive
+                // feature, not locally; these are just for intellisense. 
+                "/home/joshua/Code/googletest/googletest/include",
+                "/home/joshua/Code/googletest/googlemock/include",
+                // TODO: Integrate SDL with Bazel; this was installed with
+                // apt and will be impossible to version-pin or distribute. 
+                "/usr/include/SDL2"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c17",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "linux-clang-x64"
+        }
+    ],
+    "version": 4
+}
