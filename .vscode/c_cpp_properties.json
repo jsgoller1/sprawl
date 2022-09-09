@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}",
+                "${workspaceFolder}/src/include",
                 // Note: Neon Rain uses gtest via Bazel's remote archive
                 // feature, not locally; these are just for intellisense. 
                 "/home/joshua/Code/googletest/googletest/include",
