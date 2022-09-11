@@ -1,8 +1,9 @@
 {
+    "cStandard": "c17",
+    "cppStandard": "c++14",
+    "C_Cpp.clang_format_fallbackStyle": "Google",
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
-    "C_Cpp.clang_format_fallbackStyle": "Google",
-    "C_Cpp.clang_format_path": "/usr/bin/clang-format",
     "files.insertFinalNewline": true,
     "editor.tabSize": 4,
     "files.associations": {
