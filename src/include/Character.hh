@@ -14,9 +14,9 @@ class Character : public GameObject {
   void shoot();
 
  private:
-  CharacterNamePS name;
+  CharacterNameSPtr name;
   shared_ptr<AIComponent> aiComponent;
   shared_ptr<CombatComponent> combatComponent;
 };
 
-typedef shared_ptr<Character> CharacterPS;
+typedef shared_ptr<Character> CharacterSPtr;

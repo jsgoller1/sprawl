@@ -1,3 +1,5 @@
+#include "Memory.hh"
+
 typedef int PositionUnit;
 
 typedef struct Position {
@@ -5,9 +7,11 @@ typedef struct Position {
   PositionUnit y;
 } Position;
 
-class PositionManager {
+class PositionMgr {
  public:
   void setPosition();
   Position getPosition();
   Position move();
 };
+
+typedef unique_ptr<PositionMgr> PositionMgrSPtr;

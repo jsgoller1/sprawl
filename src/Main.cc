@@ -1,12 +1,15 @@
-#include "InputManager.hh"
+#include "InputHandler.hh"
 #include "Logger.hh"
 #include "Screen.hh"
 #include "World.hh"
 
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+
 int main() {
-  Screen screen = Screen();
+  Screen screen = Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
   World world = World();
-  InputManager inputManager = InputManager();
+  InputHandler inputManager = InputHandler();
   GameAction userAction;
 
   while (userAction != QUIT) {
@@ -20,7 +23,7 @@ int main() {
     // (settings menu) or not (in-game menu for "doing something"
     // mid-game); pausing would mean just skipping world.update()
     world.update(userAction);
-    // screen.draw(world);
+    screen.drawAll(world.getDrawables());
     // sleep(startTime + MS_PER_FRAME - getCurrentTime());
   }
 }

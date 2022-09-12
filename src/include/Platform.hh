@@ -5,4 +5,4 @@ class Platform : public GameObject {
   // walls, floors, cielings, ground, etc.
 };
 
-typedef shared_ptr<Platform> PlatformPS;
+typedef shared_ptr<Platform> PlatformSPtr;

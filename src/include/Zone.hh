@@ -1,7 +1,10 @@
-#include "AIManager.hh"
+#pragma once
+
+#include "AIMgr.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
 #include "Memory.hh"
+#include "Texture.hh"
 #include "Types.hh"
 
 class Zone {
@@ -12,20 +15,21 @@ class Zone {
 
  public:
   void update(const GameAction& action);
-  void load(const FilePathPS zoneWADDirPS);
+  void load(const FilePathSPtr zoneWADDirSPtr);
   void loadHardcoded();
+  void setBackground(const FilePathSPtr backgroundPath);
   Zone();
 
  private:
   // We only need to care about physics and AI going on in currentZone,
   // since only currentZone will have active GameObjects. Additionally, physics
   // might differ based on zone (underwater, outer space, cyberspace, etc)
-  AIManager aiManager;
-  PhysicsManager physicsManager;
-  shared_ptr<GameObjectPSCollection> gameObjects;
+  AIMgr aiMgr;
+  PhysicsMgr physicsMgr;
+  shared_ptr<GameObjectSPtrCollection> gameObjects;
   // TODO: Backgrounds, once we figure out texturing
-  // Background background;
+  TextureSPtr background;
 };
 
-typedef shared_ptr<Zone> ZonePS;
-typedef std::vector<ZonePS> ZonePSCollection;
+typedef shared_ptr<Zone> ZoneSPtr;
+typedef std::vector<ZoneSPtr> ZoneSPtrCollection;

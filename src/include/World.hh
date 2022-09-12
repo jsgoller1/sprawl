@@ -16,12 +16,13 @@ class World {
 
  public:
   World();
-  World(const FilePathPS wadDirPS);
+  World(const FilePathSPtr wadDirSPtr);
   void update(const GameAction& action);
+  DrawingComponentSPtrCollectionSPtr getDrawables();
 
  private:
-  ZonePS currentZone;
-  ZonePSCollection zones;
+  ZoneSPtr currentZone;
+  ZoneSPtrCollection zones;
   void draw() {
     // Collects whatever GameObjects should be drawn
     // and gives them to the screen for drawing

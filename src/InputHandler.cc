@@ -1,18 +1,17 @@
-#include "InputManager.hh"
-
 #include "GameAction.hh"
+#include "InputHandler.hh"
 #include "Logger.hh"
 
-GameAction InputManager::getGameAction() {
+GameAction InputHandler::getGameAction() {
   // TODO: For now, this forwarding method is a code smell;
   // eventually, we'll get inputs that won't cause game actions
   // i.e. (pausing the game, volume change, etc, which won't cause actions to
   // be given to World.update()), so we want to keep getting input and
   // getting game actions separate.
-  return this->getInput().get()->getGameAction();
+  return this->getInput()->getGameAction();
 }
 
-shared_ptr<InputEvent> InputManager::getInput() {
+shared_ptr<InputEvent> InputHandler::getInput() {
   SDL_Event event;
   // TODO: Do we only want to try to get one event at a
   // time, or should we poll for all events and return a
@@ -23,24 +22,24 @@ shared_ptr<InputEvent> InputManager::getInput() {
   }
 
   SDL_Keycode symbol;
-  shared_ptr<InputEvent> inputEventPS;
+  shared_ptr<InputEvent> inputEventSPtr;
   switch (event.type) {
     case SDL_QUIT:
-      inputEventPS = shared_ptr<QuitEvent>(new QuitEvent());
+      inputEventSPtr = shared_ptr<QuitEvent>(new QuitEvent());
       break;
     // TODO: For some reason, pressing a key my local keyboard causes both
     // SDL_TEXTINPUT (771) and SDL_KEYDOWN (768) on key press, but only
     // SDL_KEYUP (769) on release. Can just ignore the 771 for now.
     case SDL_KEYDOWN:
       symbol = event.key.keysym.sym;
-      inputEventPS = shared_ptr<ButtonEvent>(new ButtonEvent(symbol));
+      inputEventSPtr = shared_ptr<ButtonEvent>(new ButtonEvent(symbol));
       break;
     default:
-      inputEventPS = shared_ptr<NoEvent>(new NoEvent());
+      inputEventSPtr = shared_ptr<NoEvent>(new NoEvent());
       gLogger.log("Unhandleable input event: " + to_string(event.type));
       break;
   }
-  return inputEventPS;
+  return inputEventSPtr;
 }
 
 // TODO: Later on, we should refactor this to reference something like

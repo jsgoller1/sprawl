@@ -3,17 +3,17 @@
 #include <vector>
 
 #include "Memory.hh"
-#include "PhysicsManager.hh"
-#include "PositionManager.hh"
+#include "PhysicsMgr.hh"
+#include "PositionMgr.hh"
 
 class GameObject {
   // GameObjects are anything interactive in the world;
   // items, characters, vehicles
 
  private:
-  shared_ptr<PositionManager> positionManager;
-  shared_ptr<PhysicsManager> physicsManager;
+  PositionMgrSPtr positionMgr;
+  PhysicsMgrSPtr physicsMgr;
 };
 
-typedef shared_ptr<GameObject> GameObjectPS;
-typedef std::vector<GameObjectPS> GameObjectPSCollection;
+typedef shared_ptr<GameObject> GameObjectSPtr;
+typedef std::vector<GameObjectSPtr> GameObjectSPtrCollection;
