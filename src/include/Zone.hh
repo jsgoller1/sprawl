@@ -16,6 +16,7 @@ class Zone {
   // we'll want to be able to scroll around in them
 
  public:
+  // TODO: serialize(); // needed for saving game and level editor
   void update(const GameAction& action);
   void load(const FilePathSPtr zoneWADDirSPtr);
   void loadHardcoded();
