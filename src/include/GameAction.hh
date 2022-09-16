@@ -15,3 +15,7 @@ enum GameAction {
   SHOOT_LEFT = 8,
   SHOOT_RIGHT = 9,
 };
+
+// TODO: Add actions for creating and destroying non-player GameObjects, moving
+// them around, etc; how can an interpreter be used to submit actions to the
+// world()?

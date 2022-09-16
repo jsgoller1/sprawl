@@ -11,6 +11,9 @@ int main() {
   World world = World();
   InputHandler inputManager = InputHandler();
   GameAction userAction;
+  // TODO: create message queue and kick off thread for
+  // running interpreter that can read input and produce commands to
+  // be given to World()
 
   while (userAction != QUIT) {
     // startTime = getCurrentTime();
@@ -18,10 +21,17 @@ int main() {
     if (userAction != GameAction::IDLE) {
       gLogger.log("GameAction: " + to_string(userAction));
     }
-    // TODO:
-    // uiSystem = UISystem() // ui can either pause the game
-    // (settings menu) or not (in-game menu for "doing something"
-    // mid-game); pausing would mean just skipping world.update()
+    /*
+    TODO: UI stuff; UI can either pause the game
+    (settings menu) or not (in-game menu for "doing something"
+    mid-game); pausing would mean just skipping world.update()
+    */
+    // uiSystem = UISystem()
+
+    // TODO: Read from interpreter message queue until it's empty
+    // and run world.update() on each action; may want to add method
+    // for a batch of actions
+
     world.update(userAction);
     screen.drawAll(world.getDrawables());
     // sleep(startTime + MS_PER_FRAME - getCurrentTime());
