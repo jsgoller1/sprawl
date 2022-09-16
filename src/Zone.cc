@@ -39,5 +39,6 @@ DrawingCompSPtrCollectionSPtr Zone::getDrawables() {
       drawables->push_back(comp);
     }
   }
+  drawables->push_back(this->background->getDrawingCompSPtr());
   return drawables;
 }
