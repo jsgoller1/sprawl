@@ -1,6 +1,6 @@
 #include "Screen.hh"
 
-#include "DrawingComponent.hh"
+#include "DrawingComp.hh"
 #include "Logger.hh"
 
 Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
@@ -31,15 +31,12 @@ Screen::~Screen() {
   SDL_Quit();
 }
 
-void Screen::draw(DrawingComponentSPtr drawable) {
-  this->renderer->prepare(drawable);
-}
-
-void Screen::drawAll(shared_ptr<DrawingComponentSPtrCollection> drawables) {
+void Screen::drawAll(DrawingCompSPtrCollectionSPtr drawables) {
   this->clear();
-  for (DrawingComponentSPtr drawable : *(drawables.get())) {
-    this->draw(drawable);
+  for (DrawingCompSPtr drawable : *(drawables.get())) {
+    this->renderer->prepare(drawable);
   }
+  renderer->render();
 }
 
 void Screen::update() { this->renderer->render(); }

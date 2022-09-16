@@ -1,7 +1,10 @@
 #include "World.hh"
 
+#include "DrawingComp.hh"
 #include "GameAction.hh"
 #include "Types.hh"
+
+using std::vector;
 
 World::World(const FilePathSPtr wadDirSPtr) {}
 
@@ -14,4 +17,8 @@ World::World() {
 
 void World::update(const GameAction& action) {
   this->currentZone->update(action);
+}
+
+DrawingCompSPtrCollectionSPtr World::getDrawables() {
+  return this->currentZone->getDrawables();
 }

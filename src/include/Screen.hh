@@ -27,8 +27,8 @@ class Screen {
   Screen(const Screen&);
   ~Screen();
 
-  void draw(DrawingComponentSPtr drawable);
-  void drawAll(DrawingComponentSPtrCollectionSPtr drawables);
+  void draw(DrawingCompSPtr drawable);
+  void drawAll(DrawingCompSPtrCollectionSPtr drawables);
   void update();
   void clear();
 

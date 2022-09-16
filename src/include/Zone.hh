@@ -1,6 +1,8 @@
 #pragma once
 
 #include "AIMgr.hh"
+#include "Background.hh"
+#include "DrawingComp.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
 #include "Memory.hh"
@@ -18,6 +20,7 @@ class Zone {
   void load(const FilePathSPtr zoneWADDirSPtr);
   void loadHardcoded();
   void setBackground(const FilePathSPtr backgroundPath);
+  DrawingCompSPtrCollectionSPtr getDrawables();
   Zone();
 
  private:
@@ -28,7 +31,7 @@ class Zone {
   PhysicsMgr physicsMgr;
   shared_ptr<GameObjectSPtrCollection> gameObjects;
   // TODO: Backgrounds, once we figure out texturing
-  TextureSPtr background;
+  BackgroundSPtr background;
 };
 
 typedef shared_ptr<Zone> ZoneSPtr;

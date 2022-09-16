@@ -18,7 +18,7 @@ class World {
   World();
   World(const FilePathSPtr wadDirSPtr);
   void update(const GameAction& action);
-  DrawingComponentSPtrCollectionSPtr getDrawables();
+  DrawingCompSPtrCollectionSPtr getDrawables();
 
  private:
   ZoneSPtr currentZone;

@@ -14,14 +14,15 @@ CC_FLAGS :=-std=c++17 -g
 #WARNINGS :=-Weverything -Werror
 IGNORE := -Wno-c++98-compat
 LIBDIR := -Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
-INCLUDE := -I src/include
+INCLUDE := -I src/include -I src/managers/include -I src/components/include
 LINK := -lSDL2 -lSDL2_image
-CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(INCLUDE) $(LINK) $(LIBDIR)
+SOURCE := src/*.cc src/components/*.cc src/managers/*.cc
 OUTFILE := $(BIN_DIR)/neon-rain
 OUTPUT := -o $(OUTFILE)
+CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(INCLUDE) $(LINK) $(LIBDIR) $(SOURCE) $(OUTPUT)
 
 all: clean
-	$(CC_COMPILE) src/*.cc $(OUTPUT)
+	$(CC_COMPILE)
 	$(VALGRIND) $(OUTFILE)
 
 ### Binary cleanup
