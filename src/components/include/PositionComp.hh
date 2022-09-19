@@ -3,14 +3,27 @@
 
 typedef int PositionUnit;
 
+typedef struct Point {
+  PositionUnit x;
+  PositionUnit y;
+} Point;
+typedef shared_ptr<Point> PointSPtr;
+
 class PositionComp {
  public:
-  PositionComp(const PositionUnit x, const PositionUnit y);
-  void setPosition(const PositionUnit x, const PositionUnit y);
+  PositionComp(PointSPtr center);
+  PositionComp(const PositionUnit center_x, const PositionUnit center_y);
+
   PositionUnit getX();
-  void setX(const PositionUnit x);
   PositionUnit getY();
-  void setY(const PositionUnit y);
+  void setX(const PositionUnit center_x);
+  void setY(const PositionUnit center_y);
+  PointSPtr getCenter();
+  void setCenter(PointSPtr center);
+
+  void updateX(const PositionUnit x);
+  void updateY(const PositionUnit y);
+  void updateCenter(PointSPtr delta);
 
  private:
   PositionUnit x;

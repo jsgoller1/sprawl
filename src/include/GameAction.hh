@@ -19,3 +19,5 @@ enum GameAction {
 // TODO: Add actions for creating and destroying non-player GameObjects, moving
 // them around, etc; how can an interpreter be used to submit actions to the
 // world()?
+
+// TODO: Need a to_string method for debugging / logging.

@@ -2,10 +2,15 @@
 
 #include "AIMgr.hh"
 #include "Background.hh"
+#include "Character.hh"
 #include "DrawingComp.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
+#include "Logger.hh"
 #include "Memory.hh"
+#include "PhysicsMgr.hh"
+#include "Platform.hh"
+#include "PositionComp.hh"
 #include "Texture.hh"
 #include "Types.hh"
 
@@ -33,6 +38,7 @@ class Zone {
   shared_ptr<GameObjectSPtrCollection> gameObjects;
   // TODO: Backgrounds, once we figure out texturing
   BackgroundSPtr background;
+  CharacterSPtr player;
 };
 
 typedef shared_ptr<Zone> ZoneSPtr;

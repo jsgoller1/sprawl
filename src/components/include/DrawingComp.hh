@@ -10,32 +10,31 @@
 using std::vector;
 
 typedef double Angle;
-typedef SDL_Point Point;
 
 class DrawingComp {
  public:
   DrawingComp(const PositionCompSPtr positionCompSPtr = nullptr,
               const TextureSPtr textureSPtr = nullptr,
-              const PointSPtr center = nullptr,
               const SDL_RendererFlip flip = SDL_FLIP_NONE);
-  // Forward to Texture()
+
+  // Getters/Setters for owned attributes
+  Angle getAngle();
+  SDL_RendererFlip getFlip();
   TextureSPtr getTexture();
   SDL_Rect* getClippingRectangle();
+
+  // Forward to Texture()
+  PositionUnit getWidth();
+  PositionUnit getHeight();
 
   // Forward to PositionComp()
   int getX();
   int getY();
-
-  PositionUnit getWidth();
-  PositionUnit getHeight();
-  Angle getAngle();
   PointSPtr getCenter();
-  SDL_RendererFlip getFlip();
 
  private:
   PositionCompSPtr positionCompSPtr;
   TextureSPtr textureSPtr;
-  PointSPtr center;
   SDL_RendererFlip flip;
   SDL_Rect* clippingRectangle;
   Angle angle;

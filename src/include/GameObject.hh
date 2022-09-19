@@ -4,18 +4,22 @@
 
 #include "DrawingComp.hh"
 #include "Memory.hh"
-#include "PhysicsMgr.hh"
 #include "PositionComp.hh"
+
+// Forward decl, see PhysicsComp.hh
+class PhysicsComp;
 
 class GameObject {
   // GameObjects are anything interactive in the world;
-  // items, characters, vehicles. They can be drawn.
- public:
-  DrawingCompSPtr getDrawingComp();
+  // items, characters, vehicles. They can be drawn, though
+  // they may not be visible (i.e triggers).
 
- private:
-  PositionCompSPtr positionMgr;
-  PhysicsMgrSPtr physicsMgr;
+ public:
+  DrawingCompSPtr getDrawingCompSPtr();
+
+ protected:
+  PositionCompSPtr positionComp;
+  shared_ptr<PhysicsComp> physicsComp;
   DrawingCompSPtr drawingCompSPtr;
 };
 
