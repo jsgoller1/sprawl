@@ -1,3 +1,5 @@
 #include "GameObject.hh"
 
-DrawingCompSPtr GameObject::getDrawingComp() { return this->drawingCompSPtr; }
+DrawingCompSPtr GameObject::getDrawingCompSPtr() {
+  return this->drawingCompSPtr;
+}

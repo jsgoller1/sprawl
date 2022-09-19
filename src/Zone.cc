@@ -1,12 +1,5 @@
 #include "Zone.hh"
 
-#include "Background.hh"
-#include "Character.hh"
-#include "GameAction.hh"
-#include "Platform.hh"
-#include "Texture.hh"
-#include "Types.hh"
-
 // TODO: Remove this; this is just for hardcoding the screen coordinates for
 // loadHardcoded(); Zone should NOT know about Screen.
 #include "Screen.hh"
@@ -27,10 +20,14 @@ void Zone::loadHardcoded() {
   this->gameObjects =
       shared_ptr<GameObjectSPtrCollection>(new GameObjectSPtrCollection());
 
-  CharacterSPtr player = CharacterSPtr(new Character("player"));
-  this->gameObjects->push_back(player);
-  PlatformSPtr floor = PlatformSPtr(new Platform);
-  this->gameObjects->push_back(floor);
+  CharacterSPtr player = CharacterSPtr(
+      new Character(CharacterNameSPtr(new CharacterName("player")),
+                    FilePathSPtr(new FilePath("./assets/player.bmp")),
+                    PointSPtr(new Point{.x = 16, .y = 16})));
+
+  // TODO: This is ugly; we should just implement a private
+  // Zone::getGameObjects()
+  this->player = player;
 }
 
 void Zone::update(const GameAction& action) {}
@@ -39,11 +36,13 @@ DrawingCompSPtrCollectionSPtr Zone::getDrawables() {
   DrawingCompSPtrCollectionSPtr drawables =
       DrawingCompSPtrCollectionSPtr(new vector<DrawingCompSPtr>());
   for (GameObjectSPtr objSPtr : *(this->gameObjects)) {
-    DrawingCompSPtr comp = objSPtr->getDrawingComp();
+    DrawingCompSPtr comp = objSPtr->getDrawingCompSPtr();
     if (comp != nullptr) {
       drawables->push_back(comp);
     }
   }
+
+  drawables->push_back(this->player->getDrawingCompSPtr());
   drawables->push_back(this->background->getDrawingCompSPtr());
   return drawables;
 }

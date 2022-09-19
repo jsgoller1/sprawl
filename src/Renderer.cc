@@ -23,12 +23,12 @@ void Renderer::prepare(DrawingCompSPtr drawable) {
   SDL_Rect renderQuad = {drawable->getX(), drawable->getY(),
                          drawable->getWidth(), drawable->getHeight()};
   SDL_Texture* textureData = this->prepareTexture(drawable->getTexture());
-  SDL_Rect* clip = drawable->getClippingRectangle();
+  SDL_Rect* clip = nullptr;
   Angle angle = drawable->getAngle();
-  Point* center = drawable->getCenter().get();
   SDL_RendererFlip flip = drawable->getFlip();
+  SDL_Point center = SDL_Point{.x = drawable->getX(), .y = drawable->getY()};
   logSDLError(SDL_RenderCopyEx(this->renderer, textureData, clip, &renderQuad,
-                               angle, center, flip),
+                               angle, &center, flip),
               "Renderer::prepare()");
 }
 
@@ -43,7 +43,7 @@ SDL_Texture* Renderer::prepareTexture(TextureSPtr textureSPtr) {
   SDL_Surface* pixelData = textureSPtr->getPixelData();
   // TODO: Color key is static for now, might want to se it
   // in drawingComponent
-  SDL_SetColorKey(pixelData, SDL_TRUE,
+  SDL_SetColorKey(pixelData, SDL_FALSE,
                   SDL_MapRGB(pixelData->format, 0, 0xFF, 0xFF));
   SDL_Texture* texture =
       SDL_CreateTextureFromSurface(this->renderer, pixelData);
