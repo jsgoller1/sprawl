@@ -1,19 +1,12 @@
 {
     "configurations": [
         {
-            "name": "macOS",
-            "includePath": [
-                "${workspaceFolder}",
-                "${workspaceFolder}/src/include",
-            ],
-            "C_Cpp.clang_format_path": "/usr/local/bin/clang-format",
-            "compilerPath": "/usr/bin/clang",
-        },
-        {
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/components/include",
+                "${workspaceFolder}/src/managers/include",
                 // Note: Neon Rain uses gtest via Bazel's remote archive
                 // feature, not locally; these are just for intellisense. 
                 "/home/joshua/Code/googletest/googletest/include",
@@ -22,7 +15,6 @@
                 // apt and will be impossible to version-pin or distribute. 
                 "/usr/include/SDL2"
             ],
-            "C_Cpp.clang_format_path": "/usr/bin/clang-format",
             "defines": [],
             "compilerPath": "/usr/bin/clang",
             "intelliSenseMode": "linux-clang-x64"

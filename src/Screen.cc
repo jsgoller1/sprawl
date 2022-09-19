@@ -7,7 +7,7 @@ Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     string message = "SDL could not initialize! SDL_Error: ";
     message += string((char*)SDL_GetError());
-    gLogger.log(message);
+    log(message);
     throw;
   }
   this->window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
@@ -16,7 +16,7 @@ Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   if (this->window == nullptr) {
     string message = "Window could not be created! SDL_Error: ";
     message += string((char*)SDL_GetError());
-    gLogger.log(message);
+    log(message);
     throw;
   }
 
@@ -41,6 +41,4 @@ void Screen::drawAll(DrawingCompSPtrCollectionSPtr drawables) {
 
 void Screen::update() { this->renderer->render(); }
 
-void Screen::clear() {
-  // this->surface.reset(SDL_GetWindowSurface(this->window));
-}
+void Screen::clear() { this->renderer->clear(); }

@@ -1,28 +1,29 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "Memory.hh"
+#include "PositionComp.hh"
 #include "Types.hh"
 
 class Texture {
  public:
-  Texture(const FilePathSPtr path) : path(path){};
-  Texture(const FilePath path) {
-    this->path = FilePathSPtr(new FilePath(path));
-  }
-  void load(const FilePathSPtr path);
+  Texture(const FilePathSPtr path);
+  ~Texture();
   void render();
   void setColor();
   void setAlpha();
   void setBlend();
-  void getHeight();
-  void getWidth();
-  shared_ptr<SDL_Texture> getRawData();
+  PositionUnit getHeight();
+  PositionUnit getWidth();
+  SDL_Surface* getPixelData();
 
  private:
-  shared_ptr<SDL_Texture> texture;
+  SDL_Surface* pixelData;
   FilePathSPtr path;
+  PositionUnit height;
+  PositionUnit width;
 };
 
 typedef shared_ptr<Texture> TextureSPtr;

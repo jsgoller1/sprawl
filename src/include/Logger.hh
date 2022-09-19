@@ -1,12 +1,10 @@
 #include <iostream>
 #include <string>
 
+#define SDL_ERROR_OCCURRED -1
+
 using std::string;
 using std::to_string;
 
-class Logger {
- public:
-  void log(const string& message) { printf("%s\n", message.c_str()); }
-};
-
-static Logger gLogger;
+void log(const string& message);
+void logSDLError(int sdlErrorCode, const string& callerFnName);

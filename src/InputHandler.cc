@@ -1,5 +1,6 @@
-#include "GameAction.hh"
 #include "InputHandler.hh"
+
+#include "GameAction.hh"
 #include "Logger.hh"
 
 GameAction InputHandler::getGameAction() {
@@ -36,7 +37,7 @@ shared_ptr<InputEvent> InputHandler::getInput() {
       break;
     default:
       inputEventSPtr = shared_ptr<NoEvent>(new NoEvent());
-      gLogger.log("Unhandleable input event: " + to_string(event.type));
+      log("Unhandleable input event: " + to_string(event.type));
       break;
   }
   return inputEventSPtr;

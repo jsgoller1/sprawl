@@ -19,7 +19,7 @@ int main() {
     // startTime = getCurrentTime();
     userAction = inputManager.getGameAction();
     if (userAction != GameAction::IDLE) {
-      gLogger.log("GameAction: " + to_string(userAction));
+      log("GameAction: " + to_string(userAction));
     }
     /*
     TODO: UI stuff; UI can either pause the game
@@ -35,5 +35,8 @@ int main() {
     world.update(userAction);
     screen.drawAll(world.getDrawables());
     // sleep(startTime + MS_PER_FRAME - getCurrentTime());
+
+    // log("Quitting after one loop.");
+    // return 0;
   }
 }

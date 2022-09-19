@@ -16,8 +16,7 @@ class DrawingComp {
  public:
   DrawingComp(const PositionCompSPtr positionCompSPtr = nullptr,
               const TextureSPtr textureSPtr = nullptr,
-              const PointSPtr center = nullptr, const PositionUnit width = 0,
-              const PositionUnit height = 0,
+              const PointSPtr center = nullptr,
               const SDL_RendererFlip flip = SDL_FLIP_NONE);
   // Forward to Texture()
   TextureSPtr getTexture();
@@ -27,8 +26,8 @@ class DrawingComp {
   int getX();
   int getY();
 
-  int getWidth();
-  int getHeight();
+  PositionUnit getWidth();
+  PositionUnit getHeight();
   Angle getAngle();
   PointSPtr getCenter();
   SDL_RendererFlip getFlip();
@@ -37,8 +36,6 @@ class DrawingComp {
   PositionCompSPtr positionCompSPtr;
   TextureSPtr textureSPtr;
   PointSPtr center;
-  PositionUnit width;
-  PositionUnit height;
   SDL_RendererFlip flip;
   SDL_Rect* clippingRectangle;
   Angle angle;
