@@ -7,6 +7,10 @@
 #include "Texture.hh"
 #include "Types.hh"
 
+// TODO: Remove this; this is just for hardcoding the screen coordinates for
+// loadHardcoded(); Zone should NOT know about Screen.
+#include "Screen.hh"
+
 Zone::Zone() {}
 
 void Zone::load(const FilePathSPtr zoneWADDirSPtr) {}
@@ -16,7 +20,8 @@ void Zone::loadHardcoded() {
   // textures, positions, music, etc from WAD files we can design as data (and
   // perhaps emit with a level design tool).
   BackgroundSPtr background = BackgroundSPtr(new Background(
-      FilePathSPtr(new FilePath("./assets/world-background.bmp")), 0, 0));
+      FilePathSPtr(new FilePath("./assets/world-background.bmp")), nullptr,
+      SCREEN_X_CENTER, SCREEN_Y_CENTER));
 
   this->background = background;
   this->gameObjects =

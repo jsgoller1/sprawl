@@ -3,9 +3,6 @@
 #include "Screen.hh"
 #include "World.hh"
 
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1080
-
 int main() {
   Screen screen = Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
   World world = World();
