@@ -29,6 +29,11 @@ int main() {
     // and run world.update() on each action; may want to add method
     // for a batch of actions
 
+    // TODO: We will likely want to have some kind of state detailing what to do
+    // with input; e.g. if a UI menu is open, "pressing the up arrow key" should
+    // not move the player around. We may also want the World/Zone to keep state
+    // as well, e.g. "up" should do something different if the player is in a
+    // vehicle, in combat, etc.
     world.update(userAction);
     screen.drawAll(world.getDrawables());
     // sleep(startTime + MS_PER_FRAME - getCurrentTime());

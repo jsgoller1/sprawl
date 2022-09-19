@@ -3,6 +3,7 @@
 
 #include "AIComp.hh"
 #include "CombatComp.hh"
+#include "GameAction.hh"
 #include "GameObject.hh"
 #include "Memory.hh"
 #include "PositionComp.hh"
@@ -14,6 +15,8 @@ class Character : public GameObject {
   Character(const CharacterNameSPtr name, const FilePathSPtr texturePath,
             const PointSPtr center);
   void shoot();
+  void move(const GameAction& action);
+  void shoot(const GameAction& action);
 
  private:
   CharacterNameSPtr name;

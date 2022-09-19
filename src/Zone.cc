@@ -30,7 +30,28 @@ void Zone::loadHardcoded() {
   this->player = player;
 }
 
-void Zone::update(const GameAction& action) {}
+void Zone::update(const GameAction& action) {
+  switch (action) {
+    case IDLE:
+      break;
+    case MOVE_DOWN:
+    case MOVE_UP:
+    case MOVE_LEFT:
+    case MOVE_RIGHT:
+      log(string("Got move action: " + to_string(action)));
+      this->player->move(action);
+      break;
+    case SHOOT_DOWN:
+    case SHOOT_UP:
+    case SHOOT_LEFT:
+    case SHOOT_RIGHT:
+      log(string("Got shoot action: " + to_string(action)));
+      this->player->shoot(action);
+      break;
+    default:
+      log(string("Unknown action: " + to_string(action)));
+  }
+}
 
 DrawingCompSPtrCollectionSPtr Zone::getDrawables() {
   DrawingCompSPtrCollectionSPtr drawables =
@@ -42,7 +63,7 @@ DrawingCompSPtrCollectionSPtr Zone::getDrawables() {
     }
   }
 
-  drawables->push_back(this->player->getDrawingCompSPtr());
   drawables->push_back(this->background->getDrawingCompSPtr());
+  drawables->push_back(this->player->getDrawingCompSPtr());
   return drawables;
 }

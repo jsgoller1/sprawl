@@ -6,6 +6,7 @@
 #include "DrawingComp.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
+#include "Logger.hh"
 #include "Memory.hh"
 #include "PhysicsMgr.hh"
 #include "Platform.hh"
