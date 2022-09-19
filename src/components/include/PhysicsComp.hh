@@ -6,7 +6,7 @@
 
 class PhysicsComponent {
   // Any GameObject can have a physics component; if it does, it registers
-  // it with the global PhysicsManager.
+  // it with the global PhysicsMgr.
  public:
   void move();  // forward method for parent's move()
   shared_ptr<GameObjectCollection> getCollisions();

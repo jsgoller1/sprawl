@@ -2,10 +2,18 @@
 
 #include <SDL2/SDL.h>
 
+#include "DrawingComp.hh"
 #include "Memory.hh"
+#include "Renderer.hh"
+#include "Types.hh"
 
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+#define SCREEN_X_CENTER (PositionUnit)(1920 / 2)
+#define SCREEN_Y_CENTER (PositionUnit)(1080 / 2)
+
+typedef int ScreenWidth;
+typedef int ScreenHeight;
 
 class Screen {
   // Screen manages actually drawing stuff on the screen; for now, it handles
@@ -21,13 +29,22 @@ class Screen {
   // draw, but all of it will take precedence over World items.
 
  public:
-  Screen();
+  Screen(const ScreenWidth width, const ScreenHeight height);
   Screen(const Screen&);
   ~Screen();
 
-  void draw();
+  void draw(DrawingCompSPtr drawable);
+  void drawAll(DrawingCompSPtrCollectionSPtr drawables);
+  void update();
+  void clear();
 
  private:
-  SDL_Window* window;
+  void initRenderer(bool useHardwareAcceleration, bool useVSync);
+
+  // TODO: Do we actually want to use C++ smart pointers
+  // with these SDL objects? Any good reason to do so, and will
+  // there be drawbacks (e.g accidental automatic garbage collection)?
   unique_ptr<SDL_Surface> surface;
+  SDL_Window* window;
+  RendererSPtr renderer;
 };

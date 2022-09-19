@@ -2,18 +2,22 @@
 
 #include <vector>
 
+#include "DrawingComp.hh"
 #include "Memory.hh"
-#include "PhysicsManager.hh"
-#include "PositionManager.hh"
+#include "PhysicsMgr.hh"
+#include "PositionComp.hh"
 
 class GameObject {
   // GameObjects are anything interactive in the world;
-  // items, characters, vehicles
+  // items, characters, vehicles. They can be drawn.
+ public:
+  DrawingCompSPtr getDrawingComp();
 
  private:
-  shared_ptr<PositionManager> positionManager;
-  shared_ptr<PhysicsManager> physicsManager;
+  PositionCompSPtr positionMgr;
+  PhysicsMgrSPtr physicsMgr;
+  DrawingCompSPtr drawingCompSPtr;
 };
 
-typedef shared_ptr<GameObject> GameObjectPS;
-typedef std::vector<GameObjectPS> GameObjectPSCollection;
+typedef shared_ptr<GameObject> GameObjectSPtr;
+typedef std::vector<GameObjectSPtr> GameObjectSPtrCollection;

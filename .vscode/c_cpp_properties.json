@@ -5,6 +5,8 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/components/include",
+                "${workspaceFolder}/src/managers/include",
                 // Note: Neon Rain uses gtest via Bazel's remote archive
                 // feature, not locally; these are just for intellisense. 
                 "/home/joshua/Code/googletest/googletest/include",
@@ -15,8 +17,6 @@
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
-            "cStandard": "c17",
-            "cppStandard": "c++14",
             "intelliSenseMode": "linux-clang-x64"
         }
     ],

@@ -32,7 +32,7 @@ class NoEvent : public InputEvent {
   GameAction getGameAction() override;
 };
 
-class InputManager {
+class InputHandler {
  public:
   GameAction getGameAction();
   shared_ptr<InputEvent> getInput();
