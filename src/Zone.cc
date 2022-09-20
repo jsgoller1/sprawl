@@ -12,22 +12,27 @@ void Zone::loadHardcoded() {
   // We'll hardcode the zone state initially. Eventually, we'll want to load
   // textures, positions, music, etc from WAD files we can design as data (and
   // perhaps emit with a level design tool).
-  BackgroundSPtr background = BackgroundSPtr(new Background(
-      FilePathSPtr(new FilePath("./assets/world-background.bmp")), nullptr,
-      SCREEN_X_CENTER, SCREEN_Y_CENTER));
-
-  this->background = background;
+  // TODO: This is ugly; we should just implement a private
+  // Zone::getGameObjects()
   this->gameObjects =
       shared_ptr<GameObjectSPtrCollection>(new GameObjectSPtrCollection());
 
-  CharacterSPtr player = CharacterSPtr(
-      new Character(CharacterNameSPtr(new CharacterName("player")),
-                    FilePathSPtr(new FilePath("./assets/player.bmp")),
-                    PointSPtr(new Point{.x = 16, .y = 16})));
+  // Set up background
+  BackgroundSPtr background = BackgroundSPtr(new Background(
+      FilePathSPtr(new FilePath("./assets/world-background.bmp")), nullptr,
+      SCREEN_X_CENTER, SCREEN_Y_CENTER));
+  this->background = background;
 
-  // TODO: This is ugly; we should just implement a private
-  // Zone::getGameObjects()
+  // Set up player character
+  CharacterSPtr player = CharacterSPtr(
+      new Character(PointSPtr(new Point{.x = 16, .y = 16}),
+                    GameObjectNameSPtr(new GameObjectName("player")), nullptr,
+                    FilePathSPtr(new FilePath("./assets/player.bmp"))));
   this->player = player;
+
+  // Add a single platform
+  // PlatformSPtr platform = PlatformSPtr(new Platform());
+  // this->gameObjects->push_back(platform);
 }
 
 void Zone::update(const GameAction& action) {

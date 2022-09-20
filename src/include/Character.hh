@@ -12,14 +12,15 @@
 class Character : public GameObject {
   // Self explanatory: parent class for player, npcs, enemies, etc
  public:
-  Character(const CharacterNameSPtr name, const FilePathSPtr texturePath,
-            const PointSPtr center);
+  Character(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
+            const PhysicsCompSPtr physicsComp = nullptr,
+            const FilePathSPtr texturePath = nullptr,
+            const DrawingCompSPtr drawingComp = nullptr);
   void shoot();
   void move(const GameAction& action);
   void shoot(const GameAction& action);
 
  private:
-  CharacterNameSPtr name;
   AICompSPtr aiCompSPtr;
   CombatCompSPtr combatCompSPtr;
 };

@@ -4,10 +4,8 @@
 
 #include "DrawingComp.hh"
 #include "Memory.hh"
+#include "PhysicsComp.hh"
 #include "PositionComp.hh"
-
-// Forward decl, see PhysicsComp.hh
-class PhysicsComp;
 
 class GameObject {
   // GameObjects are anything interactive in the world;
@@ -18,9 +16,15 @@ class GameObject {
   DrawingCompSPtr getDrawingCompSPtr();
 
  protected:
+  GameObject(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
+             const PhysicsCompSPtr physicsComp = nullptr,
+             const FilePathSPtr texturePath = nullptr,
+             const DrawingCompSPtr drawingComp = nullptr);
+
+  GameObjectNameSPtr name;
   PositionCompSPtr positionComp;
-  shared_ptr<PhysicsComp> physicsComp;
-  DrawingCompSPtr drawingCompSPtr;
+  DrawingCompSPtr drawingComp;
+  PhysicsCompSPtr physicsComp;
 };
 
 typedef shared_ptr<GameObject> GameObjectSPtr;

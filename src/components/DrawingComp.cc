@@ -1,15 +1,18 @@
 #include "DrawingComp.hh"
 
 DrawingComp::DrawingComp(const PositionCompSPtr positionCompSPtr,
-                         const TextureSPtr textureSPtr,
+                         const TextureSPtr texture,
                          const SDL_RendererFlip flip) {
   this->positionCompSPtr = positionCompSPtr;
-  this->textureSPtr = textureSPtr;
+  this->texture = texture;
   this->flip = flip;
   this->clippingRectangle = nullptr;
 }
 
-TextureSPtr DrawingComp::getTexture() { return this->textureSPtr; }
+void DrawingComp::setTexture(const TextureSPtr texture) {
+  this->texture = texture;
+}
+TextureSPtr DrawingComp::getTexture() { return this->texture; }
 
 // TODO: Clipping rectangle, flip, and angle should probably belong to Texture.
 SDL_Rect* DrawingComp::getClippingRectangle() {
@@ -19,8 +22,8 @@ SDL_RendererFlip DrawingComp::getFlip() { return this->flip; }
 Angle DrawingComp::getAngle() { return this->angle; }
 
 // Forwarding methods
-PositionUnit DrawingComp::getWidth() { return this->textureSPtr->getWidth(); }
-PositionUnit DrawingComp::getHeight() { return this->textureSPtr->getHeight(); }
+PositionUnit DrawingComp::getWidth() { return this->texture->getWidth(); }
+PositionUnit DrawingComp::getHeight() { return this->texture->getHeight(); }
 PointSPtr DrawingComp::getCenter() {
   return this->positionCompSPtr->getCenter();
 }
