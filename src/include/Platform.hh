@@ -8,7 +8,7 @@ class Platform : public GameObject {
   // walls, floors, cielings, ground, etc.
  public:
   Platform(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
-           const PhysicsCompSPtr physicsComp = nullptr,
+           const shared_ptr<PhysicsComp> physicsComp = nullptr,
            const FilePathSPtr texturePath = nullptr,
            const DrawingCompSPtr drawingComp = nullptr);
 };

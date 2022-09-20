@@ -1,7 +1,7 @@
 #include "Character.hh"
 
 Character::Character(const PointSPtr center, const GameObjectNameSPtr name,
-                     const PhysicsCompSPtr physicsComp,
+                     const shared_ptr<PhysicsComp> physicsComp,
                      const FilePathSPtr texturePath,
                      const DrawingCompSPtr drawingComp)
     : GameObject(center, name, physicsComp, texturePath, drawingComp) {}
@@ -10,6 +10,7 @@ void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
+
   switch (action) {
     case MOVE_UP:
       this->positionComp->updateY(-100);
@@ -22,6 +23,9 @@ void Character::move(const GameAction& action) {
       break;
     case MOVE_RIGHT:
       this->positionComp->updateX(100);
+      break;
+    default:
+      // TODO: should warn
       break;
   }
 }

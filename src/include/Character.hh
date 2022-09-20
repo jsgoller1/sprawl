@@ -13,7 +13,7 @@ class Character : public GameObject {
   // Self explanatory: parent class for player, npcs, enemies, etc
  public:
   Character(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
-            const PhysicsCompSPtr physicsComp = nullptr,
+            const shared_ptr<PhysicsComp> physicsComp = nullptr,
             const FilePathSPtr texturePath = nullptr,
             const DrawingCompSPtr drawingComp = nullptr);
   void shoot();

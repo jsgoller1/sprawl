@@ -4,7 +4,7 @@
 // loadHardcoded(); Zone should NOT know about Screen.
 #include "Screen.hh"
 
-Zone::Zone() {}
+Zone::Zone() { this->physicsMgr = shared_ptr<PhysicsMgr>(new PhysicsMgr()); }
 
 void Zone::load(const FilePathSPtr zoneWADDirSPtr) {}
 
@@ -31,11 +31,21 @@ void Zone::loadHardcoded() {
   this->player = player;
 
   // Add a single platform
-  // PlatformSPtr platform = PlatformSPtr(new Platform());
-  // this->gameObjects->push_back(platform);
+  PlatformSPtr platform = PlatformSPtr(new Platform(
+      PointSPtr(new Point{.x = SCREEN_X_CENTER, .y = SCREEN_Y_CENTER}),
+      GameObjectNameSPtr(new GameObjectName("player")), nullptr,
+      FilePathSPtr(new FilePath("./assets/wall-indestructible.bmp"))));
+  this->gameObjects->push_back(platform);
+  this->physicsMgr->manageComponent(platform->getPhysicsComponent());
+  this->physicsMgr->manageComponent(player->getPhysicsComponent());
 }
 
 void Zone::update(const GameAction& action) {
+  this->handleInput(action);
+  this->physicsMgr->applyGravity();
+}
+
+void Zone::handleInput(const GameAction& action) {
   switch (action) {
     case IDLE:
       break;
@@ -61,14 +71,17 @@ void Zone::update(const GameAction& action) {
 DrawingCompSPtrCollectionSPtr Zone::getDrawables() {
   DrawingCompSPtrCollectionSPtr drawables =
       DrawingCompSPtrCollectionSPtr(new vector<DrawingCompSPtr>());
+
+  // Background should be drawn first to ensure everything else gets
+  // drawn over it.
+  drawables->push_back(this->background->getDrawingCompSPtr());
+  drawables->push_back(this->player->getDrawingComponent());
   for (GameObjectSPtr objSPtr : *(this->gameObjects)) {
-    DrawingCompSPtr comp = objSPtr->getDrawingCompSPtr();
+    DrawingCompSPtr comp = objSPtr->getDrawingComponent();
     if (comp != nullptr) {
       drawables->push_back(comp);
     }
   }
 
-  drawables->push_back(this->background->getDrawingCompSPtr());
-  drawables->push_back(this->player->getDrawingCompSPtr());
   return drawables;
 }
