@@ -22,3 +22,8 @@ DrawingCompSPtr GameObject::getDrawingComponent() { return this->drawingComp; }
 shared_ptr<PhysicsComp> GameObject::getPhysicsComponent() {
   return this->physicsComp;
 }
+
+void GameObject::inferBoundingBoxFromTexture() {
+  shared_ptr<Texture> texture = this->drawingComp->getTexture();
+  this->physicsComp->setBoundingBox(texture->getHeight(), texture->getWidth());
+}

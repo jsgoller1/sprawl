@@ -29,13 +29,16 @@ void Zone::loadHardcoded() {
                     GameObjectNameSPtr(new GameObjectName("player")), nullptr,
                     FilePathSPtr(new FilePath("./assets/player.bmp"))));
   this->player = player;
+  player->inferBoundingBoxFromTexture();
 
   // Add a single platform
   PlatformSPtr platform = PlatformSPtr(new Platform(
       PointSPtr(new Point{.x = SCREEN_X_CENTER, .y = SCREEN_Y_CENTER}),
       GameObjectNameSPtr(new GameObjectName("player")), nullptr,
       FilePathSPtr(new FilePath("./assets/wall-indestructible.bmp"))));
+  platform->inferBoundingBoxFromTexture();
   this->gameObjects->push_back(platform);
+
   this->physicsMgr->manageComponent(platform->getPhysicsComponent());
   this->physicsMgr->manageComponent(player->getPhysicsComponent());
 }

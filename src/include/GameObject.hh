@@ -18,6 +18,7 @@ class GameObject {
  public:
   DrawingCompSPtr getDrawingComponent();
   shared_ptr<PhysicsComp> getPhysicsComponent();
+  void inferBoundingBoxFromTexture();
 
  protected:
   GameObject(const PointSPtr center, const GameObjectNameSPtr name = nullptr,

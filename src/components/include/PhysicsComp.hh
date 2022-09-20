@@ -10,7 +10,7 @@
 class PhysicsMgr;
 class GameObject;
 
-class PhysicsComp {
+class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   // Any GameObject can have a physics component; if it does, it registers
   // it with the global PhysicsMgr.
  public:
@@ -18,13 +18,23 @@ class PhysicsComp {
               const BoundingBoxSPtr boundingBox = nullptr,
               const bool collisionsSetting = false,
               const bool gravitySetting = false);
-  void move();  // forward method for parent's move()
+  shared_ptr<PhysicsComp> getptr();
+
+  // Forwarding methods for PositionComp
+  void move();
+  PointSPtr getCenter();
+
   bool hasCollisions();
-  void setCollisions(const bool setting);
+  void enableCollisions(const bool setting);
   bool hasGravity();
-  void setGravity(const bool setting);
+  void enableGravity(const bool setting);
+  BoundingBoxSPtr getBoundingBox();
+  void setBoundingBox(const BoundingBoxSPtr box);
+  void setBoundingBox(const PositionUnit h, const PositionUnit w);
+
   bool predictMovementCollision();
   bool isColliding();
+
   shared_ptr<PhysicsMgr> getManager();
   void setManager(const shared_ptr<PhysicsMgr> manager);
 

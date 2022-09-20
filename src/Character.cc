@@ -13,16 +13,28 @@ void Character::move(const GameAction& action) {
 
   switch (action) {
     case MOVE_UP:
-      this->positionComp->updateY(-100);
+      this->positionComp->updateY(-25);
+      if (this->physicsComp->isColliding()) {
+        this->positionComp->updateY(25);
+      }
       break;
     case MOVE_DOWN:
-      this->positionComp->updateY(100);
+      this->positionComp->updateY(25);
+      if (this->physicsComp->isColliding()) {
+        this->positionComp->updateY(-25);
+      }
       break;
     case MOVE_LEFT:
-      this->positionComp->updateX(-100);
+      this->positionComp->updateX(-25);
+      if (this->physicsComp->isColliding()) {
+        this->positionComp->updateX(25);
+      }
       break;
     case MOVE_RIGHT:
-      this->positionComp->updateX(100);
+      this->positionComp->updateX(25);
+      if (this->physicsComp->isColliding()) {
+        this->positionComp->updateX(-25);
+      }
       break;
     default:
       // TODO: should warn

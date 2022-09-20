@@ -20,6 +20,10 @@ class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
   std::shared_ptr<PhysicsMgr> getptr();
 
  public:
+  bool areColliding(const shared_ptr<PhysicsComp> comp1,
+                    const shared_ptr<PhysicsComp> comp2);
+  shared_ptr<vector<shared_ptr<PhysicsComp>>> getAllColliding(
+      shared_ptr<PhysicsComp> component);
   void applyGravity();
   void manageComponent(const shared_ptr<PhysicsComp> component);
   void unmanageComponent(const shared_ptr<PhysicsComp> component);
