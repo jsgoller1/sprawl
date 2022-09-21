@@ -5,6 +5,31 @@ PhysicsMgr::PhysicsMgr() {
       new set<shared_ptr<PhysicsComp>>());
 }
 
+bool isAboveEq(const PositionUnit y1, const PositionUnit y2) {
+  // 0,0 is the top left of the screen, so
+  // "above" means "lesser y value"
+  return y1 < y2;
+}
+bool isBelowEq(const PositionUnit y1, const PositionUnit y2) {
+  // 0,0 is the top left of the screen, so
+  // "below" means "greater y value"
+  return y1 > y2;
+}
+bool isLeftEq(const PositionUnit x1, const PositionUnit x2) { return x1 <= x2; }
+bool isRightEq(const PositionUnit x1, const PositionUnit x2) {
+  return x1 >= x2;
+}
+
+bool xFallsWithin(const PositionUnit leftBound, const PositionUnit rightBound,
+                  const PositionUnit testPoint) {
+  return isLeftEq(leftBound, testPoint) && isLeftEq(testPoint, rightBound);
+}
+
+bool yFallsWithin(const PositionUnit highest, const PositionUnit lowest,
+                  const PositionUnit testPoint) {
+  return isAboveEq(highest, testPoint) && isAboveEq(testPoint, lowest);
+}
+
 std::shared_ptr<PhysicsMgr> PhysicsMgr::getptr() {
   // TODO: This is dangerous and leads to undefined behavior if no other
   // shared pointers to this object exist; it would be best to force
@@ -32,7 +57,6 @@ void PhysicsMgr::unmanageComponent(const shared_ptr<PhysicsComp> component) {
 }
 
 void PhysicsMgr::applyGravity() {}
-
 bool PhysicsMgr::areColliding(const shared_ptr<PhysicsComp> comp1,
                               const shared_ptr<PhysicsComp> comp2) {
   // TODO: Probably want bounding objects to know how to
@@ -44,23 +68,32 @@ bool PhysicsMgr::areColliding(const shared_ptr<PhysicsComp> comp1,
   PointSPtr loc2 = comp2->getCenter();
   BoundingBoxSPtr box2 = comp2->getBoundingBox();
 
-  PositionUnit comp1YMin = loc1->y - box1->height;
-  PositionUnit comp1YMax = loc1->y + box1->height;
-  PositionUnit comp1XMin = loc1->x - box1->width;
-  PositionUnit comp1XMax = loc1->x + box1->width;
+  // 0,0 is the upper lefthand corner, see remark:
+  // https://wiki.libsdl.org/SDL_SetWindowPosition
+  PositionUnit comp1YHighest = loc1->y - (box1->height / 2);
+  PositionUnit comp1YLowest = loc1->y + (box1->height / 2);
+  PositionUnit comp1XLeftmost = loc1->x - (box1->width / 2);
+  PositionUnit comp1XRightmost = loc1->x + (box1->width / 2);
 
-  PositionUnit comp2YMin = loc2->y - box2->height;
-  PositionUnit comp2YMax = loc2->y + box2->height;
-  PositionUnit comp2XMin = loc2->x - box2->width;
-  PositionUnit comp2XMax = loc2->x + box2->width;
+  PositionUnit comp2YHighest = loc2->y - (box2->height / 2);
+  PositionUnit comp2YLowest = loc2->y + (box2->height / 2);
+  PositionUnit comp2XLeftmost = loc2->x - (box2->width / 2);
+  PositionUnit comp2XRightmost = loc2->x + (box2->width / 2);
 
   bool intersectingY = false;
-  intersectingY |= ((comp1YMin <= comp2YMin) && (comp2YMin <= comp1YMax));
-  intersectingY |= ((comp1YMin <= comp2YMax) && (comp2YMax <= comp1YMax));
+  // Check if comp2's highest or lowest y coordinate falls within comp1's y
+  // range
+  intersectingY |= yFallsWithin(comp1YHighest, comp1YLowest, comp2YHighest);
+  intersectingY |= yFallsWithin(comp1YHighest, comp1YLowest, comp2YLowest);
 
   bool intersectingX = false;
-  intersectingX |= ((comp1XMin <= comp2XMin) && (comp2XMin <= comp1XMax));
-  intersectingX |= ((comp1XMin <= comp2XMax) && (comp2XMax <= comp1XMax));
+  // Check if comp2's leftmost X coord falls with comp 1
+  // (is it left of the rightmost and right of the leftmost);
+  // then do same thing for right
+  intersectingX |=
+      xFallsWithin(comp1XLeftmost, comp1XRightmost, comp2XLeftmost);
+  intersectingX |=
+      xFallsWithin(comp1XLeftmost, comp1XRightmost, comp2XRightmost);
 
   return intersectingY && intersectingX;
 }

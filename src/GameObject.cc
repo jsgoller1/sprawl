@@ -16,6 +16,10 @@ GameObject::GameObject(const PointSPtr center, const GameObjectNameSPtr name,
   if (texturePath != nullptr) {
     this->drawingComp->setTexture(TextureSPtr(new Texture(texturePath)));
   }
+  this->positionComp->setX(this->positionComp->getX() -
+                           (this->drawingComp->getWidth() / 2));
+  this->positionComp->setY(this->positionComp->getY() -
+                           (this->drawingComp->getHeight() / 2));
 }
 
 DrawingCompSPtr GameObject::getDrawingComponent() { return this->drawingComp; }

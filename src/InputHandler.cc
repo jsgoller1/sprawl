@@ -35,9 +35,16 @@ shared_ptr<InputEvent> InputHandler::getInput() {
       symbol = event.key.keysym.sym;
       inputEventSPtr = shared_ptr<ButtonEvent>(new ButtonEvent(symbol));
       break;
+    case SDL_MOUSEBUTTONDOWN:
+      // TODO: This is just for debugging purposes so we can figure
+      // out screen coordinates of where we clicked.
+      log("Screen clicked at (x,y): (" + to_string(event.button.x) + ", " +
+          to_string(event.button.y) + ")");
+      inputEventSPtr = shared_ptr<NoEvent>(new NoEvent());
+      break;
     default:
       inputEventSPtr = shared_ptr<NoEvent>(new NoEvent());
-      log("Unhandleable input event: " + to_string(event.type));
+      // log("Unhandleable input event: " + to_string(event.type));
       break;
   }
   return inputEventSPtr;

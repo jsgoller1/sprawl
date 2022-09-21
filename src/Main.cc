@@ -36,7 +36,7 @@ int main() {
     // vehicle, in combat, etc.
     world.update(userAction);
     screen.drawAll(world.getDrawables());
-    // sleep(startTime + MS_PER_FRAME - getCurrentTime());
+    //  sleep(startTime + MS_PER_FRAME - getCurrentTime());
 
     // log("Quitting after one loop.");
     // return 0;

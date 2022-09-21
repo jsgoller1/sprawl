@@ -32,6 +32,14 @@ void Zone::loadHardcoded() {
   player->inferBoundingBoxFromTexture();
 
   // Add a single platform
+  // Center should be at 960, 540
+  /* Clockwise from top-left, the four corners appear at (approx):
+    Top left:(811, 393)
+    Top right: (1108, 394)
+    Bottom right: (1111, 685)
+    Bottom left: (815, 689)
+  */
+
   PlatformSPtr platform = PlatformSPtr(new Platform(
       PointSPtr(new Point{.x = SCREEN_X_CENTER, .y = SCREEN_Y_CENTER}),
       GameObjectNameSPtr(new GameObjectName("player")), nullptr,
