@@ -4,16 +4,18 @@
 // an enum probably won't do anymore as we'll need
 // to get the button pressed and the position
 enum GameAction {
-  IDLE = 0,
-  QUIT = 1,
-  MOVE_UP = 2,
-  MOVE_DOWN = 3,
-  MOVE_LEFT = 4,
-  MOVE_RIGHT = 5,
-  SHOOT_UP = 6,
-  SHOOT_DOWN = 7,
-  SHOOT_LEFT = 8,
-  SHOOT_RIGHT = 9,
+  IDLE,
+  QUIT,
+  MOVE_UP,
+  MOVE_DOWN,
+  MOVE_LEFT,
+  STOP_MOVE_LEFT,
+  MOVE_RIGHT,
+  STOP_MOVE_RIGHT,
+  SHOOT_UP,
+  SHOOT_DOWN,
+  SHOOT_LEFT,
+  SHOOT_RIGHT,
 };
 
 // TODO: Add actions for creating and destroying non-player GameObjects, moving

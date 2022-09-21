@@ -14,13 +14,14 @@ typedef double Angle;
 class DrawingComp {
  public:
   DrawingComp(const PositionCompSPtr positionCompSPtr = nullptr,
-              const TextureSPtr textureSPtr = nullptr,
+              const TextureSPtr texture = nullptr,
               const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
   // Getters/Setters for owned attributes
   Angle getAngle();
   SDL_RendererFlip getFlip();
   TextureSPtr getTexture();
+  void setTexture(const TextureSPtr texture);
   SDL_Rect* getClippingRectangle();
 
   // Forward to Texture()
@@ -31,10 +32,11 @@ class DrawingComp {
   int getX();
   int getY();
   PointSPtr getCenter();
+  PointSPtr getDrawPoint();
 
  private:
   PositionCompSPtr positionCompSPtr;
-  TextureSPtr textureSPtr;
+  TextureSPtr texture;
   SDL_RendererFlip flip;
   SDL_Rect* clippingRectangle;
   Angle angle;

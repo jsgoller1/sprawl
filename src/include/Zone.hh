@@ -34,11 +34,14 @@ class Zone {
   // since only currentZone will have active GameObjects. Additionally, physics
   // might differ based on zone (underwater, outer space, cyberspace, etc)
   AIMgr aiMgr;
-  PhysicsMgr physicsMgr;
+  shared_ptr<PhysicsMgr> physicsMgr;
   shared_ptr<GameObjectSPtrCollection> gameObjects;
   // TODO: Backgrounds, once we figure out texturing
   BackgroundSPtr background;
   CharacterSPtr player;
+
+  void handleInput(const GameAction& action);
+  void handlePhysics();
 };
 
 typedef shared_ptr<Zone> ZoneSPtr;

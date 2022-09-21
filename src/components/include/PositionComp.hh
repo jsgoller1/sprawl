@@ -25,6 +25,8 @@ class PositionComp {
   void updateY(const PositionUnit y);
   void updateCenter(PointSPtr delta);
 
+  void move(const PointSPtr movement);
+
  private:
   PositionUnit x;
   PositionUnit y;

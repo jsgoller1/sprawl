@@ -9,11 +9,24 @@ class InputEvent {
   virtual GameAction getGameAction() = 0;
 };
 
-class ButtonEvent : public InputEvent {
+class ButtonDownEvent : public InputEvent {
   // Represents a key or mouse button being pressed
 
  public:
-  ButtonEvent(const SDL_Keycode value) : value(value) {}
+  ButtonDownEvent(const SDL_Keycode value) : value(value) {}
+  GameAction getGameAction() override;
+
+  // TODO: We will need other data from
+  // SDL_EVENT later on;  when the key was
+  // pressed, whether it was a repeat, etc.
+  SDL_Keycode value;
+};
+
+class ButtonUpEvent : public InputEvent {
+  // Represents a key or mouse button being released
+
+ public:
+  ButtonUpEvent(const SDL_Keycode value) : value(value) {}
   GameAction getGameAction() override;
 
   // TODO: We will need other data from

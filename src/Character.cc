@@ -1,33 +1,38 @@
 #include "Character.hh"
 
-Character::Character(const CharacterNameSPtr name,
-                     const FilePathSPtr texturePath, const PointSPtr center) {
-  this->name = name;
-  this->positionComp = PositionCompSPtr(new PositionComp(center));
-
-  TextureSPtr texture = TextureSPtr(new Texture(texturePath));
-  this->drawingCompSPtr =
-      DrawingCompSPtr(new DrawingComp(this->positionComp, texture));
+Character::Character(const PointSPtr center, const GameObjectNameSPtr name,
+                     const shared_ptr<PhysicsComp> physicsComp,
+                     const FilePathSPtr texturePath,
+                     const DrawingCompSPtr drawingComp)
+    : GameObject(center, name, physicsComp, texturePath, drawingComp) {
+  this->moveSpeed = PointSPtr(new Point{.x = 10, .y = 10});
 }
 
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
+  PointSPtr newVelocity = this->physicsComp->getVelocity();
+
   switch (action) {
     case MOVE_UP:
-      this->positionComp->updateY(-100);
-      break;
-    case MOVE_DOWN:
-      this->positionComp->updateY(100);
+      // TODO: Jumping / double jumping
       break;
     case MOVE_LEFT:
-      this->positionComp->updateX(-100);
+      newVelocity->x = this->moveSpeed->x;
       break;
     case MOVE_RIGHT:
-      this->positionComp->updateX(100);
+      newVelocity->x = -(this->moveSpeed->x);
+      break;
+    case STOP_MOVE_RIGHT:
+    case STOP_MOVE_LEFT:
+      newVelocity->x = 0;
+      break;
+    default:
+      // TODO: should warn
       break;
   }
+  this->physicsComp->setVelocity(newVelocity);
 }
 void Character::shoot(const GameAction& action) {
   this->combatCompSPtr->shoot(action);

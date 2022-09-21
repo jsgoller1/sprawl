@@ -20,16 +20,24 @@ void Renderer::prepare(DrawingCompSPtr drawable) {
   /* Takes a DrawingComponent and prepares it off-screen for rendering.
    */
 
-  SDL_Rect renderQuad = {drawable->getX(), drawable->getY(),
-                         drawable->getWidth(), drawable->getHeight()};
+  PointSPtr drawPoint = drawable->getDrawPoint();
+  SDL_Rect renderQuad = {drawPoint->x, drawPoint->y, drawable->getWidth(),
+                         drawable->getHeight()};
   SDL_Texture* textureData = this->prepareTexture(drawable->getTexture());
   SDL_Rect* clip = nullptr;
   Angle angle = drawable->getAngle();
   SDL_RendererFlip flip = drawable->getFlip();
   SDL_Point center = SDL_Point{.x = drawable->getX(), .y = drawable->getY()};
+
   logSDLError(SDL_RenderCopyEx(this->renderer, textureData, clip, &renderQuad,
                                angle, &center, flip),
               "Renderer::prepare()");
+
+  // TODO: A memory leak that crashed my crashed my machine repeatedly by
+  // allocating ~1GB/sec occurred because I forgot this destroy call. Would
+  // be useful to set up textures with smart pointers that call
+  // SDL_DestroyTexture when cleaned up.
+  SDL_DestroyTexture(textureData);
 }
 
 void Renderer::render() {

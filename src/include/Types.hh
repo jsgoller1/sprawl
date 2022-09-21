@@ -8,5 +8,5 @@
 
 typedef std::string FilePath;
 typedef shared_ptr<FilePath> FilePathSPtr;
-typedef std::string CharacterName;
-typedef shared_ptr<CharacterName> CharacterNameSPtr;
+typedef std::string GameObjectName;
+typedef shared_ptr<GameObjectName> GameObjectNameSPtr;

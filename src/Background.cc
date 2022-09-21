@@ -14,10 +14,12 @@ Background::Background(const FilePathSPtr texturePathSPtr,
   // TODO: This is ugly and stupid; initial position should be treated
   // universally as a center point and handled more cleanly. Use given x/y
   // coordinates as the texture's center, not the upper left corner
+  /*
   this->positionCompSPtr->setX(this->positionCompSPtr->getX() -
                                (this->drawingCompSPtr->getWidth() / 2));
   this->positionCompSPtr->setY(this->positionCompSPtr->getY() -
                                (this->drawingCompSPtr->getHeight() / 2));
+  */
 }
 
 DrawingCompSPtr Background::getDrawingCompSPtr() {

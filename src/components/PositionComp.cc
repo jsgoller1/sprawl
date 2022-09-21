@@ -28,3 +28,8 @@ void PositionComp::updateCenter(PointSPtr delta) {
   this->x += delta->x;
   this->y += delta->y;
 }
+
+void PositionComp::move(const PointSPtr movement) {
+  this->x += movement->x;
+  this->y += movement->y;
+}
