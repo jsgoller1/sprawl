@@ -27,5 +27,15 @@ PositionUnit DrawingComp::getHeight() { return this->texture->getHeight(); }
 PointSPtr DrawingComp::getCenter() {
   return this->positionCompSPtr->getCenter();
 }
+PointSPtr DrawingComp::getDrawPoint() {
+  // Get the specific point SDL should use for drawing; SDL treats
+  // this as the top left of the image and draws from there.
+  PointSPtr drawPoint = this->positionCompSPtr->getCenter();
+  drawPoint->x -= this->getWidth() / 2;
+  // Lower y values are higher on the screen.
+  drawPoint->y -= this->getHeight() / 2;
+  return drawPoint;
+}
+
 PositionUnit DrawingComp::getX() { return this->positionCompSPtr->getX(); }
 PositionUnit DrawingComp::getY() { return this->positionCompSPtr->getY(); }

@@ -32,4 +32,5 @@ class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
   shared_ptr<set<shared_ptr<PhysicsComp>>> managedComponents;
 };
 
-// typedef shared_ptr<PhysicsMgr> PhysicsMgrSPtr;
+bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
+                          const PositionUnit low2, const PositionUnit hi2);

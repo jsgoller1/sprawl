@@ -20,8 +20,9 @@ void Renderer::prepare(DrawingCompSPtr drawable) {
   /* Takes a DrawingComponent and prepares it off-screen for rendering.
    */
 
-  SDL_Rect renderQuad = {drawable->getX(), drawable->getY(),
-                         drawable->getWidth(), drawable->getHeight()};
+  PointSPtr drawPoint = drawable->getDrawPoint();
+  SDL_Rect renderQuad = {drawPoint->x, drawPoint->y, drawable->getWidth(),
+                         drawable->getHeight()};
   SDL_Texture* textureData = this->prepareTexture(drawable->getTexture());
   SDL_Rect* clip = nullptr;
   Angle angle = drawable->getAngle();

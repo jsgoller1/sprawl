@@ -5,29 +5,27 @@ PhysicsMgr::PhysicsMgr() {
       new set<shared_ptr<PhysicsComp>>());
 }
 
-bool isAboveEq(const PositionUnit y1, const PositionUnit y2) {
-  // 0,0 is the top left of the screen, so
-  // "above" means "lesser y value"
-  return y1 < y2;
-}
-bool isBelowEq(const PositionUnit y1, const PositionUnit y2) {
-  // 0,0 is the top left of the screen, so
-  // "below" means "greater y value"
-  return y1 > y2;
-}
-bool isLeftEq(const PositionUnit x1, const PositionUnit x2) { return x1 <= x2; }
-bool isRightEq(const PositionUnit x1, const PositionUnit x2) {
-  return x1 >= x2;
-}
-
-bool xFallsWithin(const PositionUnit leftBound, const PositionUnit rightBound,
-                  const PositionUnit testPoint) {
-  return isLeftEq(leftBound, testPoint) && isLeftEq(testPoint, rightBound);
-}
-
-bool yFallsWithin(const PositionUnit highest, const PositionUnit lowest,
-                  const PositionUnit testPoint) {
-  return isAboveEq(highest, testPoint) && isAboveEq(testPoint, lowest);
+bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
+                          const PositionUnit low2, const PositionUnit hi2) {
+  /*
+   To do 2D collision testing, we need to do two separate 1D line intersection
+   tests; if both intersect, a 2D collision occurs.
+   For two straight lines A and B (each with start and end points l and r,
+   though this works for vertical lines too), we have four cases to check:
+    - The right side of A intersects with B:
+      B.l <= A.r <= B.r
+    - The left side of A intersects with B:
+      B.l <= A.l <= B.r
+    - A falls completely in B:
+      B.l <= A.l < A.r <= B.r
+    - B falls completely within A:
+      A.l <= B.l < B.r <= A.r
+  */
+  bool low2Intersects = ((low1 <= low2) && (low2 <= hi1));
+  bool hi2Intersects = ((low1 <= hi2) && (hi2 <= hi1));
+  bool containedIn1 = ((low1 <= low2) && (hi2 <= hi1));
+  bool containedIn2 = ((low2 <= low1) && (hi1 <= hi2));
+  return low2Intersects || hi2Intersects || containedIn1 || containedIn2;
 }
 
 std::shared_ptr<PhysicsMgr> PhysicsMgr::getptr() {
@@ -80,22 +78,12 @@ bool PhysicsMgr::areColliding(const shared_ptr<PhysicsComp> comp1,
   PositionUnit comp2XLeftmost = loc2->x - (box2->width / 2);
   PositionUnit comp2XRightmost = loc2->x + (box2->width / 2);
 
-  bool intersectingY = false;
-  // Check if comp2's highest or lowest y coordinate falls within comp1's y
-  // range
-  intersectingY |= yFallsWithin(comp1YHighest, comp1YLowest, comp2YHighest);
-  intersectingY |= yFallsWithin(comp1YHighest, comp1YLowest, comp2YLowest);
-
-  bool intersectingX = false;
-  // Check if comp2's leftmost X coord falls with comp 1
-  // (is it left of the rightmost and right of the leftmost);
-  // then do same thing for right
-  intersectingX |=
-      xFallsWithin(comp1XLeftmost, comp1XRightmost, comp2XLeftmost);
-  intersectingX |=
-      xFallsWithin(comp1XLeftmost, comp1XRightmost, comp2XRightmost);
-
-  return intersectingY && intersectingX;
+  // Highest and Lowest refer to positioning on the screen; numerically,
+  // Lowest is greater than Highest
+  return areLinesIntersecting(comp1YHighest, comp1YLowest, comp2YHighest,
+                              comp2YLowest) &&
+         areLinesIntersecting(comp1XLeftmost, comp1XRightmost, comp2XLeftmost,
+                              comp2XRightmost);
 }
 
 shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(

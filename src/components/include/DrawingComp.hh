@@ -32,6 +32,7 @@ class DrawingComp {
   int getX();
   int getY();
   PointSPtr getCenter();
+  PointSPtr getDrawPoint();
 
  private:
   PositionCompSPtr positionCompSPtr;
