@@ -33,6 +33,7 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   void setBoundingBox(const PositionUnit h, const PositionUnit w);
   void setVelocity(const PointSPtr velocity);
   PointSPtr getVelocity();
+  void addVelocity(const PointSPtr velocity);
 
   bool predictMovementCollision();
   bool isColliding();

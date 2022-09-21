@@ -1,5 +1,7 @@
 #include "PhysicsMgr.hh"
 
+#include <algorithm>
+
 PhysicsMgr::PhysicsMgr() {
   this->managedComponents = shared_ptr<set<shared_ptr<PhysicsComp>>>(
       new set<shared_ptr<PhysicsComp>>());
@@ -98,21 +100,43 @@ shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(
   return collided;
 }
 
-void PhysicsMgr::applyGravity() {}
-void PhysicsMgr::applyVelocity() {
+void PhysicsMgr::applyGravity(shared_ptr<PhysicsComp> comp) {
+  // Gravity is a somewhat different case of velocity; in addition
+  // to whatever horizontal movement we have, we want to try to move downwards
+  // but undo it if we can't; we shouldn't halt horizontal velocity if we fail.
+  // TODO: This can still be refactored.
+  if (comp->hasGravity() && comp->getVelocity()->y < 20) {
+    PointSPtr newVelocity = comp->getVelocity();
+    newVelocity->y = std::min(newVelocity->y + 1, 20);
+    comp->move(newVelocity);
+    if (comp->isColliding()) {
+      comp->move(
+          PointSPtr(new Point{.x = -newVelocity->x, .y = -newVelocity->y}));
+      newVelocity->y = 0;
+    }
+    comp->setVelocity(newVelocity);
+  }
+}
+void PhysicsMgr::applyVelocity(shared_ptr<PhysicsComp> comp) {
   // Attempt to move each point according to its current velocity.
   // If it winds up colliding with something, undo the movement,
   // and set its velocity to 0.
+  PointSPtr velocity = comp->getVelocity();
+  comp->move(velocity);
+  if (comp->isColliding()) {
+    // TODO: Since we don't have to do any redrawing, we can try a strategy
+    // where we attempt to move half as far as we would have, then half of
+    // that, etc until the movement is less than 1 pixel; this should fix the
+    // "forcefield" problem.
+    comp->move(PointSPtr(new Point{.x = -velocity->x, .y = -velocity->y}));
+    comp->setVelocity(PointSPtr(new Point{.x = 0, .y = 0}));
+  }
+}
+void PhysicsMgr::applyVelocityAll() {
   for (shared_ptr<PhysicsComp> comp : *(this->managedComponents)) {
-    PointSPtr velocity = comp->getVelocity();
-    comp->move(velocity);
-    if (comp->isColliding()) {
-      // TODO: Since we don't have to do any redrawing, we can try a strategy
-      // where we attempt to move half as far as we would have, then half of
-      // that, etc until the movement is less than 1 pixel; this should fix the
-      // "forcefield" problem.
-      comp->move(PointSPtr(new Point{.x = -velocity->x, .y = -velocity->y}));
-      comp->setVelocity(PointSPtr(new Point{.x = 0, .y = 0}));
-    }
+    // TODO: applying gravity here is messy and should be done elsewhere;
+    // this will just get it done for the initial MVP.
+    this->applyGravity(comp);
+    this->applyVelocity(comp);
   }
 }

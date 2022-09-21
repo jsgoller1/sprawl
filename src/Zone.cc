@@ -56,8 +56,7 @@ void Zone::loadHardcoded() {
 
 void Zone::update(const GameAction& action) {
   this->handleInput(action);
-  this->physicsMgr->applyGravity();
-  this->physicsMgr->applyVelocity();
+  this->physicsMgr->applyVelocityAll();
 }
 
 void Zone::handleInput(const GameAction& action) {
@@ -65,13 +64,16 @@ void Zone::handleInput(const GameAction& action) {
     case IDLE:
       break;
     case MOVE_DOWN:
-    case MOVE_UP:
     case STOP_MOVE_LEFT:
     case STOP_MOVE_RIGHT:
     case MOVE_LEFT:
     case MOVE_RIGHT:
       log(string("Got move action: " + to_string(action)));
       this->player->move(action);
+      break;
+    case MOVE_UP:
+      log(string("Got move action: " + to_string(action)));
+      this->player->jump();
       break;
     case SHOOT_DOWN:
     case SHOOT_UP:

@@ -29,6 +29,11 @@ void PhysicsComp::setVelocity(const PointSPtr velocity) {
 }
 PointSPtr PhysicsComp::getVelocity() { return this->velocity; }
 
+void PhysicsComp::addVelocity(const PointSPtr velocity) {
+  this->velocity->x += velocity->x;
+  this->velocity->y += velocity->y;
+}
+
 shared_ptr<PhysicsMgr> PhysicsComp::getManager() { return this->manager; }
 void PhysicsComp::setManager(const shared_ptr<PhysicsMgr> manager) {
   this->manager = manager;
