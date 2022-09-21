@@ -24,8 +24,9 @@ class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
                     const shared_ptr<PhysicsComp> comp2);
   shared_ptr<vector<shared_ptr<PhysicsComp>>> getAllColliding(
       shared_ptr<PhysicsComp> component);
-  void applyGravity();
-  void applyVelocity();
+  void applyGravity(shared_ptr<PhysicsComp> comp);
+  void applyVelocity(shared_ptr<PhysicsComp> comp);
+  void applyVelocityAll();
   void manageComponent(const shared_ptr<PhysicsComp> component);
   void unmanageComponent(const shared_ptr<PhysicsComp> component);
 

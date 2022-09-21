@@ -19,11 +19,13 @@ class Character : public GameObject {
   void shoot();
   void move(const GameAction& action);
   void shoot(const GameAction& action);
+  void jump();
 
  private:
   AICompSPtr aiCompSPtr;
   CombatCompSPtr combatCompSPtr;
   PointSPtr moveSpeed;
+  int jumpCount;
 };
 
 typedef shared_ptr<Character> CharacterSPtr;
