@@ -135,8 +135,11 @@ Character::move(action){
             this->jump()
             break;
         case StopMoveLeft:
-            break:
+            - apply negative of current force in x direction (mario drops off incrementally but that's too hard for)
         case MoveLeft:
+            - apply force if less than max for move speed
+                - if on the ground, 100%
+                - if in mid-air, move speed is 60% of regular ground speed
             break;
             ...
     }

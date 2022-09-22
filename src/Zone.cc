@@ -8,6 +8,53 @@ Zone::Zone() {
   this->physicsMgr = shared_ptr<PhysicsMgr>(new PhysicsMgr());
   this->gameObjects =
       shared_ptr<GameObjectSPtrCollection>(new GameObjectSPtrCollection());
+<<<<<<< HEAD
+=======
+
+  // Set up background
+  BackgroundSPtr background = BackgroundSPtr(new Background(
+      FilePathSPtr(new FilePath("./assets/world-background.bmp")), nullptr,
+      SCREEN_X_CENTER, SCREEN_Y_CENTER));
+  this->background = background;
+
+  // Set up player character
+  CharacterSPtr player = CharacterSPtr(
+      new Character(PointSPtr(new Point{.x = 400, .y = 734}),
+                    GameObjectNameSPtr(new GameObjectName("player")), nullptr,
+                    FilePathSPtr(new FilePath("./assets/player.bmp"))));
+  this->player = player;
+  player->inferBoundingBoxFromTexture();
+  this->physicsMgr->manageComponent(player->getPhysicsComponent());
+
+  // Set up enemy character
+  CharacterSPtr enemy = CharacterSPtr(
+      new Character(PointSPtr(new Point{.x = 1450, .y = 734}),
+                    GameObjectNameSPtr(new GameObjectName("enemy")), nullptr,
+                    FilePathSPtr(new FilePath("./assets/enemy.bmp"))));
+  enemy->inferBoundingBoxFromTexture();
+  this->gameObjects->push_back(enemy);
+  this->physicsMgr->manageComponent(enemy->getPhysicsComponent());
+
+  for (int x = 0; x < 1920 + (300 * 2); x += 300) {
+    // Add a single platform
+    PlatformSPtr platform = PlatformSPtr(new Platform(
+        PointSPtr(
+            new Point{.x = (PositionUnit)x, .y = SCREEN_Y_CENTER * 2 - 20}),
+        nullptr, nullptr,
+        FilePathSPtr(new FilePath("./assets/wall-indestructible.bmp"))));
+    platform->inferBoundingBoxFromTexture();
+    this->gameObjects->push_back(platform);
+    this->physicsMgr->manageComponent(platform->getPhysicsComponent());
+  }
+
+  PlatformSPtr tallWall = PlatformSPtr(new Platform(
+      PointSPtr(new Point{.x = (PositionUnit)1200,
+                          .y = (SCREEN_Y_CENTER * 2 - 20) - 250}),
+      nullptr, nullptr, FilePathSPtr(new FilePath("./assets/wall-tall.bmp"))));
+  tallWall->inferBoundingBoxFromTexture();
+  this->gameObjects->push_back(tallWall);
+  this->physicsMgr->manageComponent(tallWall->getPhysicsComponent());
+>>>>>>> 63a94b0 (ready to start implementation)
 }
 
 void Zone::load(const FilePathSPtr zoneWADDirSPtr) {}
