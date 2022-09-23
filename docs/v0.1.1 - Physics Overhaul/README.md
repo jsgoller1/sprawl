@@ -38,16 +38,16 @@ So, concretely:
 
 ### Issue: handling player movement
 - Presently, we just set the player's velocity and update their position based on it each frame. We can't do this with our new force-based movement system.
-- Under normal conditions, the player expects their character to move in the direction of their button press as long as they hold it down, and stop once they 
-release it. Small acceleration / deacceleration is acceptable. 
-- Character movement is subject to drag. In order to achieve any velocity, a character must have sufficient force applied to it so it can accelerate.
-    - This force must exceed the drag force for acceleration to occur
+- The player expects their character to move in the direction of their button press as long as they hold it down, and stop once they  release it. Small acceleration / deacceleration is acceptable. 
+- In order to achieve any velocity, a character must have sufficient force applied to it so it can accelerate.
+    - If we use force to achieve player movement, the player will stay in motion until another force stops them. 
+    - If we implement stopping as "releasing the key applies backward force to stop movement," it will result in bizarre behavior if other forces are applied while the character is in motion (e.g. running into a wall.)
+- One solution is to apply a drag force to any object in motion.
+    F_drag = -a * velocity; a is a drag constant. 
 - To stay in motion, a character must have equal and opposite force to drag force added to it. 
 - The dumbest/easiest way to do this would be have an initial "impulse jolt" that results in the character accelerating to their maximum velocity, then as long
 as the movement key is held down, just adding a drag-counteracting force each time drag is added. 
-
-
-
+- cyclone implements drag as a modifier to velocity. While this technically works, it leads to a painful calculation of "how much force do we add to balance out drag". If we apply drag as a force before calculating the new velocity, we can sidestep this entirely. 
 - Player movement is handled as follows:
     - A player has a maximum movement speed, and we don't want to exceed it
     - When the player presses a button to move, we add force to the character.
@@ -55,7 +55,6 @@ as the movement key is held down, just adding a drag-counteracting force each ti
             - If their speed is not at max, we add up to a certain amount of force. 
                 - e.g. suppose a character got hit by a truck and is moving backwards. if the player tries to move them forward, that will slow their backward movement, but not immediately halt it
             - If their speed is already max, we only add enough force to cancel drag.
-
 
 ### Issue: collision testing and forces
 Collisions are "directional"; if movement occurs in the x and y direction but an x-direction collision happens, only the x velocity needs to be zeroed. So
@@ -160,6 +159,8 @@ attemptMove(){
     this->moveX(); // moves force.magnitude units in force.direction.x
     if isColliding(){
         this->moveXReverse(); // moves force.magnitude units in -(force.direction.x)
+        // We should attempt to move as close to the object as possible; maybe add a collisionDistance()
+        // that knows the closest we can get to its bounding box?
         apply equal to opposite of x direction
     }
 
