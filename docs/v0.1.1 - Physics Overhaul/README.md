@@ -1,30 +1,115 @@
-## Points and vectors
-We should have three separate classes/types:
-- Point: this is a 2D value that represents either a screen location, or a direction
-- Magnitude: this is a dimensionless (?) value
-- Force: this is a composition of a Point and Magnitude; it represents a force of a particular magnitude in the direction of the point. 
+# Physics overhaul
+
+The current way of managing gravity completely sucks and results in janky-ass behavior. We need better collisions, velocities, and gravity.
+
+## Thoughts
+### Background physics concepts
+- velocity is a "vector quantity", with "speed" and "direction"
+    - Speed is a scalar; units are non-directional magnitude over time, i.e. units per second
+    - Direction is the vector component, no units. 
+    - Velocity is definied with derivatives; can be thought of as "change in position with respect to time.
+    - Units: "directional distance per time", e.g. "three units left per second"
+- acceleration refers to change in the direction or speed of a velocity. 
+    - acceleration is also defined with derivatives; can be thought of as "change in velocity with respect to time"
+    - units: "directional distance per time"^2, i.e. meters per second squared. 
+- momentum is the product of mass and velocity
+    - units: mass * directional distance / time, e.g. "kg * m/s". 
+- force is 
+- If something is in motion with no acceleration, this is due to the sum of forces applied to it cancelling each other out; per newton's second law, it stays in motion until another force acts on it.
+    - A car travelling at 100mph with no acceleration has a sum of forces acting on it: the engine is applying force enough to overcome the gravity/friction, air resistance, etc. If the driver takes their foot off the gas, the engine applies less force, so the net force is no longer 0 and the car decelerates. 
+
+So, concretely:
+- force = mass * acceleration
+- acceleration = force / mass
+- new position = initial position + (velocity * time)
+    - only works for objects that aren't accelerating
+    - if an object starts at 0,0 and has constant velocity of (5 units per second in direction 1,1) over 4 seconds, then it ends at 20,20
+
+### Approach to implementation
+- Every object should have mass, velocity, acceleration, and drag/dampening 
+    - drag/dampening depends on what surface the object is on (mid-air, ground, water, etc). For now, we will just have "mid air drag" and "regular drag". 
+    - Each object has its current drag, which can be obtained from the PhysicsManager
+    - We aren't implementing friction; just a global "here's how much you slow down each frame if you're in mid-air or not"
+- We don't attempt to move objects as part of handling user input, reconciling collisions, etc. We just apply forces to them.
+    - We apply gravity (also a force) each frame
+- When we "handle physics", we "integrate"; this means we use apply all forces to an object, use them with the object's mass and acceleration to determine its velocity, which determines its positional movement.
+- We then attempt the move and check for collisions. 
+    - If one occurs, the object applies a force to what it collides with, and has an opposing force applied back depending on the direction of the collision
+
+### Issue: handling player movement
+- Presently, we just set the player's velocity and update their position based on it each frame. We can't do this with our new force-based movement system.
+- Under normal conditions, the player expects their character to move in the direction of their button press as long as they hold it down, and stop once they 
+release it. Small acceleration / deacceleration is acceptable. 
+- Character movement is subject to drag. In order to achieve any velocity, a character must have sufficient force applied to it so it can accelerate.
+    - This force must exceed the drag force for acceleration to occur
+- To stay in motion, a character must have equal and opposite force to drag force added to it. 
+- The dumbest/easiest way to do this would be have an initial "impulse jolt" that results in the character accelerating to their maximum velocity, then as long
+as the movement key is held down, just adding a drag-counteracting force each time drag is added. 
 
 
-## Better collisions, velocities, and gravity
-### Problem
-The current way of managing gravity completely sucks and results in janky-ass behavior.
 
-### Thoughts
-- Every object should have a "force" value indicating which direction / magnitude force is being applied to it
-- Presently, we will assume the magnitude of a force describes how far the object moves in that direction if no collision
-occurs; I think this means "unit mass in a frictionless vacuum", but I could be wrong. 
-    - Later on, we can add friction and air/water resistance
-- Collisions should be directional; if movement occurs in the x and y direction but an x-direction collision
-happens, only the x velocity needs to be zeroed.
-- To keep things simple, we should just think of four cardinal directions, and only get more complicated if necessary. 
-- Gravity should add downward force (up to a limit, beyond which extra acceleration could happen if the character has a means of creating it)
-- Each frame, objects should move according to their velocity; we should not try to move them directly except 
-for things like teleporting. 
-- Movements should be predictive / reversible: as part of applying velocity, we should attempt to move
-  the object, see if a collision ensues, and then reverse it if so. 
+- Player movement is handled as follows:
+    - A player has a maximum movement speed, and we don't want to exceed it
+    - When the player presses a button to move, we add force to the character.
+        - Each frame, the amount of force we add might change, depening on their current speed. 
+            - If their speed is not at max, we add up to a certain amount of force. 
+                - e.g. suppose a character got hit by a truck and is moving backwards. if the player tries to move them forward, that will slow their backward movement, but not immediately halt it
+            - If their speed is already max, we only add enough force to cancel drag.
+
+
+### Issue: collision testing and forces
+Collisions are "directional"; if movement occurs in the x and y direction but an x-direction collision happens, only the x velocity needs to be zeroed. So
+if we do a two-axis movement and a collision occurs, we need to be able to determine which direction caused the collision. 
+
+#### Collision for single direction movement
+Trivial, we know exactly which direction the collision occurred in.
+
+#### Collision for two direction movement
+E.g. up and to the right. We can perform all movements as single-direction by breaking up their respective moves along each axis and testing them separately.
+- An edge case occurs here if only the diagonal movement would cause a collision. Not sure how I want to handle this yet.
+- Collisions can't occur in a direction we're not moving; when we move-and-test, our move is what causes a collision
+    - Separately, something could collide with us, e.g. while we fall we are hit by a bullet. However, this won't happen concurrently; the bullet would collide with us, apply its force, and then be moved back to its original state until its next move is calculated
+    
+## Plan
+### New physics and position types
+A whole bunch of `cyclone-physics` code can be adapted for 2D vector math
+
+Single dimension:
+- Magnitude (int)
+- Mass (int); can never be 0. 
+- Dampening (int)
+
+Two dimensions:
+- Vect2D: has int x and int y
+- Direction: a Vect2D whose x and y values are constrained to -1, 0, or 1. 
+    - We will define all cardinal directions as constants at compile time
+- We will want to define vector addition, scaling, and scale-then-add
+
+Composition:
+- Force: has Direction and Magnitude
+- Velocity: has Direction and Magnitude
+- Acceleration: has Direction and Magnitude
+
+### New attributes/methods
+PhysicsComp:
+- attrs
+    - Mass, Velocity, and Acceleration
+    - Movable (bool): can forces applied to this cause movement?
+- Methods
+    - getters/setters for each attr
+    - void applyForce(Force): updates acceleration of an object via newton's laws. 
+    - bool isMoving(): returns whether velocity is 0 or not
+    - moveX(), moveY(), moveReverseX(), moveReverseY(): 
+
+PhysicsManager:
+- AirDampening and SurfaceDampening (eventually we may want more / different ones)
+
+### Other details
+- I want to stick with ints if possible, but we might not be able to due to calculating net force on an object (which will require inverse mass)
 - Horizontal movement in mid-air is allowed; pretty common for platformers
 - Double jumping is allowed (or even multi-jumping, could be upgradable)
 
+### Test scenarios
 Scenarios for any object:
 - Gravity
     - Object on surface (downward collision in range) -> no velocity change
@@ -41,53 +126,33 @@ Situations and outcomes:
 - Jumping from stationary - object has upward force added to it once, but gravity will apply each loop and the upward force will decrease until it becomes stationary and then moves down
 - Jumping while moving - upward force added to existing force. 
 
-Collision direction is a tricky problem, i.e. "movement in which direction caused us to collide with this thing?" 
-- If we're moving along one axis and a collision occurs, we know the direction that caused the collision (see below for edge case)
-    - The collision algorithm works by moving the object then testing; collisions only occur because we moved into something
-    - We can't be moving downwards and cause a horizontal collision
-- If we're moving on two axes and collision occurs, there are three cases:
-    - vertical movement caused the collision irrespective of horizontal; vertical movement is halted
-    - horizontal movement caused the collision irrespective of vertical; horizontal movement is halted
-    - movement on both axes was required for the collision; all movement is halted
-- For two axis movement resulting in collisions, we can:
-    - invert the move, then retry as two separate single-axis moves. This could result in side effects.
-- Alternatively, we can do _every_ move as a single axis move, and just do the two axes separately. (this is probably easiest)
-
-### Plan
+## Pseudocode
 (assume the core game loop will call `PhysicsManager::update()` once per loop)
-
-#### pseudocode
-General:
-```
-typedef Magnitude PositionUnit; // integer type
-
-struct Direction : Point {
-    int x, /* both x and y can only be 
-    int y     -1, 0, or 1, 8 possible states */
-}
-
-struct Force {
-    Point direction,
-    Magnitude magnitude
-}
-```
 
 For `physicsComponent`: 
 ```
-// adds force to object.force
-component::applyForce(force);
+// adapted from https://github.com/idmillington/cyclone-physics/blob/master/src/particle.cpp
+integrate(time duration)
+{
+    if (mass <= 0 or duration <= 0) {
+        return;
+    }
+    // Attempt movement based on velocity based on
+    // object's velocity over the duration;
+    // we will scale the velocity vector based on time
+    // and add that to position, taking collisions into account
+    attemptMove(duration)
 
-// object.force getter
-component::getForce();
+    // Update our acceleration from forces accumulated since last 
+    // integration, then use that to update our velocity
+    this->acceleration->addScaledVector(this->forceAccum, 1/this->mass);
+    this->velocity.addScaledVector(this->acceleration, duration);
 
-// object.force setter
-component::setForce(force);
+    // Impose drag.
+    this->velocity *= real_pow(this->damping, duration);
 
-// set object's force to stationary
-component::clearForce();
-
-// returns true/false if force is nonzero
-component::isMoving()
+    this->forces->clear();
+}
 
 // Try movement along each axis separately; if it results in a collision, 
 // undo the movement and set force in that direction to 0.
@@ -95,7 +160,7 @@ attemptMove(){
     this->moveX(); // moves force.magnitude units in force.direction.x
     if isColliding(){
         this->moveXReverse(); // moves force.magnitude units in -(force.direction.x)
-        this->force->direction->x = 0
+        apply equal to opposite of x direction
     }
 
     this->moveY(); // moves force.magnitude units in force.direction.x
@@ -104,7 +169,7 @@ attemptMove(){
         if this->force->direction->y > 0 {
             this->canJump = true; // this is a private element that we will make accessible via a getter
         }
-        this->force->direction->y = 0
+        apply equal to opposite of y direction
     }
 }
 ```
@@ -121,9 +186,8 @@ PhysicsManager::update(){
 }
 
 PhysicsManager::ApplyGravity(object){
-    if (object.force.y < GRAV_MAX) {
-        object.force += GRAV_INCREMENT // "down" has a higher y value 
-    }
+    if the object's downward acceleration isn't greater than max:
+        apply gravitational force
 }
 ```
 
@@ -135,11 +199,10 @@ Character::move(action){
             this->jump()
             break;
         case StopMoveLeft:
-            - apply negative of current force in x direction (mario drops off incrementally but that's too hard for)
+            - apply dampening
         case MoveLeft:
-            - apply force if less than max for move speed
-                - if on the ground, 100%
-                - if in mid-air, move speed is 60% of regular ground speed
+            - disable dampening 
+            - apply force in left direction
             break;
             ...
     }

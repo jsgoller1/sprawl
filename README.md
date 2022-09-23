@@ -26,3 +26,7 @@ These are for convenience only
 - `^.*Comp$`: a component class for implementing reusable behavior via composition; always access these via smart pointers.
 - `^.*Mgr$`: a manager class that stores references to components and updates the owner object through them. 
 
+
+## Credits, Resources, References
+- [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.
+- [Game Engine Physics Development by Ian Millington](https://www.amazon.com/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768/) and the accompanying [cyclone-physics](https://github.com/idmillington/cyclone-physics) engine were extremely useful for 2D math, velocity, and acceleration. Some of his code was copied modified to support Neon Rain. `cyclone-physics` is released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
