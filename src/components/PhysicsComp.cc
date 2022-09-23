@@ -8,7 +8,7 @@ PhysicsComp::PhysicsComp(const PositionCompSPtr positionComp,
   this->boundingBox = boundingBox;
   this->gravityEnabled = gravitySetting;
   this->collisionsEnabled = collisionsSetting;
-  this->velocity = PointSPtr(new Point{.x = 0, .y = 0});
+  this->velocity = shared_ptr<Vect2D>(new Vect2D{.x = 0, .y = 0});
 }
 
 shared_ptr<PhysicsComp> PhysicsComp::getptr() {
@@ -24,12 +24,12 @@ void PhysicsComp::enableGravity(const bool setting) {
   this->gravityEnabled = setting;
 }
 
-void PhysicsComp::setVelocity(const PointSPtr velocity) {
+void PhysicsComp::setVelocity(const shared_ptr<Vect2D> velocity) {
   this->velocity = velocity;
 }
-PointSPtr PhysicsComp::getVelocity() { return this->velocity; }
+shared_ptr<Vect2D> PhysicsComp::getVelocity() { return this->velocity; }
 
-void PhysicsComp::addVelocity(const PointSPtr velocity) {
+void PhysicsComp::addVelocity(const shared_ptr<Vect2D> velocity) {
   this->velocity->x += velocity->x;
   this->velocity->y += velocity->y;
 }
@@ -59,8 +59,10 @@ bool PhysicsComp::isColliding() {
   return !(colliding->empty());
 }
 
-PointSPtr PhysicsComp::getCenter() { return this->positionComp->getCenter(); }
+shared_ptr<Vect2D> PhysicsComp::getCenter() {
+  return this->positionComp->getCenter();
+}
 
-void PhysicsComp::move(PointSPtr direction) {
+void PhysicsComp::move(shared_ptr<Vect2D> direction) {
   this->positionComp->move(direction);
 }

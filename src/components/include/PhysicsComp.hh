@@ -21,8 +21,8 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   shared_ptr<PhysicsComp> getptr();
 
   // Forwarding methods for PositionComp
-  void move(PointSPtr direction);
-  PointSPtr getCenter();
+  void move(shared_ptr<Vect2D> direction);
+  shared_ptr<Vect2D> getCenter();
 
   bool hasCollisions();
   void enableCollisions(const bool setting);
@@ -31,9 +31,9 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   BoundingBoxSPtr getBoundingBox();
   void setBoundingBox(const BoundingBoxSPtr box);
   void setBoundingBox(const PositionUnit h, const PositionUnit w);
-  void setVelocity(const PointSPtr velocity);
-  PointSPtr getVelocity();
-  void addVelocity(const PointSPtr velocity);
+  void setVelocity(const shared_ptr<Vect2D> velocity);
+  shared_ptr<Vect2D> getVelocity();
+  void addVelocity(const shared_ptr<Vect2D> velocity);
 
   bool predictMovementCollision();
   bool isColliding();
@@ -52,7 +52,7 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
  private:
   bool collisionsEnabled;
   bool gravityEnabled;
-  PointSPtr velocity;
+  shared_ptr<Vect2D> velocity;
   shared_ptr<GameObject> parentGameObject;
   PositionCompSPtr positionComp;
   BoundingBoxSPtr boundingBox;

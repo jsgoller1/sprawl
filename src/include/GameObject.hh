@@ -21,7 +21,8 @@ class GameObject {
   void inferBoundingBoxFromTexture();
 
  protected:
-  GameObject(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
+  GameObject(const shared_ptr<Vect2D> center,
+             const GameObjectNameSPtr name = nullptr,
              const shared_ptr<PhysicsComp> physicsComp = nullptr,
              const FilePathSPtr texturePath = nullptr,
              const DrawingCompSPtr drawingComp = nullptr);

@@ -19,7 +19,7 @@ Zone::Zone() {
 
   // Set up player character
   CharacterSPtr player = CharacterSPtr(
-      new Character(PointSPtr(new Point{.x = 400, .y = 734}),
+      new Character(shared_ptr<Vect2D>(new Vect2D{.x = 400, .y = 734}),
                     GameObjectNameSPtr(new GameObjectName("player")), nullptr,
                     FilePathSPtr(new FilePath("./assets/player.bmp"))));
   this->player = player;
@@ -28,7 +28,7 @@ Zone::Zone() {
 
   // Set up enemy character
   CharacterSPtr enemy = CharacterSPtr(
-      new Character(PointSPtr(new Point{.x = 1450, .y = 734}),
+      new Character(shared_ptr<Vect2D>(new Vect2D{.x = 1450, .y = 734}),
                     GameObjectNameSPtr(new GameObjectName("enemy")), nullptr,
                     FilePathSPtr(new FilePath("./assets/enemy.bmp"))));
   enemy->inferBoundingBoxFromTexture();
@@ -38,8 +38,8 @@ Zone::Zone() {
   for (int x = 0; x < 1920 + (300 * 2); x += 300) {
     // Add a single platform
     PlatformSPtr platform = PlatformSPtr(new Platform(
-        PointSPtr(
-            new Point{.x = (PositionUnit)x, .y = SCREEN_Y_CENTER * 2 - 20}),
+        shared_ptr<Vect2D>(
+            new Vect2D{.x = (PositionUnit)x, .y = SCREEN_Y_CENTER * 2 - 20}),
         nullptr, nullptr,
         FilePathSPtr(new FilePath("./assets/wall-indestructible.bmp"))));
     platform->inferBoundingBoxFromTexture();
@@ -48,8 +48,8 @@ Zone::Zone() {
   }
 
   PlatformSPtr tallWall = PlatformSPtr(new Platform(
-      PointSPtr(new Point{.x = (PositionUnit)1200,
-                          .y = (SCREEN_Y_CENTER * 2 - 20) - 250}),
+      shared_ptr<Vect2D>(new Vect2D{.x = (PositionUnit)1200,
+                                        .y = (SCREEN_Y_CENTER * 2 - 20) - 250}),
       nullptr, nullptr, FilePathSPtr(new FilePath("./assets/wall-tall.bmp"))));
   tallWall->inferBoundingBoxFromTexture();
   this->gameObjects->push_back(tallWall);

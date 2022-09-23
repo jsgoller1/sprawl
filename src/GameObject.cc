@@ -1,6 +1,7 @@
 #include "GameObject.hh"
 
-GameObject::GameObject(const PointSPtr center, const GameObjectNameSPtr name,
+GameObject::GameObject(const shared_ptr<Vect2D> center,
+                       const GameObjectNameSPtr name,
                        const shared_ptr<PhysicsComp> physicsComp,
                        const FilePathSPtr texturePath,
                        const DrawingCompSPtr drawingComp) {

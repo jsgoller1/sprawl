@@ -20,7 +20,7 @@ void Renderer::prepare(DrawingCompSPtr drawable) {
   /* Takes a DrawingComponent and prepares it off-screen for rendering.
    */
 
-  PointSPtr drawPoint = drawable->getDrawPoint();
+  shared_ptr<Vect2D> drawPoint = drawable->getDrawPoint();
   SDL_Rect renderQuad = {drawPoint->x, drawPoint->y, drawable->getWidth(),
                          drawable->getHeight()};
   SDL_Texture* textureData = this->prepareTexture(drawable->getTexture());

@@ -7,7 +7,8 @@ class Platform : public GameObject {
   // Platforms are gravity-disabled surfaces with colliders; examples include
   // walls, floors, cielings, ground, etc.
  public:
-  Platform(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
+  Platform(const shared_ptr<Vect2D> center,
+           const GameObjectNameSPtr name = nullptr,
            const shared_ptr<PhysicsComp> physicsComp = nullptr,
            const FilePathSPtr texturePath = nullptr,
            const DrawingCompSPtr drawingComp = nullptr);

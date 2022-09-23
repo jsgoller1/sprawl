@@ -12,7 +12,8 @@
 class Character : public GameObject {
   // Self explanatory: parent class for player, npcs, enemies, etc
  public:
-  Character(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
+  Character(const shared_ptr<Vect2D> center,
+            const GameObjectNameSPtr name = nullptr,
             const shared_ptr<PhysicsComp> physicsComp = nullptr,
             const FilePathSPtr texturePath = nullptr,
             const DrawingCompSPtr drawingComp = nullptr);
@@ -24,7 +25,7 @@ class Character : public GameObject {
  private:
   AICompSPtr aiCompSPtr;
   CombatCompSPtr combatCompSPtr;
-  PointSPtr moveSpeed;
+  shared_ptr<Vect2D> moveSpeed;
   int jumpCount;
 };
 

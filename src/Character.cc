@@ -2,12 +2,13 @@
 
 #include "Logger.hh"
 
-Character::Character(const PointSPtr center, const GameObjectNameSPtr name,
+Character::Character(const shared_ptr<Vect2D> center,
+                     const GameObjectNameSPtr name,
                      const shared_ptr<PhysicsComp> physicsComp,
                      const FilePathSPtr texturePath,
                      const DrawingCompSPtr drawingComp)
     : GameObject(center, name, physicsComp, texturePath, drawingComp) {
-  this->moveSpeed = PointSPtr(new Point{.x = 10, .y = 10});
+  this->moveSpeed = shared_ptr<Vect2D>(new Vect2D{.x = 150, .y = 150});
   this->jumpCount = 0;
   this->physicsComp->enableGravity(true);
 }
@@ -16,7 +17,7 @@ void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
-  PointSPtr newVelocity = this->physicsComp->getVelocity();
+  shared_ptr<Vect2D> newVelocity = this->physicsComp->getVelocity();
 
   switch (action) {
     case MOVE_UP:
@@ -48,8 +49,8 @@ void Character::jump() {
   // jumpCount++;
   log("Jump count: " + to_string(jumpCount));
   if (not(jumpCount >= 2) and this->physicsComp->getVelocity()->y == 0) {
-    PointSPtr newVelocity = PointSPtr(
-        new Point{.x = this->physicsComp->getVelocity()->x, .y = -20});
+    shared_ptr<Vect2D> newVelocity = shared_ptr<Vect2D>(
+        new Vect2D{.x = this->physicsComp->getVelocity()->x, .y = -20});
     this->physicsComp->addVelocity(newVelocity);
   }
 }

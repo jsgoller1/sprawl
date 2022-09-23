@@ -31,8 +31,8 @@ class DrawingComp {
   // Forward to PositionComp()
   int getX();
   int getY();
-  PointSPtr getCenter();
-  PointSPtr getDrawPoint();
+  shared_ptr<Vect2D> getCenter();
+  shared_ptr<Vect2D> getDrawPoint();
 
  private:
   PositionCompSPtr positionCompSPtr;

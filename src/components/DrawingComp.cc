@@ -25,13 +25,13 @@ Angle DrawingComp::getAngle() { return this->angle; }
 // Forwarding methods
 PositionUnit DrawingComp::getWidth() { return this->texture->getWidth(); }
 PositionUnit DrawingComp::getHeight() { return this->texture->getHeight(); }
-PointSPtr DrawingComp::getCenter() {
+shared_ptr<Vect2D> DrawingComp::getCenter() {
   return this->positionCompSPtr->getCenter();
 }
-PointSPtr DrawingComp::getDrawPoint() {
+shared_ptr<Vect2D> DrawingComp::getDrawPoint() {
   // Get the specific point SDL should use for drawing; SDL treats
   // this as the top left of the image and draws from there.
-  PointSPtr drawPoint = this->positionCompSPtr->getCenter();
+  shared_ptr<Vect2D> drawPoint = this->positionCompSPtr->getCenter();
   drawPoint->x -= this->getWidth() / 2;
   // Lower y values are higher on the screen.
   drawPoint->y -= this->getHeight() / 2;
