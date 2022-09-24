@@ -15,7 +15,7 @@ PositionUnit PositionComp::getY() { return this->y; }
 void PositionComp::setX(const PositionUnit x) { this->x = x; }
 void PositionComp::setY(const PositionUnit y) { this->y = y; }
 shared_ptr<Vect2D> PositionComp::getCenter() {
-  return shared_ptr<Vect2D>(new Vect2D{.x = this->x, .y = this->y});
+  return shared_ptr<Vect2D>(new Vect2D(this->x, this->y));
 }
 void PositionComp::setCenter(shared_ptr<Vect2D> center) {
   this->x = center->x;

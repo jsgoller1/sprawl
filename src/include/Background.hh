@@ -15,7 +15,7 @@ class Background {
   DrawingCompSPtr getDrawingCompSPtr();
 
  private:
-  PositionCompSPtr positionCompSPtr;
+  shared_ptr<PositionComp> positionCompSPtr;
   DrawingCompSPtr drawingCompSPtr;
 };
 

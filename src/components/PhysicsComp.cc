@@ -1,6 +1,6 @@
 #include "PhysicsComp.hh"
 
-PhysicsComp::PhysicsComp(const PositionCompSPtr positionComp,
+PhysicsComp::PhysicsComp(const shared_ptr<PositionComp> positionComp,
                          const BoundingBoxSPtr boundingBox,
                          const bool collisionsSetting,
                          const bool gravitySetting) {

@@ -28,7 +28,7 @@ class GameObject {
              const DrawingCompSPtr drawingComp = nullptr);
 
   GameObjectNameSPtr name;
-  PositionCompSPtr positionComp;
+  shared_ptr<PositionComp> positionComp;
   DrawingCompSPtr drawingComp;
   shared_ptr<PhysicsComp> physicsComp;
 };

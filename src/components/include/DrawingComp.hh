@@ -13,7 +13,7 @@ typedef double Angle;
 
 class DrawingComp {
  public:
-  DrawingComp(const PositionCompSPtr positionCompSPtr = nullptr,
+  DrawingComp(const shared_ptr<PositionComp> positionCompSPtr = nullptr,
               const TextureSPtr texture = nullptr,
               const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
@@ -35,7 +35,7 @@ class DrawingComp {
   shared_ptr<Vect2D> getDrawPoint();
 
  private:
-  PositionCompSPtr positionCompSPtr;
+  shared_ptr<PositionComp> positionCompSPtr;
   TextureSPtr texture;
   SDL_RendererFlip flip;
   SDL_Rect* clippingRectangle;

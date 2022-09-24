@@ -14,7 +14,7 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   // Any GameObject can have a physics component; if it does, it registers
   // it with the global PhysicsMgr.
  public:
-  PhysicsComp(const PositionCompSPtr positionComp,
+  PhysicsComp(const shared_ptr<PositionComp> positionComp,
               const BoundingBoxSPtr boundingBox = nullptr,
               const bool collisionsSetting = false,
               const bool gravitySetting = false);
@@ -54,7 +54,7 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   bool gravityEnabled;
   shared_ptr<Vect2D> velocity;
   shared_ptr<GameObject> parentGameObject;
-  PositionCompSPtr positionComp;
+  shared_ptr<PositionComp> positionComp;
   BoundingBoxSPtr boundingBox;
   shared_ptr<PhysicsMgr> manager;
 };

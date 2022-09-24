@@ -1,12 +1,6 @@
 #pragma once
 #include "Memory.hh"
-
-typedef int PositionUnit;
-
-typedef struct Vect2D {
-  PositionUnit x;
-  PositionUnit y;
-} Vect2D;
+#include "Types.hh"
 
 // A Direction is a Vect2D whose x/y values
 // can only be -1, 0, or 1 so it can function
@@ -17,6 +11,7 @@ typedef struct Direction {
   const DIRECTION_SCALAR y;
 } Direction;
 
+// TODO: See Effective CPP, Item 18.
 // NOTE: In SDL, (0,0) is the top left of the screen,
 // so smaller Y-coordinate values are closer to the top of the screen.
 static const Direction NONE = Direction{.x = ZERO, .y = ZERO};

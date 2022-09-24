@@ -1,34 +1,29 @@
 #pragma once
 #include "Memory.hh"
-
-typedef int PositionUnit;
-
-typedef struct Vect2D {
-  PositionUnit x;
-  PositionUnit y;
-} Vect2D;
+#include "PositionTypes.hh"
+#include "Vect2D.hh"
 
 class PositionComp {
  public:
   PositionComp(shared_ptr<Vect2D> center);
-  PositionComp(const PositionUnit center_x, const PositionUnit center_y);
+  PositionComp(const XCoord center_x, const YCoord center_y);
 
-  PositionUnit getX();
-  PositionUnit getY();
-  void setX(const PositionUnit center_x);
-  void setY(const PositionUnit center_y);
+  XCoord getX();
+  YCoord getY();
+  void setX(const XCoord center_x);
+  void setY(const YCoord center_y);
   shared_ptr<Vect2D> getCenter();
   void setCenter(shared_ptr<Vect2D> center);
 
-  void updateX(const PositionUnit x);
-  void updateY(const PositionUnit y);
+  void updateX(const XCoord x);
+  void updateY(const YCoord y);
   void updateCenter(shared_ptr<Vect2D> delta);
 
   void move(const shared_ptr<Vect2D> movement);
 
  private:
-  PositionUnit x;
-  PositionUnit y;
+  XCoord x;
+  YCoord y;
 };
 
-typedef shared_ptr<PositionComp> PositionCompSPtr;
+typedef shared_ptr<PositionComp> shared_ptr<PositionComp>;

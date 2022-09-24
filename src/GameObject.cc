@@ -5,7 +5,7 @@ GameObject::GameObject(const shared_ptr<Vect2D> center,
                        const shared_ptr<PhysicsComp> physicsComp,
                        const FilePathSPtr texturePath,
                        const DrawingCompSPtr drawingComp) {
-  this->positionComp = PositionCompSPtr(new PositionComp(center));
+  this->positionComp = shared_ptr<PositionComp>(new PositionComp(center));
   this->name = name;
   this->physicsComp =
       (physicsComp == nullptr)

@@ -3,7 +3,7 @@
 Background::Background(const FilePathSPtr texturePathSPtr,
                        DrawingCompSPtr drawingCompSPtr, const PositionUnit x,
                        const PositionUnit y) {
-  this->positionCompSPtr = PositionCompSPtr(new PositionComp(x, y));
+  this->positionCompSPtr = shared_ptr<PositionComp>(new PositionComp(x, y));
 
   if (drawingCompSPtr == nullptr) {
     drawingCompSPtr = DrawingCompSPtr(new DrawingComp(
