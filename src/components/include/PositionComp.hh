@@ -1,7 +1,7 @@
 #pragma once
+#include "Math.hh"
 #include "Memory.hh"
 #include "PositionTypes.hh"
-#include "Vect2D.hh"
 
 class PositionComp {
  public:

@@ -12,6 +12,9 @@
 #include "Memory.hh"
 #include "Types.hh"
 
+bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
+                          const PositionUnit low2, const PositionUnit hi2);
+
 class Vect2D {
  public:
   Vect2D();

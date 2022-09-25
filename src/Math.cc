@@ -1,4 +1,4 @@
-#include "Vect2D.hh"
+#include "Math.hh"
 
 /*
  * This code was adapted from cyclone-physics by Ian Millington.
@@ -9,6 +9,34 @@
  * MIT License:
  * https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE
  */
+
+// TODO: This method works only for lines that are presumed to be perpendictular
+// or parallel to the coordinate axes. Can another version be written that takes
+// 4 points and can reliably test intersection regardless of orientation?
+// (Could we just apply a 2D rotation matrix to each point and then do the same
+// test?)
+bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
+                          const PositionUnit low2, const PositionUnit hi2) {
+  /*
+   To do 2D collision testing, we need to do two separate 1D line intersection
+   tests; if both intersect, a 2D collision occurs.
+   For two straight lines A and B (each with start and end points l and r,
+   though this works for vertical lines too), we have four cases to check:
+    - The right side of A intersects with B:
+      B.l <= A.r <= B.r
+    - The left side of A intersects with B:
+      B.l <= A.l <= B.r
+    - A falls completely in B:
+      B.l <= A.l < A.r <= B.r
+    - B falls completely within A:
+      A.l <= B.l < B.r <= A.r
+  */
+  bool low2Intersects = ((low1 <= low2) && (low2 <= hi1));
+  bool hi2Intersects = ((low1 <= hi2) && (hi2 <= hi1));
+  bool containedIn1 = ((low1 <= low2) && (hi2 <= hi1));
+  bool containedIn2 = ((low2 <= low1) && (hi1 <= hi2));
+  return low2Intersects || hi2Intersects || containedIn1 || containedIn2;
+}
 
 Vect2D::Vect2D() {
   this->x = 0;
