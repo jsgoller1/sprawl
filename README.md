@@ -29,4 +29,5 @@ These are for convenience only
 
 ## Credits, Resources, References
 - [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.
-- [Game Engine Physics Development by Ian Millington](https://www.amazon.com/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768/) and the accompanying [cyclone-physics](https://github.com/idmillington/cyclone-physics) engine were extremely useful for 2D math, velocity, and acceleration. Some of his code was copied modified to support Neon Rain. `cyclone-physics` is released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
+- [Game Engine Physics Development by Ian Millington](https://www.amazon.com/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768/)
+- Millington's [cyclone-physics](https://github.com/idmillington/cyclone-physics) engine was partially copied and modified to support Neon Rain. `cyclone-physics` is released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
