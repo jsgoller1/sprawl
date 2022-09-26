@@ -3,7 +3,7 @@
 #include "Math.hh"
 #include "Memory.hh"
 
-bool BoundingBox::isColliding(const shared_ptr<BoundingBox> otherBox) {
+bool BoundingBox::checkCollision(const shared_ptr<BoundingBox> otherBox) {
   // TODO: SDL implements several functions and types we can use
   // for collision detection; this works fine for now.
 

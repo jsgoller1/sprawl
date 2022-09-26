@@ -24,7 +24,7 @@ class BoundingBox {
   BoundingBox(const shared_ptr<BoundingBoxParams> params);
   BoundingBox(const shared_ptr<Vect2D> center, const PositionUnit height,
               const PositionUnit width);
-  bool isColliding(const shared_ptr<BoundingBox> box);
+  bool checkCollision(const shared_ptr<BoundingBox> box);
 
  private:
   shared_ptr<Vect2D> center;

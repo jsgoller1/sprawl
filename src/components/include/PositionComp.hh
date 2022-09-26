@@ -1,7 +1,6 @@
 #pragma once
 #include "Math.hh"
 #include "Memory.hh"
-#include "PositionTypes.hh"
 
 class PositionComp {
  public:
@@ -9,21 +8,20 @@ class PositionComp {
   PositionComp(const XCoord center_x, const YCoord center_y);
 
   XCoord getX();
-  YCoord getY();
   void setX(const XCoord center_x);
+  YCoord getY();
   void setY(const YCoord center_y);
   shared_ptr<Vect2D> getCenter();
   void setCenter(shared_ptr<Vect2D> center);
 
-  void updateX(const XCoord x);
-  void updateY(const YCoord y);
-  void updateCenter(shared_ptr<Vect2D> delta);
-
-  void move(const shared_ptr<Vect2D> movement);
+  void move(const shared_ptr<Vect2D> delta);
+  void reverseMove(const shared_ptr<Vect2D> delta);
+  void moveOnlyX(const shared_ptr<Vect2D> vect);
+  void reverseMoveOnlyX(const shared_ptr<Vect2D> vect);
+  void moveOnlyY(const shared_ptr<Vect2D> vect);
+  void reverseMoveOnlyY(const shared_ptr<Vect2D> vect);
 
  private:
   XCoord x;
   YCoord y;
 };
-
-typedef shared_ptr<PositionComp> shared_ptr<PositionComp>;

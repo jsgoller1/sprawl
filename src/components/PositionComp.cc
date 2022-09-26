@@ -22,14 +22,33 @@ void PositionComp::setCenter(shared_ptr<Vect2D> center) {
   this->y = center->y;
 }
 
-void PositionComp::updateX(const PositionUnit x) { this->x += x; }
-void PositionComp::updateY(const PositionUnit y) { this->y += y; }
-void PositionComp::updateCenter(shared_ptr<Vect2D> delta) {
-  this->x += delta->x;
-  this->y += delta->y;
-}
-
 void PositionComp::move(const shared_ptr<Vect2D> movement) {
   this->x += movement->x;
   this->y += movement->y;
 }
+
+void PositionComp::reverseMove(const shared_ptr<Vect2D> delta) {
+  shared_ptr<Vect2D> inverted = shared_ptr<Vect2D>(new Vect2D(delta));
+  inverted->invert();
+  this->move(inverted);
+};
+void PositionComp::moveOnlyX(const shared_ptr<Vect2D> vect) {
+  shared_ptr<Vect2D> onlyX = shared_ptr<Vect2D>(new Vect2D(vect));
+  onlyX->y = 0.0;
+  this->move(onlyX);
+};
+void PositionComp::reverseMoveOnlyX(const shared_ptr<Vect2D> vect) {
+  shared_ptr<Vect2D> onlyX = shared_ptr<Vect2D>(new Vect2D(vect));
+  onlyX->y = 0.0;
+  this->reverseMove(onlyX);
+};
+void PositionComp::moveOnlyY(const shared_ptr<Vect2D> vect) {
+  shared_ptr<Vect2D> onlyY = shared_ptr<Vect2D>(new Vect2D(vect));
+  onlyY->x = 0.0;
+  this->move(onlyY);
+};
+void PositionComp::reverseMoveOnlyY(const shared_ptr<Vect2D> vect) {
+  shared_ptr<Vect2D> onlyY = shared_ptr<Vect2D>(new Vect2D(vect));
+  onlyY->x = 0.0;
+  this->reverseMove(onlyY);
+};

@@ -5,13 +5,22 @@
 #include "Memory.hh"
 #include "PhysicsComp.hh"
 
+/*
+The PhysicsManager class handles interactions between PhysicsComp objects. Like
+a real-life manager, it doesn't know how to do anything useful - it can only
+tell things it manages how to interact with each other, and it handles their
+interactions with the outside world so they don't have to. It relies on
+PhysicsComp to know how to do useful stuff, and just needs to tell it when.
+
+PhysicsManager knows about GameObjects, and how to determine which PhysicsComp
+is owned by which GameObject.
+
+*/
+
 // Forward decls
 class PhysicsComp;  // see PhysicsComp.hh
 
 class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
-  // Keeps track of registered PhyiscsComponents and knows how to apply physics
-  // to them
-
  public:
   PhysicsMgr();
   std::shared_ptr<PhysicsMgr> getptr();

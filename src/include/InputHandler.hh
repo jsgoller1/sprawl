@@ -2,7 +2,9 @@
 #include <SDL2/SDL.h>
 
 #include "GameAction.hh"
+#include "Logger.hh"
 #include "Memory.hh"
+#include "Types.hh"
 
 class InputEvent {
  public:

@@ -31,16 +31,16 @@ bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
     - B falls completely within A:
       A.l <= B.l < B.r <= A.r
   */
-  bool low2Intersects = ((low1 <= low2) && (low2 <= hi1));
-  bool hi2Intersects = ((low1 <= hi2) && (hi2 <= hi1));
-  bool containedIn1 = ((low1 <= low2) && (hi2 <= hi1));
-  bool containedIn2 = ((low2 <= low1) && (hi1 <= hi2));
+  bool low2Intersects = (lte(low1, low2) && lte(low2, hi1));
+  bool hi2Intersects = (lte(low1, hi2) && lte(hi2, hi1));
+  bool containedIn1 = (lte(low1, low2) && lte(hi2, hi1));
+  bool containedIn2 = (lte(low2, low1) && lte(hi1, hi2));
   return low2Intersects || hi2Intersects || containedIn1 || containedIn2;
 }
 
 Vect2D::Vect2D() {
-  this->x = 0;
-  this->y = 0;
+  this->x = 0.0;
+  this->y = 0.0;
 }
 Vect2D::Vect2D(XCoord x, YCoord y) {
   this->x = x;
@@ -57,7 +57,7 @@ Vect2D::Vect2D(shared_ptr<Vect2D> vect) {
 
 bool Vect2D::operator==(const Vect2D& vect) const {
   // Returns true if both vectors have same x and y components
-  return this->x == vect.x && this->y == vect.y;
+  return eq(this->x, vect.x) && eq(this->y, vect.y);
 }
 bool Vect2D::operator!=(const Vect2D& vect) const {
   // Returns true if vectors have different x or y components
@@ -100,10 +100,15 @@ void Vect2D::operator*=(const real value) {
   this->y *= value;
 }
 
+void Vect2D::addScaledVector(const Vect2D& vect, const real scalar) {
+  this->x += vect.x * scalar;
+  this->y += vect.y * scalar;
+}
+
 void Vect2D::clear() {
   // Sets all components to 0
-  this->x = 0;
-  this->y = 0;
+  this->x = 0.0;
+  this->y = 0.0;
 }
 void Vect2D::invert() {
   // Sets all components to their additive inverse

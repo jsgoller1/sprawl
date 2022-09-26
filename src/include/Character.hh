@@ -9,6 +9,8 @@
 #include "PositionComp.hh"
 #include "Types.hh"
 
+typedef int JumpCount;
+
 class Character : public GameObject {
   // Self explanatory: parent class for player, npcs, enemies, etc
  public:
@@ -26,7 +28,7 @@ class Character : public GameObject {
   AICompSPtr aiCompSPtr;
   CombatCompSPtr combatCompSPtr;
   shared_ptr<Vect2D> moveSpeed;
-  int jumpCount;
+  JumpCount jumpCount;
 };
 
 typedef shared_ptr<Character> CharacterSPtr;

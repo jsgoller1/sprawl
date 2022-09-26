@@ -3,8 +3,8 @@
 #include <algorithm>
 
 PhysicsMgr::PhysicsMgr() {
-  this->managedComponents = shared_ptr<set<shared_ptr<PhysicsComp>>>(
-      new set<shared_ptr<PhysicsComp>>());
+  this->managedComponents = shared_ptr<std::set<shared_ptr<PhysicsComp>>>(
+      new std::set<shared_ptr<PhysicsComp>>());
 }
 
 std::shared_ptr<PhysicsMgr> PhysicsMgr::getptr() {
@@ -39,7 +39,7 @@ shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(
       shared_ptr<vector<shared_ptr<PhysicsComp>>>(
           new vector<shared_ptr<PhysicsComp>>());
   for (shared_ptr<PhysicsComp> other : *(this->managedComponents)) {
-    if (other != component && this->areColliding(component, other)) {
+    if (other != component && component->isColliding(other)) {
       collided->push_back(other);
     }
   }

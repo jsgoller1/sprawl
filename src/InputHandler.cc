@@ -1,8 +1,5 @@
 #include "InputHandler.hh"
 
-#include "GameAction.hh"
-#include "Logger.hh"
-
 GameAction InputHandler::getGameAction() {
   // TODO: For now, this forwarding method is a code smell;
   // eventually, we'll get inputs that won't cause game actions
@@ -17,7 +14,7 @@ shared_ptr<InputEvent> InputHandler::getInput() {
   // TODO: Do we only want to try to get one event at a
   // time, or should we poll for all events and return a
   // collection?
-  if (SDL_PollEvent(&event) == 0) {
+  if (not SDL_PollEvent(&event)) {
     shared_ptr<NoEvent> action = shared_ptr<NoEvent>(new NoEvent());
     return action;
   }
