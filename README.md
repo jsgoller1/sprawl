@@ -26,10 +26,14 @@ These are for convenience only
 - `^.*Comp$`: a component class for implementing reusable behavior via composition; always access these via smart pointers.
 - `^.*Mgr$`: a manager class that stores references to components and updates the owner object through them. 
 
-
 ## Credits, Resources, References
 - [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.
-- [Game Engine Physics Development by Ian Millington](https://www.amazon.com/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768/)
-- Millington's [cyclone-physics](https://github.com/idmillington/cyclone-physics) engine was partially copied and modified to support Neon Rain. `cyclone-physics` is released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
-- [Elliott Jin](https://github.com/robot-dreams) for the advice, rubber-ducking, and reassurance
+- [Game Engine Physics Development by Ian Millington](https://www.amazon.com/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768/) was super helpful; some of his code was was partially copied and modified to support Neon Rain. 
+- [Elliott Jin](https://github.com/robot-dreams) for the advice, rubber-ducking, and reassurance.
 - Eric Barone (ConcernedApe), John Carmack, Matt Dabrowski, Terry A. Davis, Paul Erdős, and Richard Feynman for their inspiring examples
+
+## Licensing 
+Neon Rain is presently proprietary / closed source, and may not be bought, sold, reproduced, etc in any capacity without the author's permission. Neon Rain uses C and C++ standard libraries provided by Clang. It also makes use of the following:
+- `SDL`, released under the [zlib license](https://raw.githubusercontent.com/libsdl-org/SDL/main/LICENSE.txt).
+- `cyclone-physics`, released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
+- `nlohmann/json`, released under the [MIT License](https://raw.githubusercontent.com/nlohmann/json/develop/LICENSE.MIT).
