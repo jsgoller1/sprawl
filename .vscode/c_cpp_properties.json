@@ -7,10 +7,8 @@
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/src/components/include",
                 "${workspaceFolder}/src/managers/include",
-                // Note: Neon Rain uses gtest via Bazel's remote archive
-                // feature, not locally; these are just for intellisense. 
-                "/home/joshua/Code/googletest/googletest/include",
-                "/home/joshua/Code/googletest/googlemock/include",
+                "${workspaceFolder}/src/wads/include",
+                "${workspaceFolder}/src/3rdparty/include",
                 // TODO: Integrate SDL with Bazel; this was installed with
                 // apt and will be impossible to version-pin or distribute. 
                 "/usr/include/SDL2"

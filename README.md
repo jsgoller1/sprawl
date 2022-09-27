@@ -19,6 +19,9 @@ make
 sudo make install
 ```
 
+### 4) Install nlohmann/json
+
+
 ## Naming conventions for class/type names
 These are for convenience only
 - `^.*UPtr$`: a `std::uniq_ptr`.
