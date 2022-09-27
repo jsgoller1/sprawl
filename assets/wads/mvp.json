@@ -28,6 +28,15 @@
         },
         {
             "type": "Platform",
+            "name": "wall-tall",
+            "texturePath": "./assets/wall-tall.bmp",
+            "position": {
+                "x": 1200,
+                "y": 810
+            }
+        },
+        {
+            "type": "Platform",
             "name": "wall-indestructible",
             "texturePath": "./assets/textures/wall-indestructible.bmp",
             "position": {
