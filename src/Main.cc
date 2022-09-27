@@ -1,6 +1,7 @@
 #include "InputHandler.hh"
 #include "Logger.hh"
 #include "Screen.hh"
+#include "Types.hh"
 #include "World.hh"
 
 int main() {
@@ -36,6 +37,10 @@ int main() {
     // vehicle, in combat, etc.
     world.update(userAction);
     screen.drawAll(world.getDrawables());
+
+    // If we wind up taking less time than we need should we sleep?
+    // Framerates higher than 60 FPS are imperceptible, and we don't
+    // want the game world moving faster than the player can handle.
     //  sleep(startTime + MS_PER_FRAME - getCurrentTime());
 
     // log("Quitting after one loop.");

@@ -14,6 +14,9 @@
 #include "Texture.hh"
 #include "Types.hh"
 
+// Forward declaration
+class WADLoader;
+
 class Zone {
   // A Zone is a location in the World containing GameObjects
   // TODO: Initially, all zones are rectangular, have the same height as the
@@ -24,7 +27,6 @@ class Zone {
   // TODO: serialize(); // needed for saving game and level editor
   void update(const GameAction& action);
   void load(const FilePathSPtr zoneWADDirSPtr);
-  void loadHardcoded();
   void setBackground(const FilePathSPtr backgroundPath);
   DrawingCompSPtrCollectionSPtr getDrawables();
   Zone();
@@ -36,12 +38,13 @@ class Zone {
   AIMgr aiMgr;
   shared_ptr<PhysicsMgr> physicsMgr;
   shared_ptr<GameObjectSPtrCollection> gameObjects;
-  // TODO: Backgrounds, once we figure out texturing
   BackgroundSPtr background;
   CharacterSPtr player;
 
   void handleInput(const GameAction& action);
   void handlePhysics();
+
+  friend WADLoader;
 };
 
 typedef shared_ptr<Zone> ZoneSPtr;
