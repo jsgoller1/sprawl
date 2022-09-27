@@ -1,8 +1,10 @@
 #pragma once
 
+#include "DrawingComp.hh"
 #include "GameAction.hh"
 #include "Memory.hh"
 #include "Types.hh"
+#include "WADLoader.hh"
 #include "Zone.hh"
 
 class World {
@@ -13,8 +15,9 @@ class World {
   // NOTE: Menus, UI, dialogue boxes, etc should not be part of the world
 
  public:
-  World();
-  World(const FilePathSPtr wadDirSPtr);
+  World()
+      : World(shared_ptr<FilePath>(new FilePath("./assets/wads/mvp.json"))){};
+  World(const shared_ptr<FilePath> wadPath);
   void update(const GameAction& action);
   DrawingCompSPtrCollectionSPtr getDrawables();
   // TODO: serialize(); // needed for saving game and level editor
