@@ -31,3 +31,5 @@ These are for convenience only
 - [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.
 - [Game Engine Physics Development by Ian Millington](https://www.amazon.com/Game-Physics-Engine-Development-Commercial-Grade/dp/0123819768/)
 - Millington's [cyclone-physics](https://github.com/idmillington/cyclone-physics) engine was partially copied and modified to support Neon Rain. `cyclone-physics` is released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
+- [Elliott Jin](https://github.com/robot-dreams) for the advice, rubber-ducking, and reassurance
+- Eric Barone (ConcernedApe), John Carmack, Matt Dabrowski, Terry A. Davis, Paul Erdős, and Richard Feynman for their inspiring examples
