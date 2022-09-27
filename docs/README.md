@@ -22,7 +22,7 @@ Order/priority is loose / not committed; "X" means "any value", "?" means "no id
 - v? - Update REPL to a full Python interpreter
 
 ## Versioning
-Format: "v{major}.{minor}.{patch_number}"
+Format: "v{major}.{minor}.{patch_number or string}"
 - Branching and squashing are done for major tasks. 
 - Patch numbers are bumped any time a branch gets merged back into mainline, typically
   when that task doesn't result in new gameplay features. 
