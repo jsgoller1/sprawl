@@ -14,17 +14,23 @@ CC_FLAGS :=-std=c++20 -g
 WARNINGS :=# -Weverything -Werror
 IGNORE := -Wno-c++98-compat
 INCLUDE := -I src/include -I src/managers/include -I src/components/include -I src/wads/include -I src/3rdparty/include
+TEST_INCLUDE := $(INCLUDE) -I src/test/include
 LINK := -lSDL2 -lSDL2_image
+TEST_LINK := $(LINK) -lgtest_main -lgtest -lgmock 
 CLANG_LINKER_ARGS := -Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
 SOURCE := src/*.cc src/components/*.cc src/managers/*.cc src/wads/*.cc
+MAIN_SOURCE := $(SOURCE) src/main/*.cc
+TEST_SOURCE := $(SOURCE) src/test/*.cc
 OUTFILE := $(BIN_DIR)/neon-rain
 OUTPUT := -o $(OUTFILE)
-CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(INCLUDE) $(LINK) $(CLANG_LINKER_ARGS) $(SOURCE) $(OUTPUT)
+CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(CLANG_LINKER_ARGS) $(OUTPUT)
+MAIN_COMPILE := $(CC_COMPILE) $(INCLUDE) $(LINK) $(MAIN_SOURCE)
+TEST_COMPILE := $(CC_COMPILE) $(TEST_INCLUDE) $(TEST_LINK) $(TEST_SOURCE)
 
 SCREEN_RECORD := byzanz-record -d 3 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
 
 all: clean
-	$(CC_COMPILE)
+	$(MAIN_COMPILE)
 	$(VALGRIND) $(OUTFILE)
 
 ### Binary cleanup
@@ -45,4 +51,6 @@ install-devtools:
 	libsdl2-dev \
 	valgrind
 
-
+test: 
+	$(TEST_COMPILE)
+	$(VALGRIND) $(OUTFILE)
