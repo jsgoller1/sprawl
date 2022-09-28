@@ -4,11 +4,11 @@
 
 #include "DrawingComp.hh"
 #include "Memory.hh"
-#include "PhysicsComp.hh"
+#include "PhysicsComponent.hh"
 #include "PositionComp.hh"
 
 // Forward decls
-class PhysicsComp;  // see PhysicsComp.hh
+class PhysicsComponent;  // see PhysicsComponent.hh
 
 class GameObject {
   // GameObjects are anything interactive in the world;
@@ -17,20 +17,20 @@ class GameObject {
 
  public:
   DrawingCompSPtr getDrawingComponent();
-  shared_ptr<PhysicsComp> getPhysicsComponent();
+  shared_ptr<PhysicsComponent> getPhysicsComponent();
   void inferBoundingBoxFromTexture();
 
  protected:
   GameObject(const shared_ptr<Vect2D> center,
              const GameObjectNameSPtr name = nullptr,
-             const shared_ptr<PhysicsComp> physicsComp = nullptr,
+             const shared_ptr<PhysicsComponent> physicsComp = nullptr,
              const FilePathSPtr texturePath = nullptr,
              const DrawingCompSPtr drawingComp = nullptr);
 
   GameObjectNameSPtr name;
   shared_ptr<PositionComp> positionComp;
   DrawingCompSPtr drawingComp;
-  shared_ptr<PhysicsComp> physicsComp;
+  shared_ptr<PhysicsComponent> physicsComp;
 };
 
 typedef shared_ptr<GameObject> GameObjectSPtr;

@@ -5,7 +5,7 @@
 #include "Screen.hh"
 
 Zone::Zone() {
-  this->physicsMgr = shared_ptr<PhysicsMgr>(new PhysicsMgr());
+  this->physicsMgr = shared_ptr<PhysicsManager>(new PhysicsManager());
   this->gameObjects =
       shared_ptr<GameObjectSPtrCollection>(new GameObjectSPtrCollection());
 }

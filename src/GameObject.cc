@@ -2,15 +2,15 @@
 
 GameObject::GameObject(const shared_ptr<Vect2D> center,
                        const GameObjectNameSPtr name,
-                       const shared_ptr<PhysicsComp> physicsComp,
+                       const shared_ptr<PhysicsComponent> physicsComp,
                        const FilePathSPtr texturePath,
                        const DrawingCompSPtr drawingComp) {
   this->positionComp = shared_ptr<PositionComp>(new PositionComp(center));
   this->name = name;
-  this->physicsComp =
-      (physicsComp == nullptr)
-          ? shared_ptr<PhysicsComp>(new PhysicsComp(this->positionComp))
-          : physicsComp;
+  this->physicsComp = (physicsComp == nullptr)
+                          ? shared_ptr<PhysicsComponent>(
+                                new PhysicsComponent(this->positionComp))
+                          : physicsComp;
   this->drawingComp = (drawingComp == nullptr)
                           ? DrawingCompSPtr(new DrawingComp(this->positionComp))
                           : drawingComp;
@@ -20,7 +20,7 @@ GameObject::GameObject(const shared_ptr<Vect2D> center,
 }
 
 DrawingCompSPtr GameObject::getDrawingComponent() { return this->drawingComp; }
-shared_ptr<PhysicsComp> GameObject::getPhysicsComponent() {
+shared_ptr<PhysicsComponent> GameObject::getPhysicsComponent() {
   return this->physicsComp;
 }
 

@@ -1,9 +1,9 @@
-#include "PhysicsComp.hh"
+#include "PhysicsComponent.hh"
 
-PhysicsComp::PhysicsComp(const shared_ptr<PositionComp> positionComp,
-                         const shared_ptr<BoundingBoxParams> boundingBoxParams,
-                         const bool collisionsSetting,
-                         const bool gravitySetting) {
+PhysicsComponent::PhysicsComponent(
+    const shared_ptr<PositionComp> positionComp,
+    const shared_ptr<BoundingBoxParams> boundingBoxParams,
+    const bool collisionsSetting, const bool gravitySetting) {
   this->positionComp = positionComp;
   this->boundingBoxParams = boundingBoxParams;
   this->gravityEnabled = gravitySetting;
@@ -11,63 +11,74 @@ PhysicsComp::PhysicsComp(const shared_ptr<PositionComp> positionComp,
   this->velocity = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
 }
 
-shared_ptr<PhysicsComp> PhysicsComp::getptr() {
+shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
   return this->shared_from_this();
 }
 
-bool PhysicsComp::isForceResponsive() const { return this->forceResponsive; }
-void PhysicsComp::setForceResponsive(const bool setting) {
+bool PhysicsComponent::isForceResponsive() const {
+  return this->forceResponsive;
+}
+void PhysicsComponent::setForceResponsive(const bool setting) {
   this->forceResponsive = setting;
 }
-bool PhysicsComp::hasCollisions() const { return this->collisionsEnabled; }
-void PhysicsComp::enableCollisions(const bool setting) {
+bool PhysicsComponent::hasCollisions() const { return this->collisionsEnabled; }
+void PhysicsComponent::enableCollisions(const bool setting) {
   this->collisionsEnabled = setting;
 }
-bool PhysicsComp::hasGravity() const { return this->gravityEnabled; }
-void PhysicsComp::enableGravity(const bool setting) {
+bool PhysicsComponent::hasGravity() const { return this->gravityEnabled; }
+void PhysicsComponent::enableGravity(const bool setting) {
   this->gravityEnabled = setting;
 }
-shared_ptr<Vect2D> PhysicsComp::getNetForce() const { return this->netForce; }
-shared_ptr<Vect2D> PhysicsComp::getVelocity() const { return this->velocity; }
-shared_ptr<Vect2D> PhysicsComp::getAcceleration() const {
+shared_ptr<Vect2D> PhysicsComponent::getNetForce() const {
+  return this->netForce;
+}
+shared_ptr<Vect2D> PhysicsComponent::getVelocity() const {
+  return this->velocity;
+}
+shared_ptr<Vect2D> PhysicsComponent::getAcceleration() const {
   return this->acceleration;
 }
-real PhysicsComp::getAirDragCoeff() const { return this->airDragCoeff; };
-void PhysicsComp::setAirDragCoeff(real coeff) { this->airDragCoeff = coeff; };
-real PhysicsComp::getSurfaceDragCoeff() const {
+real PhysicsComponent::getAirDragCoeff() const { return this->airDragCoeff; };
+void PhysicsComponent::setAirDragCoeff(real coeff) {
+  this->airDragCoeff = coeff;
+};
+real PhysicsComponent::getSurfaceDragCoeff() const {
   return this->surfaceDragCoeff;
 };
-void PhysicsComp::setSurfaceDragCoeff(real coeff) {
+void PhysicsComponent::setSurfaceDragCoeff(real coeff) {
   this->surfaceDragCoeff = coeff;
 };
-shared_ptr<PhysicsMgr> PhysicsComp::getManager() const { return this->manager; }
-void PhysicsComp::setManager(const shared_ptr<PhysicsMgr> manager) {
+shared_ptr<PhysicsManager> PhysicsComponent::getManager() const {
+  return this->manager;
+}
+void PhysicsComponent::setManager(const shared_ptr<PhysicsManager> manager) {
   this->manager = manager;
 }
-shared_ptr<BoundingBoxParams> PhysicsComp::getBoundingBoxParams() const {
+shared_ptr<BoundingBoxParams> PhysicsComponent::getBoundingBoxParams() const {
   return this->boundingBoxParams;
 }
-void PhysicsComp::setBoundingBoxParams(
+void PhysicsComponent::setBoundingBoxParams(
     const shared_ptr<BoundingBoxParams> params) {
   this->boundingBoxParams = params;
 }
 
-shared_ptr<BoundingBox> PhysicsComp::getBoundingBox() const {
+shared_ptr<BoundingBox> PhysicsComponent::getBoundingBox() const {
   return shared_ptr<BoundingBox>(new BoundingBox(this->boundingBoxParams));
 };
 
-void PhysicsComp::applyForce(const shared_ptr<const Vect2D> force) {
+void PhysicsComponent::applyForce(const shared_ptr<const Vect2D> force) {
   *(this->netForce) += *force;
 }
 
-bool PhysicsComp::isMoving() const {
+bool PhysicsComponent::isMoving() const {
   // TODO: We need to do smart / precise floating point comparisons, probably
   // by defining a Velocity class that knows how to tell if two velocities are
   // close enough to be equal.
   return false;
 }
 
-bool PhysicsComp::checkCollision(const shared_ptr<PhysicsComp> comp) const {
+bool PhysicsComponent::checkCollision(
+    const shared_ptr<PhysicsComponent> comp) const {
   shared_ptr<BoundingBox> usBox =
       shared_ptr<BoundingBox>(new BoundingBox(this->boundingBoxParams));
   shared_ptr<BoundingBox> themBox =
@@ -75,7 +86,7 @@ bool PhysicsComp::checkCollision(const shared_ptr<PhysicsComp> comp) const {
   return usBox->checkCollision(themBox);
 }
 
-void PhysicsComp::integrate(const time_ms duration) {
+void PhysicsComponent::integrate(const time_ms duration) {
   /*
   integrate() drives an object's physics; we apply all forces to the object
   to determine its acceleration, then its velocity, and finally attempt to
@@ -130,7 +141,7 @@ void PhysicsComp::integrate(const time_ms duration) {
   this->netForce = Vect2D::zero();
 }
 
-void PhysicsComp::attemptMove(const shared_ptr<Vect2D> moveDistance) {
+void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   // Attempt movement based on velocity based on
   // object's velocity over the duration;
   // we will scale the velocity vector based on time
@@ -186,15 +197,15 @@ void PhysicsComp::attemptMove(const shared_ptr<Vect2D> moveDistance) {
 
   bool DONT_APPLY_TO_US = false;
   bool APPLY_TO_THEM = true;
-  for (shared_ptr<PhysicsComp> comp : *doubleCollisions->getAll()) {
+  for (shared_ptr<PhysicsComponent> comp : *doubleCollisions->getAll()) {
     result = this->resolveElasticCollision(comp, CollisionAxes::X_AND_Y,
                                            DONT_APPLY_TO_US, APPLY_TO_THEM);
   }
-  for (shared_ptr<PhysicsComp> comp : *xOnlyCollisions->getAll()) {
+  for (shared_ptr<PhysicsComponent> comp : *xOnlyCollisions->getAll()) {
     result = this->resolveElasticCollision(comp, CollisionAxes::X_ONLY,
                                            DONT_APPLY_TO_US, APPLY_TO_THEM);
   }
-  for (shared_ptr<PhysicsComp> comp : *yOnlyCollisions->getAll()) {
+  for (shared_ptr<PhysicsComponent> comp : *yOnlyCollisions->getAll()) {
     result = this->resolveElasticCollision(comp, CollisionAxes::Y_ONLY,
                                            DONT_APPLY_TO_US, APPLY_TO_THEM);
   }
@@ -204,7 +215,7 @@ void PhysicsComp::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   // TODO: Check if we're colliding down; if so, we can jump again.
 }
 
-void PhysicsComp::updateVelocityFromNetForce(const time_ms duration) {
+void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   // Determine the drag force associated with our velocity,
   // add that to the net force, and get our true velocity.
 
@@ -221,8 +232,8 @@ void PhysicsComp::updateVelocityFromNetForce(const time_ms duration) {
   this->velocity = calculateVelocity(duration, this->velocity);
 }
 
-shared_ptr<CollisionResult> PhysicsComp::resolveElasticCollision(
-    shared_ptr<PhysicsComp> collisionTarget, const CollisionAxes axes,
+shared_ptr<CollisionResult> PhysicsComponent::resolveElasticCollision(
+    shared_ptr<PhysicsComponent> collisionTarget, const CollisionAxes axes,
     const bool applyResultToUs, const bool applyResultToThem) {
   // Resolve a collision that has occurred betwen us and another physics-enabled
   // object. The collision is elastic, so kinetic energy and momentum will be

@@ -13,7 +13,7 @@ CC_COMPILER:=clang++
 CC_FLAGS :=-std=c++20 -g
 WARNINGS :=# -Weverything -Werror
 IGNORE := -Wno-c++98-compat
-INCLUDE := -I src/include -I src/managers/include -I src/components/include -I src/wads/include -I src/3rdparty/include
+INCLUDE := -I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/physics/include  -I src/wads/include 
 TEST_INCLUDE := $(INCLUDE) -I src/test/include
 LINK := -lSDL2 -lSDL2_image
 TEST_LINK := $(LINK) -lgtest_main -lgtest -lgmock 

@@ -8,18 +8,18 @@
 #include "Math.hh"
 #include "Memory.hh"
 #include "PhysicsHelpers.hh"
-#include "PhysicsMgr.hh"
+#include "PhysicsManager.hh"
 #include "PositionComp.hh"
 #include "Types.hh"
 
 /*
-PhysicsComp is a Component class that implements all physics-related behavior.
-It knows about stuff like mass, velocity, and acceleration, and how to translate
-that into movement of the actual GameObject it represets via calls to a
-PositionComp. PhysicsComps only know about other PhysicsComps and the
+PhysicsComponent is a Component class that implements all physics-related
+behavior. It knows about stuff like mass, velocity, and acceleration, and how to
+translate that into movement of the actual GameObject it represets via calls to
+a PositionComp. PhysicsComps only know about other PhysicsComps and the
 PhysicsManager; they don't know anything about the GameObject they belong to,
-and have no way to figure out which GameObject another PhysicsComp belongs to.
-This is intentional and to prevent circular / messy dependencies.
+and have no way to figure out which GameObject another PhysicsComponent belongs
+to. This is intentional and to prevent circular / messy dependencies.
 
 Any GameObject can have a physics component; if it does, it must be registered
 with the global PhysicsManager for PhysicsBehavior to occur.
@@ -30,24 +30,24 @@ PhysicsManager and get the answer in the form of a collection of other
 PhysicsComps. The PhysicsManager can then be asked to translate these
 PhysicsComps into GameObjects. We should leverage polymorphism to pass a
 (pointer to an) empty collection of (pointers to) GameObjects from the
-GameObject to its PhysicsComp without PhysicsComp knowing about its contents,
-and have PhysicsComp pass that to PhysicsManager when translating PhysicsComps
-into GameObjects; this way PhysicsComp doesn't need to know anything about
-GameObjects and GameObject doesn't know about the PhysicsManager.
+GameObject to its PhysicsComponent without PhysicsComponent knowing about its
+contents, and have PhysicsComponent pass that to PhysicsManager when translating
+PhysicsComps into GameObjects; this way PhysicsComponent doesn't need to know
+anything about GameObjects and GameObject doesn't know about the PhysicsManager.
 */
 
 // Forward decls
-class PhysicsMgr;
+class PhysicsManager;
 class GameObject;
 
-class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
+class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
  public:
   // ctors / dtors
-  PhysicsComp(const shared_ptr<PositionComp> positionComp,
-              const shared_ptr<BoundingBoxParams> BoundingBoxParams = nullptr,
-              const bool collisionsSetting = false,
-              const bool gravitySetting = false);
-  shared_ptr<PhysicsComp> getptr();
+  PhysicsComponent(
+      const shared_ptr<PositionComp> positionComp,
+      const shared_ptr<BoundingBoxParams> BoundingBoxParams = nullptr,
+      const bool collisionsSetting = false, const bool gravitySetting = false);
+  shared_ptr<PhysicsComponent> getptr();
 
   // Attribute getter/setters
   bool isForceResponsive() const;
@@ -70,10 +70,10 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   void setSurfaceDragCoeff(real coeff);
 
   // Owned object getter/setters
-  shared_ptr<PhysicsMgr> getManager() const;
-  void setManager(const shared_ptr<PhysicsMgr> manager);
+  shared_ptr<PhysicsManager> getManager() const;
+  void setManager(const shared_ptr<PhysicsManager> manager);
   // TODO: Do we want to use dep injection for bounding boxes?
-  // Seems like we should have PhysicsComp construct them since
+  // Seems like we should have PhysicsComponent construct them since
   // they need to know its center.
   shared_ptr<BoundingBoxParams> getBoundingBoxParams() const;
   void setBoundingBoxParams(const shared_ptr<BoundingBoxParams> params);
@@ -97,7 +97,7 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   bool isMidair() const { return false; }
   bool isMoving() const;
   bool isColliding() const;
-  bool checkCollision(const shared_ptr<PhysicsComp> comp) const;
+  bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
   void integrate(const time_ms duration);
 
   shared_ptr<CollisionObjects> getCollisionObjects();
@@ -109,7 +109,7 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   // a callback that returns shared_ptr<GameObject> to the parent?
   // Alternatively, maybe the PhysicsManager should manage the relationships
   // between components and their parents and support turning a list of
-  // PhysicsComp into GameObjects?
+  // PhysicsComponent into GameObjects?
 
  private:
   // Attributes
@@ -133,13 +133,13 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   shared_ptr<BoundingBoxParams> boundingBoxParams;
 
   // References
-  shared_ptr<PhysicsMgr> manager;
+  shared_ptr<PhysicsManager> manager;
 
   // Other functionality
   void updateVelocityFromNetForce(const time_ms duration);
   void attemptMove(const shared_ptr<Vect2D> moveDistance);
   shared_ptr<CollisionResult> resolveElasticCollision(
-      shared_ptr<PhysicsComp> collisionTarget, const CollisionAxes type,
+      shared_ptr<PhysicsComponent> collisionTarget, const CollisionAxes type,
       const bool applyResultToUs, const bool applyResultToThem);
   shared_ptr<Vect2D> calculateGravityForce() const;
 };

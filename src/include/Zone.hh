@@ -8,7 +8,7 @@
 #include "GameObject.hh"
 #include "Logger.hh"
 #include "Memory.hh"
-#include "PhysicsMgr.hh"
+#include "PhysicsManager.hh"
 #include "Platform.hh"
 #include "PositionComp.hh"
 #include "Texture.hh"
@@ -37,7 +37,7 @@ class Zone {
   // since only currentZone will have active GameObjects. Additionally, physics
   // might differ based on zone (underwater, outer space, cyberspace, etc)
   AIMgr aiMgr;
-  shared_ptr<PhysicsMgr> physicsMgr;
+  shared_ptr<PhysicsManager> physicsMgr;
   shared_ptr<GameObjectSPtrCollection> gameObjects;
   BackgroundSPtr background;
   CharacterSPtr player;

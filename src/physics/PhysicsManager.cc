@@ -1,13 +1,13 @@
-#include "PhysicsMgr.hh"
+#include "PhysicsManager.hh"
 
 #include <algorithm>
 
-PhysicsMgr::PhysicsMgr() {
-  this->managedComponents = shared_ptr<std::set<shared_ptr<PhysicsComp>>>(
-      new std::set<shared_ptr<PhysicsComp>>());
+PhysicsManager::PhysicsManager() {
+  this->managedComponents = shared_ptr<std::set<shared_ptr<PhysicsComponent>>>(
+      new std::set<shared_ptr<PhysicsComponent>>());
 }
 
-std::shared_ptr<PhysicsMgr> PhysicsMgr::getptr() {
+std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
   // TODO: This is dangerous and leads to undefined behavior if no other
   // shared pointers to this object exist; it would be best to force
   // any construction to return a shared pointer, but that might not be
@@ -16,7 +16,7 @@ std::shared_ptr<PhysicsMgr> PhysicsMgr::getptr() {
   return this->shared_from_this();
 }
 
-void PhysicsMgr::manageComponent(const shared_ptr<PhysicsComp> component) {
+void PhysicsManager::manageComponent(const shared_ptr<PhysicsComponent> component) {
   if (component->getManager() != nullptr) {
     // TODO: Log a warning
     return;
@@ -24,7 +24,8 @@ void PhysicsMgr::manageComponent(const shared_ptr<PhysicsComp> component) {
   component->setManager(this->getptr());
   this->managedComponents->insert(component);
 }
-void PhysicsMgr::unmanageComponent(const shared_ptr<PhysicsComp> component) {
+void PhysicsManager::unmanageComponent(
+    const shared_ptr<PhysicsComponent> component) {
   if (component->getManager() != this->getptr()) {
     // TODO: Log a warning
     return;
@@ -33,12 +34,12 @@ void PhysicsMgr::unmanageComponent(const shared_ptr<PhysicsComp> component) {
   this->managedComponents->erase(component);
 }
 
-shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(
-    shared_ptr<PhysicsComp> component) {
-  shared_ptr<vector<shared_ptr<PhysicsComp>>> collided =
-      shared_ptr<vector<shared_ptr<PhysicsComp>>>(
-          new vector<shared_ptr<PhysicsComp>>());
-  for (shared_ptr<PhysicsComp> other : *(this->managedComponents)) {
+shared_ptr<vector<shared_ptr<PhysicsComponent>>> PhysicsManager::getAllColliding(
+    shared_ptr<PhysicsComponent> component) {
+  shared_ptr<vector<shared_ptr<PhysicsComponent>>> collided =
+      shared_ptr<vector<shared_ptr<PhysicsComponent>>>(
+          new vector<shared_ptr<PhysicsComponent>>());
+  for (shared_ptr<PhysicsComponent> other : *(this->managedComponents)) {
     if (other != component && component->isColliding(other)) {
       collided->push_back(other);
     }
@@ -46,8 +47,8 @@ shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(
   return collided;
 }
 
-void PhysicsMgr::updateManagedComponents(const time_ms duration) {
-  for (shared_ptr<PhysicsComp> comp : *(this->managedComponents)) {
+void PhysicsManager::updateManagedComponents(const time_ms duration) {
+  for (shared_ptr<PhysicsComponent> comp : *(this->managedComponents)) {
     // TODO: applying gravity here is messy and should be done elsewhere;
     // this will just get it done for the initial MVP.
     comp->integrate(duration);

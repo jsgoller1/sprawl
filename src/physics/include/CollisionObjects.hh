@@ -3,7 +3,7 @@
 #include <set>
 
 #include "Memory.hh"
-#include "PhysicsComp.hh"
+#include "PhysicsComponent.hh"
 
 class CollisionObjects {
  public:
@@ -13,7 +13,7 @@ class CollisionObjects {
   // TODO: This is bad an leaks implementation details (about the fact that
   // CollisionObjects are implemented with sets); we should support a begin()
   // and end() method instead.
-  shared_ptr<std::set<shared_ptr<PhysicsComp>>> getAll() const {
+  shared_ptr<std::set<shared_ptr<PhysicsComponent>>> getAll() const {
     return this->objects;
   }
 
@@ -23,7 +23,7 @@ class CollisionObjects {
       shared_ptr<CollisionObjects> otherObjects);
 
  private:
-  shared_ptr<std::set<shared_ptr<PhysicsComp>>> objects;
+  shared_ptr<std::set<shared_ptr<PhysicsComponent>>> objects;
 };
 
 typedef std::pair<shared_ptr<Vect2D>, shared_ptr<Vect2D>> CollisionResult;
