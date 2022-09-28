@@ -14,20 +14,20 @@ CC_FLAGS :=-std=c++20 -g
 WARNINGS :=# -Weverything -Werror
 IGNORE := -Wno-c++98-compat
 INCLUDE := -I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/physics/include  -I src/wads/include 
-TEST_INCLUDE := $(INCLUDE) -I src/test/include
 LINK := -lSDL2 -lSDL2_image
-TEST_LINK := $(LINK) -lgtest_main -lgtest -lgmock 
 CLANG_LINKER_ARGS := -Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
 SOURCE := src/*.cc src/components/*.cc src/managers/*.cc src/wads/*.cc
-MAIN_SOURCE := $(SOURCE) src/main/*.cc
-TEST_SOURCE := $(SOURCE) src/test/*.cc
-OUTFILE := $(BIN_DIR)/neon-rain
-OUTPUT := -o $(OUTFILE)
-CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(CLANG_LINKER_ARGS) $(OUTPUT)
-MAIN_COMPILE := $(CC_COMPILE) $(INCLUDE) $(LINK) $(MAIN_SOURCE)
-TEST_COMPILE := $(CC_COMPILE) $(TEST_INCLUDE) $(TEST_LINK) $(TEST_SOURCE)
+CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(CLANG_LINKER_ARGS) 
 
-SCREEN_RECORD := byzanz-record -d 3 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
+MAIN_SOURCE := $(SOURCE) src/main/*.cc
+MAIN_OUTPUT := -o $(BIN_DIR)/neon-rain
+MAIN_COMPILE := $(CC_COMPILE) $(MAIN_OUTPUT) $(INCLUDE) $(LINK) $(MAIN_SOURCE)
+
+TEST_INCLUDE := $(INCLUDE) -I src/test/include
+TEST_LINK := $(LINK) -lgtest_main -lgtest -lgmock 
+TEST_SOURCE := $(SOURCE) src/test/*.cc
+TEST_OUTPUT := -o $(BIN_DIR)/neon-rain
+TEST_COMPILE := $(CC_COMPILE) $(TEST_OUTPUT) $(TEST_INCLUDE) $(TEST_LINK) $(TEST_SOURCE)
 
 all: clean
 	$(MAIN_COMPILE)
@@ -40,7 +40,7 @@ clean:
 	-mkdir $(BIN_DIR)
 
 record:
-	$(SCREEN_RECORD)
+	byzanz-record -d 3 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
 
 install-devtools:
 	apt-get -qq install -y \
