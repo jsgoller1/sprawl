@@ -6,6 +6,8 @@
 #include "CombatComp.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
+#include "Logger.hh"
+#include "Math.hh"
 #include "Memory.hh"
 #include "PositionComp.hh"
 #include "Types.hh"
@@ -28,8 +30,17 @@ class Character : public GameObject {
  private:
   AICompSPtr aiCompSPtr;
   CombatCompSPtr combatCompSPtr;
-  shared_ptr<Vect2D> moveSpeed;
-  JumpCount jumpCount;
+
+  // TOOD: Is there a way we can ensure all GameObject descendants have a
+  // PhysicsComponent by default, but can override it with a child of
+  // PhysicsComponent if they want without having to redeclare the attribute as
+  // the new child type? Doing this feels dangerous, because we could
+  // accidentally wind up with two physics components on an object (e.g. if I
+  // subtly rename one). We do want GameObjects to have a PhysicsComp, so we
+  // shouldn't move its declaration to the base class.
+  shared_ptr<CharacterPhysicsComponent> physicsComp;
+
+  bool canDoubleJump;
 };
 
 typedef shared_ptr<Character> CharacterSPtr;

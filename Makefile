@@ -11,7 +11,7 @@ BIN_DIR := $(shell pwd)/bin
 ### Compiler settings for C++
 CC_COMPILER:=clang++
 CC_FLAGS :=-std=c++20 -g
-WARNINGS :=# -Weverything -Werror
+WARNINGS := -Weverything -Werror
 IGNORE := -Wno-c++98-compat
 INCLUDE := -I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/physics/include  -I src/wads/include 
 LINK := -lSDL2 -lSDL2_image

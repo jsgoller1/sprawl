@@ -58,6 +58,9 @@ bool neq(const real& real1, const real& real2);
 bool lte(const real& real1, const real& real2);
 bool gte(const real& real1, const real& real2);
 
+#define MAX(x, y) ((x < y) ? y : x)
+#define MIN(x, y) ((x > y) ? y : x)
+
 bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
                           const PositionUnit low2, const PositionUnit hi2);
 
@@ -104,15 +107,33 @@ class Vect2D {
 
 class Direction {
  public:
-  static Direction None() { return Direction(0.0, 0.0); }
-  static Direction Up() { return Direction(0.0, -1.0); }
-  static Direction Down() { return Direction(0.0, 1.0); }
-  static Direction Left() { return Direction(-1.0, 0.0); }
-  static Direction Right() { return Direction(-1.0, 0.0); }
-  static Direction LeftUp() { return Direction(-1.0, -1.0); }
-  static Direction RightUp() { return Direction(1.0, -1.0); }
-  static Direction LeftDown() { return Direction(-1.0, 1.0); }
-  static Direction RightDown() { return Direction(1.0, 1.0); }
+  static shared_ptr<Direction> None() {
+    return shared_ptr<Direction>(new Direction(0.0, 0.0));
+  }
+  static shared_ptr<Direction> Up() {
+    return shared_ptr<Direction>(new Direction(0.0, -1.0));
+  }
+  static shared_ptr<Direction> Down() {
+    return shared_ptr<Direction>(new Direction(0.0, 1.0));
+  }
+  static shared_ptr<Direction> Left() {
+    return shared_ptr<Direction>(new Direction(-1.0, 0.0));
+  }
+  static shared_ptr<Direction> Right() {
+    return shared_ptr<Direction>(new Direction(-1.0, 0.0));
+  }
+  static shared_ptr<Direction> LeftUp() {
+    return shared_ptr<Direction>(new Direction(-1.0, -1.0));
+  }
+  static shared_ptr<Direction> RightUp() {
+    return shared_ptr<Direction>(new Direction(1.0, -1.0));
+  }
+  static shared_ptr<Direction> LeftDown() {
+    return shared_ptr<Direction>(new Direction(-1.0, 1.0));
+  }
+  static shared_ptr<Direction> RightDown() {
+    return shared_ptr<Direction>(new Direction(1.0, 1.0));
+  }
 
  private:
   explicit Direction(int x, int y) : x(x), y(y){};

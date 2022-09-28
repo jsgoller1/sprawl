@@ -7,7 +7,14 @@ that has character-related physics functionality.
 
 class CharacterPhysicsComponent : public PhysicsComponent {
  public:
-  CharacterPhysicsComponent();
+  CharacterPhysicsComponent(
+      const shared_ptr<PositionComp> positionComp,
+      const shared_ptr<BoundingBoxParams> boundingBoxParams = nullptr,
+      const bool collisionsSetting = false, const bool gravitySetting = false);
   void applyJumpForce();
   void applyMovementForce(const shared_ptr<Direction> direction);
+
+ private:
+  PositionUnit jumpSpeed;
+  PositionUnit moveSpeed;
 };

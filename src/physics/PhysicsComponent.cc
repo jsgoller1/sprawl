@@ -245,5 +245,3 @@ shared_ptr<CollisionResult> PhysicsComponent::resolveElasticCollision(
   // or not, return a (pointer to a) pair of forces where pair->first is their
   // force on us, and pair->second is our force on them.
 }
-
-void applyMovementForce(const shared_ptr<Direction> direction) {}

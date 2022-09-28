@@ -64,6 +64,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<Vect2D> getNetForce() const;
   shared_ptr<Vect2D> getVelocity() const;
   shared_ptr<Vect2D> getAcceleration() const;
+  real getCurrentDragCoeff() const;
   real getAirDragCoeff() const;
   void setAirDragCoeff(real coeff);
   real getSurfaceDragCoeff() const;
@@ -106,7 +107,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   // between components and their parents and support turning a list of
   // PhysicsComponent into GameObjects?
 
- private:
+ protected:
   // Attributes
   bool forceResponsive;
   bool collisionsEnabled;

@@ -9,6 +9,7 @@
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/src/components/include",
                 "${workspaceFolder}/src/managers/include",
+                "${workspaceFolder}/src/physics/include",
                 "${workspaceFolder}/src/test/include",
                 "${workspaceFolder}/src/wads/include"
             ],
