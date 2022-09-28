@@ -37,7 +37,7 @@ actual performance problem.
 programmatically enforce this unless we implement real as a class, which feels
 like overkill.
 - If something _isn't_ a real (e.g. arr index) or can be more simply handled as
-an integer (timestamp), it gets its own type via a class def or typedef. No
+an integer (time_ms), it gets its own type via a class def or typedef. No
 'naked ints' or inline int values. The idea here is to make types more explicit
 and catch accidental conversion as easily as possible.
 - Conversion of reals to ints for SDL's sake (screen coordinates, texture sizes,
@@ -49,7 +49,6 @@ etc) must happen as close to the SDL boundary as possible.
 // - CS:APP (Bryant et al), sec 3.11
 // - https://floating-point-gui.de/errors/comparison/
 typedef double real;
-typedef real time;
 typedef real PositionUnit;
 typedef PositionUnit YCoord;
 typedef PositionUnit XCoord;
@@ -85,7 +84,7 @@ class Vect2D {
   void addScaledVector(const Vect2D& vect, const int scalar) {
     this->addScaledVector(vect, float(scalar));
   };
-  void addScaledVector(const Vect2D& vect, const time scalar) {
+  void addScaledVector(const Vect2D& vect, const time_ms scalar) {
     this->addScaledVector(vect, float(scalar));
   };
 

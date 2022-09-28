@@ -3,6 +3,7 @@
 #include "DrawingComp.hh"
 #include "GameAction.hh"
 #include "Memory.hh"
+#include "Time.hh"
 #include "Types.hh"
 #include "WADLoader.hh"
 #include "Zone.hh"
@@ -18,7 +19,7 @@ class World {
   World()
       : World(shared_ptr<FilePath>(new FilePath("./assets/wads/mvp.json"))){};
   World(const shared_ptr<FilePath> wadPath);
-  void update(const GameAction& action);
+  void update(const GameAction& action, const time_ms duration);
   DrawingCompSPtrCollectionSPtr getDrawables();
   // TODO: serialize(); // needed for saving game and level editor
 

@@ -46,27 +46,10 @@ shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(
   return collided;
 }
 
-void PhysicsMgr::applyVelocity(shared_ptr<PhysicsComp> comp) {
-  // Attempt to move each point according to its current velocity.
-  // If it winds up colliding with something, undo the movement,
-  // and set its velocity to 0.
-  shared_ptr<Vect2D> velocity = comp->getVelocity();
-  comp->move(velocity);
-  if (comp->isColliding()) {
-    // TODO: Since we don't have to do any redrawing, we can try a strategy
-    // where we attempt to move half as far as we would have, then half of
-    // that, etc until the movement is less than 1 pixel; this should fix the
-    // "forcefield" problem.
-    comp->move(
-        shared_ptr<Vect2D>(new Vect2D{.x = -velocity->x, .y = -velocity->y}));
-    comp->setVelocity(shared_ptr<Vect2D>(new Vect2D{.x = 0, .y = 0}));
-  }
-}
-void PhysicsMgr::applyVelocityAll() {
+void PhysicsMgr::updateManagedComponents(const time_ms duration) {
   for (shared_ptr<PhysicsComp> comp : *(this->managedComponents)) {
     // TODO: applying gravity here is messy and should be done elsewhere;
     // this will just get it done for the initial MVP.
-    this->applyGravity(comp);
-    this->applyVelocity(comp);
+    comp->integrate(duration);
   }
 }

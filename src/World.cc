@@ -5,8 +5,8 @@ World::World(const shared_ptr<FilePath> wadPath) {
   this->currentZone = wadLoader->zoneFromWAD(wadPath);
 }
 
-void World::update(const GameAction& action) {
-  this->currentZone->update(action);
+void World::update(const GameAction& action, const time_ms duration) {
+  this->currentZone->update(action, duration);
 }
 
 DrawingCompSPtrCollectionSPtr World::getDrawables() {

@@ -7,6 +7,7 @@
 #include "GameObject.hh"
 #include "Math.hh"
 #include "Memory.hh"
+#include "PhysicsHelpers.hh"
 #include "PhysicsMgr.hh"
 #include "PositionComp.hh"
 #include "Types.hh"
@@ -88,10 +89,16 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   // Unique/Purpose-related functionality
   shared_ptr<BoundingBox> getBoundingBox() const;
   void applyForce(const shared_ptr<const Vect2D> force);
+  void applyMovementForce(const shared_ptr<Direction> direction);
+  // TODO: Not everything that uses a PhysicsComponent will need to
+  // jump, so we might want to subclass something like CharacterPhysicsComponent
+  // from PhysicsComponent and move this method there.
+  void applyJumpForce();
+  bool isMidair() const { return false; }
   bool isMoving() const;
   bool isColliding() const;
   bool checkCollision(const shared_ptr<PhysicsComp> comp) const;
-  void integrate(const time duration);
+  void integrate(const time_ms duration);
 
   shared_ptr<CollisionObjects> getCollisionObjects();
   // TODO: I _really_ don't want to have references to the parent object
@@ -109,8 +116,8 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   bool forceResponsive;
   bool collisionsEnabled;
   bool gravityEnabled;
-  real airDragCoeff;
-  real surfaceDragCoeff;
+  real airDragCoeff = 0.2;
+  real surfaceDragCoeff = 0.4;
   // TODO: Do we want to define a custom force type, or is it
   // ok to use just a Vect2D?
   shared_ptr<Vect2D> netForce;
@@ -129,11 +136,10 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   shared_ptr<PhysicsMgr> manager;
 
   // Other functionality
-  void attemptMove(const time duration);
+  void updateVelocityFromNetForce(const time_ms duration);
+  void attemptMove(const shared_ptr<Vect2D> moveDistance);
   shared_ptr<CollisionResult> resolveElasticCollision(
       shared_ptr<PhysicsComp> collisionTarget, const CollisionAxes type,
       const bool applyResultToUs, const bool applyResultToThem);
-  shared_ptr<Vect2D> calculateAirDragForce() const;
-  shared_ptr<Vect2D> calculateSurfaceDragForce() const;
   shared_ptr<Vect2D> calculateGravityForce() const;
 };

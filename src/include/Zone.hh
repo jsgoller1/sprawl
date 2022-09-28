@@ -12,6 +12,7 @@
 #include "Platform.hh"
 #include "PositionComp.hh"
 #include "Texture.hh"
+#include "Time.hh"
 #include "Types.hh"
 
 // Forward declaration
@@ -25,7 +26,7 @@ class Zone {
 
  public:
   // TODO: serialize(); // needed for saving game and level editor
-  void update(const GameAction& action);
+  void update(const GameAction& action, const time_ms duration);
   void load(const FilePathSPtr zoneWADDirSPtr);
   void setBackground(const FilePathSPtr backgroundPath);
   DrawingCompSPtrCollectionSPtr getDrawables();

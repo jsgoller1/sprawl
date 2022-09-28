@@ -4,6 +4,7 @@
 
 #include "Memory.hh"
 #include "PhysicsComp.hh"
+#include "Time.hh"
 
 /*
 The PhysicsManager class handles interactions between PhysicsComp objects. Like
@@ -26,7 +27,7 @@ class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
   std::shared_ptr<PhysicsMgr> getptr();
 
  public:
-  void updateManagedComponents();
+  void updateManagedComponents(const time_ms duration);
   shared_ptr<vector<shared_ptr<PhysicsComp>>> getAllColliding(
       shared_ptr<PhysicsComp> component);
   void manageComponent(const shared_ptr<PhysicsComp> component);

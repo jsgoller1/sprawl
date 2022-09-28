@@ -12,9 +12,9 @@ Zone::Zone() {
 
 void Zone::load(const FilePathSPtr zoneWADDirSPtr) {}
 
-void Zone::update(const GameAction& action) {
+void Zone::update(const GameAction& action, const time_ms duration) {
   this->handleInput(action);
-  this->physicsMgr->applyVelocityAll();
+  this->physicsMgr->updateManagedComponents(duration);
 }
 
 void Zone::handleInput(const GameAction& action) {
