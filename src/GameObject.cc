@@ -1,10 +1,10 @@
 #include "GameObject.hh"
 
-GameObject::GameObject(const shared_ptr<Vect2D> center,
-                       const GameObjectNameSPtr name,
-                       const shared_ptr<PhysicsComponent> physicsComp,
-                       const FilePathSPtr texturePath,
-                       const DrawingCompSPtr drawingComp) {
+void GameObject::init(const shared_ptr<Vect2D> center,
+                      const GameObjectNameSPtr name,
+                      const shared_ptr<PhysicsComponent> physicsComp,
+                      const FilePathSPtr texturePath,
+                      const DrawingCompSPtr drawingComp) {
   this->positionComp = shared_ptr<PositionComp>(new PositionComp(center));
   this->name = name;
   this->physicsComp = (physicsComp == nullptr)
@@ -17,6 +17,21 @@ GameObject::GameObject(const shared_ptr<Vect2D> center,
   if (texturePath != nullptr) {
     this->drawingComp->setTexture(TextureSPtr(new Texture(texturePath)));
   }
+}
+GameObject::GameObject(const shared_ptr<Vect2D> center,
+                       const GameObjectNameSPtr name,
+                       const shared_ptr<PhysicsComponent> physicsComp,
+                       const FilePathSPtr texturePath,
+                       const DrawingCompSPtr drawingComp) {
+  this->init(center, name, physicsComp, texturePath, drawingComp);
+}
+
+GameObject::GameObject(const shared_ptr<Vect2D> center,
+                       const GameObjectNameSPtr name,
+                       const FilePathSPtr texturePath,
+                       const DrawingCompSPtr drawingComp) {
+  shared_ptr<PhysicsComponent> physicsComp = nullptr;
+  this->init(center, name, physicsComp, texturePath, drawingComp);
 }
 
 DrawingCompSPtr GameObject::getDrawingComponent() { return this->drawingComp; }

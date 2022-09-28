@@ -27,10 +27,20 @@ class GameObject {
              const FilePathSPtr texturePath = nullptr,
              const DrawingCompSPtr drawingComp = nullptr);
 
+  GameObject(const shared_ptr<Vect2D> center,
+             const GameObjectNameSPtr name = nullptr,
+             const FilePathSPtr texturePath = nullptr,
+             const DrawingCompSPtr drawingComp = nullptr);
+
   GameObjectNameSPtr name;
   shared_ptr<PositionComp> positionComp;
   DrawingCompSPtr drawingComp;
   shared_ptr<PhysicsComponent> physicsComp;
+
+ private:
+  void init(const shared_ptr<Vect2D> center, const GameObjectNameSPtr name,
+            const shared_ptr<PhysicsComponent> physicsComp,
+            const FilePathSPtr texturePath, const DrawingCompSPtr drawingComp);
 };
 
 typedef shared_ptr<GameObject> GameObjectSPtr;

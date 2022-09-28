@@ -4,12 +4,16 @@
 
 Character::Character(const shared_ptr<Vect2D> center,
                      const GameObjectNameSPtr name,
-                     const shared_ptr<PhysicsComponent> physicsComp,
+                     const shared_ptr<CharacterPhysicsComponent> physicsComp,
                      const FilePathSPtr texturePath,
                      const DrawingCompSPtr drawingComp)
-    : GameObject(center, name, physicsComp, texturePath, drawingComp) {
+    : GameObject(center, name, texturePath, drawingComp) {
   this->moveSpeed = shared_ptr<Vect2D>(new Vect2D{.x = 150, .y = 150});
   this->jumpCount = 0;
+  this->physicsComp = (physicsComp == nullptr)
+                          ? shared_ptr<CharacterPhysicsComponent>(
+                                new CharacterPhysicsComponent())
+                          : physicsComp;
   this->physicsComp->enableGravity(true);
 }
 

@@ -89,11 +89,6 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   // Unique/Purpose-related functionality
   shared_ptr<BoundingBox> getBoundingBox() const;
   void applyForce(const shared_ptr<const Vect2D> force);
-  void applyMovementForce(const shared_ptr<Direction> direction);
-  // TODO: Not everything that uses a PhysicsComponent will need to
-  // jump, so we might want to subclass something like CharacterPhysicsComponent
-  // from PhysicsComponent and move this method there.
-  void applyJumpForce();
   bool isMidair() const { return false; }
   bool isMoving() const;
   bool isColliding() const;

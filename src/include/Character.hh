@@ -2,11 +2,11 @@
 #pragma once
 
 #include "AIComp.hh"
+#include "CharacterPhysicsComponent.hh"
 #include "CombatComp.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
 #include "Memory.hh"
-#include "PhysicsComponent.hh"
 #include "PositionComp.hh"
 #include "Types.hh"
 
@@ -17,7 +17,7 @@ class Character : public GameObject {
  public:
   Character(const shared_ptr<Vect2D> center,
             const GameObjectNameSPtr name = nullptr,
-            const shared_ptr<PhysicsComponent> physicsComp = nullptr,
+            const shared_ptr<CharacterPhysicsComponent> physicsComp = nullptr,
             const FilePathSPtr texturePath = nullptr,
             const DrawingCompSPtr drawingComp = nullptr);
   void shoot();
