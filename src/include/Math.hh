@@ -44,15 +44,8 @@ and catch accidental conversion as easily as possible.
 etc) must happen as close to the SDL boundary as possible.
 
 */
-// TODO: Floating point comparison is hard; here, we're just doing
-// a margin-of-error test and calling it a day. Followups:
-// - CS:APP (Bryant et al), sec 3.11
-// - https://floating-point-gui.de/errors/comparison/
-typedef double real;
-typedef real PositionUnit;
-typedef PositionUnit YCoord;
-typedef PositionUnit XCoord;
 
+#define FLOAT_EQ_ACCEPTABLE_MARGIN_OF_ERROR 0.00000001
 bool eq(const real& real1, const real& real2);
 bool neq(const real& real1, const real& real2);
 bool lte(const real& real1, const real& real2);
@@ -70,7 +63,6 @@ class Vect2D {
   Vect2D(XCoord x, YCoord y);
   Vect2D(const Vect2D& vect);
   Vect2D(shared_ptr<Vect2D> vect);
-  ~Vect2D();
   XCoord x;
   YCoord y;
 
@@ -85,11 +77,11 @@ class Vect2D {
 
   void addScaledVector(const Vect2D& vect, const real scalar);
   void addScaledVector(const Vect2D& vect, const int scalar) {
-    this->addScaledVector(vect, float(scalar));
-  };
+    this->addScaledVector(vect, real(scalar));
+  }
   void addScaledVector(const Vect2D& vect, const time_ms scalar) {
-    this->addScaledVector(vect, float(scalar));
-  };
+    this->addScaledVector(vect, real(scalar));
+  }
 
   void getDirection();
   void getMagnitude();
@@ -134,11 +126,18 @@ class Direction {
   static shared_ptr<Direction> RightDown() {
     return shared_ptr<Direction>(new Direction(1.0, 1.0));
   }
+  bool operator==(const Direction& other) const;
 
  private:
-  explicit Direction(int x, int y) : x(x), y(y){};
+  explicit Direction(XCoord x, XCoord y) : x(x), y(y) {}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-private-field"
+  // These fields are in fact used, we just never access them directly; we are
+  // using static methods to treat various values for Direction as constants.
+  // See Effective C++, item 18 for details.
   XCoord x;
   YCoord y;
+#pragma clang diagnostic pop
 };
 
 /*

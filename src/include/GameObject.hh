@@ -18,7 +18,6 @@ class GameObject {
  public:
   DrawingCompSPtr getDrawingComponent();
   shared_ptr<PhysicsComponent> getPhysicsComponent();
-  void inferBoundingBoxFromTexture();
 
  protected:
   GameObject(const shared_ptr<Vect2D> center,

@@ -2,25 +2,28 @@
 #include <algorithm>
 #include <set>
 
+#include "Math.hh"
 #include "Memory.hh"
-#include "PhysicsComponent.hh"
 
-class CollisionObjects {
+// Forward decls
+class PhysicsComponent;
+
+class CollidingPhysicsComponents {
  public:
   void add();
   void remove();
   bool contains();
   // TODO: This is bad an leaks implementation details (about the fact that
-  // CollisionObjects are implemented with sets); we should support a begin()
-  // and end() method instead.
+  // CollidingPhysicsComponents are implemented with sets); we should support a
+  // begin() and end() method instead.
   shared_ptr<std::set<shared_ptr<PhysicsComponent>>> getAll() const {
     return this->objects;
   }
 
-  shared_ptr<CollisionObjects> getMerged(
-      shared_ptr<CollisionObjects> otherObjects);
-  shared_ptr<CollisionObjects> getRemoved(
-      shared_ptr<CollisionObjects> otherObjects);
+  shared_ptr<CollidingPhysicsComponents> getMerged(
+      shared_ptr<CollidingPhysicsComponents> otherObjects);
+  shared_ptr<CollidingPhysicsComponents> getRemoved(
+      shared_ptr<CollidingPhysicsComponents> otherObjects);
 
  private:
   shared_ptr<std::set<shared_ptr<PhysicsComponent>>> objects;

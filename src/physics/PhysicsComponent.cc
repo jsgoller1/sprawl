@@ -3,11 +3,15 @@
 PhysicsComponent::PhysicsComponent(
     const shared_ptr<PositionComp> positionComp,
     const shared_ptr<BoundingBoxParams> boundingBoxParams,
-    const bool collisionsSetting, const bool gravitySetting) {
+    const bool forceResponsiveSetting, const bool collisionsSetting,
+    const bool gravitySetting) {
   this->positionComp = positionComp;
   this->boundingBoxParams = boundingBoxParams;
+  this->forceResponsive = forceResponsiveSetting;
   this->gravityEnabled = gravitySetting;
   this->collisionsEnabled = collisionsSetting;
+  this->acceleration = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
+  this->netForce = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
   this->velocity = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
 }
 
@@ -38,6 +42,12 @@ shared_ptr<Vect2D> PhysicsComponent::getVelocity() const {
 shared_ptr<Vect2D> PhysicsComponent::getAcceleration() const {
   return this->acceleration;
 }
+real PhysicsComponent::getCurrentDragCoeff() const {
+  // TODO: Check what drag coefficient is appropriate for the situation, i.e. if
+  // we're in midair or not
+  return this->surfaceDragCoeff;
+};
+
 real PhysicsComponent::getAirDragCoeff() const { return this->airDragCoeff; };
 void PhysicsComponent::setAirDragCoeff(real coeff) {
   this->airDragCoeff = coeff;
@@ -63,7 +73,8 @@ void PhysicsComponent::setBoundingBoxParams(
 }
 
 shared_ptr<BoundingBox> PhysicsComponent::getBoundingBox() const {
-  return shared_ptr<BoundingBox>(new BoundingBox(this->boundingBoxParams));
+  return shared_ptr<BoundingBox>(new BoundingBox(
+      this->positionComp->getCenter(), this->boundingBoxParams));
 };
 
 void PhysicsComponent::applyForce(const shared_ptr<const Vect2D> force) {
@@ -79,10 +90,8 @@ bool PhysicsComponent::isMoving() const {
 
 bool PhysicsComponent::checkCollision(
     const shared_ptr<PhysicsComponent> comp) const {
-  shared_ptr<BoundingBox> usBox =
-      shared_ptr<BoundingBox>(new BoundingBox(this->boundingBoxParams));
-  shared_ptr<BoundingBox> themBox =
-      shared_ptr<BoundingBox>(new BoundingBox(comp->boundingBoxParams));
+  shared_ptr<BoundingBox> usBox = this->getBoundingBox();
+  shared_ptr<BoundingBox> themBox = comp->getBoundingBox();
   return usBox->checkCollision(themBox);
 }
 
@@ -141,6 +150,9 @@ void PhysicsComponent::integrate(const time_ms duration) {
   this->netForce = Vect2D::zero();
 }
 
+shared_ptr<CollidingPhysicsComponents> PhysicsComponent::getCollisionObjects() {
+}
+
 void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   // Attempt movement based on velocity based on
   // object's velocity over the duration;
@@ -154,18 +166,20 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   // things, one of which is closer.
 
   this->positionComp->moveOnlyX(moveDistance);
-  shared_ptr<CollisionObjects> xCollisions = this->getCollisionObjects();
+  shared_ptr<CollidingPhysicsComponents> xCollisions =
+      this->getCollisionObjects();
   this->positionComp->reverseMoveOnlyX(moveDistance);
 
   this->positionComp->moveOnlyY(moveDistance);
-  shared_ptr<CollisionObjects> yCollisions = this->getCollisionObjects();
+  shared_ptr<CollidingPhysicsComponents> yCollisions =
+      this->getCollisionObjects();
   this->positionComp->reverseMoveOnlyY(moveDistance);
 
-  shared_ptr<CollisionObjects> doubleCollisions =
+  shared_ptr<CollidingPhysicsComponents> doubleCollisions =
       xCollisions->getMerged(yCollisions);
-  shared_ptr<CollisionObjects> xOnlyCollisions =
+  shared_ptr<CollidingPhysicsComponents> xOnlyCollisions =
       xCollisions->getRemoved(yCollisions);
-  shared_ptr<CollisionObjects> yOnlyCollisions =
+  shared_ptr<CollidingPhysicsComponents> yOnlyCollisions =
       yCollisions->getRemoved(xCollisions);
 
   /*

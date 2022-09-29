@@ -3,6 +3,7 @@
 Texture::Texture(const FilePathSPtr path) {
   this->path = path;
   this->pixelData = IMG_Load(this->path.get()->c_str());
+  // TODO: Catch exception if image loading fails.
   this->height = this->pixelData->h;
   this->width = this->pixelData->w;
 };

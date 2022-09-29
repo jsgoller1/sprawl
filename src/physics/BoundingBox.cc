@@ -3,6 +3,19 @@
 #include "Math.hh"
 #include "Memory.hh"
 
+BoundingBox::BoundingBox(const shared_ptr<Vect2D> center,
+                         const shared_ptr<BoundingBoxParams> params) {
+  this->center = center;
+  this->height = params->height;
+  this->width = params->width;
+}
+BoundingBox::BoundingBox(const shared_ptr<Vect2D> center,
+                         const PositionUnit height, const PositionUnit width) {
+  this->center = center;
+  this->height = height;
+  this->width = width;
+}
+
 bool BoundingBox::checkCollision(const shared_ptr<BoundingBox> otherBox) {
   // TODO: SDL implements several functions and types we can use
   // for collision detection; this works fine for now.

@@ -1,6 +1,6 @@
 ### General vars
-SHELL :=/bin/bash
-BIN_DIR := $(shell pwd)/bin
+SHELL:=/bin/bash
+BIN_DIR:=$(shell pwd)/bin
 
 ### Uncomment this to run Clang's static analyzer while building; this makes the build slower.
 #ANALYZER:=scan-build --status-bugs
@@ -10,28 +10,43 @@ BIN_DIR := $(shell pwd)/bin
 
 ### Compiler settings for C++
 CC_COMPILER:=clang++
-CC_FLAGS :=-std=c++20 -g
-WARNINGS := -Weverything -Werror
-IGNORE := -Wno-c++98-compat
-INCLUDE := -I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/physics/include  -I src/wads/include 
-LINK := -lSDL2 -lSDL2_image
-CLANG_LINKER_ARGS := -Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
-SOURCE := src/*.cc src/components/*.cc src/managers/*.cc src/wads/*.cc
-CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORE) $(CLANG_LINKER_ARGS) 
+CC_FLAGS:=-std=c++20 -g
+WARNINGS:=-Weverything -Werror
+INCLUDE:=-I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/physics/include  -I src/wads/include 
+LINK:=-lSDL2 -lSDL2_image
+CLANG_LINKER_ARGS:=-Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
+SOURCE:=src/*.cc src/components/*.cc src/managers/*.cc src/physics/*.cc src/wads/*.cc
+#### Warnings we ignore, with explanations
+ # Don't care about C++98 backwards compatibility.
+IGNORED_WARNINGS:=-Wno-c++98-compat -Wno-c++98-compat-pedantic  
+# Padding is irrelevant, we have memory to waste.
+IGNORED_WARNINGS:=$(IGNORED_WARNINGS) -Wno-padded 
+# Constructors with parameters shadowing attributes makes them concise
+# Elsewhere, we use shadowing intentionally so we can chain constructors or make it clear what attribute
+# a parameter will be assigned to. 
+IGNORED_WARNINGS:=$(IGNORED_WARNINGS) -Wno-shadow-field-in-constructor -Wno-shadow-field -Wno-shadow
+# We don't need to worry about missing values of an enum in a switch as long as we use a default path
+IGNORED_WARNINGS:=$(IGNORED_WARNINGS) -Wno-switch-enum
+# nlohmann/json is a 3rd party library; no need to handle any warnings from it.
+IGNORED_WARNINGS:=$(IGNORED_WARNINGS) -Wno-everything 
 
-MAIN_SOURCE := $(SOURCE) src/main/*.cc
-MAIN_OUTPUT := -o $(BIN_DIR)/neon-rain
-MAIN_COMPILE := $(CC_COMPILE) $(MAIN_OUTPUT) $(INCLUDE) $(LINK) $(MAIN_SOURCE)
+CC_COMPILE:=$(ANALYZER) $(CC_COMPILER) $(CC_FLAGS) $(WARNINGS) $(IGNORED_WARNINGS) $(CLANG_LINKER_ARGS) 
 
-TEST_INCLUDE := $(INCLUDE) -I src/test/include
-TEST_LINK := $(LINK) -lgtest_main -lgtest -lgmock 
-TEST_SOURCE := $(SOURCE) src/test/*.cc
-TEST_OUTPUT := -o $(BIN_DIR)/neon-rain
-TEST_COMPILE := $(CC_COMPILE) $(TEST_OUTPUT) $(TEST_INCLUDE) $(TEST_LINK) $(TEST_SOURCE)
+MAIN_SOURCE:=$(SOURCE) src/main/*.cc
+MAIN_OUTFILE:=$(BIN_DIR)/neon-rain
+MAIN_OUTPUT:=-o $(MAIN_OUTFILE)
+MAIN_COMPILE:=$(CC_COMPILE) $(INCLUDE) $(LINK) $(MAIN_SOURCE) $(MAIN_OUTPUT) 
+
+TEST_INCLUDE:=$(INCLUDE) -I src/test/include
+TEST_LINK:=$(LINK) -lgtest_main -lgtest -lgmock 
+TEST_SOURCE:=$(SOURCE) src/test/*.cc
+TEST_OUTFILE:=$(BIN_DIR)/neon-rain-test
+TEST_OUTPUT:=-o $(TEST_OUTFILE)
+TEST_COMPILE:=$(CC_COMPILE) $(TEST_INCLUDE) $(TEST_LINK) $(TEST_SOURCE) $(TEST_OUTPUT) 
 
 all: clean
 	$(MAIN_COMPILE)
-	$(VALGRIND) $(OUTFILE)
+	$(VALGRIND) $(MAIN_OUTFILE)
 
 ### Binary cleanup
 clean:
@@ -53,4 +68,4 @@ install-devtools:
 
 test: 
 	$(TEST_COMPILE)
-	$(VALGRIND) $(OUTFILE)
+	$(VALGRIND) $(TEST_OUTFILE)

@@ -3,7 +3,7 @@
 #include <set>
 
 #include "BoundingBox.hh"
-#include "CollisionObjects.hh"
+#include "CollidingPhysicsComponents.hh"
 #include "GameObject.hh"
 #include "Math.hh"
 #include "Memory.hh"
@@ -39,6 +39,7 @@ anything about GameObjects and GameObject doesn't know about the PhysicsManager.
 // Forward decls
 class PhysicsManager;
 class GameObject;
+class CollidingPhysicsComponents;
 
 class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
  public:
@@ -46,6 +47,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   PhysicsComponent(
       const shared_ptr<PositionComp> positionComp,
       const shared_ptr<BoundingBoxParams> BoundingBoxParams = nullptr,
+      const bool forceResponsiveSetting = false,
       const bool collisionsSetting = false, const bool gravitySetting = false);
   shared_ptr<PhysicsComponent> getptr();
 
@@ -96,7 +98,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
   void integrate(const time_ms duration);
 
-  shared_ptr<CollisionObjects> getCollisionObjects();
+  shared_ptr<CollidingPhysicsComponents> getCollisionObjects();
   // TODO: I _really_ don't want to have references to the parent object
   // stored in the physicsComponent; the physicsComponent should be constructed
   // with refs to parent-owned components it needs - if it has a direct

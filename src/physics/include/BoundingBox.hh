@@ -21,7 +21,8 @@ typedef struct BoundingBoxParams {
 class BoundingBox {
   // BoundingBoxes manage collision detection.
  public:
-  BoundingBox(const shared_ptr<BoundingBoxParams> params);
+  BoundingBox(const shared_ptr<Vect2D> center,
+              const shared_ptr<BoundingBoxParams> params);
   BoundingBox(const shared_ptr<Vect2D> center, const PositionUnit height,
               const PositionUnit width);
   bool checkCollision(const shared_ptr<BoundingBox> box);

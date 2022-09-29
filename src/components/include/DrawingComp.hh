@@ -29,8 +29,8 @@ class DrawingComp {
   PositionUnit getHeight();
 
   // Forward to PositionComp()
-  int getX();
-  int getY();
+  PositionUnit getX();
+  PositionUnit getY();
   shared_ptr<Vect2D> getCenter();
   shared_ptr<Vect2D> getDrawPoint();
 

@@ -5,14 +5,17 @@ CharacterPhysicsComponent::CharacterPhysicsComponent(
     const shared_ptr<BoundingBoxParams> boundingBoxParams,
     const bool collisionsSetting, const bool gravitySetting)
     : PhysicsComponent(positionComp, boundingBoxParams, collisionsSetting,
-                       gravitySetting) {}
+                       gravitySetting) {
+  this->moveSpeed = 10.0;
+  this->jumpSpeed = 10.0;
+}
 
 void CharacterPhysicsComponent::applyJumpForce() {}
 void CharacterPhysicsComponent::applyMovementForce(
     const shared_ptr<Direction> direction) {
   // If the character is not already moving in the desired direction at max
   // velocity, apply sufficient force for them to accelerate to max velocity and
-  // overcome drag. Otherwise, apply drag-cancelling force to maintain velocity.
+  // overcome drag.
 
   // NOTE: If a character begins moving left, we zero any right-ward velocity
   // they may have had and vice versa; this is a hack that saves us from having
@@ -22,7 +25,7 @@ void CharacterPhysicsComponent::applyMovementForce(
   // should be pushed in whatever direction the collision pushed them (net force
   // will be zeroed after one update from the physics manager, anyway).
 
-  if (direction == Direction::Left()) {
+  if (*direction == *Direction::Left()) {
     if (this->velocity->x <= -this->moveSpeed) {
       // If we're already moving as fast as we need to be (or faster),
       // we don't need to add any additional force.
@@ -45,7 +48,7 @@ void CharacterPhysicsComponent::applyMovementForce(
     *impulseForce += counterDragForce;
     this->applyForce(impulseForce);
 
-  } else if (direction == Direction::Right()) {
+  } else if (*direction == *Direction::Right()) {
     if (this->velocity->x >= this->moveSpeed) {
       return;
     }

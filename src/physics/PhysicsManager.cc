@@ -16,7 +16,8 @@ std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
   return this->shared_from_this();
 }
 
-void PhysicsManager::manageComponent(const shared_ptr<PhysicsComponent> component) {
+void PhysicsManager::manageComponent(
+    const shared_ptr<PhysicsComponent> component) {
   if (component->getManager() != nullptr) {
     // TODO: Log a warning
     return;
@@ -34,13 +35,13 @@ void PhysicsManager::unmanageComponent(
   this->managedComponents->erase(component);
 }
 
-shared_ptr<vector<shared_ptr<PhysicsComponent>>> PhysicsManager::getAllColliding(
-    shared_ptr<PhysicsComponent> component) {
+shared_ptr<vector<shared_ptr<PhysicsComponent>>>
+PhysicsManager::getAllColliding(shared_ptr<PhysicsComponent> component) {
   shared_ptr<vector<shared_ptr<PhysicsComponent>>> collided =
       shared_ptr<vector<shared_ptr<PhysicsComponent>>>(
           new vector<shared_ptr<PhysicsComponent>>());
   for (shared_ptr<PhysicsComponent> other : *(this->managedComponents)) {
-    if (other != component && component->isColliding(other)) {
+    if (other != component && component->checkCollision(other)) {
       collided->push_back(other);
     }
   }

@@ -50,11 +50,10 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
       shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
   PositionUnit x = characterJSON["position"]["x"];
   PositionUnit y = characterJSON["position"]["y"];
-  shared_ptr<Point> center = shared_ptr<Point>(new Point{.x = x, .y = y});
+  shared_ptr<Vect2D> center = shared_ptr<Vect2D>(new Vect2D(x, y));
 
   CharacterSPtr character =
       CharacterSPtr(new Character(center, name, nullptr, texturePath));
-  character->inferBoundingBoxFromTexture();
   zone->physicsMgr->manageComponent(character->getPhysicsComponent());
 
   if (*name == "Player") {
@@ -81,12 +80,11 @@ void WADLoader::addPlatform(shared_ptr<Zone> zone,
   PositionUnit x = platformJSON["position"]["x"];
   PositionUnit y = platformJSON["position"]["y"];
   for (int count = 0; count < repeatCount; count++) {
-    shared_ptr<Point> center = shared_ptr<Point>(new Point{.x = x, .y = y});
+    shared_ptr<Vect2D> center = shared_ptr<Vect2D>(new Vect2D(x, y));
     shared_ptr<FilePath> texturePath =
         shared_ptr<FilePath>(new FilePath(platformJSON["texturePath"]));
     shared_ptr<Platform> platform = shared_ptr<Platform>(
         new Platform(center, nullptr, nullptr, texturePath));
-    platform->inferBoundingBoxFromTexture();
     zone->physicsMgr->manageComponent(platform->getPhysicsComponent());
     zone->gameObjects->push_back(platform);
     x += xOffset;

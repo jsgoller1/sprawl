@@ -38,6 +38,20 @@ bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
   return low2Intersects || hi2Intersects || containedIn1 || containedIn2;
 }
 
+// TODO: Floating point comparison is hard; here, we're just doing
+// a margin-of-error test and calling it a day. Followups:
+// - CS:APP (Bryant et al), sec 3.11
+// - https://floating-point-gui.de/errors/comparison/
+bool eq(const real& real1, const real& real2) {
+  real diff = real1 - real2;
+  return ((-FLOAT_EQ_ACCEPTABLE_MARGIN_OF_ERROR < diff) &&
+          (diff < FLOAT_EQ_ACCEPTABLE_MARGIN_OF_ERROR));
+}
+bool neq(const real& real1, const real& real2) { return false; };
+// TODO: Implement these
+bool lte(const real& real1, const real& real2) { return false; };
+bool gte(const real& real1, const real& real2) { return false; }
+
 Vect2D::Vect2D() {
   this->x = 0.0;
   this->y = 0.0;
@@ -112,6 +126,11 @@ void Vect2D::clear() {
 }
 void Vect2D::invert() {
   // Sets all components to their additive inverse
-  this->x = -this->x;
-  this->y = -this->y;
+  this->x = -1.0 * this->x;
+  this->y = -1.0 * this->y;
+}
+
+bool Direction::operator==(const Direction& dir) const {
+  // Returns true if both vectors have same x and y components
+  return eq(this->x, dir.x) && eq(this->y, dir.y);
 }
