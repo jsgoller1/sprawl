@@ -1,20 +1,23 @@
 #pragma once
 
+#include <vector>
+
 #include "BoundingBox.hh"
 #include "Component.hh"
 #include "GameObject.hh"
 #include "Memory.hh"
-#include "PhysicsMgr.hh"
 #include "PositionComp.hh"
 
 // Forward decls
 class GameObject;
+class PhysicsMgr;
 
-class PhysicsComp : public Component {
+class PhysicsComp : public Component<PhysicsComp> {
   // Any GameObject can have a physics component; if it does, it registers
   // it with the global PhysicsMgr.
  public:
-  PhysicsComp(const PositionCompSPtr positionComp,
+  PhysicsComp(const shared_ptr<const Identity> parentIdentity,
+              const PositionCompSPtr positionComp,
               const BoundingBoxSPtr boundingBox = nullptr,
               const bool collisionsSetting = false,
               const bool gravitySetting = false);
@@ -35,10 +38,6 @@ class PhysicsComp : public Component {
   void addVelocity(const PointSPtr velocity);
 
   bool predictMovementCollision();
-  bool isColliding();
-
-  shared_ptr<PhysicsMgr> getManager();
-  void setManager(const shared_ptr<PhysicsMgr> manager);
 
   // TODO: Physics components should probably only talk to other physics
   // components; as such, when we detect collisions, the physics manager should
@@ -56,8 +55,4 @@ class PhysicsComp : public Component {
   PositionCompSPtr positionComp;
   BoundingBoxSPtr boundingBox;
   shared_ptr<PhysicsMgr> manager;
-  PhysicsMgr* getManagerRaw() const override { return this->manager.get(); };
-  void setManagerRaw(PhysicsMgr* manager) {
-    this->manager = manager->getptr();
-  };
 };

@@ -1,12 +1,5 @@
 #include "PhysicsMgr.hh"
 
-#include <algorithm>
-
-PhysicsMgr::PhysicsMgr() {
-  this->managedComponents = shared_ptr<set<shared_ptr<PhysicsComp>>>(
-      new set<shared_ptr<PhysicsComp>>());
-}
-
 bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
                           const PositionUnit low2, const PositionUnit hi2) {
   /*
@@ -30,34 +23,17 @@ bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
   return low2Intersects || hi2Intersects || containedIn1 || containedIn2;
 }
 
-std::shared_ptr<PhysicsMgr> PhysicsMgr::getptr() {
-  // TODO: This is dangerous and leads to undefined behavior if no other
-  // shared pointers to this object exist; it would be best to force
-  // any construction to return a shared pointer, but that might not be
-  // viable. See:
-  // https://en.cppreference.com/w/cpp/memory/enable_shared_from_this
-  return this->shared_from_this();
+bool PhysicsMgr::anyColliding(const shared_ptr<PhysicsComp> comp) {
+  for (auto otherComp : *(this->managedComponents)) {
+    if (comp != otherComp && this->isColliding(comp, otherComp)) {
+      return true;
+    }
+  }
+  return false;
 }
 
-void PhysicsMgr::manageComponent(const shared_ptr<PhysicsComp> component) {
-  if (component->getManager() != nullptr) {
-    // TODO: Log a warning
-    return;
-  }
-  component->setManager(this->getptr());
-  this->managedComponents->insert(component);
-}
-void PhysicsMgr::unmanageComponent(const shared_ptr<PhysicsComp> component) {
-  if (component->getManager() != this->getptr()) {
-    // TODO: Log a warning
-    return;
-  }
-  component->setManager(nullptr);
-  this->managedComponents->erase(component);
-}
-
-bool PhysicsMgr::areColliding(const shared_ptr<PhysicsComp> comp1,
-                              const shared_ptr<PhysicsComp> comp2) {
+bool PhysicsMgr::isColliding(const shared_ptr<PhysicsComp> comp1,
+                             const shared_ptr<PhysicsComp> comp2) {
   // TODO: Probably want bounding objects to know how to
   // determine collisions, not PhysicsManager. Fine for now.
   // TODO: SDL implements several functions and types we can use
@@ -93,7 +69,7 @@ shared_ptr<vector<shared_ptr<PhysicsComp>>> PhysicsMgr::getAllColliding(
       shared_ptr<vector<shared_ptr<PhysicsComp>>>(
           new vector<shared_ptr<PhysicsComp>>());
   for (shared_ptr<PhysicsComp> other : *(this->managedComponents)) {
-    if (other != component && this->areColliding(component, other)) {
+    if (other != component && this->isColliding(component, other)) {
       collided->push_back(other);
     }
   }
@@ -109,7 +85,7 @@ void PhysicsMgr::applyGravity(shared_ptr<PhysicsComp> comp) {
     PointSPtr newVelocity = comp->getVelocity();
     newVelocity->y = std::min(newVelocity->y + 1, 20);
     comp->move(newVelocity);
-    if (comp->isColliding()) {
+    if (this->anyColliding(comp)) {
       comp->move(
           PointSPtr(new Point{.x = -newVelocity->x, .y = -newVelocity->y}));
       newVelocity->y = 0;
@@ -123,7 +99,7 @@ void PhysicsMgr::applyVelocity(shared_ptr<PhysicsComp> comp) {
   // and set its velocity to 0.
   PointSPtr velocity = comp->getVelocity();
   comp->move(velocity);
-  if (comp->isColliding()) {
+  if (this->anyColliding(comp)) {
     // TODO: Since we don't have to do any redrawing, we can try a strategy
     // where we attempt to move half as far as we would have, then half of
     // that, etc until the movement is less than 1 pixel; this should fix the

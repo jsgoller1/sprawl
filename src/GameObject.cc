@@ -3,14 +3,15 @@
 GameObject::GameObject(const PointSPtr center, const GameObjectNameSPtr name,
                        const shared_ptr<PhysicsComp> physicsComp,
                        const FilePathSPtr texturePath,
-                       const DrawingCompSPtr drawingComp) {
+                       const DrawingCompSPtr drawingComp)
+    : Entity(name) {
   this->identity = IdentityManager::instance()->getNewIdentity(name);
   this->positionComp = PositionCompSPtr(new PositionComp(center));
   this->name = name;
-  this->physicsComp =
-      (physicsComp == nullptr)
-          ? shared_ptr<PhysicsComp>(new PhysicsComp(this->positionComp))
-          : physicsComp;
+  this->physicsComp = (physicsComp == nullptr)
+                          ? shared_ptr<PhysicsComp>(new PhysicsComp(
+                                this->identity, this->positionComp))
+                          : physicsComp;
   this->drawingComp =
       (drawingComp == nullptr)
           ? DrawingCompSPtr(new DrawingComp(this->identity, this->positionComp))

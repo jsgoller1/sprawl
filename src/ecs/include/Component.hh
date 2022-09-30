@@ -22,30 +22,38 @@
  * Entity on the screen.
  */
 
-class Component : public enable_shared_from_this<Component> {
+template <typename DerivedComponent>
+class Component : public enable_shared_from_this<Component<DerivedComponent>> {
  public:
+  std::shared_ptr<Component<DerivedComponent>> getptr() {
+    return this->shared_from_this();
+  }
+
   Component(shared_ptr<const Identity> parentIdentity)
       : parentIdentity(parentIdentity){};
   shared_ptr<const Identity> getParentIdentity() {
     return this->parentIdentity;
   };
 
-  // NOTE: C++ doesn't support overriding methods in parent classes with methods
-  // in the child class that return a smart pointer to a covariant type; you can
-  // only do this with raw pointers. The solution is to do the overriding with a
-  // private method that returns a raw pointer to the covariant type, then call
-  // that method from a public method that returns a smart pointer to it. The
-  // public method should have the same name as the one in the parent class so
-  // name hiding occurs. The compiler won't catch incorrectly named functions,
-  // but there's no other simple way to do this.
-  shared_ptr<Manager> getManager();
-  void setManager(shared_ptr<Manager> manager);
+  shared_ptr<Manager<Component<DerivedComponent>>> getManager() {
+    return this->getManagerRaw()->getptr();
+  }
+  void setManager(shared_ptr<Manager<Component<DerivedComponent>>> manager) {
+    this->setManagerRaw(manager.get());
+  }
 
  private:
   // Disallow creation of components with no parents
-  Component() = delete;
+  Component<DerivedComponent>() = delete;
   shared_ptr<const Identity> parentIdentity;
 
-  virtual Manager* getManagerRaw() const = 0;
-  virtual void getManagerRaw(Manager* manager) = 0;
+  Manager<DerivedComponent>* getManagerRaw() {
+    DerivedComponent& derived = static_cast<DerivedComponent&>(*this);
+    return this->manager->get();
+  }
+
+  void setManagerRaw(Manager<DerivedComponent>* manager) {
+    DerivedComponent& derived = static_cast<DerivedComponent&>(*this);
+    this->manager = manager->getptr();
+  }
 };
