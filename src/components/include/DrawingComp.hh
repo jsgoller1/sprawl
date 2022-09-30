@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "Component.hh"
+#include "IdentityManager.hh"
 #include "Memory.hh"
 #include "PositionComp.hh"
 #include "Texture.hh"
@@ -11,9 +13,10 @@ using std::vector;
 
 typedef double Angle;
 
-class DrawingComp {
+class DrawingComp : public Component {
  public:
-  DrawingComp(const PositionCompSPtr positionCompSPtr = nullptr,
+  DrawingComp(const shared_ptr<const Identity> parentIdentity,
+              const PositionCompSPtr positionCompSPtr = nullptr,
               const TextureSPtr texture = nullptr,
               const SDL_RendererFlip flip = SDL_FLIP_NONE);
 

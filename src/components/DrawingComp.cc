@@ -1,8 +1,9 @@
 #include "DrawingComp.hh"
 
-DrawingComp::DrawingComp(const PositionCompSPtr positionCompSPtr,
-                         const TextureSPtr texture,
-                         const SDL_RendererFlip flip) {
+DrawingComp::DrawingComp(const shared_ptr<const Identity> parentIdentity,
+                         PositionCompSPtr positionCompSPtr,
+                         const TextureSPtr texture, const SDL_RendererFlip flip)
+    : Component(parentIdentity) {
   this->positionCompSPtr = positionCompSPtr;
   this->texture = texture;
   this->flip = flip;

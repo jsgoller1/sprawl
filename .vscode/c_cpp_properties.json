@@ -6,6 +6,7 @@
                 "${workspaceFolder}",
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/src/components/include",
+                "${workspaceFolder}/src/ecs/include",
                 "${workspaceFolder}/src/managers/include",
                 "${workspaceFolder}/src/wads/include",
                 "${workspaceFolder}/src/3rdparty/include",

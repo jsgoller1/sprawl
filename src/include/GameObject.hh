@@ -26,6 +26,7 @@ class GameObject {
              const FilePathSPtr texturePath = nullptr,
              const DrawingCompSPtr drawingComp = nullptr);
 
+  shared_ptr<const Identity> identity;
   GameObjectNameSPtr name;
   PositionCompSPtr positionComp;
   DrawingCompSPtr drawingComp;
