@@ -2,21 +2,20 @@
 
 #include <set>
 
+#include "Manager.hh"
 #include "Memory.hh"
-#include "PhysicsComp.hh"
 
 using std::set;
 
 // Forward decls
 class PhysicsComp;  // see PhysicsComp.hh
 
-class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
+class PhysicsMgr : public Manager {
   // Keeps track of registered PhyiscsComponents and knows how to apply physics
   // to them
 
  public:
   PhysicsMgr();
-
   std::shared_ptr<PhysicsMgr> getptr();
 
  public:
@@ -27,11 +26,6 @@ class PhysicsMgr : public enable_shared_from_this<PhysicsMgr> {
   void applyGravity(shared_ptr<PhysicsComp> comp);
   void applyVelocity(shared_ptr<PhysicsComp> comp);
   void applyVelocityAll();
-  void manageComponent(const shared_ptr<PhysicsComp> component);
-  void unmanageComponent(const shared_ptr<PhysicsComp> component);
-
- private:
-  shared_ptr<set<shared_ptr<PhysicsComp>>> managedComponents;
 };
 
 bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,

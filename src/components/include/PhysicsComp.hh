@@ -1,16 +1,16 @@
 #pragma once
 
 #include "BoundingBox.hh"
+#include "Component.hh"
 #include "GameObject.hh"
 #include "Memory.hh"
 #include "PhysicsMgr.hh"
 #include "PositionComp.hh"
 
 // Forward decls
-class PhysicsMgr;
 class GameObject;
 
-class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
+class PhysicsComp : public Component {
   // Any GameObject can have a physics component; if it does, it registers
   // it with the global PhysicsMgr.
  public:
@@ -18,7 +18,6 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
               const BoundingBoxSPtr boundingBox = nullptr,
               const bool collisionsSetting = false,
               const bool gravitySetting = false);
-  shared_ptr<PhysicsComp> getptr();
 
   // Forwarding methods for PositionComp
   void move(PointSPtr direction);
@@ -57,4 +56,8 @@ class PhysicsComp : public enable_shared_from_this<PhysicsComp> {
   PositionCompSPtr positionComp;
   BoundingBoxSPtr boundingBox;
   shared_ptr<PhysicsMgr> manager;
+  PhysicsMgr* getManagerRaw() const override { return this->manager.get(); };
+  void setManagerRaw(PhysicsMgr* manager) {
+    this->manager = manager->getptr();
+  };
 };
