@@ -19,7 +19,7 @@
  * component type.
  */
 template <typename DerivedManager>
-class Manager : public enable_shared_from_this<Manager<DerivedType>> {
+class Manager : public enable_shared_from_this<Manager<DerivedManager>> {
  public:
   Manager();
 
@@ -28,7 +28,7 @@ class Manager : public enable_shared_from_this<Manager<DerivedType>> {
   // any construction to return a shared pointer, but that might not be
   // viable. See:
   // https://en.cppreference.com/w/cpp/memory/enable_shared_from_this
-  std::shared_ptr<Manager<DerivedType>> getptr() {
+  std::shared_ptr<Manager<DerivedManager>> getptr() {
     return this->shared_from_this();
   }
 
@@ -39,19 +39,19 @@ class Manager : public enable_shared_from_this<Manager<DerivedType>> {
       // TODO: Log a warning
       return;
     }
-    component->setManager(derived->getptr());
-    derived->managedComponents->insert(component);
+    component->setManager(derived.getptr());
+    derived.managedComponents->insert(component);
   }
 
   template <typename ComponentType>
   void unmanageComponent(const shared_ptr<ComponentType> component) {
     DerivedManager& derived = static_cast<DerivedManager&>(*this);
-    if (component->getManager() != derived->getptr()) {
+    if (component->getManager() != derived.getptr()) {
       // TODO: Log a warning
       return;
     }
     component->setManager(nullptr);
-    derived->managedComponents->erase(component);
+    derived.managedComponents->erase(component);
   }
 
  protected:

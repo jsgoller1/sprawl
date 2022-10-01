@@ -12,10 +12,9 @@ GameObject::GameObject(const PointSPtr center, const GameObjectNameSPtr name,
                           ? shared_ptr<PhysicsComp>(new PhysicsComp(
                                 this->identity, this->positionComp))
                           : physicsComp;
-  this->drawingComp =
-      (drawingComp == nullptr)
-          ? DrawingCompSPtr(new DrawingComp(this->identity, this->positionComp))
-          : drawingComp;
+  this->drawingComp = (drawingComp == nullptr)
+                          ? DrawingCompSPtr(new DrawingComp(this->positionComp))
+                          : drawingComp;
   if (texturePath != nullptr) {
     this->drawingComp->setTexture(TextureSPtr(new Texture(texturePath)));
   }

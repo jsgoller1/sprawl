@@ -35,10 +35,13 @@ class Component : public enable_shared_from_this<Component<DerivedComponent>> {
     return this->parentIdentity;
   };
 
-  shared_ptr<Manager<Component<DerivedComponent>>> getManager() {
+  template <typename DerivedManager>
+  shared_ptr<Manager<DerivedManager>> getManager() {
     return this->getManagerRaw()->getptr();
   }
-  void setManager(shared_ptr<Manager<Component<DerivedComponent>>> manager) {
+
+  template <typename DerivedManager>
+  void setManager(shared_ptr<Manager<DerivedManager>> manager) {
     this->setManagerRaw(manager.get());
   }
 
@@ -47,13 +50,16 @@ class Component : public enable_shared_from_this<Component<DerivedComponent>> {
   Component<DerivedComponent>() = delete;
   shared_ptr<const Identity> parentIdentity;
 
-  Manager<DerivedComponent>* getManagerRaw() {
-    DerivedComponent& derived = static_cast<DerivedComponent&>(*this);
+  template <typename DerivedManager>
+  static shared_ptr<Manager<DerivedManager>> manager = nullptr;
+
+  template <typename DerivedManager>
+  Manager<DerivedManager>* getManagerRaw() {
     return this->manager->get();
   }
 
-  void setManagerRaw(Manager<DerivedComponent>* manager) {
-    DerivedComponent& derived = static_cast<DerivedComponent&>(*this);
+  template <typename DerivedManager>
+  void setManagerRaw(Manager<DerivedManager>* manager) {
     this->manager = manager->getptr();
   }
 };

@@ -10,7 +10,7 @@
 
 class PhysicsMgr : public Manager<PhysicsMgr> {
  public:
-  bool isColliding(const shared_ptr<PhysicsComp> comp1);
+  bool anyColliding(const shared_ptr<PhysicsComp> comp1);
   bool isColliding(const shared_ptr<PhysicsComp> comp1,
                    const shared_ptr<PhysicsComp> comp2);
   shared_ptr<std::vector<shared_ptr<PhysicsComp>>> getAllColliding(
@@ -19,7 +19,7 @@ class PhysicsMgr : public Manager<PhysicsMgr> {
   void applyVelocity(shared_ptr<PhysicsComp> comp);
   void applyVelocityAll();
 
- private:
+ protected:
   shared_ptr<std::set<shared_ptr<PhysicsComp>>> managedComponents;
 };
 

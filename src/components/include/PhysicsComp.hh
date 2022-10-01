@@ -51,8 +51,6 @@ class PhysicsComp : public Component<PhysicsComp> {
   bool collisionsEnabled;
   bool gravityEnabled;
   PointSPtr velocity;
-  shared_ptr<GameObject> parentGameObject;
   PositionCompSPtr positionComp;
   BoundingBoxSPtr boundingBox;
-  shared_ptr<PhysicsMgr> manager;
 };
