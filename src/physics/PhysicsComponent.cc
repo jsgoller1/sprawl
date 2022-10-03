@@ -44,12 +44,12 @@ shared_ptr<Vect2D> PhysicsComponent::getVelocity() const {
 shared_ptr<Vect2D> PhysicsComponent::getAcceleration() const {
   return this->acceleration;
 }
-real PhysicsComponent::getCurrentDragCoeff() const {
+real PhysicsComponent::getDragCoeff() const {
   // TODO: Check what drag coefficient is appropriate for the situation, i.e. if
   // we're in midair or not
-  return this->surfaceDragCoeff;
+  return this->dragCoeff;
 };
-
+/*
 real PhysicsComponent::getAirDragCoeff() const { return this->airDragCoeff; };
 void PhysicsComponent::setAirDragCoeff(real coeff) {
   this->airDragCoeff = coeff;
@@ -60,6 +60,7 @@ real PhysicsComponent::getSurfaceDragCoeff() const {
 void PhysicsComponent::setSurfaceDragCoeff(real coeff) {
   this->surfaceDragCoeff = coeff;
 };
+*/
 shared_ptr<PhysicsManager> PhysicsComponent::getManager() const {
   return this->manager;
 }
@@ -134,9 +135,8 @@ void PhysicsComponent::integrate(const time_ms duration) {
   if (this->mass <= 0 or duration <= 0) {
     return;
   }
-  this->updateVelocityFromNetForce(duration);
-  // TODO: Should wait until we have drag-movement handled before moving onto
-  // collisions.
+
+  this->updateVelocityNoDrag(to_seconds(duration));
   const shared_ptr<Vect2D> moveDistance = *(this->velocity) * duration;
   this->positionComp->move(moveDistance);
   /*
@@ -231,17 +231,27 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   // TODO: Check if we're colliding down; if so, we can jump again.
 }
 
+void PhysicsComponent::updateVelocityNoDrag(const time_ms duration) {
+  // Calculates velocity by imposing drag as a damper on velocity
+  // rather than as a force itself.
+  this->acceleration =
+      calculateAcceleration(duration, this->netForce, this->mass);
+  *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
+  *(this->velocity) *= pow(this->dragCoeff, duration);
+}
+
 void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   // Determine the drag force associated with our velocity,
   // add that to the net force, and get our true velocity.
+  // TODO: This, combined with our "add some force" technique for user
+  // movement, results in odd blitting/janky behavior.
 
   shared_ptr<Vect2D> draglessAcceleration =
       calculateAcceleration(duration, this->netForce, this->mass);
   shared_ptr<Vect2D> draglessVelocity =
       calculateVelocity(duration, draglessAcceleration);
-  shared_ptr<Vect2D> dragForce = calculateDragForce(
-      draglessVelocity,
-      (this->isMidair()) ? this->airDragCoeff : this->surfaceDragCoeff);
+  shared_ptr<Vect2D> dragForce =
+      calculateDragForce(*draglessVelocity + *this->velocity, this->dragCoeff);
   this->applyForce(dragForce);
   this->acceleration =
       calculateAcceleration(duration, this->netForce, this->mass);

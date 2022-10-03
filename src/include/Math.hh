@@ -77,9 +77,6 @@ class Vect2D {
   void addScaledVector(const Vect2D& vect, const int scalar) {
     this->addScaledVector(vect, real(scalar));
   }
-  void addScaledVector(const Vect2D& vect, const time_ms scalar) {
-    this->addScaledVector(vect, real(scalar));
-  }
 
   void getDirection();
   void getMagnitude();

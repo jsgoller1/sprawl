@@ -18,16 +18,21 @@ void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
+  shared_ptr<Vect2D> moveForce;
   switch (action) {
     case MOVE_UP:
       // TODO: Jumping / double jumping
       this->jump();
       break;
     case MOVE_LEFT:
-      this->getPhysicsComponent()->applyMovementForce(Direction::Left());
+      // this->getPhysicsComponent()->applyMovementForce(Direction::Left());
+      moveForce = shared_ptr<Vect2D>(new Vect2D(-10.0, 0.0));
+      this->getPhysicsComponent()->applyForce(moveForce);
       break;
     case MOVE_RIGHT:
-      this->getPhysicsComponent()->applyMovementForce(Direction::Right());
+      // this->getPhysicsComponent()->applyMovementForce(Direction::Right());
+      moveForce = shared_ptr<Vect2D>(new Vect2D(10.0, 0.0));
+      this->getPhysicsComponent()->applyForce(moveForce);
       break;
     default:
       // TODO: should warn

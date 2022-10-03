@@ -13,8 +13,8 @@ CharacterPhysicsComponent::CharacterPhysicsComponent(
     const bool collisionsSetting, const bool gravitySetting)
     : PhysicsComponent(ownerName, positionComp, boundingBoxParams,
                        collisionsSetting, gravitySetting) {
-  this->moveSpeed = 0.8;
-  this->jumpSpeed = 0.8;
+  this->moveSpeed = 2.0;
+  this->jumpSpeed = 2.0;
 }
 
 void CharacterPhysicsComponent::applyJumpForce() {}
@@ -62,7 +62,7 @@ void CharacterPhysicsComponent::applyMovementForce(
   // Apply a bit extra force to ensure whatever drag we experience will be
   // cancelled out so we get to our top velocity.
   shared_ptr<Vect2D> counterDragForce =
-      calculateDragForce(impulseForce, this->getCurrentDragCoeff());
+      calculateDragForce(impulseForce, this->dragCoeff);
   counterDragForce->invert();
   *impulseForce += counterDragForce;
   this->applyForce(impulseForce);

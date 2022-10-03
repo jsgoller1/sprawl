@@ -7,6 +7,7 @@
 #include "PhysicsHelpers.hh"
 #include "PhysicsManager.hh"
 #include "PositionComp.hh"
+#include "Time.hh"
 #include "Types.hh"
 
 /*
@@ -63,11 +64,11 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<Vect2D> getNetForce() const;
   shared_ptr<Vect2D> getVelocity() const;
   shared_ptr<Vect2D> getAcceleration() const;
-  real getCurrentDragCoeff() const;
-  real getAirDragCoeff() const;
-  void setAirDragCoeff(real coeff);
-  real getSurfaceDragCoeff() const;
-  void setSurfaceDragCoeff(real coeff);
+  real getDragCoeff() const;
+  // real getAirDragCoeff() const;
+  // void setAirDragCoeff(real coeff);
+  // real getSurfaceDragCoeff() const;
+  // void setSurfaceDragCoeff(real coeff);
 
   // Owned object getter/setters
   shared_ptr<PhysicsManager> getManager() const;
@@ -112,8 +113,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   bool forceResponsive;
   bool collisionsEnabled;
   bool gravityEnabled;
-  real airDragCoeff = 0.02;
-  real surfaceDragCoeff = 0.04;
+  real dragCoeff = 0.2;
   // TODO: Do we want to define a custom force type, or is it
   // ok to use just a Vect2D?
   shared_ptr<Vect2D> netForce;
@@ -132,6 +132,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<PhysicsManager> manager;
 
   // Other functionality
+  void updateVelocityNoDrag(const time_ms duration);
   void updateVelocityFromNetForce(const time_ms duration);
   void attemptMove(const shared_ptr<Vect2D> moveDistance);
   shared_ptr<CollisionResult> resolveElasticCollision(

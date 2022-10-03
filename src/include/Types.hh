@@ -27,8 +27,8 @@ typedef double real;
 typedef real PositionUnit;
 typedef PositionUnit YCoord;
 typedef PositionUnit XCoord;
-typedef unsigned long long time_ms;
-typedef real time_ms_float;
+typedef real time_ms;
+typedef real time_s;
 /*
  * Per policy in Math.hh, we use reals / floating point numbers everywhere
  * possible. Anytime we use an int (either because we have to or we could use a
