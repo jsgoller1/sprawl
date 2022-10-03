@@ -1,7 +1,5 @@
 #include "PhysicsManager.hh"
 
-#include <algorithm>
-
 PhysicsManager::PhysicsManager() {
   this->managedComponents = shared_ptr<std::set<shared_ptr<PhysicsComponent>>>(
       new std::set<shared_ptr<PhysicsComponent>>());

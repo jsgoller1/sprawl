@@ -1,4 +1,4 @@
-#include <PositionComp.hh>
+#include "PositionComp.hh"
 
 PositionComp::PositionComp(shared_ptr<Vect2D> center) {
   this->x = center->x;

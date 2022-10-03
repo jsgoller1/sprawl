@@ -17,14 +17,17 @@ shared_ptr<Zone> WADLoader::zoneFromWAD(
   // for now, just implementing them as loops inside add*()
   if (data.contains("gameObjects")) {
     for (auto gameObjectJSON : data["gameObjects"]) {
+      if (gameObjectJSON["enabled"] == "false") {
+        continue;
+      }
       if (gameObjectJSON["type"] == "Character") {
         this->addCharacter(zone, gameObjectJSON);
       } else if (gameObjectJSON["type"] == "Platform") {
         this->addPlatform(zone, gameObjectJSON);
       } else {
         // TODO: Custom exception indicating we don't know how to create the
-        // object. Eventually, we don't need to stop the game over this, but for
-        // now we should.
+        // object. Eventually, we don't need to stop the game over this, but
+        // for now we should.
         throw;
       }
     }

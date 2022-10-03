@@ -1,7 +1,5 @@
 #include "Logger.hh"
 
-#include <SDL2/SDL.h>
-
 void log(const string& message) { printf("%s\n", message.c_str()); }
 
 /*

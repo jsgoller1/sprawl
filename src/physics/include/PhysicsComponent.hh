@@ -1,10 +1,7 @@
 #pragma once
 
-#include <set>
-
 #include "BoundingBox.hh"
 #include "CollidingPhysicsComponents.hh"
-#include "GameObject.hh"
 #include "Math.hh"
 #include "Memory.hh"
 #include "PhysicsHelpers.hh"
@@ -38,13 +35,13 @@ anything about GameObjects and GameObject doesn't know about the PhysicsManager.
 
 // Forward decls
 class PhysicsManager;
-class GameObject;
 class CollidingPhysicsComponents;
 
 class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
  public:
   // ctors / dtors
   PhysicsComponent(
+      const GameObjectNameSPtr ownerName,
       const shared_ptr<PositionComp> positionComp,
       const shared_ptr<BoundingBoxParams> BoundingBoxParams = nullptr,
       const bool forceResponsiveSetting = false,
@@ -111,11 +108,12 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
 
  protected:
   // Attributes
+  GameObjectNameSPtr ownerName;
   bool forceResponsive;
   bool collisionsEnabled;
   bool gravityEnabled;
-  real airDragCoeff = 0.2;
-  real surfaceDragCoeff = 0.4;
+  real airDragCoeff = 0.02;
+  real surfaceDragCoeff = 0.04;
   // TODO: Do we want to define a custom force type, or is it
   // ok to use just a Vect2D?
   shared_ptr<Vect2D> netForce;

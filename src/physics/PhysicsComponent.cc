@@ -1,10 +1,12 @@
 #include "PhysicsComponent.hh"
 
 PhysicsComponent::PhysicsComponent(
+    const GameObjectNameSPtr ownerName,
     const shared_ptr<PositionComp> positionComp,
     const shared_ptr<BoundingBoxParams> boundingBoxParams,
     const bool forceResponsiveSetting, const bool collisionsSetting,
     const bool gravitySetting) {
+  this->ownerName = ownerName;
   this->positionComp = positionComp;
   this->boundingBoxParams = boundingBoxParams;
   this->forceResponsive = forceResponsiveSetting;
@@ -236,14 +238,14 @@ void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   shared_ptr<Vect2D> draglessAcceleration =
       calculateAcceleration(duration, this->netForce, this->mass);
   shared_ptr<Vect2D> draglessVelocity =
-      calculateVelocity(duration, this->velocity);
+      calculateVelocity(duration, draglessAcceleration);
   shared_ptr<Vect2D> dragForce = calculateDragForce(
       draglessVelocity,
       (this->isMidair()) ? this->airDragCoeff : this->surfaceDragCoeff);
   this->applyForce(dragForce);
   this->acceleration =
       calculateAcceleration(duration, this->netForce, this->mass);
-  this->velocity = calculateVelocity(duration, this->velocity);
+  *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
 }
 
 shared_ptr<CollisionResult> PhysicsComponent::resolveElasticCollision(

@@ -1,8 +1,8 @@
 #pragma once
-#include <SDL2/SDL.h>
 
 #include "DrawingComp.hh"
 #include "Memory.hh"
+#include "Types.hh"
 
 class Renderer {
  public:

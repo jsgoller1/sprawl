@@ -12,6 +12,12 @@ class Platform : public GameObject {
            const shared_ptr<PhysicsComponent> physicsComp = nullptr,
            const FilePathSPtr texturePath = nullptr,
            const DrawingCompSPtr drawingComp = nullptr);
+
+ private:
+  shared_ptr<PhysicsComponent> physicsComp;
+  PhysicsComponent* getRawPhysicsComponent() override {
+    return this->physicsComp.get();
+  }
 };
 
 typedef shared_ptr<Platform> PlatformSPtr;

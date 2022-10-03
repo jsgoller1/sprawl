@@ -27,18 +27,25 @@ class Character : public GameObject {
   void shoot(const GameAction& action);
   void jump();
 
+  // NOTE: Name hiding GameObject::getPhysicsComponent()
+  // so we can have covariant return with shared pointers. See:
+  // https://www.fluentcpp.com/2017/09/12/how-to-return-a-smart-pointer-and-use-covariance/
+  shared_ptr<CharacterPhysicsComponent> getPhysicsComponent() {
+    return this->getRawPhysicsComponent()->getptr();
+  }
+
  private:
   AICompSPtr aiCompSPtr;
   CombatCompSPtr combatCompSPtr;
+  shared_ptr<CharacterPhysicsComponent> physicsComponent;
 
-  // TOOD: Is there a way we can ensure all GameObject descendants have a
-  // PhysicsComponent by default, but can override it with a child of
-  // PhysicsComponent if they want without having to redeclare the attribute as
-  // the new child type? Doing this feels dangerous, because we could
-  // accidentally wind up with two physics components on an object (e.g. if I
-  // subtly rename one). We do want GameObjects to have a PhysicsComp, so we
-  // shouldn't move its declaration to the base class.
-  shared_ptr<CharacterPhysicsComponent> physicsComp;
+  void setPhysicsComponent(shared_ptr<CharacterPhysicsComponent> comp) {
+    this->physicsComponent = comp;
+  }
+
+  CharacterPhysicsComponent* getRawPhysicsComponent() override {
+    return this->physicsComponent.get();
+  };
 
   bool canDoubleJump;
 };

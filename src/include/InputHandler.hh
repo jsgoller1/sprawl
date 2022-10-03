@@ -1,5 +1,4 @@
 #pragma once
-#include <SDL2/SDL.h>
 
 #include "GameAction.hh"
 #include "Logger.hh"

@@ -1,5 +1,4 @@
 #pragma once
-#include <fstream>
 
 #include "PositionComp.hh"
 #include "Types.hh"

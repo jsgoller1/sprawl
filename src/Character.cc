@@ -6,12 +6,12 @@ Character::Character(
     const FilePathSPtr texturePath, const DrawingCompSPtr drawingComp)
     : GameObject(center, name, texturePath, drawingComp) {
   this->canDoubleJump = true;
-  this->physicsComp =
+  this->setPhysicsComponent(
       (characterPhysicsComp == nullptr)
-          ? shared_ptr<CharacterPhysicsComponent>(
-                new CharacterPhysicsComponent(this->positionComp))
-          : characterPhysicsComp;
-  this->physicsComp->enableGravity(true);
+          ? shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(
+                this->getName(), this->getPositionComponent()))
+          : characterPhysicsComp);
+  this->getPhysicsComponent()->enableGravity(true);
 }
 
 void Character::move(const GameAction& action) {
@@ -24,10 +24,10 @@ void Character::move(const GameAction& action) {
       this->jump();
       break;
     case MOVE_LEFT:
-      this->physicsComp->applyMovementForce(Direction::Left());
+      this->getPhysicsComponent()->applyMovementForce(Direction::Left());
       break;
     case MOVE_RIGHT:
-      this->physicsComp->applyMovementForce(Direction::Right());
+      this->getPhysicsComponent()->applyMovementForce(Direction::Right());
       break;
     default:
       // TODO: should warn
@@ -42,8 +42,8 @@ void Character::jump() {
   if (not this->canDoubleJump) {
     return;
   }
-  if (this->physicsComp->isMidair()) {
+  if (this->getPhysicsComponent()->isMidair()) {
     this->canDoubleJump = false;
   }
-  this->physicsComp->applyJumpForce();
+  this->getPhysicsComponent()->applyJumpForce();
 }

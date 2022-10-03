@@ -9,8 +9,6 @@
  * https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE
  */
 
-#include <cfloat>
-
 #include "Memory.hh"
 #include "Types.hh"
 
@@ -112,7 +110,7 @@ class Direction {
     return shared_ptr<Direction>(new Direction(-1.0, 0.0));
   }
   static shared_ptr<Direction> Right() {
-    return shared_ptr<Direction>(new Direction(-1.0, 0.0));
+    return shared_ptr<Direction>(new Direction(1.0, 0.0));
   }
   static shared_ptr<Direction> LeftUp() {
     return shared_ptr<Direction>(new Direction(-1.0, -1.0));

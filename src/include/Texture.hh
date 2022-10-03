@@ -1,8 +1,5 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-
 #include "Memory.hh"
 #include "PositionComp.hh"
 #include "Types.hh"

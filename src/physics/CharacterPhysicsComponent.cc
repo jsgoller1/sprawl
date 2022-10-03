@@ -1,13 +1,20 @@
 #include "CharacterPhysicsComponent.hh"
 
+// NOTE: See note in header about name hiding; I hate this.
+shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
+  return static_pointer_cast<CharacterPhysicsComponent, PhysicsComponent>(
+      this->shared_from_this());
+}
+
 CharacterPhysicsComponent::CharacterPhysicsComponent(
+    const GameObjectNameSPtr ownerName,
     const shared_ptr<PositionComp> positionComp,
     const shared_ptr<BoundingBoxParams> boundingBoxParams,
     const bool collisionsSetting, const bool gravitySetting)
-    : PhysicsComponent(positionComp, boundingBoxParams, collisionsSetting,
-                       gravitySetting) {
-  this->moveSpeed = 10.0;
-  this->jumpSpeed = 10.0;
+    : PhysicsComponent(ownerName, positionComp, boundingBoxParams,
+                       collisionsSetting, gravitySetting) {
+  this->moveSpeed = 0.8;
+  this->jumpSpeed = 0.8;
 }
 
 void CharacterPhysicsComponent::applyJumpForce() {}
@@ -25,43 +32,38 @@ void CharacterPhysicsComponent::applyMovementForce(
   // should be pushed in whatever direction the collision pushed them (net force
   // will be zeroed after one update from the physics manager, anyway).
 
-  if (*direction == *Direction::Left()) {
-    if (this->velocity->x <= -this->moveSpeed) {
-      // If we're already moving as fast as we need to be (or faster),
-      // we don't need to add any additional force.
-      return;
-    }
-    // Otherwise, cancel any existing velocity and acceleration, and add a
-    // single force that will immediately accelerate us to top speed.
-    // TODO: All GameObjects presently have unit mass, so we can achieve
-    // our maximum velocity by applying a force equal to the desired velocity
-    // for 1 unit of time (plus additional force to counteract drag). This will
-    // not work once we have different masses.
+  // Cancel any existing velocity and acceleration, and add a
+  // single force that will immediately accelerate us to top speed.
+  // TODO: All GameObjects presently have unit mass, so we can achieve
+  // our maximum velocity by applying a force equal to the desired velocity
+  // for 1 unit of time (plus additional force to counteract drag). This
+  // will not work once we have different masses.
 
-    this->velocity->x = 0;
-    this->acceleration->x = 0;
-    shared_ptr<Vect2D> impulseForce = shared_ptr<Vect2D>(new Vect2D(-1.0, 0.0));
-    *impulseForce *= this->moveSpeed;
-    shared_ptr<Vect2D> counterDragForce =
-        calculateDragForce(impulseForce, this->getCurrentDragCoeff());
-    counterDragForce->invert();
-    *impulseForce += counterDragForce;
-    this->applyForce(impulseForce);
-
-  } else if (*direction == *Direction::Right()) {
-    if (this->velocity->x >= this->moveSpeed) {
-      return;
-    }
-    this->velocity->x = 0;
-    this->acceleration->x = 0;
-    shared_ptr<Vect2D> impulseForce = shared_ptr<Vect2D>(new Vect2D(1.0, 0.0));
-    *impulseForce *= this->moveSpeed;
-    shared_ptr<Vect2D> counterDragForce =
-        calculateDragForce(impulseForce, this->getCurrentDragCoeff());
-    counterDragForce->invert();
-    *impulseForce += counterDragForce;
-    this->applyForce(impulseForce);
-  } else {
-    // TODO: Log a warning, nothing to do here.
+  // Do nothing if we're somehow told to move in an illegal direction
+  if (not(*direction == *Direction::Left()) &&
+      not(*direction == *Direction::Right())) {
+    return;
   }
+  // If we're already moving as fast as we need to be (or faster),
+  // we don't need to add any additional force, so we can bail out here.
+  if (*direction == *Direction::Left() ? this->velocity->x <= -this->moveSpeed
+                                       : this->velocity->x >= this->moveSpeed) {
+    return;
+  }
+  // Otherwise, zero our existing velocity / acceleration and prepare an impulse
+  // force in the desired direction
+  // this->velocity->x = 0;
+  this->acceleration->x = 0;
+  real impulseDirection =
+      (*direction == *Direction::Left() ? -this->moveSpeed : this->moveSpeed);
+  shared_ptr<Vect2D> impulseForce =
+      shared_ptr<Vect2D>(new Vect2D(impulseDirection, 0.0));
+
+  // Apply a bit extra force to ensure whatever drag we experience will be
+  // cancelled out so we get to our top velocity.
+  shared_ptr<Vect2D> counterDragForce =
+      calculateDragForce(impulseForce, this->getCurrentDragCoeff());
+  counterDragForce->invert();
+  *impulseForce += counterDragForce;
+  this->applyForce(impulseForce);
 }

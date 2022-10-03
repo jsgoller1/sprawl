@@ -1,7 +1,5 @@
 #pragma once
 
-#include <set>
-
 #include "Memory.hh"
 #include "PhysicsComponent.hh"
 #include "Time.hh"

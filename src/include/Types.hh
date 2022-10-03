@@ -1,8 +1,20 @@
 #pragma once
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
+#include <algorithm>
+#include <cfloat>
+#include <fstream>
+#include <iostream>
+#include <set>
 #include <string>
+#include <vector>
+
+using std::set;
+using std::string;
+using std::to_string;
+using std::vector;
 
 #include "Memory.hh"
 

@@ -1,13 +1,9 @@
 #pragma once
-#include <SDL2/SDL.h>
-
-#include <vector>
 
 #include "Memory.hh"
 #include "PositionComp.hh"
 #include "Texture.hh"
-
-using std::vector;
+#include "Types.hh"
 
 typedef double Angle;
 
