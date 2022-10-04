@@ -16,7 +16,10 @@
             "position": {
                 "x": 400,
                 "y": 734
-            }
+            },
+            "maxSpeed": 10.0,
+            "minSpeed": 0.05,
+            "dragCoefficient": 0.005
         },
         {
             "type": "Character",

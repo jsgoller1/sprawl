@@ -3,7 +3,9 @@
 Character::Character(
     const shared_ptr<Vect2D> center, const GameObjectNameSPtr name,
     const shared_ptr<CharacterPhysicsComponent> characterPhysicsComp,
-    const FilePathSPtr texturePath, const DrawingCompSPtr drawingComp)
+    const FilePathSPtr texturePath, const DrawingCompSPtr drawingComp,
+    const PositionUnit maxSpeed, const PositionUnit minSpeed,
+    const real dragCoefficient)
     : GameObject(center, name, texturePath, drawingComp) {
   this->canDoubleJump = true;
   this->setPhysicsComponent(
@@ -12,27 +14,25 @@ Character::Character(
                 this->getName(), this->getPositionComponent()))
           : characterPhysicsComp);
   this->getPhysicsComponent()->enableGravity(true);
+  this->getPhysicsComponent()->setMaxSpeed(maxSpeed);
+  this->getPhysicsComponent()->setMinSpeed(minSpeed);
+  this->getPhysicsComponent()->setDragCoefficient(dragCoefficient);
 }
 
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
-  shared_ptr<Vect2D> moveForce;
   switch (action) {
     case MOVE_UP:
       // TODO: Jumping / double jumping
       this->jump();
       break;
     case MOVE_LEFT:
-      // this->getPhysicsComponent()->applyMovementForce(Direction::Left());
-      moveForce = shared_ptr<Vect2D>(new Vect2D(-10.0, 0.0));
-      this->getPhysicsComponent()->applyForce(moveForce);
+      this->getPhysicsComponent()->applyMovementForce(Direction::Left());
       break;
     case MOVE_RIGHT:
-      // this->getPhysicsComponent()->applyMovementForce(Direction::Right());
-      moveForce = shared_ptr<Vect2D>(new Vect2D(10.0, 0.0));
-      this->getPhysicsComponent()->applyForce(moveForce);
+      this->getPhysicsComponent()->applyMovementForce(Direction::Right());
       break;
     default:
       // TODO: should warn

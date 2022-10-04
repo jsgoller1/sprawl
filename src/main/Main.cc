@@ -20,7 +20,7 @@ int main() {
     duration = timer.tick();
     userAction = inputManager.getGameAction();
     if (userAction != GameAction::IDLE) {
-      log("GameAction: " + to_string(userAction));
+      // log("GameAction: " + to_string(userAction));
     }
     /*
     TODO: UI stuff; UI can either pause the game
@@ -38,6 +38,7 @@ int main() {
     // not move the player around. We may also want the World/Zone to keep state
     // as well, e.g. "up" should do something different if the player is in a
     // vehicle, in combat, etc.
+    // userAction = GameAction::MOVE_RIGHT;
     world.update(userAction, duration);
     screen.drawAll(world.getDrawables());
 

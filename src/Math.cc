@@ -130,6 +130,15 @@ void Vect2D::invert() {
   this->y = -1.0 * this->y;
 }
 
+void Vect2D::roundToZero(const real minValue) {
+  // if a value falls within a certain range, set it to zero.
+  // TODO: We may want to generalize this
+  // to a generic roundUp or roundDown method; for now,
+  // we only need rounding down to zero.
+  this->x = ((-minValue < this->x) && (this->x < minValue)) ? 0.0 : this->x;
+  this->y = ((-minValue < this->y) && (this->y < minValue)) ? 0.0 : this->y;
+}
+
 bool Direction::operator==(const Direction& dir) const {
   // Returns true if both vectors have same x and y components
   return eq(this->x, dir.x) && eq(this->y, dir.y);

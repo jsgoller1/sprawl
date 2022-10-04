@@ -53,10 +53,14 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
       shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
   PositionUnit x = characterJSON["position"]["x"];
   PositionUnit y = characterJSON["position"]["y"];
+  real maxSpeed = characterJSON["maxSpeed"];
+  real minSpeed = characterJSON["minSpeed"];
+  real dragCoefficient = characterJSON["dragCoefficient"];
   shared_ptr<Vect2D> center = shared_ptr<Vect2D>(new Vect2D(x, y));
 
   CharacterSPtr character =
-      CharacterSPtr(new Character(center, name, nullptr, texturePath));
+      CharacterSPtr(new Character(center, name, nullptr, texturePath, nullptr,
+                                  maxSpeed, minSpeed, dragCoefficient));
   zone->physicsMgr->manageComponent(character->getPhysicsComponent());
 
   if (*name == "Player") {

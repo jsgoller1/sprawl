@@ -5,7 +5,8 @@ PhysicsComponent::PhysicsComponent(
     const shared_ptr<PositionComp> positionComp,
     const shared_ptr<BoundingBoxParams> boundingBoxParams,
     const bool forceResponsiveSetting, const bool collisionsSetting,
-    const bool gravitySetting) {
+    const bool gravitySetting, const PositionUnit maxSpeed,
+    const PositionUnit minSpeed, const real dragCoefficient) {
   this->ownerName = ownerName;
   this->positionComp = positionComp;
   this->boundingBoxParams = boundingBoxParams;
@@ -15,6 +16,9 @@ PhysicsComponent::PhysicsComponent(
   this->acceleration = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
   this->netForce = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
   this->velocity = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
+  this->maxSpeed = maxSpeed;
+  this->minSpeed = minSpeed;
+  this->dragCoefficient = dragCoefficient;
 }
 
 shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
@@ -44,11 +48,7 @@ shared_ptr<Vect2D> PhysicsComponent::getVelocity() const {
 shared_ptr<Vect2D> PhysicsComponent::getAcceleration() const {
   return this->acceleration;
 }
-real PhysicsComponent::getDragCoeff() const {
-  // TODO: Check what drag coefficient is appropriate for the situation, i.e. if
-  // we're in midair or not
-  return this->dragCoeff;
-};
+
 /*
 real PhysicsComponent::getAirDragCoeff() const { return this->airDragCoeff; };
 void PhysicsComponent::setAirDragCoeff(real coeff) {
@@ -137,8 +137,13 @@ void PhysicsComponent::integrate(const time_ms duration) {
   }
 
   this->updateVelocityNoDrag(to_seconds(duration));
+  std::cout << "netForce (x): " << this->netForce->x << std::endl;
+  std::cout << "Acceleration (x): " << this->acceleration->x << std::endl;
+  std::cout << "Final Velocity (x): " << this->velocity->x << std::endl;
   const shared_ptr<Vect2D> moveDistance = *(this->velocity) * duration;
   this->positionComp->move(moveDistance);
+  std::cout << "----------------" << std::endl;
+
   /*
   if (this->isForceResponsive()) {
     // - attempt to do the X/Y move, and get a list of objects we'd collide
@@ -237,7 +242,14 @@ void PhysicsComponent::updateVelocityNoDrag(const time_ms duration) {
   this->acceleration =
       calculateAcceleration(duration, this->netForce, this->mass);
   *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
-  *(this->velocity) *= pow(this->dragCoeff, duration);
+  real drag = pow(this->dragCoefficient, duration);
+  std::cout << "Pre-drag Velocity (x): " << this->velocity->x << std::endl;
+  *(this->velocity) *= drag;
+  std::cout << "Post-drag Velocity (x): " << this->velocity->x << std::endl;
+
+  // Clamp to zero; we don't want to very slowly decelerate
+  // to zero, but do so more abruptly
+  // this->velocity->roundToZero(this->minSpeed);
 }
 
 void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
@@ -250,8 +262,8 @@ void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
       calculateAcceleration(duration, this->netForce, this->mass);
   shared_ptr<Vect2D> draglessVelocity =
       calculateVelocity(duration, draglessAcceleration);
-  shared_ptr<Vect2D> dragForce =
-      calculateDragForce(*draglessVelocity + *this->velocity, this->dragCoeff);
+  shared_ptr<Vect2D> dragForce = calculateDragForce(
+      *draglessVelocity + *this->velocity, this->dragCoefficient);
   this->applyForce(dragForce);
   this->acceleration =
       calculateAcceleration(duration, this->netForce, this->mass);

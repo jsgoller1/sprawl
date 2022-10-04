@@ -46,7 +46,9 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
       const shared_ptr<PositionComp> positionComp,
       const shared_ptr<BoundingBoxParams> BoundingBoxParams = nullptr,
       const bool forceResponsiveSetting = false,
-      const bool collisionsSetting = false, const bool gravitySetting = false);
+      const bool collisionsSetting = false, const bool gravitySetting = false,
+      const PositionUnit maxSpeed = 0.0, const PositionUnit minSpeed = 0.0,
+      const real dragCoefficient = 0.0);
   shared_ptr<PhysicsComponent> getptr();
 
   // Attribute getter/setters
@@ -64,11 +66,14 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<Vect2D> getNetForce() const;
   shared_ptr<Vect2D> getVelocity() const;
   shared_ptr<Vect2D> getAcceleration() const;
-  real getDragCoeff() const;
-  // real getAirDragCoeff() const;
-  // void setAirDragCoeff(real coeff);
-  // real getSurfaceDragCoeff() const;
-  // void setSurfaceDragCoeff(real coeff);
+  void setMaxSpeed(const PositionUnit maxSpeed) { this->maxSpeed = maxSpeed; }
+  PositionUnit getMaxSpeed() { return this->maxSpeed; }
+  void setMinSpeed(const PositionUnit minSpeed) { this->minSpeed = minSpeed; }
+  PositionUnit getMinSpeed() { return this->minSpeed; }
+  void setDragCoefficient(const real dragCoefficient) {
+    this->dragCoefficient = dragCoefficient;
+  }
+  real getDragCoefficient() { return this->dragCoefficient; }
 
   // Owned object getter/setters
   shared_ptr<PhysicsManager> getManager() const;
@@ -108,12 +113,25 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   // PhysicsComponent into GameObjects?
 
  protected:
+  // Other functionality
+  void updateVelocityNoDrag(const time_ms duration);
+  void updateVelocityFromNetForce(const time_ms duration);
+  void attemptMove(const shared_ptr<Vect2D> moveDistance);
+  shared_ptr<CollisionResult> resolveElasticCollision(
+      shared_ptr<PhysicsComponent> collisionTarget, const CollisionAxes type,
+      const bool applyResultToUs, const bool applyResultToThem);
+  shared_ptr<Vect2D> calculateGravityForce() const;
+
+ private:
+  PositionUnit maxSpeed;
+  PositionUnit minSpeed;
+  real dragCoefficient;
+
   // Attributes
   GameObjectNameSPtr ownerName;
   bool forceResponsive;
   bool collisionsEnabled;
   bool gravityEnabled;
-  real dragCoeff = 0.2;
   // TODO: Do we want to define a custom force type, or is it
   // ok to use just a Vect2D?
   shared_ptr<Vect2D> netForce;
@@ -130,13 +148,4 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
 
   // References
   shared_ptr<PhysicsManager> manager;
-
-  // Other functionality
-  void updateVelocityNoDrag(const time_ms duration);
-  void updateVelocityFromNetForce(const time_ms duration);
-  void attemptMove(const shared_ptr<Vect2D> moveDistance);
-  shared_ptr<CollisionResult> resolveElasticCollision(
-      shared_ptr<PhysicsComponent> collisionTarget, const CollisionAxes type,
-      const bool applyResultToUs, const bool applyResultToThem);
-  shared_ptr<Vect2D> calculateGravityForce() const;
 };

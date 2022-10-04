@@ -26,11 +26,11 @@ void Zone::handleInput(const GameAction& action) {
     case STOP_MOVE_RIGHT:
     case MOVE_LEFT:
     case MOVE_RIGHT:
-      log(string("Got move action: " + to_string(action)));
+      // log(string("Got move action: " + to_string(action)));
       this->player->move(action);
       break;
     case MOVE_UP:
-      log(string("Got move action: " + to_string(action)));
+      // log(string("Got move action: " + to_string(action)));
       this->player->jump();
       break;
     case SHOOT_DOWN:
@@ -41,7 +41,8 @@ void Zone::handleInput(const GameAction& action) {
       this->player->shoot(action);
       break;
     default:
-      log(string("Unknown action: " + to_string(action)));
+      // log(string("Unknown action: " + to_string(action)));
+      break;
   }
 }
 

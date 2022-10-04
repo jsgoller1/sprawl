@@ -21,7 +21,10 @@ class Character : public GameObject {
             const GameObjectNameSPtr name = nullptr,
             const shared_ptr<CharacterPhysicsComponent> physicsComp = nullptr,
             const FilePathSPtr texturePath = nullptr,
-            const DrawingCompSPtr drawingComp = nullptr);
+            const DrawingCompSPtr drawingComp = nullptr,
+            const PositionUnit maxSpeed = 0.0,
+            const PositionUnit minSpeed = 0.0,
+            const real dragCoefficient = 0.0);
   void shoot();
   void move(const GameAction& action);
   void shoot(const GameAction& action);

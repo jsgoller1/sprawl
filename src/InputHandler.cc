@@ -6,6 +6,14 @@ GameAction InputHandler::getGameAction() {
   // i.e. (pausing the game, volume change, etc, which won't cause actions to
   // be given to World.update()), so we want to keep getting input and
   // getting game actions separate.
+
+  // BUG: This doesn't work as intended when a user holds a key down. Because we
+  // wait for events, we're at the mercy of the keyboard driver in terms of
+  // delays. This causes an issue with character movement where there's a short
+  // burst and pause before continuous movement. What we should do instead is
+  // track key state by keeping a collection of currently pressed keys, adding
+  // to them when a keydown event occurs, and assuming the key is held down
+  // until we get a keyup event and remove it from the collection.
   return this->getInput()->getGameAction();
 }
 

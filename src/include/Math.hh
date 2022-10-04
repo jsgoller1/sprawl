@@ -82,6 +82,7 @@ class Vect2D {
   void getMagnitude();
   void clear();
   void invert();
+  void roundToZero(const real minValue);
 
   static shared_ptr<Vect2D> zero() {
     return shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
