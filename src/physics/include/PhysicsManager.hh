@@ -30,7 +30,12 @@ class PhysicsManager : public enable_shared_from_this<PhysicsManager> {
       shared_ptr<PhysicsComponent> component);
   void manageComponent(const shared_ptr<PhysicsComponent> component);
   void unmanageComponent(const shared_ptr<PhysicsComponent> component);
+  real getGravityConstant() const { return this->gravityConstant; }
+  void setGravityConstant(const real gravityConstant) {
+    this->gravityConstant = gravityConstant;
+  };
 
  private:
   shared_ptr<std::set<shared_ptr<PhysicsComponent>>> managedComponents;
+  real gravityConstant = 10.0;
 };

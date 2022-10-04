@@ -55,44 +55,6 @@ bool gte(const real& real1, const real& real2);
 bool areLinesIntersecting(const PositionUnit low1, const PositionUnit hi1,
                           const PositionUnit low2, const PositionUnit hi2);
 
-class Vect2D {
- public:
-  Vect2D();
-  Vect2D(XCoord x, YCoord y);
-  Vect2D(const Vect2D& vect);
-  Vect2D(shared_ptr<Vect2D> vect);
-  XCoord x;
-  YCoord y;
-
-  bool operator==(const Vect2D& other) const;
-  bool operator!=(const Vect2D& other) const;
-  shared_ptr<Vect2D> operator+(const Vect2D& vect) const;
-  void operator+=(const Vect2D& vect);
-  shared_ptr<Vect2D> operator-(const Vect2D& vect) const;
-  void operator-=(const Vect2D& vect);
-  shared_ptr<Vect2D> operator*(const real value) const;
-  void operator*=(const real value);
-
-  void addScaledVector(const Vect2D& vect, const real scalar);
-  void addScaledVector(const Vect2D& vect, const int scalar) {
-    this->addScaledVector(vect, real(scalar));
-  }
-
-  void getDirection();
-  void getMagnitude();
-  void clear();
-  void invert();
-  void roundToZero(const real minValue);
-
-  static shared_ptr<Vect2D> zero() {
-    return shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
-  }
-
- private:
-  // Disallow creation of vectors from integer coordinates.
-  explicit Vect2D(int x, int y);
-};
-
 class Direction {
  public:
   static shared_ptr<Direction> None() {
@@ -123,17 +85,54 @@ class Direction {
     return shared_ptr<Direction>(new Direction(1.0, 1.0));
   }
   bool operator==(const Direction& other) const;
+  XCoord getX() const { return this->x; }
+  YCoord getY() const { return this->y; }
 
  private:
   explicit Direction(XCoord x, XCoord y) : x(x), y(y) {}
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunused-private-field"
-  // These fields are in fact used, we just never access them directly; we are
-  // using static methods to treat various values for Direction as constants.
-  // See Effective C++, item 18 for details.
   XCoord x;
   YCoord y;
-#pragma clang diagnostic pop
+};
+
+class Vect2D {
+ public:
+  Vect2D();
+  Vect2D(XCoord x, YCoord y);
+  Vect2D(const Vect2D& vect);
+  Vect2D(shared_ptr<Vect2D> vect);
+  Vect2D(shared_ptr<Direction> direction);
+
+  XCoord x;
+  YCoord y;
+
+  bool operator==(const Vect2D& other) const;
+  bool operator!=(const Vect2D& other) const;
+  shared_ptr<Vect2D> operator+(const Vect2D& vect) const;
+  void operator+=(const Vect2D& vect);
+  shared_ptr<Vect2D> operator-(const Vect2D& vect) const;
+  void operator-=(const Vect2D& vect);
+  shared_ptr<Vect2D> operator*(const real value) const;
+  void operator*=(const real value);
+  string to_string();
+
+  void addScaledVector(const Vect2D& vect, const real scalar);
+  void addScaledVector(const Vect2D& vect, const int scalar) {
+    this->addScaledVector(vect, real(scalar));
+  }
+
+  void getDirection();
+  void getMagnitude();
+  void clear();
+  void invert();
+  void roundToZero(const real minValue);
+
+  static shared_ptr<Vect2D> zero() {
+    return shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
+  }
+
+ private:
+  // Disallow creation of vectors from integer coordinates.
+  explicit Vect2D(int x, int y);
 };
 
 /*

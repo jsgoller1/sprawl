@@ -69,6 +69,11 @@ Vect2D::Vect2D(shared_ptr<Vect2D> vect) {
   this->y = vect->y;
 }
 
+Vect2D::Vect2D(shared_ptr<Direction> direction) {
+  this->x = direction->getX();
+  this->y = direction->getY();
+}
+
 bool Vect2D::operator==(const Vect2D& vect) const {
   // Returns true if both vectors have same x and y components
   return eq(this->x, vect.x) && eq(this->y, vect.y);
@@ -142,4 +147,9 @@ void Vect2D::roundToZero(const real minValue) {
 bool Direction::operator==(const Direction& dir) const {
   // Returns true if both vectors have same x and y components
   return eq(this->x, dir.x) && eq(this->y, dir.y);
+}
+
+string Vect2D::to_string() {
+  return "Vect2D(x: " + std::to_string(this->x) +
+         ", y: " + std::to_string(this->y) + ")";
 }

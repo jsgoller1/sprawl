@@ -48,8 +48,7 @@ PhysicsManager::getAllColliding(shared_ptr<PhysicsComponent> component) {
 
 void PhysicsManager::updateManagedComponents(const time_ms duration) {
   for (shared_ptr<PhysicsComponent> comp : *(this->managedComponents)) {
-    // TODO: applying gravity here is messy and should be done elsewhere;
-    // this will just get it done for the initial MVP.
+    comp->applyGravity();
     comp->integrate(duration);
   }
 }

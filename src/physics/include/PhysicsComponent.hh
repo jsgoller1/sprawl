@@ -111,6 +111,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   // Alternatively, maybe the PhysicsManager should manage the relationships
   // between components and their parents and support turning a list of
   // PhysicsComponent into GameObjects?
+  void applyGravity();
 
  protected:
   // Other functionality
@@ -120,7 +121,6 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<CollisionResult> resolveElasticCollision(
       shared_ptr<PhysicsComponent> collisionTarget, const CollisionAxes type,
       const bool applyResultToUs, const bool applyResultToThem);
-  shared_ptr<Vect2D> calculateGravityForce() const;
 
  private:
   PositionUnit maxSpeed;

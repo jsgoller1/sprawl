@@ -26,4 +26,7 @@ class CharacterPhysicsComponent : public PhysicsComponent {
   // - Create some kind of factory that can take a pointer to an object
   //   and return a shared pointer to it.
   shared_ptr<CharacterPhysicsComponent> getptr();
+
+ private:
+  real mass = 1.0;
 };

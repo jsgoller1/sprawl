@@ -137,9 +137,9 @@ void PhysicsComponent::integrate(const time_ms duration) {
   }
 
   this->updateVelocityNoDrag(to_seconds(duration));
-  std::cout << "netForce (x): " << this->netForce->x << std::endl;
-  std::cout << "Acceleration (x): " << this->acceleration->x << std::endl;
-  std::cout << "Final Velocity (x): " << this->velocity->x << std::endl;
+  std::cout << "netForce: " << this->netForce->to_string() << std::endl;
+  std::cout << "Acceleration: " << this->acceleration->to_string() << std::endl;
+  std::cout << "Final Velocity: " << this->velocity->to_string() << std::endl;
   const shared_ptr<Vect2D> moveDistance = *(this->velocity) * duration;
   this->positionComp->move(moveDistance);
   std::cout << "----------------" << std::endl;
@@ -243,9 +243,11 @@ void PhysicsComponent::updateVelocityNoDrag(const time_ms duration) {
       calculateAcceleration(duration, this->netForce, this->mass);
   *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
   real drag = pow(this->dragCoefficient, duration);
-  std::cout << "Pre-drag Velocity (x): " << this->velocity->x << std::endl;
+  std::cout << "Pre-drag Velocity: " << this->velocity->to_string()
+            << std::endl;
   *(this->velocity) *= drag;
-  std::cout << "Post-drag Velocity (x): " << this->velocity->x << std::endl;
+  std::cout << "Post-drag Velocity: " << this->velocity->to_string()
+            << std::endl;
 
   // Clamp to zero; we don't want to very slowly decelerate
   // to zero, but do so more abruptly
@@ -283,3 +285,13 @@ shared_ptr<CollisionResult> PhysicsComponent::resolveElasticCollision(
   // or not, return a (pointer to a) pair of forces where pair->first is their
   // force on us, and pair->second is our force on them.
 }
+
+void PhysicsComponent::applyGravity() {
+  if (this->hasGravity()) {
+    shared_ptr<Vect2D> force =
+        shared_ptr<Vect2D>(new Vect2D(Direction::Down()));
+    force->y *= this->getManager()->getGravityConstant();
+    force->y *= this->mass;
+    this->applyForce(force);
+  }
+};
