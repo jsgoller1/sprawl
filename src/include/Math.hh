@@ -134,16 +134,3 @@ class Vect2D {
   // Disallow creation of vectors from integer coordinates.
   explicit Vect2D(int x, int y);
 };
-
-/*
-class Force {
- public:
-  Force(const Direction& direction, const Magnitude magnitude)
-      : direction(direction), magnitude(magnitude){};
-  Direction direction;
-  Magnitude magnitude;
-  static shared_ptr<Force> zero() {
-    return shared_ptr<Force>(new Force(DIR_NONE, 0.0));
-  }
-};
-*/
