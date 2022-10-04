@@ -1,12 +1,16 @@
 #pragma once
 
 #include "Math.hh"
-#include "Memory.hh"
+#include "Types.hh"
 
-// Forward decls
+// Forward decl
 class PhysicsComponent;
 
-class CollidingPhysicsComponents {
+typedef std::pair<shared_ptr<Vect2D>, shared_ptr<Vect2D>> CollisionResult;
+
+enum CollisionAxes { X_AND_Y, Y_ONLY, X_ONLY };
+
+class Collision {
  public:
   void add();
   void remove();
@@ -18,15 +22,9 @@ class CollidingPhysicsComponents {
     return this->objects;
   }
 
-  shared_ptr<CollidingPhysicsComponents> getMerged(
-      shared_ptr<CollidingPhysicsComponents> otherObjects);
-  shared_ptr<CollidingPhysicsComponents> getRemoved(
-      shared_ptr<CollidingPhysicsComponents> otherObjects);
+  shared_ptr<Collision> getMerged(shared_ptr<Collision> otherObjects);
+  shared_ptr<Collision> getRemoved(shared_ptr<Collision> otherObjects);
 
  private:
   shared_ptr<std::set<shared_ptr<PhysicsComponent>>> objects;
 };
-
-typedef std::pair<shared_ptr<Vect2D>, shared_ptr<Vect2D>> CollisionResult;
-
-enum CollisionAxes { X_AND_Y, Y_ONLY, X_ONLY };
