@@ -3,12 +3,13 @@
 PhysicsComponent::PhysicsComponent(
     const GameObjectNameSPtr ownerName,
     const shared_ptr<PositionComp> positionComp,
-    const shared_ptr<BoundingBoxParams> boundingBoxParams,
-    const bool forceResponsiveSetting, const bool collisionsSetting,
-    const bool gravitySetting, const PositionUnit maxSpeed,
-    const PositionUnit minSpeed, const real dragCoefficient) {
+    const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
+    const bool forceResponsiveSetting, const bool gravitySetting,
+    const PositionUnit maxSpeed, const PositionUnit minSpeed,
+    const real dragCoefficient) {
   this->ownerName = ownerName;
   this->positionComp = positionComp;
+  this->collisionDetectionComponent = collisionDetectionComponent;
   this->forceResponsive = forceResponsiveSetting;
   this->gravityEnabled = gravitySetting;
   this->acceleration = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
@@ -21,7 +22,8 @@ PhysicsComponent::PhysicsComponent(
 
 bool PhysicsComponent::checkCollision(
     const shared_ptr<PhysicsComponent> comp) const {
-  this->collisionComponent->checkCollision(comp->getCollisionComponent());
+  this->collisionDetectionComponent->checkCollision(
+      comp->getCollisionDetectionComponent());
 }
 
 void PhysicsComponent::applyForce(const shared_ptr<const Vect2D> force) {
@@ -76,14 +78,37 @@ void PhysicsComponent::integrate(const time_ms duration) {
     // std::cout << "Final Velocity: " << this->velocity->to_string() <<
     // std::endl;
     // std::cout << "----------------" << std::endl;
-    const shared_ptr<Vect2D> moveDistance = *(this->velocity) * duration;
-    this->positionComp->move(moveDistance);
-    this->attemptMove(moveDistance);
+    const shared_ptr<Vect2D> movement = *(this->velocity) * duration;
+    this->attemptMove(movement);
   }
   this->netForce = Vect2D::zero();
 }
 
-void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
+void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
+  // Calculates velocity by imposing drag as a damper on velocity
+  // rather than as a force itself.
+  this->acceleration =
+      calculateAcceleration(duration, this->netForce, this->mass);
+  *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
+  real drag = pow(this->dragCoefficient, duration);
+  // std::cout << "Pre-drag Velocity: " << this->velocity->to_string() <<
+  // std::endl;
+  *(this->velocity) *= drag;
+  // std::cout << "Post-drag Velocity: " << this->velocity->to_string() <<
+  // std::endl;
+}
+
+void PhysicsComponent::applyGravity() {
+  if (this->getGravityEnabled()) {
+    shared_ptr<Vect2D> force =
+        shared_ptr<Vect2D>(new Vect2D(Direction::Down()));
+    force->y *= this->getManager()->getGravityConstant();
+    force->y *= this->mass;
+    this->applyForce(force);
+  }
+};
+
+void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
   // Attempt movement based on velocity based on
   // object's velocity over the duration;
   // we will scale the velocity vector based on time
@@ -101,17 +126,79 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   // box? There are some edge cases where a move might collide with two
   // things, one of which is closer.
 
-  this->positionComp->moveOnlyX(moveDistance);
-  shared_ptr<Collision> xCollisions = this->collisionComponent->getCollision();
-  this->positionComp->reverseMoveOnlyX(moveDistance);
+  this->positionComp->moveOnlyX(movement);
+  shared_ptr<CollisionSet> xCollisions = this->detectCollision();
+  this->positionComp->reverseMoveOnlyX(movement);
 
-  this->positionComp->moveOnlyY(moveDistance);
-  shared_ptr<Collision> yCollisions = this->collisionComponent->getCollision();
-  this->positionComp->reverseMoveOnlyY(moveDistance);
+  this->positionComp->moveOnlyY(movement);
+  shared_ptr<CollisionSet> yCollisions = this->detectCollision();
+  this->positionComp->reverseMoveOnlyY(movement);
 
-  shared_ptr<Collision> doubleCollisions = xCollisions->getMerged(yCollisions);
-  shared_ptr<Collision> xOnlyCollisions = xCollisions->getRemoved(yCollisions);
-  shared_ptr<Collision> yOnlyCollisions = yCollisions->getRemoved(xCollisions);
+  this->resolveCollisions(movement, xCollisions, yCollisions);
+}
+
+shared_ptr<CollisionSet> PhysicsComponent::detectCollision() {
+  shared_ptr<set<shared_ptr<PhysicsComponent>>> candidates =
+      this->getManager()->getCollisionCandidates(this->getptr());
+  shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> candidateComponents =
+      shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>(
+          new set<shared_ptr<CollisionDetectionComponent>>());
+  for (shared_ptr<PhysicsComponent> pComp : *candidates) {
+    candidateComponents->insert(pComp->getCollisionDetectionComponent());
+  }
+}
+
+void PhysicsComponent::resolveCollisions(
+    // TODO: I _really_ don't want to have references to the parent object
+    // stored in the physicsComponent; the physicsComponent should be
+    // constructed with refs to parent-owned components it needs - if it has a
+    // direct reference to the parent object, it will wind up calling the parent
+    // directly and creating dependencies on it. Maybe the physicsComponent
+    // could be given a callback that returns shared_ptr<GameObject> to the
+    // parent? Alternatively, maybe the PhysicsManager should manage the
+    // relationships between components and their parents and support turning a
+    // list of PhysicsComponent into GameObjects?
+    const shared_ptr<Vect2D> movement,
+    const shared_ptr<CollisionSet> xCollisions,
+    const shared_ptr<CollisionSet> yCollisions) {
+  if (xCollisions != nullptr) {
+    shared_ptr<CollisionSet> xOnlyCollisions =
+        xCollisions->setwiseComplement(yCollisions);
+    // Resolve collisions here
+  }
+  if (yCollisions != nullptr) {
+    shared_ptr<CollisionSet> yOnlyCollisions =
+        yCollisions->setwiseComplement(xCollisions);
+    // Resolve collisions here
+  }
+  if (xCollisions != nullptr && yCollisions != nullptr) {
+    shared_ptr<CollisionSet> doubleCollisions =
+        xCollisions->setwiseAnd(yCollisions);
+    // Resolve collisions here
+  }
+}
+
+void PhysicsComponent::resolveCollisionsElastic(
+    shared_ptr<CollisionSet> collisionTarget, const CollisionAxes axes) {
+  /*
+    shared_ptr<CollisionResult> resolveElasticCollision(
+        shared_ptr<CollisionDetectionComponent> collisionTarget,
+        const CollisionAxes axes, const bool applyResultToUs,
+        const bool applyResultToThem);
+
+  */
+
+  // Resolve a collision that we know occurred betwen us and another
+  // physics-enabled object.
+
+  // The collision is elastic, so kinetic energy and momentum will be
+  //  preserved (https://en.wikipedia.org/wiki/Elastic_collision#Equations).
+  //  CollisionSet axes determine whether we collided with them via X-axis
+  //  movement, Y-axis movement, or both. We calculate what force they should
+  //  apply to us, and what force we should apply to them. Flags control whether
+  //  these are added to our/their net force. Regardless of whether we apply
+  //  these forces or not, return a (pointer to a) pair of forces where
+  //  pair->first is their force on us, and pair->second is our force on them.
 
   /*
     NOTE: If we collide with multiple objects with once, how much force we wind
@@ -139,47 +226,31 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> moveDistance) {
   shared_ptr<Vect2D> currentNetForce = this->getNetForce();
   shared_ptr<Vect2D> cumulativeNormalForce = Vect2D::zero();
   shared_ptr<CollisionResult> result;
+  shared_ptr<CollisionDetectionComponent> us =
+      this->collisionDetectionComponent;
 
   bool DONT_APPLY_TO_US = false;
   bool APPLY_TO_THEM = true;
-  for (shared_ptr<PhysicsComponent> comp : *doubleCollisions->getAll()) {
-    result = this->resolveElasticCollision(comp, CollisionAxes::X_AND_Y,
-                                           DONT_APPLY_TO_US, APPLY_TO_THEM);
+  for (shared_ptr<PhysicsComponent> physComp : *doubleCollisions->getAll()) {
+    shared_ptr<CollisionDetectionComponent> them =
+        physComp->getCollisionDetectionComponent();
+    result = us->resolveElasticCollision(them, CollisionAxes::X_AND_Y,
+                                         DONT_APPLY_TO_US, APPLY_TO_THEM);
   }
-  for (shared_ptr<PhysicsComponent> comp : *xOnlyCollisions->getAll()) {
-    result = this->resolveElasticCollision(comp, CollisionAxes::X_ONLY,
-                                           DONT_APPLY_TO_US, APPLY_TO_THEM);
+  for (shared_ptr<PhysicsComponent> physComp : *xOnlyCollisions->getAll()) {
+    shared_ptr<CollisionDetectionComponent> them =
+        physComp->getCollisionDetectionComponent();
+    result = us->resolveElasticCollision(them, CollisionAxes::X_ONLY,
+                                         DONT_APPLY_TO_US, APPLY_TO_THEM);
   }
-  for (shared_ptr<PhysicsComponent> comp : *yOnlyCollisions->getAll()) {
-    result = this->resolveElasticCollision(comp, CollisionAxes::Y_ONLY,
-                                           DONT_APPLY_TO_US, APPLY_TO_THEM);
+  for (shared_ptr<PhysicsComponent> physComp : *yOnlyCollisions->getAll()) {
+    shared_ptr<CollisionDetectionComponent> them =
+        physComp->getCollisionDetectionComponent();
+    result = us->resolveElasticCollision(them, CollisionAxes::Y_ONLY,
+                                         DONT_APPLY_TO_US, APPLY_TO_THEM);
   }
   // TODO: If we wind up with forces causing backwards acceleration, zero them
   // here.
 
   // TODO: Check if we're colliding down; if so, we can jump again.
 }
-
-void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
-  // Calculates velocity by imposing drag as a damper on velocity
-  // rather than as a force itself.
-  this->acceleration =
-      calculateAcceleration(duration, this->netForce, this->mass);
-  *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
-  real drag = pow(this->dragCoefficient, duration);
-  std::cout << "Pre-drag Velocity: " << this->velocity->to_string()
-            << std::endl;
-  *(this->velocity) *= drag;
-  std::cout << "Post-drag Velocity: " << this->velocity->to_string()
-            << std::endl;
-}
-
-void PhysicsComponent::applyGravity() {
-  if (this->getGravityEnabled()) {
-    shared_ptr<Vect2D> force =
-        shared_ptr<Vect2D>(new Vect2D(Direction::Down()));
-    force->y *= this->getManager()->getGravityConstant();
-    force->y *= this->mass;
-    this->applyForce(force);
-  }
-};

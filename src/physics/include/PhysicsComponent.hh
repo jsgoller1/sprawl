@@ -1,7 +1,6 @@
 #pragma once
 
-#include "BoundingBox.hh"
-#include "CollisionComponent.hh"
+#include "CollisionDetectionComponent.hh"
 #include "Math.hh"
 #include "Memory.hh"
 #include "PhysicsHelpers.hh"
@@ -43,11 +42,10 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   PhysicsComponent(
       const GameObjectNameSPtr ownerName,
       const shared_ptr<PositionComp> positionComp,
-      const shared_ptr<BoundingBoxParams> BoundingBoxParams = nullptr,
+      const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
       const bool forceResponsiveSetting = false,
-      const bool collisionsSetting = false, const bool gravitySetting = false,
-      const PositionUnit maxSpeed = 0.0, const PositionUnit minSpeed = 0.0,
-      const real dragCoefficient = 0.0);
+      const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
+      const PositionUnit minSpeed = 0.0, const real dragCoefficient = 0.0);
   shared_ptr<PhysicsComponent> getptr() { return this->shared_from_this(); }
 
   // Attribute getter/setters
@@ -76,19 +74,23 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<Vect2D> getAcceleration() const { return this->acceleration; }
   shared_ptr<Vect2D> getVelocity() const { return this->velocity; }
 
-  // Owned components/objects and forwarding methods
+  // Owned components/objects
   shared_ptr<PhysicsManager> getManager() const { return this->manager; }
   void setManager(const shared_ptr<PhysicsManager> manager) {
     this->manager = manager;
   };
-  shared_ptr<CollisionComponent> getCollisionComponent() const {
-    return this->collisionComponent;
+  shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent()
+      const {
+    return this->collisionDetectionComponent;
   }
-  void getCollisionComponent(const shared_ptr<CollisionComponent> comp) {
-    this->collisionComponent = comp;
+  void setCollisionDetectionComponent(
+      const shared_ptr<CollisionDetectionComponent> comp) {
+    this->collisionDetectionComponent = comp;
   }
+
+  // Forwarding methods
   shared_ptr<BoundingBox> getBoundingBox() {
-    this->collisionComponent->getBoundingBox();
+    this->collisionDetectionComponent->getBoundingBox();
   }
   bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
 
@@ -99,12 +101,11 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   bool isMidair() const;
   bool isMoving() const;
   void integrate(const time_ms duration);
-
- protected:
-  void attemptMove(const shared_ptr<Vect2D> moveDistance);
-  shared_ptr<CollisionResult> resolveElasticCollision(
-      shared_ptr<PhysicsComponent> collisionTarget, const CollisionAxes type,
-      const bool applyResultToUs, const bool applyResultToThem);
+  shared_ptr<CollisionSet> detectCollision();
+  void PhysicsComponent::resolveCollisions(
+      const shared_ptr<Vect2D> movement,
+      const shared_ptr<CollisionSet> xCollisions = nullptr,
+      const shared_ptr<CollisionSet> yCollisions = nullptr);
 
  private:
   // Attributes
@@ -120,7 +121,9 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   shared_ptr<Vect2D> acceleration;
 
   shared_ptr<PhysicsManager> manager;
-  shared_ptr<CollisionComponent> collisionComponent;
+  shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
   shared_ptr<PositionComp> positionComp;
+
+  void attemptMove(const shared_ptr<Vect2D> movement);
   void updateVelocityFromNetForce(const time_ms duration);
 };

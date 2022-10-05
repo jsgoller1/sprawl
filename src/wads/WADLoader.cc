@@ -51,6 +51,8 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
       shared_ptr<GameObjectName>(new GameObjectName(characterJSON["name"]));
   shared_ptr<FilePath> texturePath =
       shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
+  shared_ptr<BoundingBoxParams> bboxParams = shared_ptr<BoundingBoxParams>(
+      new BoundingBoxParams(shared_ptr<Texture>(new Texture(texturePath))));
   PositionUnit x = characterJSON["position"]["x"];
   PositionUnit y = characterJSON["position"]["y"];
   real maxSpeed = characterJSON["maxSpeed"];

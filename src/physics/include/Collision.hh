@@ -6,11 +6,16 @@
 // Forward decl
 class PhysicsComponent;
 
-typedef std::pair<shared_ptr<Vect2D>, shared_ptr<Vect2D>> CollisionResult;
-
 enum CollisionAxes { X_AND_Y, Y_ONLY, X_ONLY };
+enum CollisionType { PSEUDO, ELASTIC };
+class ElasticCollisionResult {};
 
-class Collision {
+class CollisionSet {
+  /*
+   * A CollisionSet represents the set of objects that a moving object has
+   * collided with. "Set" here refers to the mathematical sense of a set, not
+   * std::set().
+   */
  public:
   void add();
   void remove();
@@ -22,8 +27,9 @@ class Collision {
     return this->objects;
   }
 
-  shared_ptr<Collision> getMerged(shared_ptr<Collision> otherObjects);
-  shared_ptr<Collision> getRemoved(shared_ptr<Collision> otherObjects);
+  shared_ptr<CollisionSet> setwiseAnd(shared_ptr<CollisionSet> otherObjects);
+  shared_ptr<CollisionSet> setwiseComplement(
+      shared_ptr<CollisionSet> otherObjects);
 
  private:
   shared_ptr<std::set<shared_ptr<PhysicsComponent>>> objects;

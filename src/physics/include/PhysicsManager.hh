@@ -26,7 +26,7 @@ class PhysicsManager : public enable_shared_from_this<PhysicsManager> {
 
  public:
   void updateManagedComponents(const time_ms duration);
-  shared_ptr<vector<shared_ptr<PhysicsComponent>>> getAllColliding(
+  shared_ptr<set<shared_ptr<PhysicsComponent>>> getCollisionCandidates(
       shared_ptr<PhysicsComponent> component);
   void manageComponent(const shared_ptr<PhysicsComponent> component);
   void unmanageComponent(const shared_ptr<PhysicsComponent> component);
@@ -36,6 +36,6 @@ class PhysicsManager : public enable_shared_from_this<PhysicsManager> {
   };
 
  private:
-  shared_ptr<std::set<shared_ptr<PhysicsComponent>>> managedComponents;
+  shared_ptr<set<shared_ptr<PhysicsComponent>>> managedComponents;
   real gravityConstant = 10.0;
 };

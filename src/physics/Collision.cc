@@ -1,6 +1,10 @@
 #include "Collision.hh"
 
-shared_ptr<Collision> Collision::getMerged(shared_ptr<Collision> otherObjects) {
-}
-shared_ptr<Collision> Collision::getRemoved(
-    shared_ptr<Collision> otherObjects) {}
+void CollisionSet::add() {}
+void CollisionSet::remove() {}
+bool CollisionSet::contains() {}
+
+shared_ptr<CollisionSet> CollisionSet::setwiseAnd(
+    shared_ptr<CollisionSet> otherObjects) {}
+shared_ptr<CollisionSet> CollisionSet::setwiseComplement(
+    shared_ptr<CollisionSet> otherObjects) {}
