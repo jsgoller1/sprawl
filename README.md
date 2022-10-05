@@ -1,5 +1,5 @@
-# neon-rain
-2D cyberpunk game
+# Sprawl game engine
+A 2D game engine built to implement __Neon Rain__. 
 
 ## Setup
 Linux only development at present; requires `make`.
@@ -18,11 +18,3 @@ Download and unzip [the source](https://github.com/libsdl-org/SDL_image/releases
 make
 sudo make install
 ```
-
-## Naming conventions for class/type names
-These are for convenience only
-- `^.*UPtr$`: a `std::uniq_ptr`.
-- `^.*SPtr$`: a `std::shared_ptr`. 
-- `^.*Comp$`: a component class for implementing reusable behavior via composition; always access these via smart pointers.
-- `^.*Mgr$`: a manager class that stores references to components and updates the owner object through them. 
-

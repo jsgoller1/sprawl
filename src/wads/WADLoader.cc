@@ -34,28 +34,46 @@ shared_ptr<Zone> WADLoader::zoneFromWAD(
 
 void WADLoader::addBackground(shared_ptr<Zone> zone,
                               const json& backgroundJSON) const {
-  shared_ptr<FilePath> texturePath =
-      shared_ptr<FilePath>(new FilePath(backgroundJSON["texturePath"]));
+  // Prepare PositionComponent
   PositionUnit x = backgroundJSON["position"]["x"];
   PositionUnit y = backgroundJSON["position"]["y"];
-  zone->background =
-      shared_ptr<Background>(new Background(texturePath, nullptr, x, y));
+  shared_ptr<PositionComponent> positionComponent =
+      shared_ptr<PositionComponent>(new PositionComponent(x, y));
+  // Prepare DrawingComponent
+  shared_ptr<FilePath> texturePath =
+      shared_ptr<FilePath>(new FilePath(backgroundJSON["texturePath"]));
+  shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
+  shared_ptr<DrawingComponent> drawingComponent = shared_ptr<DrawingComponent>(
+      new DrawingComponent(positionComponent, texture));
+  // Construct
+  zone->background = shared_ptr<Background>(
+      new Background(drawingComponent, positionComponent));
 }
 
 void WADLoader::addCharacter(shared_ptr<Zone> zone,
                              const json& characterJSON) const {
-  shared_ptr<GameObjectName> name =
-      shared_ptr<GameObjectName>(new GameObjectName(characterJSON["name"]));
-  shared_ptr<FilePath> texturePath =
-      shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
+  shared_ptr<GameObjectID> name =
+      shared_ptr<GameObjectID>(new GameObjectID(characterJSON["name"]));
+  // Prepare PositionComponent
   PositionUnit x = characterJSON["position"]["x"];
   PositionUnit y = characterJSON["position"]["y"];
-  shared_ptr<Point> center = shared_ptr<Point>(new Point{.x = x, .y = y});
-
-  CharacterSPtr character =
-      CharacterSPtr(new Character(center, name, nullptr, texturePath));
+  shared_ptr<PositionComponent> positionComponent =
+      shared_ptr<PositionComponent>(new PositionComponent(x, y));
+  // Prepare DrawingComponent
+  shared_ptr<FilePath> texturePath =
+      shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
+  shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
+  shared_ptr<DrawingComponent> drawingComponent = shared_ptr<DrawingComponent>(
+      new DrawingComponent(positionComponent, texture));
+  // Prepare PhysicsComponent
+  shared_ptr<PhysicsComponent> physicsComponent =
+      shared_ptr<PhysicsComponent>(new PhysicsComponent(positionComponent));
+  // Construct
+  shared_ptr<Character> character = shared_ptr<Character>(new Character(
+      name, positionComponent, physicsComponent, drawingComponent));
   character->inferBoundingBoxFromTexture();
-  zone->physicsMgr->manageComponent(character->getPhysicsComponent());
+
+  zone->physicsManager->manageComponent(character->getPhysicsComponent());
 
   if (*name == "Player") {
     zone->player = character;
@@ -65,6 +83,8 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
 }
 void WADLoader::addPlatform(shared_ptr<Zone> zone,
                             const json& platformJSON) const {
+  // TODO: This repetition logic should go someplace else so it can be applied
+  // to any object
   int repeatCount = 1;
   PositionUnit xOffset = 0;
   PositionUnit yOffset = 0;
@@ -78,17 +98,33 @@ void WADLoader::addPlatform(shared_ptr<Zone> zone,
     }
   }
 
+  shared_ptr<GameObjectID> name =
+      shared_ptr<GameObjectID>(new GameObjectID(platformJSON["name"]));
+
   PositionUnit x = platformJSON["position"]["x"];
   PositionUnit y = platformJSON["position"]["y"];
   for (int count = 0; count < repeatCount; count++) {
-    shared_ptr<Point> center = shared_ptr<Point>(new Point{.x = x, .y = y});
+    // Prepare PositionComponent
+    shared_ptr<PositionComponent> positionComponent =
+        shared_ptr<PositionComponent>(new PositionComponent(x, y));
+    // Prepare DrawingComponent
     shared_ptr<FilePath> texturePath =
         shared_ptr<FilePath>(new FilePath(platformJSON["texturePath"]));
-    shared_ptr<Platform> platform = shared_ptr<Platform>(
-        new Platform(center, nullptr, nullptr, texturePath));
+    shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
+    shared_ptr<DrawingComponent> drawingComponent =
+        shared_ptr<DrawingComponent>(
+            new DrawingComponent(positionComponent, texture));
+    // Prepare PhysicsComponent
+    shared_ptr<PhysicsComponent> physicsComponent =
+        shared_ptr<PhysicsComponent>(new PhysicsComponent(positionComponent));
+
+    // Construct
+    shared_ptr<Platform> platform = shared_ptr<Platform>(new Platform(
+        name, positionComponent, physicsComponent, drawingComponent));
     platform->inferBoundingBoxFromTexture();
-    zone->physicsMgr->manageComponent(platform->getPhysicsComponent());
+    zone->physicsManager->manageComponent(platform->getPhysicsComponent());
     zone->gameObjects->push_back(platform);
+
     x += xOffset;
     y += yOffset;
   }

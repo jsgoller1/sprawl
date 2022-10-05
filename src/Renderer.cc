@@ -1,11 +1,7 @@
 #include "Renderer.hh"
 
-#include "DrawingComp.hh"
-#include "Logger.hh"
-#include "Texture.hh"
-
-Renderer::Renderer(SDL_Window* window, bool useHardwareAcceleration,
-                   bool useVSync) {
+Renderer::Renderer(SDL_Window* const window, const bool useHardwareAcceleration,
+                   const bool useVSync) {
   Uint32 flags = 0;
   flags |= (useHardwareAcceleration ? SDL_RENDERER_ACCELERATED : 0);
   flags |= (useVSync ? SDL_RENDERER_PRESENTVSYNC : 0);
@@ -16,11 +12,11 @@ Renderer::Renderer(SDL_Window* window, bool useHardwareAcceleration,
   }
 }
 
-void Renderer::prepare(DrawingCompSPtr drawable) {
+void Renderer::prepare(const shared_ptr<DrawingComponent> drawable) const {
   /* Takes a DrawingComponent and prepares it off-screen for rendering.
    */
 
-  PointSPtr drawPoint = drawable->getDrawPoint();
+  shared_ptr<Point> drawPoint = drawable->getDrawPoint();
   SDL_Rect renderQuad = {drawPoint->x, drawPoint->y, drawable->getWidth(),
                          drawable->getHeight()};
   SDL_Texture* textureData = this->prepareTexture(drawable->getTexture());
@@ -40,23 +36,23 @@ void Renderer::prepare(DrawingCompSPtr drawable) {
   SDL_DestroyTexture(textureData);
 }
 
-void Renderer::render() {
+void Renderer::render() const {
   // Renders to the screen everything previously drawn with Renderer::prepare()
   SDL_RenderPresent(this->renderer);
 }
 
-void Renderer::clear() { SDL_RenderClear(this->renderer); }
+void Renderer::clear() const { SDL_RenderClear(this->renderer); }
 
-SDL_Texture* Renderer::prepareTexture(TextureSPtr textureSPtr) {
-  SDL_Surface* pixelData = textureSPtr->getPixelData();
+SDL_Texture* Renderer::prepareTexture(const shared_ptr<Texture> texture) const {
+  SDL_Surface* pixelData = texture->getPixelData();
   // TODO: Color key is static for now, might want to se it
-  // in drawingComponent
+  // in drawingComponentonent
   SDL_SetColorKey(pixelData, SDL_FALSE,
                   SDL_MapRGB(pixelData->format, 0, 0xFF, 0xFF));
-  SDL_Texture* texture =
+  SDL_Texture* sdlTexture =
       SDL_CreateTextureFromSurface(this->renderer, pixelData);
   if (texture == nullptr) {
     logSDLError(SDL_ERROR_OCCURRED, "Renderer::prepareTexture");
   }
-  return texture;
+  return sdlTexture;
 }

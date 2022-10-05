@@ -1,8 +1,8 @@
 #pragma once
-#include <SDL2/SDL.h>
 
 #include "GameAction.hh"
-#include "Memory.hh"
+#include "Logger.hh"
+#include "Types.hh"
 
 class InputEvent {
  public:
@@ -13,26 +13,32 @@ class ButtonDownEvent : public InputEvent {
   // Represents a key or mouse button being pressed
 
  public:
-  ButtonDownEvent(const SDL_Keycode value) : value(value) {}
+  ButtonDownEvent(const SDL_Keycode keycode) : keycode(keycode) {}
   GameAction getGameAction() override;
 
   // TODO: We will need other data from
   // SDL_EVENT later on;  when the key was
   // pressed, whether it was a repeat, etc.
-  SDL_Keycode value;
+  SDL_Keycode getKeycode() { return this->keycode; }
+
+ private:
+  SDL_Keycode keycode;
 };
 
 class ButtonUpEvent : public InputEvent {
   // Represents a key or mouse button being released
 
  public:
-  ButtonUpEvent(const SDL_Keycode value) : value(value) {}
+  ButtonUpEvent(const SDL_Keycode keycode) : keycode(keycode) {}
   GameAction getGameAction() override;
 
   // TODO: We will need other data from
   // SDL_EVENT later on;  when the key was
   // pressed, whether it was a repeat, etc.
-  SDL_Keycode value;
+  SDL_Keycode getKeycode() { return this->keycode; }
+
+ private:
+  SDL_Keycode keycode;
 };
 
 class QuitEvent : public InputEvent {

@@ -1,19 +1,21 @@
 #pragma once
-#include <SDL2/SDL.h>
 
-#include "DrawingComp.hh"
+#include "DrawingComponent.hh"
+#include "Logger.hh"
 #include "Memory.hh"
+#include "Texture.hh"
+#include "Types.hh"
 
 class Renderer {
  public:
-  void prepare(DrawingCompSPtr drawable);
-  void render();
-  void clear();
-  Renderer(SDL_Window* window, bool useHardwareAcceleration, bool useVSync);
+  Renderer(SDL_Window* const window, const bool useHardwareAcceleration,
+           const bool useVSync);
+
+  void prepare(const shared_ptr<DrawingComponent> drawable) const;
+  void render() const;
+  void clear() const;
 
  private:
   SDL_Renderer* renderer;
-  SDL_Texture* prepareTexture(TextureSPtr textureSPtr);
+  SDL_Texture* prepareTexture(const shared_ptr<Texture> texture) const;
 };
-
-typedef shared_ptr<Renderer> RendererSPtr;

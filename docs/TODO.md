@@ -18,7 +18,7 @@ Some cases won't work well (i.e. positionManager with several different ways to 
     - Unity looks like it doesn't do aggressive forwarding with owned components: https://docs.unity3d.com/ScriptReference/GameObject.html
 
 ## Shared from this bug
-Why did using `class PhysicsMgr : public enable_shared_from_this` fix the bug that was happening when `public` wasn't used? 
+Why did using `class physicsManager : public enable_shared_from_this` fix the bug that was happening when `public` wasn't used? 
 
 ## Points and vectors
 I should probably create a 2D vector class that has magnitude and direction and 

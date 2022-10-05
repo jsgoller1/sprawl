@@ -2,13 +2,10 @@
 
 #include <vector>
 
-#include "DrawingComp.hh"
+#include "DrawingComponent.hh"
 #include "Memory.hh"
-#include "PhysicsComp.hh"
-#include "PositionComp.hh"
-
-// Forward decls
-class PhysicsComp;  // see PhysicsComp.hh
+#include "PhysicsComponent.hh"
+#include "PositionComponent.hh"
 
 class GameObject {
   // GameObjects are anything interactive in the world;
@@ -16,21 +13,49 @@ class GameObject {
   // they may not be visible (i.e triggers).
 
  public:
-  DrawingCompSPtr getDrawingComponent();
-  shared_ptr<PhysicsComp> getPhysicsComponent();
+  shared_ptr<DrawingComponent> getDrawingComponent() const {
+    return this->drawingComponent;
+  }
+  void setDrawingComponent(
+      const shared_ptr<DrawingComponent> drawingComponent) {
+    this->drawingComponent = drawingComponent;
+  }
+  shared_ptr<PhysicsComponent> getPhysicsComponent() const {
+    return this->physicsComponent;
+  }
+  void setPhysicsComponent(
+      const shared_ptr<PhysicsComponent> physicsComponent) {}
+  shared_ptr<PositionComponent> getPositionComponent() const {
+    return this->positionComponent;
+  }
+  void setPositionComponent(
+      const shared_ptr<PositionComponent> positionComponent) {
+    this->positionComponent = positionComponent;
+  }
+
+  // NOTE: GameObjectIDs should not be set except at object creation time;
+  // eventually, we will have a manager for this to ensure uniqueness.
+  shared_ptr<const GameObjectID> getGameObjectID() {
+    return this->gameObjectID;
+  }
+
   void inferBoundingBoxFromTexture();
 
  protected:
-  GameObject(const PointSPtr center, const GameObjectNameSPtr name = nullptr,
-             const shared_ptr<PhysicsComp> physicsComp = nullptr,
-             const FilePathSPtr texturePath = nullptr,
-             const DrawingCompSPtr drawingComp = nullptr);
+  // TODO: Do we not want anything other than derived objects calling this
+  // constructor
+  GameObject(const shared_ptr<GameObjectID> gameObjectID,
+             const shared_ptr<PositionComponent> positionComponent,
+             const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
+             const shared_ptr<DrawingComponent> drawingComponent = nullptr)
+      : gameObjectID(gameObjectID),
+        positionComponent(positionComponent),
+        physicsComponent(physicsComponent),
+        drawingComponent(drawingComponent) {}
 
-  GameObjectNameSPtr name;
-  PositionCompSPtr positionComp;
-  DrawingCompSPtr drawingComp;
-  shared_ptr<PhysicsComp> physicsComp;
+ private:
+  shared_ptr<DrawingComponent> drawingComponent;
+  shared_ptr<PhysicsComponent> physicsComponent;
+  shared_ptr<PositionComponent> positionComponent;
+  shared_ptr<const GameObjectID> gameObjectID;
 };
-
-typedef shared_ptr<GameObject> GameObjectSPtr;
-typedef std::vector<GameObjectSPtr> GameObjectSPtrCollection;

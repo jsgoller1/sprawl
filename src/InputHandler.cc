@@ -1,8 +1,5 @@
 #include "InputHandler.hh"
 
-#include "GameAction.hh"
-#include "Logger.hh"
-
 GameAction InputHandler::getGameAction() {
   // TODO: For now, this forwarding method is a code smell;
   // eventually, we'll get inputs that won't cause game actions
@@ -23,35 +20,35 @@ shared_ptr<InputEvent> InputHandler::getInput() {
   }
 
   SDL_Keycode symbol;
-  shared_ptr<InputEvent> inputEventSPtr;
+  shared_ptr<InputEvent> inputEvent;
   switch (event.type) {
     case SDL_QUIT:
-      inputEventSPtr = shared_ptr<QuitEvent>(new QuitEvent());
+      inputEvent = shared_ptr<QuitEvent>(new QuitEvent());
       break;
     // TODO: For some reason, pressing a key my local keyboard causes both
     // SDL_TEXTINPUT (771) and SDL_KEYDOWN (768) on key press, but only
     // SDL_KEYUP (769) on release. Can just ignore the 771 for now.
     case SDL_KEYUP:
       symbol = event.key.keysym.sym;
-      inputEventSPtr = shared_ptr<ButtonUpEvent>(new ButtonUpEvent(symbol));
+      inputEvent = shared_ptr<ButtonUpEvent>(new ButtonUpEvent(symbol));
       break;
     case SDL_KEYDOWN:
       symbol = event.key.keysym.sym;
-      inputEventSPtr = shared_ptr<ButtonDownEvent>(new ButtonDownEvent(symbol));
+      inputEvent = shared_ptr<ButtonDownEvent>(new ButtonDownEvent(symbol));
       break;
     case SDL_MOUSEBUTTONDOWN:
       // TODO: This is just for debugging purposes so we can figure
       // out screen coordinates of where we clicked.
       log("Screen clicked at (x,y): (" + to_string(event.button.x) + ", " +
           to_string(event.button.y) + ")");
-      inputEventSPtr = shared_ptr<NoEvent>(new NoEvent());
+      inputEvent = shared_ptr<NoEvent>(new NoEvent());
       break;
     default:
-      inputEventSPtr = shared_ptr<NoEvent>(new NoEvent());
+      inputEvent = shared_ptr<NoEvent>(new NoEvent());
       // log("Unhandleable input event: " + to_string(event.type));
       break;
   }
-  return inputEventSPtr;
+  return inputEvent;
 }
 
 // TODO: Later on, we should refactor this to reference something like
@@ -62,7 +59,7 @@ GameAction ButtonDownEvent::getGameAction() {
   GameAction action;
   // TODO: Do we want to use SDLK or one of the other key representations?
   // Why do multiple exist?
-  switch (this->value) {
+  switch (this->keycode) {
     case SDLK_ESCAPE:
       action = GameAction::QUIT;
       break;
@@ -98,7 +95,7 @@ GameAction ButtonDownEvent::getGameAction() {
 
 GameAction ButtonUpEvent::getGameAction() {
   GameAction action;
-  switch (this->value) {
+  switch (this->keycode) {
     case SDLK_a:
       action = GameAction::STOP_MOVE_LEFT;
       break;

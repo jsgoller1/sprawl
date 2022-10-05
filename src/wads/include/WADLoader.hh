@@ -1,7 +1,7 @@
 #pragma once
 #include <fstream>
 
-#include "PositionComp.hh"
+#include "PositionComponent.hh"
 #include "Types.hh"
 #include "Zone.hh"
 #include "json.hpp"
