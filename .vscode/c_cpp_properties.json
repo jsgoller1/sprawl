@@ -7,6 +7,7 @@
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/src/components/include",
                 "${workspaceFolder}/src/managers/include",
+                "${workspaceFolder}/src/ecs/include",
                 "${workspaceFolder}/src/wads/include",
                 "${workspaceFolder}/src/3rdparty/include",
                 // TODO: Integrate SDL with Bazel; this was installed with

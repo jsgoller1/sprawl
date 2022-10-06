@@ -7,12 +7,14 @@
 #include <cfloat>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <set>
 #include <string>
 #include <vector>
 
 #include "Memory.hh"
 
+using std::map;
 using std::set;
 using std::string;
 using std::to_string;
