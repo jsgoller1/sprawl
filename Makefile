@@ -12,10 +12,10 @@ BIN_DIR:=$(shell pwd)/bin
 CC_COMPILER:=clang++
 CC_FLAGS:=-std=c++20 -g
 WARNINGS:=-Weverything -Werror
-INCLUDE:=-I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/wads/include 
+INCLUDE:=-I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/physics/include  -I src/wads/include 
 LINK:=-lSDL2 -lSDL2_image
 CLANG_LINKER_ARGS:=-Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
-SOURCE:=src/*.cc src/components/*.cc src/managers/*.cc src/wads/*.cc
+SOURCE:=src/*.cc src/components/*.cc src/managers/*.cc src/physics/*.cc src/wads/*.cc
 #### Warnings we ignore, with explanations
  # Don't care about C++98 backwards compatibility.
 IGNORED_WARNINGS:=-Wno-c++98-compat -Wno-c++98-compat-pedantic  

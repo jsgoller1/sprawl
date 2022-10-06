@@ -13,6 +13,7 @@
 
 #include "Memory.hh"
 
+using std::pair;
 using std::set;
 using std::string;
 using std::to_string;
@@ -20,6 +21,12 @@ using std::vector;
 
 typedef std::string FilePath;
 typedef std::string GameObjectID;
-typedef int PositionUnit;
+
+typedef double real;
+typedef real PositionUnit;
 typedef PositionUnit ScreenWidth;
 typedef PositionUnit ScreenHeight;
+typedef PositionUnit YCoord;
+typedef PositionUnit XCoord;
+typedef real time_ms;
+typedef real time_s;

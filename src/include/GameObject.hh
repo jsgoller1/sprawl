@@ -32,6 +32,14 @@ class GameObject {
       const shared_ptr<PositionComponent> positionComponent) {
     this->positionComponent = positionComponent;
   }
+  shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent() {
+    return this->collisionDetectionComponent;
+  }
+  void setCollisionDetectionComponent(
+      const shared_ptr<CollisionDetectionComponent>
+          collisionDetectionComponent) {
+    this->collisionDetectionComponent = collisionDetectionComponent;
+  }
 
   // NOTE: GameObjectIDs should not be set except at object creation time;
   // eventually, we will have a manager for this to ensure uniqueness.
@@ -43,19 +51,23 @@ class GameObject {
 
  protected:
   // TODO: Do we not want anything other than derived objects calling this
-  // constructor
+  // constructor?
   GameObject(const shared_ptr<GameObjectID> gameObjectID,
              const shared_ptr<PositionComponent> positionComponent,
              const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
+             const shared_ptr<CollisionDetectionComponent>
+                 collisionDetectionComponent = nullptr,
              const shared_ptr<DrawingComponent> drawingComponent = nullptr)
       : gameObjectID(gameObjectID),
         positionComponent(positionComponent),
         physicsComponent(physicsComponent),
+        collisionDetectionComponent(collisionDetectionComponent),
         drawingComponent(drawingComponent) {}
 
  private:
   shared_ptr<DrawingComponent> drawingComponent;
   shared_ptr<PhysicsComponent> physicsComponent;
   shared_ptr<PositionComponent> positionComponent;
+  shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
   shared_ptr<const GameObjectID> gameObjectID;
 };
