@@ -20,6 +20,29 @@ using std::vector;
 
 typedef std::string FilePath;
 typedef std::string GameObjectID;
-typedef int PositionUnit;
+
+typedef double real;
+typedef real PositionUnit;
 typedef PositionUnit ScreenWidth;
 typedef PositionUnit ScreenHeight;
+typedef PositionUnit YCoord;
+typedef PositionUnit XCoord;
+typedef real time_ms;
+typedef real time_s;
+/*
+ * Per policy in Math.hh, we use reals / floating point numbers everywhere
+ * possible. Anytime we use an int (either because we have to or we could use a
+ * float but shouldn't: array index, return codes, timestamps, birth month,
+ * etc), we define a new type to be explicitly used for that purpose. Enums are
+ * preferable to typedefs but not always possible.
+ */
+typedef int arrayIndex;
+
+/*
+enum ReturnCode {
+  ZERO = 0,
+};
+enum BitFlags {
+  ZERO = 0,
+};
+*/
