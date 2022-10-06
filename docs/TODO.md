@@ -8,9 +8,6 @@
 - Tried using https://github.com/bazelregistry/sdl2, didn't build
 - If system install doesn't work well, might be a good idea to copy repo and bazel-ify it for inclusion via http archive like gtest
 
-## names for smart pointers
-- don't like "SPtr" on variables after all; should be an assumption that every reference to an object is via a smart pointer (and can be checked via cross-referencing)
-
 ## Set up forwarding methods for composition classes
 Some cases won't work well (i.e. positionManager with several different ways to set position).
 - Do we want to have "Manager who gets components from objects and talks to objects through them", e.g. physics manager interacting with physics components, or "manager manages objects via forwarding methods", i.e. GameObject forwards all methods to PhysicsComponent
@@ -20,26 +17,11 @@ Some cases won't work well (i.e. positionManager with several different ways to 
 ## Shared from this bug
 Why did using `class physicsManager : public enable_shared_from_this` fix the bug that was happening when `public` wasn't used? 
 
-## Points and vectors
-I should probably create a 2D vector class that has magnitude and direction and 
-can be used for movement. Can maintain Point as the underlying direction component,
-and use it for location. 
-
 ## Layering
 I've seen other engines architected in a "lasagna style" with different layers; core stuff like rendering and physics is below stuff like characters, shooting, behaviors, etc. How can we achieve a similar kind of architecture that will make extension easy?
 
 ## Concurrency
 Concurrency is dangerous; some stuff needs to be done synchronously (like physics, at least until we do space partitioning for collisions). We can probably run audio in another thread, and maybe do some parts of other game logic in a separate thread too. 
 
-## Better collisions, velocities, and gravity
-The current way of managing gravity completely sucks and results in janky-ass behavior. Some thoughts:
-- Collisions should be directional; if movement occurs in the x and y direction but an x-direction collision
-happens, only the x velocity needs to be zeroed.
-- Gravity should add downward velocity (up to a limit, beyond which extra acceleration could happen)
-- Each frame, objects should move according to their velocity; we should not try to move them directly except 
-for things like teleporting. 
-- Movements should be predictive / reversible: as part of applying velocity, we should attempt to move
-  the object, see if a collision ensues, and then reverse it if so. 
-
-Scenarios for any object:
-    - No downward velocity, dow
+## Demos
+I'd like to be able to demo this project to other people (giving talks, showing interviewers, etc) and have pre-prepared slides, ideas, and code to show for demos of differing lengths. 

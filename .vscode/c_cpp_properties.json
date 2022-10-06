@@ -3,16 +3,15 @@
         {
             "name": "Linux",
             "includePath": [
+                "/usr/include/SDL2",
                 "${workspaceFolder}",
+                "${workspaceFolder}/src/3rdparty/include",
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/src/components/include",
                 "${workspaceFolder}/src/managers/include",
-                "${workspaceFolder}/src/wads/include",
-                "${workspaceFolder}/src/3rdparty/include",
-                // TODO: Integrate SDL with Bazel; this was installed with
-                // apt and will be impossible to version-pin or distribute. 
-                "/usr/include/SDL2",
-                "${workspaceFolder}/src/test/include"
+                "${workspaceFolder}/src/physics/include",
+                "${workspaceFolder}/src/test/include",
+                "${workspaceFolder}/src/wads/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

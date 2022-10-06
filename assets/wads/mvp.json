@@ -10,16 +10,21 @@
     "gameObjects": [
         {
             "type": "Character",
+            "enabled": "true",
             "name": "Player",
             "texturePath": "./assets/textures/player.bmp",
             "position": {
                 "x": 400,
                 "y": 734
-            }
+            },
+            "maxSpeed": 10.0,
+            "minSpeed": 0.05,
+            "dragCoefficient": 0.005
         },
         {
             "type": "Character",
             "name": "Enemy",
+            "enabled": "false",
             "texturePath": "./assets/textures/enemy.bmp",
             "position": {
                 "x": 650,
@@ -28,7 +33,18 @@
         },
         {
             "type": "Platform",
+            "name": "wall-tall",
+            "enabled": "false",
+            "texturePath": "./assets/textures/wall-tall.bmp",
+            "position": {
+                "x": 1200,
+                "y": 810
+            }
+        },
+        {
+            "type": "Platform",
             "name": "wall-indestructible",
+            "enabled": "false",
             "texturePath": "./assets/textures/wall-indestructible.bmp",
             "position": {
                 "x": 0,
