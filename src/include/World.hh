@@ -1,6 +1,6 @@
 #pragma once
 
-#include "DrawingComp.hh"
+#include "DrawingComponent.hh"
 #include "GameAction.hh"
 #include "Memory.hh"
 #include "Types.hh"
@@ -18,15 +18,15 @@ class World {
   World()
       : World(shared_ptr<FilePath>(new FilePath("./assets/wads/mvp.json"))){};
   World(const shared_ptr<FilePath> wadPath);
-  void update(const GameAction& action);
-  DrawingCompSPtrCollectionSPtr getDrawables();
+
+  // Forward to Zone
+  void update(const GameAction& action) { this->currentZone->update(action); }
+
+  shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const {
+    return this->currentZone->getDrawables();
+  }
   // TODO: serialize(); // needed for saving game and level editor
 
  private:
-  ZoneSPtr currentZone;
-  ZoneSPtrCollection zones;
-  void draw() {
-    // Collects whatever GameObjects should be drawn
-    // and gives them to the screen for drawing
-  }
+  shared_ptr<Zone> currentZone;
 };

@@ -1,22 +1,21 @@
 #include "Character.hh"
 
-#include "Logger.hh"
-
-Character::Character(const PointSPtr center, const GameObjectNameSPtr name,
-                     const shared_ptr<PhysicsComp> physicsComp,
-                     const FilePathSPtr texturePath,
-                     const DrawingCompSPtr drawingComp)
-    : GameObject(center, name, physicsComp, texturePath, drawingComp) {
-  this->moveSpeed = PointSPtr(new Point{.x = 10, .y = 10});
+Character::Character(const shared_ptr<GameObjectID> gameObjectID,
+                     const shared_ptr<PositionComponent> positionComponent,
+                     const shared_ptr<PhysicsComponent> physicsComponent,
+                     const shared_ptr<DrawingComponent> drawingComponent)
+    : GameObject(gameObjectID, positionComponent, physicsComponent,
+                 drawingComponent) {
+  this->moveSpeed = shared_ptr<Point>(new Point{.x = 10, .y = 10});
   this->jumpCount = 0;
-  this->physicsComp->enableGravity(true);
+  this->getPhysicsComponent()->enableGravity(true);
 }
 
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
-  PointSPtr newVelocity = this->physicsComp->getVelocity();
+  shared_ptr<Point> newVelocity = this->getPhysicsComponent()->getVelocity();
 
   switch (action) {
     case MOVE_UP:
@@ -36,10 +35,7 @@ void Character::move(const GameAction& action) {
       // TODO: should warn
       break;
   }
-  this->physicsComp->setVelocity(newVelocity);
-}
-void Character::shoot(const GameAction& action) {
-  this->combatCompSPtr->shoot(action);
+  this->getPhysicsComponent()->setVelocity(newVelocity);
 }
 
 void Character::jump() {
@@ -47,9 +43,10 @@ void Character::jump() {
   // but we will use it for double jumping eventually.
   // jumpCount++;
   log("Jump count: " + to_string(jumpCount));
-  if (not(jumpCount >= 2) and this->physicsComp->getVelocity()->y == 0) {
-    PointSPtr newVelocity = PointSPtr(
-        new Point{.x = this->physicsComp->getVelocity()->x, .y = -20});
-    this->physicsComp->addVelocity(newVelocity);
+  if (not(jumpCount >= 2) and
+      this->getPhysicsComponent()->getVelocity()->y == 0) {
+    shared_ptr<Point> newVelocity = shared_ptr<Point>(new Point{
+        .x = this->getPhysicsComponent()->getVelocity()->x, .y = -20});
+    this->getPhysicsComponent()->addVelocity(newVelocity);
   }
 }

@@ -5,9 +5,11 @@
 
 class TestGameObject : public GameObject {
  public:
-  TestGameObject(const PointSPtr center, const GameObjectNameSPtr name,
-                 const shared_ptr<PhysicsComp> physicsComp = nullptr,
-                 const FilePathSPtr texturePath = nullptr,
-                 const DrawingCompSPtr drawingComp = nullptr)
-      : GameObject(center, name, physicsComp, texturePath, drawingComp){};
+  TestGameObject(const shared_ptr<Point> center,
+                 const shared_ptr<GameObjectID> name,
+                 const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
+                 const shared_ptr<FilePath> texturePath = nullptr,
+                 const shared_ptr<DrawingComponent> drawingComponent = nullptr)
+      : GameObject(center, name, physicsComponent, texturePath,
+                   drawingComponent){};
 };

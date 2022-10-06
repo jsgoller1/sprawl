@@ -1,22 +1,26 @@
 #pragma once
 
-#include "DrawingComp.hh"
-#include "PositionComp.hh"
+#include "DrawingComponent.hh"
+#include "PositionComponent.hh"
 #include "Screen.hh"
 #include "Texture.hh"
 #include "Types.hh"
 
 class Background {
  public:
-  Background(const FilePathSPtr texturePathSPtr,
-             DrawingCompSPtr drawingCompSPtr = nullptr,
-             const PositionUnit x = 0, const PositionUnit y = 0);
+  Background(const shared_ptr<DrawingComponent> drawingComponent,
+             const shared_ptr<PositionComponent> positionComponent)
+      : drawingComponent(drawingComponent),
+        positionComponent(positionComponent) {}
 
-  DrawingCompSPtr getDrawingCompSPtr();
+  shared_ptr<DrawingComponent> getDrawingComponent() const {
+    return this->drawingComponent;
+  }
+  void setDrawingComp(const shared_ptr<DrawingComponent> drawingComponent) {
+    this->drawingComponent = drawingComponent;
+  }
 
  private:
-  PositionCompSPtr positionCompSPtr;
-  DrawingCompSPtr drawingCompSPtr;
+  shared_ptr<PositionComponent> positionComponent;
+  shared_ptr<DrawingComponent> drawingComponent;
 };
-
-typedef shared_ptr<Background> BackgroundSPtr;

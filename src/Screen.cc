@@ -1,8 +1,5 @@
 #include "Screen.hh"
 
-#include "DrawingComp.hh"
-#include "Logger.hh"
-
 Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     string message = "SDL could not initialize! SDL_Error: ";
@@ -22,8 +19,8 @@ Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
 
   bool useHardwareAccel = true;
   bool useVSync = true;
-  this->renderer =
-      RendererSPtr(new Renderer(this->window, useHardwareAccel, useVSync));
+  this->renderer = shared_ptr<Renderer>(
+      new Renderer(this->window, useHardwareAccel, useVSync));
 }
 
 Screen::~Screen() {
@@ -31,14 +28,15 @@ Screen::~Screen() {
   SDL_Quit();
 }
 
-void Screen::drawAll(DrawingCompSPtrCollectionSPtr drawables) {
+void Screen::drawAll(
+    const shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables) const {
   this->clear();
-  for (DrawingCompSPtr drawable : *(drawables.get())) {
+  for (auto drawable : *(drawables.get())) {
     this->renderer->prepare(drawable);
   }
   renderer->render();
 }
 
-void Screen::update() { this->renderer->render(); }
+void Screen::update() const { this->renderer->render(); }
 
-void Screen::clear() { this->renderer->clear(); }
+void Screen::clear() const { this->renderer->clear(); }

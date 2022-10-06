@@ -1,19 +1,16 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-
-#include "DrawingComp.hh"
+#include "DrawingComponent.hh"
+#include "Logger.hh"
 #include "Memory.hh"
 #include "Renderer.hh"
 #include "Types.hh"
 
+// TODO: Move these to WAD
 #define SCREEN_WIDTH 1920
 #define SCREEN_HEIGHT 1080
 #define SCREEN_X_CENTER (PositionUnit)(1920 / 2)
 #define SCREEN_Y_CENTER (PositionUnit)(1080 / 2)
-
-typedef int ScreenWidth;
-typedef int ScreenHeight;
 
 class Screen {
   // Screen manages actually drawing stuff on the screen; for now, it handles
@@ -33,18 +30,16 @@ class Screen {
   Screen(const Screen&);
   ~Screen();
 
-  void draw(DrawingCompSPtr drawable);
-  void drawAll(DrawingCompSPtrCollectionSPtr drawables);
-  void update();
-  void clear();
+  void drawAll(
+      const shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables) const;
+  void update() const;
+  void clear() const;
 
  private:
-  void initRenderer(bool useHardwareAcceleration, bool useVSync);
-
   // TODO: Do we actually want to use C++ smart pointers
   // with these SDL objects? Any good reason to do so, and will
   // there be drawbacks (e.g accidental automatic garbage collection)?
   unique_ptr<SDL_Surface> surface;
   SDL_Window* window;
-  RendererSPtr renderer;
+  shared_ptr<Renderer> renderer;
 };

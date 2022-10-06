@@ -5,16 +5,14 @@
 #include "Screen.hh"
 
 Zone::Zone() {
-  this->physicsMgr = shared_ptr<PhysicsMgr>(new PhysicsMgr());
-  this->gameObjects =
-      shared_ptr<GameObjectSPtrCollection>(new GameObjectSPtrCollection());
+  this->physicsManager = shared_ptr<PhysicsManager>(new PhysicsManager());
+  this->gameObjects = shared_ptr<vector<shared_ptr<GameObject>>>(
+      new vector<shared_ptr<GameObject>>());
 }
-
-void Zone::load(const FilePathSPtr zoneWADDirSPtr) {}
 
 void Zone::update(const GameAction& action) {
   this->handleInput(action);
-  this->physicsMgr->applyVelocityAll();
+  this->physicsManager->applyVelocityAll();
 }
 
 void Zone::handleInput(const GameAction& action) {
@@ -38,23 +36,23 @@ void Zone::handleInput(const GameAction& action) {
     case SHOOT_LEFT:
     case SHOOT_RIGHT:
       log(string("Got shoot action: " + to_string(action)));
-      this->player->shoot(action);
       break;
     default:
       log(string("Unknown action: " + to_string(action)));
   }
 }
 
-DrawingCompSPtrCollectionSPtr Zone::getDrawables() {
-  DrawingCompSPtrCollectionSPtr drawables =
-      DrawingCompSPtrCollectionSPtr(new vector<DrawingCompSPtr>());
+shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
+  shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables =
+      shared_ptr<vector<shared_ptr<DrawingComponent>>>(
+          new vector<shared_ptr<DrawingComponent>>());
 
   // Background should be drawn first to ensure everything else gets
   // drawn over it.
-  drawables->push_back(this->background->getDrawingCompSPtr());
+  drawables->push_back(this->background->getDrawingComponent());
   drawables->push_back(this->player->getDrawingComponent());
-  for (GameObjectSPtr objSPtr : *(this->gameObjects)) {
-    DrawingCompSPtr comp = objSPtr->getDrawingComponent();
+  for (shared_ptr<GameObject> obj : *(this->gameObjects)) {
+    shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();
     if (comp != nullptr) {
       drawables->push_back(comp);
     }
