@@ -1,0 +1,113 @@
+{
+    "screen": {
+        "width": 1920,
+        "height": 1080
+    },
+    "logging": {
+        "defaultLogLevel": "WARN",
+        "overrides": [
+            {
+                "entity": "Player-2",
+                "logLevel": "DEBUG"
+            },
+            {
+                "system": "INPUT",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "WADLOADER",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "COLLISIONS",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "PHYSICS",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "MATH",
+                "logLevel": "WARN"
+            }
+        ]
+    },
+    "zones": [
+        {
+            "type": "Zone",
+            "background": {
+                "enabled": true,
+                "name": "MVP background",
+                "drawing": {
+                    "texturePath": "/textures/background.bmp"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "physics": {
+                "gravityConstant": 0.01
+            },
+            "gameObjects": [
+                {
+                    "type": "Character",
+                    "enabled": true,
+                    "name": "Player",
+                    "isPlayerCharacter": true,
+                    "drawing": {
+                        "texturePath": "/textures/player.bmp"
+                    },
+                    "position": {
+                        "x": -200,
+                        "y": 0
+                    },
+                    "physics": {
+                        "maxSpeed": 0.05,
+                        "minSpeed": 0.025,
+                        "forceEnabled": true,
+                        "gravityEnabled": true,
+                        "dragEnabled": true,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true,
+                        "bbox": {
+                            "fromTexture": true
+                        }
+                    }
+                },
+                {
+                    "type": "Platform",
+                    "enabled": true,
+                    "name": "floor",
+                    "duplication": {
+                        "count": 2,
+                        "xOffset": 300
+                    },
+                    "isPlayerCharacter": false,
+                    "drawing": {
+                        "texturePath": "/textures/wall-indestructible.bmp"
+                    },
+                    "position": {
+                        "x": -200,
+                        "y": -400
+                    },
+                    "physics": {
+                        "maxSpeed": 0.025,
+                        "minSpeed": 0.05,
+                        "forceEnabled": false,
+                        "gravityEnabled": false,
+                        "dragEnabled": false,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true
+                    }
+                }
+            ]
+        }
+    ]
+}

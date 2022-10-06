@@ -1,4 +1,5 @@
 #include "Logging.hh"
+#include "Math.hh"
 
 using namespace Logging;
 
@@ -40,6 +41,10 @@ int main() {
   setShowFile(true);
   setColorUse(false);
   LOG_ERROR("This message doesn't use colors.");
+
+  // Some math stuff
+  LOG_INFO("{:.20f}", 0.12345678901234567890);
+  LOG_INFO("Above? {0}", Vect2D(438.5503425870114, -349.0).above(Vect2D(507.70534593628645, -349.0)));
 
   return 0;
 }

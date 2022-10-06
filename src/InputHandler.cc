@@ -1,5 +1,11 @@
 #include "InputHandler.hh"
 
+InputEvent::~InputEvent() = default;
+ButtonDownEvent::~ButtonDownEvent() = default;
+ButtonUpEvent::~ButtonUpEvent() = default;
+QuitEvent::~QuitEvent() = default;
+NoEvent::~NoEvent() = default;
+
 GameAction InputHandler::getGameAction() {
   // TODO: For now, this forwarding method is a code smell;
   // eventually, we'll get inputs that won't cause game actions
@@ -39,12 +45,12 @@ shared_ptr<InputEvent> InputHandler::getInput() {
     case SDL_MOUSEBUTTONDOWN:
       // TODO: This is just for debugging purposes so we can figure
       // out screen coordinates of where we clicked.
-      LOG_INFO("Screen clicked at ({0},{1})", event.button.x, event.button.y);
+      LOG_INFO_SYS(INPUT, "Screen clicked at ({0},{1})", event.button.x, event.button.y);
       inputEvent = shared_ptr<NoEvent>(new NoEvent());
       break;
     default:
       inputEvent = shared_ptr<NoEvent>(new NoEvent());
-      // log("Unhandleable input event: " + to_string(event.type));
+      LOG_DEBUG_SYS(INPUT, "Unhandleable input event: {}", event.type, event.button.y);
       break;
   }
   return inputEvent;

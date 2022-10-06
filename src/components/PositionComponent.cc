@@ -1,26 +1,37 @@
 #include "PositionComponent.hh"
 
-PositionComponent::PositionComponent(shared_ptr<Point> center) {
-  this->x = center->x;
-  this->y = center->y;
+PositionComponent::PositionComponent(const shared_ptr<Identity> ownerIdentity, const Vect2D& center)
+    : Component(ownerIdentity) {
+  this->_x = center.x();
+  this->_y = center.y();
+}
+PositionComponent::PositionComponent(const shared_ptr<Identity> ownerIdentity, const XCoord x, const YCoord y)
+    : Component(ownerIdentity) {
+  this->_x = x;
+  this->_y = y;
 }
 
-shared_ptr<Point> PositionComponent::getCenter() {
-  return shared_ptr<Point>(new Point{.x = this->x, .y = this->y});
-}
-void PositionComponent::setCenter(shared_ptr<Point> center) {
-  this->x = center->x;
-  this->y = center->y;
+Vect2D PositionComponent::getCenter() { return Vect2D(this->x(), this->y()); }
+
+void PositionComponent::setCenter(const Vect2D& center) {
+  this->_x = center.x();
+  this->_y = center.y();
 }
 
-void PositionComponent::updateX(const PositionUnit x) { this->x += x; }
-void PositionComponent::updateY(const PositionUnit y) { this->y += y; }
-void PositionComponent::updateCenter(shared_ptr<Point> delta) {
-  this->x += delta->x;
-  this->y += delta->y;
+void PositionComponent::move(const Vect2D& delta) {
+  this->setCenter(Vect2D(this->_x + delta.x(), this->_y + delta.y()));
 }
 
-void PositionComponent::move(const shared_ptr<Point> movement) {
-  this->x += movement->x;
-  this->y += movement->y;
-}
+void PositionComponent::moveReverse(const Vect2D& delta) {
+  Vect2D inverted = Vect2D(delta);
+  inverted.invert();
+  this->move(inverted);
+};
+
+void PositionComponent::moveOnlyX(const Vect2D& delta) { this->move(delta.getXComponent()); };
+
+void PositionComponent::moveReverseOnlyX(const Vect2D& delta) { this->moveReverse(delta.getYComponent()); };
+
+void PositionComponent::moveOnlyY(const Vect2D& delta) { this->move(delta.getYComponent()); };
+
+void PositionComponent::moveReverseOnlyY(const Vect2D& delta) { this->moveReverse(delta.getYComponent()); };

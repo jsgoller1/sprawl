@@ -6,12 +6,6 @@
 #include "Renderer.hh"
 #include "Types.hh"
 
-// TODO: Move these to WAD
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1080
-#define SCREEN_X_CENTER (PositionUnit)(1920 / 2)
-#define SCREEN_Y_CENTER (PositionUnit)(1080 / 2)
-
 class Screen {
   // Screen manages actually drawing stuff on the screen; for now, it handles
   // any SDL functionality related to drawing the window and actually putting
@@ -30,12 +24,13 @@ class Screen {
   Screen(const Screen&);
   ~Screen();
 
-  void drawAll(
-      const shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables) const;
+  void drawAll(const shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables) const;
   void update() const;
   void clear() const;
 
  private:
+  ScreenHeight _height;
+  ScreenWidth _width;
   // TODO: Do we actually want to use C++ smart pointers
   // with these SDL objects? Any good reason to do so, and will
   // there be drawbacks (e.g accidental automatic garbage collection)?

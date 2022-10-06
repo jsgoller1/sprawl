@@ -6,7 +6,9 @@
 
 class Texture {
  public:
+  Texture(const FilePath& path);
   Texture(const shared_ptr<FilePath> path);
+
   ~Texture();
 
   // PixelData, Height, and Width are all dependent on
@@ -21,7 +23,7 @@ class Texture {
 
  private:
   SDL_Surface* pixelData;
-  shared_ptr<FilePath> path;
+  FilePath path;
   PositionUnit height;
   PositionUnit width;
 };

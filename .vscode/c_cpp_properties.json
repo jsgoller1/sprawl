@@ -3,22 +3,46 @@
         {
             "name": "Linux",
             "includePath": [
+                "/usr/include/SDL2",
                 "${workspaceFolder}",
                 "${workspaceFolder}/src/include",
                 "${workspaceFolder}/src/3rdparty/fmt/include",
                 "${workspaceFolder}/src/3rdparty/json/include",
                 "${workspaceFolder}/src/components/include",
+                "${workspaceFolder}/src/ecs/include",
                 "${workspaceFolder}/src/logging/include",
-                "${workspaceFolder}/src/managers/include",
-                "${workspaceFolder}/src/wads/include",
-                // TODO: Integrate SDL with Bazel; this was installed with
-                // apt and will be impossible to version-pin or distribute. 
-                "/usr/include/SDL2",
-                "${workspaceFolder}/src/test/include"
+                "${workspaceFolder}/src/math/include",
+                "${workspaceFolder}/src/main/include",
+                "${workspaceFolder}/src/physics/include",
+                "${workspaceFolder}/src/test/include",
+                "${workspaceFolder}/src/wads/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
-            "intelliSenseMode": "linux-clang-x64"
+            "intelliSenseMode": "linux-clang-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
+        },
+        {
+            "name": "Mac",
+            "includePath": [
+                "/Users/joshua/Code/SDL/include",
+                "/Users/joshua/Code/SDL_image",
+                "${workspaceFolder}",
+                "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/3rdparty/fmt/include",
+                "${workspaceFolder}/src/3rdparty/json/include",
+                "${workspaceFolder}/src/components/include",
+                "${workspaceFolder}/src/ecs/include",
+                "${workspaceFolder}/src/logging/include",
+                "${workspaceFolder}/src/math/include",
+                "${workspaceFolder}/src/physics/include",
+                "${workspaceFolder}/src/test/include",
+                "${workspaceFolder}/src/wads/include"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "intelliSenseMode": "macos-clang-x64",
+            "configurationProvider": "ms-vscode.makefile-tools"
         }
     ],
     "version": 4

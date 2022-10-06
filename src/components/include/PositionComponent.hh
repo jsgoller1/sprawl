@@ -1,30 +1,30 @@
 #pragma once
+#include "Component.hh"
+#include "Identity.hh"
+#include "Math.hh"
 #include "Memory.hh"
 #include "Types.hh"
 
-typedef struct Point {
-  PositionUnit x;
-  PositionUnit y;
-} Point;
-
-class PositionComponent {
+class PositionComponent : public Component {
  public:
-  PositionComponent(const PositionUnit x, const PositionUnit y) : x(x), y(y) {}
-  PositionComponent(shared_ptr<Point> center);
+  PositionComponent(const shared_ptr<Identity> ownerIdentity, const Vect2D& center);
+  PositionComponent(const shared_ptr<Identity> ownerIdentity, const XCoord x = 0.0, const YCoord y = 0.0);
 
-  PositionUnit getX() const { return this->x; }
-  void setX(const PositionUnit x) { this->x = x; }
-  PositionUnit getY() const { return this->y; }
-  void setY(const PositionUnit y) { this->y = y; }
+  PositionUnit x() const { return this->_x; }
+  void x(const PositionUnit x) { this->_x = x; }
+  PositionUnit y() const { return this->_y; }
+  void y(const PositionUnit y) { this->_y = y; }
+  Vect2D getCenter();
+  void setCenter(const Vect2D& center);
 
-  shared_ptr<Point> getCenter();
-  void setCenter(shared_ptr<Point> center);
-  void updateX(const PositionUnit x);
-  void updateY(const PositionUnit y);
-  void updateCenter(shared_ptr<Point> delta);
-  void move(const shared_ptr<Point> movement);
+  void move(const Vect2D& delta);
+  void moveReverse(const Vect2D& delta);
+  void moveOnlyX(const Vect2D& vect);
+  void moveReverseOnlyX(const Vect2D& vect);
+  void moveOnlyY(const Vect2D& vect);
+  void moveReverseOnlyY(const Vect2D& vect);
 
  private:
-  PositionUnit x;
-  PositionUnit y;
+  XCoord _x;
+  YCoord _y;
 };

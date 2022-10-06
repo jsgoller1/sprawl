@@ -1,0 +1,129 @@
+{
+    "screen": {
+        "width": 1920,
+        "height": 1080
+    },
+    "logging": {
+        "defaultLogLevel": "WARN",
+        "useColor": false,
+        "overrides": [
+            {
+                "system": "WADLOADER",
+                "logLevel": "DEBUG"
+            },
+            {
+                "system": "COLLISIONS",
+                "logLevel": "WARN"
+            }
+        ]
+    },
+    "zones": [
+        {
+            "type": "Zone",
+            "background": {
+                "enabled": true,
+                "name": "MVP background",
+                "drawing": {
+                    "texturePath": "/textures/background.bmp"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "physics": {
+                "gravityConstant": 0.01
+            },
+            "gameObjects": [
+                {
+                    "type": "Character",
+                    "enabled": true,
+                    "name": "Player",
+                    "isPlayerCharacter": true,
+                    "drawing": {
+                        "texturePath": "/textures/player.bmp"
+                    },
+                    "position": {
+                        "x": -700,
+                        "y": 0
+                    },
+                    "physics": {
+                        "maxSpeed": 0.05,
+                        "minSpeed": 0.025,
+                        "forceEnabled": true,
+                        "gravityEnabled": true,
+                        "dragEnabled": true,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true,
+                        "bbox": {
+                            "fromTexture": true
+                        }
+                    }
+                },
+                {
+                    "type": "Character",
+                    "enabled": true,
+                    "duplicate": {
+                        "count": 15,
+                        "yOffset": 80
+                    },
+                    "name": "Enemy",
+                    "isPlayerCharacter": false,
+                    "drawing": {
+                        "texturePath": "/textures/enemy.bmp"
+                    },
+                    "position": {
+                        "x": 200,
+                        "y": -300
+                    },
+                    "physics": {
+                        "maxSpeed": 0.05,
+                        "minSpeed": 0.025,
+                        "forceEnabled": true,
+                        "gravityEnabled": true,
+                        "dragEnabled": true,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true,
+                        "bbox": {
+                            "fromTexture": true
+                        }
+                    }
+                },
+                {
+                    "type": "Platform",
+                    "enabled": true,
+                    "name": "LongFloorBoi",
+                    "isPlayerCharacter": true,
+                    "drawing": {
+                        "texturePath": "/textures/floor.bmp"
+                    },
+                    "position": {
+                        "x": 0,
+                        "y": -400
+                    },
+                    "physics": {
+                        "maxSpeed": 0.05,
+                        "minSpeed": 0.025,
+                        "forceEnabled": false,
+                        "gravityEnabled": false,
+                        "dragEnabled": true,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true,
+                        "bbox": {
+                            "fromTexture": true
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
