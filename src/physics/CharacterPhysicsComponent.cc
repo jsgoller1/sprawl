@@ -8,7 +8,7 @@ shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
 
 CharacterPhysicsComponent::CharacterPhysicsComponent(
     const GameObjectNameSPtr ownerName,
-    const shared_ptr<PositionComp> positionComp,
+    const shared_ptr<PositionComponent> positionComp,
     const shared_ptr<BoundingBoxParams> boundingBoxParams,
     const bool collisionsSetting, const bool gravitySetting)
     : PhysicsComponent(ownerName, positionComp, boundingBoxParams,

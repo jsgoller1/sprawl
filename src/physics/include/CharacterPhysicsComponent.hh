@@ -11,7 +11,7 @@ class CharacterPhysicsComponent : public PhysicsComponent {
  public:
   CharacterPhysicsComponent(
       const GameObjectNameSPtr ownerName,
-      const shared_ptr<PositionComp> positionComp,
+      const shared_ptr<PositionComponent> positionComp,
       const shared_ptr<BoundingBoxParams> boundingBoxParams = nullptr,
       const bool collisionsSetting = false, const bool gravitySetting = false);
   void applyJumpForce();

@@ -19,16 +19,8 @@ Neon Rain is modeled after an entity-component system, so consider creating a ne
 Everything should be `const` everywhere until proven otherwise. Start by making every argument, attribute, pointer, function, etc `const` and then remove `const` only when mutation is necessary.
 
 ### Class definitions
-The general rule is "header files (`.hh`) describe what something is and what it can do, source files (`.cc`) describe how it does it". Code should usually go into `.cc` files, but some exceptions are acceptable (either for convenience / concision, or because it breaks the general rule).
- There should be only one definition per header file and an associated `.cc` file; multiple classes can go in the same header if one is very small and intimately related to the other. All data attributes (including references to owned objects) go in the `private` section, and should have accompanying accessors (getter/setter methods). 
+The general rule is "header files (`.hh`) describe what something is and what it can do, source files (`.cc`) describe how it does it". Method definitions should almost always go into `.cc` files; in an exceptional case, leave a detailed comment explaining the exception. There should be only one definition per header file and an associated `.cc` file; multiple classes can go in the same header if one is very small and intimately related to the other. All data attributes (including references to owned objects) go in the `private` section, and should have accompanying accessors (getter/setter methods). 
  
- All method definitions belong in `.cc` files, except:
-- Constructors using attribute-setting syntax 
-- One-liner accessors for attributes
-- Methods calling a different version of an overloaded method
-- Static methods that fundamentally change the nature of a class, such as a static `instance()` method for a Singleton class (e.g. `EntityManager`).
-- Static methods used in place of constants, e.g. `Direction::Up()`. 
-
 Class sections should be defined in this order:
 - Public/Protected:
     - Constructors

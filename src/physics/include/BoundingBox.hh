@@ -2,7 +2,7 @@
 
 #include "Math.hh"
 #include "Memory.hh"
-#include "PositionComp.hh"
+#include "PositionComponent.hh"
 #include "Texture.hh"
 
 class BoundingBoxParams {

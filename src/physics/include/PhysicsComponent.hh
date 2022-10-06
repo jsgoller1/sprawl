@@ -5,7 +5,7 @@
 #include "Memory.hh"
 #include "PhysicsHelpers.hh"
 #include "PhysicsManager.hh"
-#include "PositionComp.hh"
+#include "PositionComponent.hh"
 #include "Time.hh"
 #include "Types.hh"
 
@@ -13,7 +13,7 @@
 PhysicsComponent is a Component class that implements all physics-related
 behavior. It knows about stuff like mass, velocity, and acceleration, and how to
 translate that into movement of the actual GameObject it represets via calls to
-a PositionComp. PhysicsComps only know about other PhysicsComps and the
+a PositionComponent. PhysicsComps only know about other PhysicsComps and the
 PhysicsManager; they don't know anything about the GameObject they belong to,
 and have no way to figure out which GameObject another PhysicsComponent belongs
 to. This is intentional and to prevent circular / messy dependencies.
@@ -40,66 +40,51 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
  public:
   // ctors / dtors
   PhysicsComponent(
-      const GameObjectNameSPtr ownerName,
-      const shared_ptr<PositionComp> positionComp,
+      const shared_ptr<GameObjectID> ownerID,
+      const shared_ptr<PositionComponent> positionComp,
       const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
       const bool forceResponsiveSetting = false,
       const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
       const PositionUnit minSpeed = 0.0, const real dragCoefficient = 0.0);
-  shared_ptr<PhysicsComponent> getptr() { return this->shared_from_this(); }
+  shared_ptr<PhysicsComponent> getptr();
 
-  // Attribute getter/setters
-  bool getForceResponsive() const { return this->forceResponsive; }
-  void setForceResponsive(const bool setting) {
-    this->forceResponsive = setting;
-  }
+  // Owned components/object accessors
+  shared_ptr<PhysicsManager> getManager() const;
+  void setManager(const shared_ptr<PhysicsManager> manager);
+  shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent()
+      const;
+  void setCollisionDetectionComponent(
+      const shared_ptr<CollisionDetectionComponent> comp);
 
-  bool getGravityEnabled() const { return this->gravityEnabled; }
-  void setGravityEnabled(const bool setting) { this->gravityEnabled = setting; }
-  PositionUnit getMaxSpeed() const { return this->maxSpeed; }
-  void setMaxSpeed(const PositionUnit maxSpeed) { this->maxSpeed = maxSpeed; }
-  PositionUnit getMinSpeed() { return this->minSpeed; }
-  void setMinSpeed(const PositionUnit minSpeed) { this->minSpeed = minSpeed; }
-  real getDragCoefficient() const { return this->dragCoefficient; }
-  void setDragCoefficient(const real dragCoefficient) {
-    this->dragCoefficient = dragCoefficient;
-  }
-  real getMass() const { return this->mass; }
-  void setMass(const real mass) { this->mass = mass; }
+  // Forwarding methods
+  bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
+  shared_ptr<BoundingBox> getBoundingBox() const;
+
+  // Unique attribute accessors
+  bool getForceResponsive() const;
+  void setForceResponsive(const bool setting);
+  bool getGravityEnabled() const;
+  void setGravityEnabled(const bool setting);
+  PositionUnit getMaxSpeed() const;
+  void setMaxSpeed(const PositionUnit maxSpeed);
+  PositionUnit getMinSpeed();
+  void setMinSpeed(const PositionUnit minSpeed);
+  real getDragCoefficient() const;
+  void setDragCoefficient(const real dragCoefficient);
+  real getMass() const;
+  void setMass(const real mass);
 
   // NOTE: netForce, Velocity, and Acceleration are never set directly;
   // use applyForce to add forces to the object. integrate() then converts
   // these to acceleration and velocity.
-  shared_ptr<Vect2D> getNetForce() const { return this->netForce; }
-  shared_ptr<Vect2D> getAcceleration() const { return this->acceleration; }
-  shared_ptr<Vect2D> getVelocity() const { return this->velocity; }
-
-  // Owned components/objects
-  shared_ptr<PhysicsManager> getManager() const { return this->manager; }
-  void setManager(const shared_ptr<PhysicsManager> manager) {
-    this->manager = manager;
-  };
-  shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent()
-      const {
-    return this->collisionDetectionComponent;
-  }
-  void setCollisionDetectionComponent(
-      const shared_ptr<CollisionDetectionComponent> comp) {
-    this->collisionDetectionComponent = comp;
-  }
-
-  // Forwarding methods
-  shared_ptr<BoundingBox> getBoundingBox() {
-    this->collisionDetectionComponent->getBoundingBox();
-  }
-  bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
+  shared_ptr<Vect2D> getNetForce() const;
+  shared_ptr<Vect2D> getAcceleration() const;
+  shared_ptr<Vect2D> getVelocity() const;
 
   // Unique/Purpose-related functionality
   shared_ptr<BoundingBox> getBoundingBox() const;
   void applyForce(const shared_ptr<const Vect2D> force);
   void applyGravity();
-  bool isMidair() const;
-  bool isMoving() const;
   void integrate(const time_ms duration);
   shared_ptr<CollisionSet> detectCollision();
   void PhysicsComponent::resolveCollisions(
@@ -109,7 +94,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
 
  private:
   // Attributes
-  GameObjectNameSPtr ownerName;
+  shared_ptr<GameObjectID> ownerID;
   bool forceResponsive;
   bool gravityEnabled;
   PositionUnit maxSpeed;
@@ -122,7 +107,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
 
   shared_ptr<PhysicsManager> manager;
   shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
-  shared_ptr<PositionComp> positionComp;
+  shared_ptr<PositionComponent> positionComp;
 
   void attemptMove(const shared_ptr<Vect2D> movement);
   void updateVelocityFromNetForce(const time_ms duration);

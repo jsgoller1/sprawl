@@ -14,21 +14,21 @@
 class CollisionDetectionComponent {
  public:
   CollisionDetectionComponent(
-
-      const shared_ptr<PositionComp> positionComp,
+      const shared_ptr<PositionComponent> positionComponent,
       const shared_ptr<BoundingBoxParams> boundingBoxParams,
       const bool collisionsEnabled = true)
-      : positionComp(positionComp),
+      : positionComponent(positionComponent),
         boundingBoxParams(boundingBoxParams),
         collisionsEnabled(collisionsEnabled) {}
 
-  shared_ptr<BoundingBox> getBoundingBox() const;
-  bool checkCollision(const shared_ptr<CollisionDetectionComponent> comp) const;
-
-  bool getCollisionsEnabled() const { return this->collisionsEnabled; }
-  void setCollisionsEnabled(const bool setting) {
-    this->collisionsEnabled = setting;
+  shared_ptr<PositionComponent> getPositionComponent() const {
+    return this->positionComponent;
   }
+  void setPositionComponent(
+      const shared_ptr<PositionComponent> positionComponent) {
+    this->positionComponent = positionComponent;
+  }
+
   shared_ptr<BoundingBoxParams> getBoundingBoxParams() const {
     return this->boundingBoxParams;
   };
@@ -36,10 +36,17 @@ class CollisionDetectionComponent {
     this->boundingBoxParams = params;
   };
 
+  bool getCollisionsEnabled() const { return this->collisionsEnabled; }
+  void setCollisionsEnabled(const bool setting) {
+    this->collisionsEnabled = setting;
+  }
+
   bool isColliding(const shared_ptr<CollisionDetectionComponent> comp) const;
+  shared_ptr<BoundingBox> getBoundingBox() const;
+  bool checkCollision(const shared_ptr<CollisionDetectionComponent> comp) const;
 
  private:
   bool collisionsEnabled;
   shared_ptr<BoundingBoxParams> boundingBoxParams;
-  shared_ptr<PositionComp> positionComp;
+  shared_ptr<PositionComponent> positionComponent;
 };

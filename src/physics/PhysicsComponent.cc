@@ -1,13 +1,14 @@
 #include "PhysicsComponent.hh"
 
+// ctors / dtors
 PhysicsComponent::PhysicsComponent(
-    const GameObjectNameSPtr ownerName,
-    const shared_ptr<PositionComp> positionComp,
+    const shared_ptr<GameObjectID> ownerID,
+    const shared_ptr<PositionComponent> positionComp,
     const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
     const bool forceResponsiveSetting, const bool gravitySetting,
     const PositionUnit maxSpeed, const PositionUnit minSpeed,
     const real dragCoefficient) {
-  this->ownerName = ownerName;
+  this->ownerID = ownerID;
   this->positionComp = positionComp;
   this->collisionDetectionComponent = collisionDetectionComponent;
   this->forceResponsive = forceResponsiveSetting;
@@ -20,18 +21,80 @@ PhysicsComponent::PhysicsComponent(
   this->dragCoefficient = dragCoefficient;
 }
 
+shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
+  return this->shared_from_this();
+}
+
+// Owned components/object accessors
+shared_ptr<PhysicsManager> PhysicsComponent::getManager() const {
+  return this->manager;
+}
+void PhysicsComponent::setManager(const shared_ptr<PhysicsManager> manager) {
+  this->manager = manager;
+};
+shared_ptr<CollisionDetectionComponent>
+PhysicsComponent::getCollisionDetectionComponent() const {
+  return this->collisionDetectionComponent;
+}
+void PhysicsComponent::setCollisionDetectionComponent(
+    const shared_ptr<CollisionDetectionComponent> comp) {
+  this->collisionDetectionComponent = comp;
+}
+
+// Forwarding methods
 bool PhysicsComponent::checkCollision(
     const shared_ptr<PhysicsComponent> comp) const {
   this->collisionDetectionComponent->checkCollision(
       comp->getCollisionDetectionComponent());
 }
+shared_ptr<BoundingBox> PhysicsComponent::getBoundingBox() const {
+  this->collisionDetectionComponent->getBoundingBox();
+}
 
+// Unique attribute accessors
+bool PhysicsComponent::getForceResponsive() const {
+  return this->forceResponsive;
+}
+void PhysicsComponent::setForceResponsive(const bool setting) {
+  this->forceResponsive = setting;
+}
+
+bool PhysicsComponent::getGravityEnabled() const {
+  return this->gravityEnabled;
+}
+void PhysicsComponent::setGravityEnabled(const bool setting) {
+  this->gravityEnabled = setting;
+}
+PositionUnit PhysicsComponent::getMaxSpeed() const { return this->maxSpeed; }
+void PhysicsComponent::setMaxSpeed(const PositionUnit maxSpeed) {
+  this->maxSpeed = maxSpeed;
+}
+PositionUnit PhysicsComponent::getMinSpeed() { return this->minSpeed; }
+void PhysicsComponent::setMinSpeed(const PositionUnit minSpeed) {
+  this->minSpeed = minSpeed;
+}
+real PhysicsComponent::getDragCoefficient() const {
+  return this->dragCoefficient;
+}
+void PhysicsComponent::setDragCoefficient(const real dragCoefficient) {
+  this->dragCoefficient = dragCoefficient;
+}
+real PhysicsComponent::getMass() const { return this->mass; }
+void PhysicsComponent::setMass(const real mass) { this->mass = mass; }
+shared_ptr<Vect2D> PhysicsComponent::getNetForce() const {
+  return this->netForce;
+}
+shared_ptr<Vect2D> PhysicsComponent::getAcceleration() const {
+  return this->acceleration;
+}
+shared_ptr<Vect2D> PhysicsComponent::getVelocity() const {
+  return this->velocity;
+}
+
+// Unique public methods
 void PhysicsComponent::applyForce(const shared_ptr<const Vect2D> force) {
   *(this->netForce) += *force;
 }
-
-bool PhysicsComponent::isMidair() const {}
-bool PhysicsComponent::isMoving() const {}
 void PhysicsComponent::integrate(const time_ms duration) {
   /*
   integrate() drives an object's physics; we apply all forces to the object
@@ -109,55 +172,51 @@ void PhysicsComponent::applyGravity() {
 };
 
 void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
-  // Attempt movement based on velocity based on
-  // object's velocity over the duration;
-  // we will scale the velocity vector based on time
-  // and add that to position, taking collisions into account
+  /*
+   * Attempt movement based on object's present velocity, testing for resulting
+   * collisions. If movement along a particular axis would a collision, we undo
+   * the move along that axis and apply resulting collision forces to each
+   * object
 
-  // - attempt to do the X/Y move, and get a list of objects we'd collide
-  // with, then move back
-  // - for each one, apply force based on our velocity to them, then apply
-  // their normal force to us and update our velocity accordingly.
-  // - Repeat this procedure for X and Y moves.
-
-  // TODO: If a collision occurs, we should attempt to move as close to the
+  // TODO: If a collision occurs, should we attempt to move as close to the
   // object as possible (to prevent "forcefields"); maybe add a
   // collisionDistance() that knows the closest we can get to its bounding
   // box? There are some edge cases where a move might collide with two
   // things, one of which is closer.
 
+  - Determine if collision occurs based on move
+    - Test each axis separately, but only treat collisions happening when
+      movement occurs on both axes as "true collisions"
+    - When a collision occurs, we need to know which objects we collided with,
+  and how far we can actually move
+    - We aren't likely to collide with more than one object at a time, most
+  likely 1.
+  - Move to the degree possible
+  - Apply resulting forces to us and each object
+    - Application of forces depends on the collision type:
+      - For elastic collisions, should we just swap net force? Or maybe zero our
+        velocity and apply theirs as a force?
+   */
+
+  shared_ptr<CollisionTestResults> results =
+      this->determineCollisions(movement);
+  this->positionComp->move(results->validMovement);
+  this->resolveCollisions(results);
+}
+
+shared_ptr<CollisionSet> PhysicsComponent::determineCollisions() {
+  shared_ptr<CollisionDetectionComponent> cdComp =
+      this->getCollisionDetectionComponent();
   this->positionComp->moveOnlyX(movement);
-  shared_ptr<CollisionSet> xCollisions = this->detectCollision();
+  shared_ptr<CollisionSet> xCollisions = cdComp->detectCollision();
   this->positionComp->reverseMoveOnlyX(movement);
 
   this->positionComp->moveOnlyY(movement);
   shared_ptr<CollisionSet> yCollisions = this->detectCollision();
   this->positionComp->reverseMoveOnlyY(movement);
-
-  this->resolveCollisions(movement, xCollisions, yCollisions);
-}
-
-shared_ptr<CollisionSet> PhysicsComponent::detectCollision() {
-  shared_ptr<set<shared_ptr<PhysicsComponent>>> candidates =
-      this->getManager()->getCollisionCandidates(this->getptr());
-  shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> candidateComponents =
-      shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>(
-          new set<shared_ptr<CollisionDetectionComponent>>());
-  for (shared_ptr<PhysicsComponent> pComp : *candidates) {
-    candidateComponents->insert(pComp->getCollisionDetectionComponent());
-  }
 }
 
 void PhysicsComponent::resolveCollisions(
-    // TODO: I _really_ don't want to have references to the parent object
-    // stored in the physicsComponent; the physicsComponent should be
-    // constructed with refs to parent-owned components it needs - if it has a
-    // direct reference to the parent object, it will wind up calling the parent
-    // directly and creating dependencies on it. Maybe the physicsComponent
-    // could be given a callback that returns shared_ptr<GameObject> to the
-    // parent? Alternatively, maybe the PhysicsManager should manage the
-    // relationships between components and their parents and support turning a
-    // list of PhysicsComponent into GameObjects?
     const shared_ptr<Vect2D> movement,
     const shared_ptr<CollisionSet> xCollisions,
     const shared_ptr<CollisionSet> yCollisions) {

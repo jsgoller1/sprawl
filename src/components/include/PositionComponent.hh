@@ -1,30 +1,28 @@
 #pragma once
+#include "Math.hh"
 #include "Memory.hh"
 #include "Types.hh"
 
-typedef struct Point {
-  PositionUnit x;
-  PositionUnit y;
-} Point;
-
 class PositionComponent {
  public:
-  PositionComponent(const PositionUnit x, const PositionUnit y) : x(x), y(y) {}
-  PositionComponent(shared_ptr<Point> center);
+  PositionComponent(shared_ptr<Vect2D> center);
+  PositionComponent(const XCoord x, const YCoord y) : x(x), y(y){};
 
   PositionUnit getX() const { return this->x; }
   void setX(const PositionUnit x) { this->x = x; }
   PositionUnit getY() const { return this->y; }
   void setY(const PositionUnit y) { this->y = y; }
+  shared_ptr<Vect2D> getCenter();
+  void setCenter(shared_ptr<Vect2D> center);
 
-  shared_ptr<Point> getCenter();
-  void setCenter(shared_ptr<Point> center);
-  void updateX(const PositionUnit x);
-  void updateY(const PositionUnit y);
-  void updateCenter(shared_ptr<Point> delta);
-  void move(const shared_ptr<Point> movement);
+  void move(const shared_ptr<Vect2D> delta);
+  void reverseMove(const shared_ptr<Vect2D> delta);
+  void moveOnlyX(const shared_ptr<Vect2D> vect);
+  void reverseMoveOnlyX(const shared_ptr<Vect2D> vect);
+  void moveOnlyY(const shared_ptr<Vect2D> vect);
+  void reverseMoveOnlyY(const shared_ptr<Vect2D> vect);
 
  private:
-  PositionUnit x;
-  PositionUnit y;
+  XCoord x;
+  YCoord y;
 };
