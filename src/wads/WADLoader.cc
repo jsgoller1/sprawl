@@ -17,6 +17,9 @@ shared_ptr<Zone> WADLoader::zoneFromWAD(
   // for now, just implementing them as loops inside add*()
   if (data.contains("gameObjects")) {
     for (auto gameObjectJSON : data["gameObjects"]) {
+      if (gameObjectJSON["enabled"] == "false") {
+        continue;
+      }
       if (gameObjectJSON["type"] == "Character") {
         this->addCharacter(zone, gameObjectJSON);
       } else if (gameObjectJSON["type"] == "Platform") {
