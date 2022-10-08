@@ -2,9 +2,24 @@
 
 #include "Types.hh"
 
-enum CollisionAxis { X_ONLY, Y_ONLY, X_AND_Y };
+enum CollisionAxis {
+  // Collision occurs due to movement along both axes; it wouldn't occur without
+  // movement along both axes; e.g. collision with another box sufficiently
+  // up-and-rightward
+  X_AND_Y = 0,
+  // Collision occurs due to y-axis component of movement, irrespective of
+  // x-axis movement; e.g. collision with the floor
+  Y_ONLY = 1,
+  // Collision occurs due to x-axis component of movement, irrespective of
+  // y-axis movement; e.g. collision with a wall.
+  X_ONLY = 2,
+  // Collision occurs due to movements along either axis; performing either one
+  // alone will cause it; e.g. collision with the perimeter of a box from inside
+  // it
+  X_OR_Y = 3
+};
 
-enum CollisionType {
+enum CollisionResolutionType {
   // Both the source and target objects respond to force; both will change
   // momentum but overall momentum will be preserved.
   ELASTIC,

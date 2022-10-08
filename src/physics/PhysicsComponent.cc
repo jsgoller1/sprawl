@@ -41,16 +41,6 @@ void PhysicsComponent::setCollisionDetectionComponent(
   this->collisionDetectionComponent = comp;
 }
 
-// Forwarding methods
-bool PhysicsComponent::checkCollision(
-    const shared_ptr<PhysicsComponent> comp) const {
-  this->collisionDetectionComponent->checkCollision(
-      comp->getCollisionDetectionComponent());
-}
-shared_ptr<BoundingBox> PhysicsComponent::getBoundingBox() const {
-  this->collisionDetectionComponent->getBoundingBox();
-}
-
 // Unique attribute accessors
 bool PhysicsComponent::getForceResponsive() const {
   return this->forceResponsive;
@@ -164,7 +154,6 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
    * Attempt movement based on object's present velocity, testing for resulting
    * collisions and resolving them appropriately based on the objects
    */
-
   shared_ptr<CollisionTestResult> results =
       this->collisionDetectionComponent->determineCollisions(movement);
   this->positionComponent->move(results->validMove);
@@ -173,7 +162,9 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
 void PhysicsComponent::resolveCollisions(
     const shared_ptr<CollisionTestResult> result) {
   for (shared_ptr<Collision> collision : *(result->collisions)) {
-    switch (collision->getType()) {
+    shared_ptr<PhysicsComponent> target =
+        this->manager->getComponent(collision->getIdentity());
+    switch (this->collisionResolutionType(target->forceResponsive)) {
       case ELASTIC:
       case INELASTIC:
       case PARTIAL_ELASTIC:

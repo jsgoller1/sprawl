@@ -2,6 +2,7 @@
 
 #include "CollisionDetectionComponent.hh"
 #include "CollisionTestResult.hh"
+#include "Component.hh"
 #include "Math.hh"
 #include "Memory.hh"
 #include "PhysicsHelpers.hh"
@@ -39,7 +40,8 @@
 // Forward decls
 class PhysicsManager;
 
-class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
+class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
+                         public Component {
  public:
   // ctors / dtors
   PhysicsComponent(
@@ -114,4 +116,6 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent> {
   void PhysicsComponent::resolveCollisions(
       const shared_ptr<CollisionTestResult> result);
   void resolveCollisionElastic(const shared_ptr<Collision> collision);
+  CollisionResolutionType collisionResolutionType(
+      const bool isTargetForceResponsive);
 };
