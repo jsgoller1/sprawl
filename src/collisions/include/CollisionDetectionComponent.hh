@@ -3,11 +3,10 @@
 
 #include "BoundingBox.hh"
 #include "CollisionTestResult.hh"
-#include "Component.hh"
 #include "Math.hh"
 #include "Memory.hh"
 
-class CollisionDetectionComponent : public Component {
+class CollisionDetectionComponent {
   /*
    * CollisionDetectionComponent handles all collision testing on behalf of
    * PhysicsComponent. It knows how to work with BoundingBoxes, and how to

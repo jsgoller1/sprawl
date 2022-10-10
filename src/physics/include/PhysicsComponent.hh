@@ -45,7 +45,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
  public:
   // ctors / dtors
   PhysicsComponent(
-      const shared_ptr<GameObjectID> ownerID,
+      const shared_ptr<Identity> ownerIdentity,
       const shared_ptr<PositionComponent> positionComp,
       const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
       const bool forceResponsiveSetting = false,
@@ -56,6 +56,8 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
   // Owned components/object accessors
   shared_ptr<PhysicsManager> getManager() const;
   void setManager(const shared_ptr<PhysicsManager> manager);
+  shared_ptr<PositionComponent> getPositionComponent() const;
+  void setPositionComponent(const shared_ptr<PositionComponent> comp);
   shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent()
       const;
   void setCollisionDetectionComponent(
@@ -86,8 +88,6 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
   shared_ptr<Vect2D> getAcceleration() const;
   shared_ptr<Vect2D> getVelocity() const;
 
-  // Unique/Purpose-related functionality
-  shared_ptr<BoundingBox> getBoundingBox() const;
   void applyForce(const shared_ptr<const Vect2D> force);
   void applyGravity();
   void integrate(const time_ms duration);
@@ -96,13 +96,13 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
 
  private:
   // Attributes
-  shared_ptr<GameObjectID> ownerID;
+  shared_ptr<Identity> ownerIdentity;
   bool forceResponsive;
   bool gravityEnabled;
   PositionUnit maxSpeed;
   PositionUnit minSpeed;
   real dragCoefficient;
-  real mass;
+  real mass = 1.0;
   shared_ptr<Vect2D> netForce;
   shared_ptr<Vect2D> velocity;
   shared_ptr<Vect2D> acceleration;
@@ -113,8 +113,7 @@ class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
 
   void attemptMove(const shared_ptr<Vect2D> movement);
   void updateVelocityFromNetForce(const time_ms duration);
-  void PhysicsComponent::resolveCollisions(
-      const shared_ptr<CollisionTestResult> result);
+  void resolveCollisions(const shared_ptr<CollisionTestResult> result);
   void resolveCollisionElastic(const shared_ptr<Collision> collision);
   CollisionResolutionType collisionResolutionType(
       const bool isTargetForceResponsive);

@@ -2,13 +2,13 @@
 
 // ctors / dtors
 PhysicsComponent::PhysicsComponent(
-    const shared_ptr<GameObjectID> ownerID,
+    const shared_ptr<Identity> ownerIdentity,
     const shared_ptr<PositionComponent> positionComponent,
     const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
     const bool forceResponsiveSetting, const bool gravitySetting,
     const PositionUnit maxSpeed, const PositionUnit minSpeed,
     const real dragCoefficient) {
-  this->ownerID = ownerID;
+  this->ownerIdentity = ownerIdentity;
   this->positionComponent = positionComponent;
   this->collisionDetectionComponent = collisionDetectionComponent;
   this->forceResponsive = forceResponsiveSetting;

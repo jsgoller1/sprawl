@@ -55,8 +55,8 @@ void WADLoader::addBackground(shared_ptr<Zone> zone,
 
 void WADLoader::addCharacter(shared_ptr<Zone> zone,
                              const json& characterJSON) const {
-  shared_ptr<GameObjectID> name =
-      shared_ptr<GameObjectID>(new GameObjectID(characterJSON["name"]));
+  shared_ptr<Identity> name =
+      shared_ptr<Identity>(new Identity(characterJSON["name"]));
   // Prepare PositionComponent
   PositionUnit x = characterJSON["position"]["x"];
   PositionUnit y = characterJSON["position"]["y"];
@@ -101,8 +101,8 @@ void WADLoader::addPlatform(shared_ptr<Zone> zone,
     }
   }
 
-  shared_ptr<GameObjectID> name =
-      shared_ptr<GameObjectID>(new GameObjectID(platformJSON["name"]));
+  shared_ptr<Identity> name =
+      shared_ptr<Identity>(new Identity(platformJSON["name"]));
 
   PositionUnit x = platformJSON["position"]["x"];
   PositionUnit y = platformJSON["position"]["y"];

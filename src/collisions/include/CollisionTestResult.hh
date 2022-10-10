@@ -1,11 +1,12 @@
 #pragma once
 
+#include "Identity.hh"
 #include "Math.hh"
 #include "PhysicsTypes.hh"
 
 typedef struct Collision {
   shared_ptr<Identity> targetIdentity;
-  CollisionAxis collisionAxis
+  CollisionAxis collisionAxis;
 } Collision;
 
 class CollisionTestResult {

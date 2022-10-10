@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Math.hh"
 #include "Memory.hh"
 #include "PositionComponent.hh"
 #include "Texture.hh"
@@ -34,7 +35,7 @@ class DrawingComponent {
   // Forwards to PositionComponent
   int getX() const { return this->positionComponent->getX(); }
   int getY() const { return this->positionComponent->getY(); }
-  shared_ptr<Point> getCenter() const {
+  shared_ptr<Vect2D> getCenter() const {
     return this->positionComponent->getCenter();
   }
 
@@ -49,7 +50,7 @@ class DrawingComponent {
   }
 
   // Unique methods
-  shared_ptr<Point> getDrawPoint() const;
+  shared_ptr<Vect2D> getDrawPoint() const;
 
  private:
   shared_ptr<PositionComponent> positionComponent;

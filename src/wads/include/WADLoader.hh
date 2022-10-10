@@ -1,6 +1,7 @@
 #pragma once
 #include <fstream>
 
+#include "Identity.hh"
 #include "PositionComponent.hh"
 #include "Types.hh"
 #include "Zone.hh"

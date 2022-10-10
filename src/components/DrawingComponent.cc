@@ -10,10 +10,10 @@ DrawingComponent::DrawingComponent(
   this->angle = 0.0;
 }
 
-shared_ptr<Point> DrawingComponent::getDrawPoint() const {
+shared_ptr<Vect2D> DrawingComponent::getDrawPoint() const {
   // Get the specific point SDL should use for drawing; SDL treats
   // this as the top left of the image and draws from there.
-  shared_ptr<Point> drawPoint = this->positionComponent->getCenter();
+  shared_ptr<Vect2D> drawPoint = this->positionComponent->getCenter();
   drawPoint->x -= this->getWidth() / 2;
   // Lower y values are higher on the screen.
   drawPoint->y -= this->getHeight() / 2;
