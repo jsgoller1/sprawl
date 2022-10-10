@@ -1,10 +1,12 @@
 #include "InputHandler.hh"
 #include "Logger.hh"
 #include "Screen.hh"
+#include "Time.hh"
 #include "Types.hh"
 #include "World.hh"
 
 int main() {
+  Timer timer = Timer();
   Screen screen = Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
   World world = World();
   InputHandler inputManager = InputHandler();
@@ -13,11 +15,13 @@ int main() {
   // running interpreter that can read input and produce commands to
   // be given to World()
 
+  time_ms duration;
   while (userAction != QUIT) {
+    duration = timer.tick();
     // startTime = getCurrentTime();
     userAction = inputManager.getGameAction();
     if (userAction != GameAction::IDLE) {
-      log("GameAction: " + to_string(userAction));
+      // log("GameAction: " + to_string(userAction));
     }
     /*
     TODO: UI stuff; UI can either pause the game
@@ -35,7 +39,7 @@ int main() {
     // not move the player around. We may also want the World/Zone to keep state
     // as well, e.g. "up" should do something different if the player is in a
     // vehicle, in combat, etc.
-    world.update(userAction);
+    world.update(userAction, duration);
     screen.drawAll(world.getDrawables());
 
     // If we wind up taking less time than we need should we sleep?

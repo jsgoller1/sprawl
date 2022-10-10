@@ -6,8 +6,8 @@
 BoundingBox::BoundingBox(const shared_ptr<Vect2D> center,
                          const shared_ptr<BoundingBoxParams> params) {
   this->center = center;
-  this->height = params->height;
-  this->width = params->width;
+  this->height = params->getHeight();
+  this->width = params->getWidth();
 }
 BoundingBox::BoundingBox(const shared_ptr<Vect2D> center,
                          const PositionUnit height, const PositionUnit width) {

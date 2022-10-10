@@ -22,7 +22,8 @@ PhysicsComponent::PhysicsComponent(
 }
 
 shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
-  return this->shared_from_this();
+  return static_pointer_cast<PhysicsComponent, Component>(
+      this->shared_from_this());
 }
 
 // Owned components/object accessors

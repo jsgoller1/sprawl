@@ -2,11 +2,13 @@
 #pragma once
 
 #include "BoundingBox.hh"
+#include "CollisionDetectionManager.hh"
 #include "CollisionTestResult.hh"
+#include "Component.hh"
 #include "Math.hh"
 #include "Memory.hh"
 
-class CollisionDetectionComponent {
+class CollisionDetectionComponent : public Component {
   /*
    * CollisionDetectionComponent handles all collision testing on behalf of
    * PhysicsComponent. It knows how to work with BoundingBoxes, and how to
@@ -22,6 +24,7 @@ class CollisionDetectionComponent {
       : positionComponent(positionComponent),
         boundingBoxParams(boundingBoxParams),
         collisionsEnabled(collisionsEnabled) {}
+  shared_ptr<CollisionDetectionComponent> getptr();
 
   shared_ptr<PositionComponent> getPositionComponent() const {
     return this->positionComponent;
@@ -52,8 +55,10 @@ class CollisionDetectionComponent {
   bool collisionsEnabled;
   shared_ptr<BoundingBoxParams> boundingBoxParams;
   shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<CollisionTestResult> predictMovementCollision(
-      const shared_ptr<Vect2D> movement);
+  shared_ptr<CollisionDetectionManager> manager;
+
+  shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>
+  predictMovementCollision(const shared_ptr<Vect2D> movement);
   CollisionAxis determineCollisionAxis(
       const shared_ptr<CollisionDetectionComponent> target,
       const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>

@@ -34,12 +34,12 @@ shared_ptr<CollisionTestResult> CollisionDetectionComponent::testCollisions(
     CollisionAxis axis =
         determineCollisionAxis(target, xCollisions, yCollisions);
     shared_ptr<Collision> collision = shared_ptr<Collision>(new Collision{
-        .targetIdentity = target->getIdentity(), .collisionAxis = axis});
+        .targetIdentity = target->getOwnerIdentity(), .collisionAxis = axis});
     finalizedCollisionSet->insert(collision);
   }
 
-  return shared_ptr<CollisionTestResult>(
-      new CollisionTestResult(this, movement, finalizedCollisionSet));
+  return shared_ptr<CollisionTestResult>(new CollisionTestResult(
+      this->getOwnerIdentity(), movement, finalizedCollisionSet));
 }
 
 shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>
@@ -58,9 +58,9 @@ CollisionDetectionComponent::predictMovementCollision(
 
   this->positionComponent->move(movement);
   for (shared_ptr<CollisionDetectionComponent> other :
-       *(this->manager->getCollisionCandidates(this))) {
+       *(this->manager->getCollisionCandidates(this->getptr()))) {
     if (this->areColliding(other)) {
-      collisionSet->insert(other);
+      targetSet->insert(other);
     }
   }
   this->positionComponent->moveReverse(movement);

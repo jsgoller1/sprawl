@@ -8,8 +8,8 @@ class Entity {
   shared_ptr<Identity> getIdentity() const;
 
  protected:
-  Entity::Entity();
-  Entity::~Entity();
+  Entity();
+  ~Entity();
 
  private:
   shared_ptr<Identity> identity;

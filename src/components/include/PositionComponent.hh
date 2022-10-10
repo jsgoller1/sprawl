@@ -6,7 +6,7 @@
 class PositionComponent {
  public:
   PositionComponent(shared_ptr<Vect2D> center);
-  PositionComponent(const XCoord x, const YCoord y) : x(x), y(y){};
+  PositionComponent(const XCoord x, const YCoord y);
 
   PositionUnit getX() const { return this->x; }
   void setX(const PositionUnit x) { this->x = x; }

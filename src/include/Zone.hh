@@ -30,7 +30,7 @@ class Zone {
   // TODO: serialize(); // needed for saving game and level editor
   void setBackground(const shared_ptr<FilePath> backgroundPath);
 
-  void update(const GameAction& action);
+  void update(const GameAction& action, const time_ms duration);
   shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const;
 
  private:

@@ -40,8 +40,7 @@
 // Forward decls
 class PhysicsManager;
 
-class PhysicsComponent : public enable_shared_from_this<PhysicsComponent>,
-                         public Component {
+class PhysicsComponent : public Component {
  public:
   // ctors / dtors
   PhysicsComponent(

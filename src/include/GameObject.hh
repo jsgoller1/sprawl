@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "BoundingBox.hh"
 #include "DrawingComponent.hh"
 #include "Entity.hh"
 #include "Memory.hh"
@@ -62,8 +63,6 @@ class GameObject : public Entity {
         physicsComponent(physicsComponent),
         collisionDetectionComponent(collisionDetectionComponent),
         drawingComponent(drawingComponent) {}
-
-  shared_ptr<PhysicsComponent> getPhysicsComponent() const;
 
  private:
   shared_ptr<DrawingComponent> drawingComponent;

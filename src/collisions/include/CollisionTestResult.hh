@@ -15,9 +15,9 @@ class CollisionTestResult {
    * what to do after a collision test.
    */
  public:
-  CollisionTestResult(
-      const shared_ptr<Identity> source, const shared_ptr<Vect2D> attemptedMove,
-      const shared_ptr<set<shared_ptr<Identity>>> collisionObjectIDs);
+  CollisionTestResult(const shared_ptr<Identity> source,
+                      const shared_ptr<Vect2D> attemptedMove,
+                      const shared_ptr<set<shared_ptr<Collision>>> collisions);
 
   shared_ptr<set<shared_ptr<Identity>>> getCollisionObjectIDs() const;
   shared_ptr<Vect2D> getValidMove() const;

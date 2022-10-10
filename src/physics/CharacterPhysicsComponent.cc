@@ -15,7 +15,7 @@ CharacterPhysicsComponent::CharacterPhysicsComponent(
                        ENABLE_FORCE_RESPONSIVE) {}
 
 shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
-  return static_pointer_cast<CharacterPhysicsComponent, PhysicsComponent>(
+  return static_pointer_cast<CharacterPhysicsComponent, Component>(
       this->shared_from_this());
 }
 

@@ -1,6 +1,10 @@
 #pragma once
 
-#include "CollisionDetectionComponent.hh"
+#include "Memory.hh"
+#include "Types.hh"
+
+// Forward decl
+class CollisionDetectionComponent;
 
 class CollisionDetectionManager {
   /*

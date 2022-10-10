@@ -10,9 +10,9 @@ Zone::Zone() {
       new vector<shared_ptr<GameObject>>());
 }
 
-void Zone::update(const GameAction& action) {
+void Zone::update(const GameAction& action, const time_ms duration) {
   this->handleInput(action);
-  this->physicsManager->applyVelocityAll();
+  this->physicsManager->updateManagedComponents(duration);
 }
 
 void Zone::handleInput(const GameAction& action) {
