@@ -28,7 +28,9 @@ class Zone {
   Zone();
 
   // TODO: serialize(); // needed for saving game and level editor
-  void setBackground(const shared_ptr<FilePath> backgroundPath);
+  void setBackground(const shared_ptr<Background> background);
+  void addPlayerCharracter(const shared_ptr<Character> playerCharacter);
+  void addGameObject(const shared_ptr<GameObject> gameObject);
 
   void update(const GameAction& action, const time_ms duration);
   shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const;
@@ -46,6 +48,4 @@ class Zone {
   shared_ptr<Character> player;
 
   void handleInput(const GameAction& action);
-
-  friend WADLoader;
 };

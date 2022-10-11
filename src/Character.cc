@@ -1,13 +1,13 @@
 #include "Character.hh"
 
 Character::Character(
-    const shared_ptr<Identity> identity,
+    const shared_ptr<EntityName> entityName,
     const shared_ptr<PositionComponent> positionComponent,
-    const shared_ptr<PhysicsComponent> physicsComponent,
     const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
+    const shared_ptr<PhysicsComponent> physicsComponent,
     const shared_ptr<DrawingComponent> drawingComponent)
-    : GameObject(identity, positionComponent, physicsComponent,
-                 collisionDetectionComponent, drawingComponent) {
+    : GameObject(entityName, positionComponent, collisionDetectionComponent,
+                 physicsComponent, drawingComponent) {
   this->moveSpeed = shared_ptr<Vect2D>(new Vect2D(10.0, 10.0));
   this->getPhysicsComponent()->setGravityEnabled(true);
 }

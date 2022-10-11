@@ -48,3 +48,20 @@ void PhysicsManager::updateManagedComponents(const time_ms duration) {
     comp->integrate(duration);
   }
 }
+
+shared_ptr<PhysicsComponent> PhysicsManager::getComponent(
+    const shared_ptr<Identity> identity) {
+  shared_ptr<EntityManager> entityManager = EntityManager::instance();
+  Entity* entity = entityManager->getEntity(identity);
+  if (entity == nullptr) {
+    // TODO: Log warning
+    return nullptr;
+  }
+  shared_ptr<PhysicsComponent> comp =
+      static_cast<GameObject*>(entity)->getPhysicsComponent();
+  if (this->managedComponents->find(comp) == this->managedComponents->end()) {
+    // TODO: Log warning
+    return nullptr;
+  }
+  return comp;
+}

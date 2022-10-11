@@ -11,13 +11,16 @@
 #include "Types.hh"
 
 class Character : public GameObject {
-  // Self explanatory: parent class for player, npcs, enemies, etc
+  /*
+   * Characters are actual characters in the game, both the player character
+   * (PC) and non-player characters (NPCs)
+   */
  public:
-  Character(const shared_ptr<Identity> identity,
-            const shared_ptr<PositionComponent> positionComponent,
-            const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
+  Character(const shared_ptr<EntityName> name = nullptr,
+            const shared_ptr<PositionComponent> positionComponent = nullptr,
             const shared_ptr<CollisionDetectionComponent>
                 collisionDetectionComponent = nullptr,
+            const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
             const shared_ptr<DrawingComponent> drawingComponent = nullptr);
   void move(const GameAction& action);
   void jump();

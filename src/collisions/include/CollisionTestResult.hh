@@ -19,7 +19,7 @@ class CollisionTestResult {
                       const shared_ptr<Vect2D> attemptedMove,
                       const shared_ptr<set<shared_ptr<Collision>>> collisions);
 
-  shared_ptr<set<shared_ptr<Identity>>> getCollisionObjectIDs() const;
+  shared_ptr<set<shared_ptr<Collision>>> getCollisions() const;
   shared_ptr<Vect2D> getValidMove() const;
   shared_ptr<Identity> getFirstCollisionTarget() const;
   shared_ptr<Direction> getCollisionDirection() const;

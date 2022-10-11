@@ -11,6 +11,7 @@
         {
             "type": "Character",
             "enabled": "true",
+            "isPlayerCharacter": "true",
             "name": "Player",
             "texturePath": "./assets/textures/player.bmp",
             "position": {
@@ -24,6 +25,7 @@
         {
             "type": "Character",
             "name": "Enemy",
+            "isPlayerCharacter": "false",
             "enabled": "false",
             "texturePath": "./assets/textures/enemy.bmp",
             "position": {

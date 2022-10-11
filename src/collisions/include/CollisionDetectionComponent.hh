@@ -18,8 +18,8 @@ class CollisionDetectionComponent : public Component {
    */
  public:
   CollisionDetectionComponent(
-      const shared_ptr<PositionComponent> positionComponent,
-      const shared_ptr<BoundingBoxParams> boundingBoxParams,
+      const shared_ptr<PositionComponent> positionComponent = nullptr,
+      const shared_ptr<BoundingBoxParams> boundingBoxParams = nullptr,
       const bool collisionsEnabled = true)
       : positionComponent(positionComponent),
         boundingBoxParams(boundingBoxParams),

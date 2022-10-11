@@ -10,11 +10,18 @@
 #include "PositionComponent.hh"
 
 class GameObject : public Entity {
-  // GameObjects are anything interactive in the world;
-  // items, characters, vehicles. They can be drawn, though
-  // they may not be visible (i.e triggers).
+  /*
+   * GameObjects are Entities in the world that the player can interact with.
+   */
 
  public:
+  GameObject(const shared_ptr<EntityName> entityName = nullptr,
+             const shared_ptr<PositionComponent> positionComponent = nullptr,
+             const shared_ptr<CollisionDetectionComponent>
+                 collisionDetectionComponent = nullptr,
+             const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
+             const shared_ptr<DrawingComponent> drawingComponent = nullptr);
+
   shared_ptr<DrawingComponent> getDrawingComponent() const {
     return this->drawingComponent;
   }
@@ -49,28 +56,21 @@ class GameObject : public Entity {
 
   void inferBoundingBoxFromTexture();
 
- protected:
-  // TODO: Do we not want anything other than derived objects calling this
-  // constructor?
-  GameObject(const shared_ptr<Identity> identity,
-             const shared_ptr<PositionComponent> positionComponent,
-             const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
-             const shared_ptr<CollisionDetectionComponent>
-                 collisionDetectionComponent = nullptr,
-             const shared_ptr<DrawingComponent> drawingComponent = nullptr)
-      : identity(identity),
-        positionComponent(positionComponent),
-        physicsComponent(physicsComponent),
-        collisionDetectionComponent(collisionDetectionComponent),
-        drawingComponent(drawingComponent) {}
-
  private:
-  shared_ptr<DrawingComponent> drawingComponent;
-  shared_ptr<PhysicsComponent> physicsComponent;
-  shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
   shared_ptr<Identity> identity;
+  shared_ptr<PositionComponent> positionComponent;
+  shared_ptr<PhysicsComponent> physicsComponent;
+  shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
+  shared_ptr<DrawingComponent> drawingComponent;
 
-  virtual void setPhysicsComponent_impl(PhysicsComponent* const comp) override;
-  virtual PhysicsComponent* getPhysicsComponent_impl() const override;
+  // NOTE: This is a technique we use to allow for covariant returns
+  // with smart pointers; unfortunately, it doesn't also work for
+  // setters because of restrictions on parameters that don't apply to
+  // return types. We might be able to get a complicated solution mixing
+  // inheiritance and templates, but we'll settle with some unfortunate name
+  // hiding for now.
+  // https://www.fluentcpp.com/2017/09/12/how-to-return-a-smart-pointer-and-use-covariance/
+
+  virtual void setPhysicsComponent_impl(PhysicsComponent* const comp);
+  virtual PhysicsComponent* getPhysicsComponent_impl() const;
 };

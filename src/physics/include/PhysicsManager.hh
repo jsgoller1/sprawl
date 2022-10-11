@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Entity.hh"
+#include "EntityManager.hh"
+#include "GameObject.hh"
 #include "Memory.hh"
 #include "PhysicsComponent.hh"
 #include "Time.hh"
@@ -34,6 +37,8 @@ class PhysicsManager : public enable_shared_from_this<PhysicsManager> {
   void setGravityConstant(const real gravityConstant) {
     this->gravityConstant = gravityConstant;
   };
+  shared_ptr<PhysicsComponent> getComponent(
+      const shared_ptr<Identity> identity);
 
  private:
   shared_ptr<set<shared_ptr<PhysicsComponent>>> managedComponents;

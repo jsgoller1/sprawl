@@ -1,28 +1,31 @@
+#pragma once
+
 #include "EntityManager.hh"
-#include "PhysicsComponent.hh"
 #include "Types.hh"
+#include "Zone.hh"
 
 typedef string EntityName;
 
+// Forward decl
+class PhysicsComponent;
+
 class Entity {
+  /*
+   * An Entity is anything that exists in the game world and makes use of
+   * components. Every Entity must have a unique Identity. Entities may also
+   * have names, but are not required to.
+   */
+
+ public:
   shared_ptr<Identity> getIdentity() const;
+  shared_ptr<EntityName> getName() const;
+  void setName(const shared_ptr<EntityName> name);
 
  protected:
-  Entity();
+  Entity(const shared_ptr<EntityName> name = nullptr);
   ~Entity();
 
  private:
   shared_ptr<Identity> identity;
-  shared_ptr<EntityName> name;
-
-  // NOTE: This is a technique we use to allow for covariant returns
-  // with smart pointers; unfortunately, it doesn't also work for
-  // setters because of restrictions on parameters that don't apply to
-  // return types. We might be able to get a complicated solution mixing
-  // inheiritance and templates, but we'll settle with some unfortunate name
-  // hiding for now.
-  // https://www.fluentcpp.com/2017/09/12/how-to-return-a-smart-pointer-and-use-covariance/
-
-  virtual void setPhysicsComponent_impl(PhysicsComponent* const comp) = 0;
-  virtual PhysicsComponent* getPhysicsComponent_impl() const = 0;
+  shared_ptr<EntityName> entityName;
 };

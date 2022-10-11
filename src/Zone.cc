@@ -60,3 +60,7 @@ shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
 
   return drawables;
 }
+
+void Zone::addGameObject(const shared_ptr<GameObject> gameObject) {
+  this->physicsManager->manageComponent(gameObject->getPhysicsComponent());
+}

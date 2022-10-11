@@ -156,15 +156,15 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
    * collisions and resolving them appropriately based on the objects
    */
   shared_ptr<CollisionTestResult> results =
-      this->collisionDetectionComponent->determineCollisions(movement);
-  this->positionComponent->move(results->validMove);
+      this->collisionDetectionComponent->testCollisions(movement);
+  this->positionComponent->move(results->getValidMove());
   this->resolveCollisions(results);
 }
 void PhysicsComponent::resolveCollisions(
     const shared_ptr<CollisionTestResult> result) {
-  for (shared_ptr<Collision> collision : *(result->collisions)) {
+  for (shared_ptr<Collision> collision : *(result->getCollisions())) {
     shared_ptr<PhysicsComponent> target =
-        this->manager->getComponent(collision->getIdentity());
+        this->manager->getComponent(collision->targetIdentity);
     switch (this->collisionResolutionType(target->forceResponsive)) {
       case ELASTIC:
       case INELASTIC:
@@ -184,7 +184,7 @@ void PhysicsComponent::resolveCollisionElastic(
   // TODO: Since every object in Neon Rain has the same mass, we can just hack
   // elastic collisions by swapping their velocities.
   shared_ptr<PhysicsComponent> them =
-      this->manager->getComponent(collision->getIdentity());
+      this->manager->getComponent(collision->targetIdentity);
   shared_ptr<Vect2D> temp = this->velocity;
   this->velocity = them->velocity;
   them->velocity = temp;

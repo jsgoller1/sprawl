@@ -37,52 +37,49 @@ shared_ptr<Zone> WADLoader::zoneFromWAD(
 
 void WADLoader::addBackground(shared_ptr<Zone> zone,
                               const json& backgroundJSON) const {
-  // Prepare PositionComponent
-  PositionUnit x = backgroundJSON["position"]["x"];
-  PositionUnit y = backgroundJSON["position"]["y"];
-  shared_ptr<PositionComponent> positionComponent =
-      shared_ptr<PositionComponent>(new PositionComponent(x, y));
-  // Prepare DrawingComponent
+  shared_ptr<Background> background = shared_ptr<Background>(new Background());
+  shared_ptr<EntityName> name =
+      shared_ptr<EntityName>(new EntityName(backgroundJSON["name"]));
+  background->setName(name);
+
+  // Initialize position
+  XCoord x = backgroundJSON["position"]["x"];
+  YCoord y = backgroundJSON["position"]["y"];
+  background->getPositionComponent()->setX(x);
+  background->getPositionComponent()->setY(y);
+
+  // Load texture
   shared_ptr<FilePath> texturePath =
       shared_ptr<FilePath>(new FilePath(backgroundJSON["texturePath"]));
   shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
-  shared_ptr<DrawingComponent> drawingComponent = shared_ptr<DrawingComponent>(
-      new DrawingComponent(positionComponent, texture));
-  // Construct
-  zone->background = shared_ptr<Background>(
-      new Background(drawingComponent, positionComponent));
+  background->getDrawingComponent()->setTexture(texture);
+
+  zone->setBackground(background);
 }
 
 void WADLoader::addCharacter(shared_ptr<Zone> zone,
                              const json& characterJSON) const {
-  shared_ptr<Identity> name =
-      shared_ptr<Identity>(new Identity(characterJSON["name"]));
-  // Prepare PositionComponent
-  PositionUnit x = characterJSON["position"]["x"];
-  PositionUnit y = characterJSON["position"]["y"];
-  shared_ptr<PositionComponent> positionComponent =
-      shared_ptr<PositionComponent>(new PositionComponent(x, y));
-  // Prepare DrawingComponent
+  shared_ptr<Character> character = shared_ptr<Character>(new Character());
+  shared_ptr<EntityName> name =
+      shared_ptr<EntityName>(new EntityName(characterJSON["name"]));
+  character->setName(name);
+
+  // Initialize position
+  XCoord x = characterJSON["position"]["x"];
+  YCoord y = characterJSON["position"]["y"];
+  character->getPositionComponent()->setX(x);
+  character->getPositionComponent()->setY(y);
+
+  // Load texture
   shared_ptr<FilePath> texturePath =
       shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
   shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
-  shared_ptr<DrawingComponent> drawingComponent = shared_ptr<DrawingComponent>(
-      new DrawingComponent(positionComponent, texture));
-  // Prepare PhysicsComponent
-  shared_ptr<PhysicsComponent> physicsComponent =
-      shared_ptr<PhysicsComponent>(new PhysicsComponent(positionComponent));
-  // Construct
-  shared_ptr<Character> character = shared_ptr<Character>(new Character(
-      name, positionComponent, physicsComponent, drawingComponent));
+  character->getDrawingComponent()->setTexture(texture);
   character->inferBoundingBoxFromTexture();
 
-  zone->physicsManager->manageComponent(character->getPhysicsComponent());
-
-  if (*name == "Player") {
-    zone->player = character;
-  } else {
-    zone->gameObjects->push_back(character);
-  }
+  (characterJSON["isPlayerCharacter"] == "true")
+      ? zone->addPlayerCharracter(character)
+      : zone->addGameObject(character);
 }
 void WADLoader::addPlatform(shared_ptr<Zone> zone,
                             const json& platformJSON) const {
@@ -100,33 +97,24 @@ void WADLoader::addPlatform(shared_ptr<Zone> zone,
       yOffset = platformJSON["repeat"]["yOffset"];
     }
   }
-
-  shared_ptr<Identity> name =
-      shared_ptr<Identity>(new Identity(platformJSON["name"]));
-
   PositionUnit x = platformJSON["position"]["x"];
   PositionUnit y = platformJSON["position"]["y"];
+
+  shared_ptr<Platform> platform;
+  shared_ptr<EntityName> name;
   for (int count = 0; count < repeatCount; count++) {
-    // Prepare PositionComponent
-    shared_ptr<PositionComponent> positionComponent =
-        shared_ptr<PositionComponent>(new PositionComponent(x, y));
-    // Prepare DrawingComponent
+    platform = shared_ptr<Platform>(new Platform());
+    name = shared_ptr<EntityName>(new EntityName(platformJSON["name"]));
+    platform->getPositionComponent()->setX(x);
+    platform->getPositionComponent()->setY(y);
+
     shared_ptr<FilePath> texturePath =
         shared_ptr<FilePath>(new FilePath(platformJSON["texturePath"]));
     shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
-    shared_ptr<DrawingComponent> drawingComponent =
-        shared_ptr<DrawingComponent>(
-            new DrawingComponent(positionComponent, texture));
-    // Prepare PhysicsComponent
-    shared_ptr<PhysicsComponent> physicsComponent =
-        shared_ptr<PhysicsComponent>(new PhysicsComponent(positionComponent));
-
-    // Construct
-    shared_ptr<Platform> platform = shared_ptr<Platform>(new Platform(
-        name, positionComponent, physicsComponent, drawingComponent));
+    platform->getDrawingComponent()->setTexture(texture);
     platform->inferBoundingBoxFromTexture();
-    zone->physicsManager->manageComponent(platform->getPhysicsComponent());
-    zone->gameObjects->push_back(platform);
+
+    zone->addGameObject(platform);
 
     x += xOffset;
     y += yOffset;
