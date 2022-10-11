@@ -14,8 +14,14 @@ class Background : public Entity {
       : positionComponent(positionComponent),
         drawingComponent(drawingComponent) {}
 
-  shared_ptr<PositionComponent> getPositionComponent() const;
-  shared_ptr<PositionComponent> setPositionComponent() const;
+  shared_ptr<PositionComponent> getPositionComponent() const {
+    return this->positionComponent;
+  }
+
+  void setPositionComponent(
+      const shared_ptr<PositionComponent> positionComponent) {
+    this->positionComponent = positionComponent;
+  }
 
   shared_ptr<DrawingComponent> getDrawingComponent() const {
     return this->drawingComponent;

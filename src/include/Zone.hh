@@ -29,7 +29,7 @@ class Zone {
 
   // TODO: serialize(); // needed for saving game and level editor
   void setBackground(const shared_ptr<Background> background);
-  void addPlayerCharracter(const shared_ptr<Character> playerCharacter);
+  void addPlayerCharacter(const shared_ptr<Character> playerCharacter);
   void addGameObject(const shared_ptr<GameObject> gameObject);
 
   void update(const GameAction& action, const time_ms duration);

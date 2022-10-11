@@ -10,6 +10,10 @@ Zone::Zone() {
       new vector<shared_ptr<GameObject>>());
 }
 
+void Zone::setBackground(const shared_ptr<Background> background) {
+  this->background = background;
+}
+
 void Zone::update(const GameAction& action, const time_ms duration) {
   this->handleInput(action);
   this->physicsManager->updateManagedComponents(duration);
@@ -61,6 +65,12 @@ shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
   return drawables;
 }
 
+void Zone::addPlayerCharacter(const shared_ptr<Character> playerCharacter) {
+  this->player = playerCharacter;
+  this->physicsManager->manageComponent(playerCharacter->getPhysicsComponent());
+}
+
 void Zone::addGameObject(const shared_ptr<GameObject> gameObject) {
+  this->gameObjects->push_back(gameObject);
   this->physicsManager->manageComponent(gameObject->getPhysicsComponent());
 }

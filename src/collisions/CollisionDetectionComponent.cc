@@ -1,12 +1,17 @@
 #include "CollisionDetectionComponent.hh"
 
+shared_ptr<CollisionDetectionComponent> CollisionDetectionComponent::getptr() {
+  return static_pointer_cast<CollisionDetectionComponent, Component>(
+      this->shared_from_this());
+}
+
 shared_ptr<BoundingBox> CollisionDetectionComponent::getBoundingBox() const {
   return shared_ptr<BoundingBox>(new BoundingBox(
       this->positionComponent->getCenter(), this->boundingBoxParams));
 };
 
 shared_ptr<CollisionTestResult> CollisionDetectionComponent::testCollisions(
-    const shared_ptr<Vect2D> movement) {
+    const shared_ptr<Vect2D> newPosition) {
   /*
    * Tests if a particular movement would cause an object to collide with
    * another object; this function may mutate the object's position as part of
@@ -16,13 +21,13 @@ shared_ptr<CollisionTestResult> CollisionDetectionComponent::testCollisions(
   // First, test movement on both axes to determine what collisions will
   // actually occur.
   shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> trueCollisions =
-      this->predictMovementCollision(movement);
+      this->predictMovementCollision(newPosition);
 
   // Next, determine which collisions occurred because of single-axis movement.
   shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> xCollisions =
-      this->predictMovementCollision(movement->getXComponent());
+      this->predictMovementCollision(newPosition->getXComponent());
   shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> yCollisions =
-      this->predictMovementCollision(movement->getYComponent());
+      this->predictMovementCollision(newPosition->getYComponent());
 
   // For each of our "actual collisions", determine in what direction
   // movement was necessary to cause the collision; e.g if a collision is found
@@ -38,8 +43,17 @@ shared_ptr<CollisionTestResult> CollisionDetectionComponent::testCollisions(
     finalizedCollisionSet->insert(collision);
   }
 
+  // Lastly, determine where we should actually move to given the collisions
+  // that occur
+  // TODO: is this something CollisionTestResult should be able to compute? It
+  // will require knowledge of BoundingBoxes, seems like we should know how to
+  // compute it.
+  shared_ptr<Vect2D> validMove;
+  // getFirstCollisionTarget
+
   return shared_ptr<CollisionTestResult>(new CollisionTestResult(
-      this->getOwnerIdentity(), movement, finalizedCollisionSet));
+      this->getOwnerIdentity(), this->positionComponent->getCenter(),
+      newPosition, finalizedCollisionSet));
 }
 
 shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>
@@ -79,7 +93,7 @@ bool CollisionDetectionComponent::areColliding(
   return usBox->checkCollision(themBox);
 }
 
-CollisionAxis determineCollisionAxis(
+CollisionAxis CollisionDetectionComponent::determineCollisionAxis(
     const shared_ptr<CollisionDetectionComponent> target,
     const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> xCollisions,
     const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>

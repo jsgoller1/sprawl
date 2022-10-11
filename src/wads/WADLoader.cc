@@ -78,7 +78,7 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
   character->inferBoundingBoxFromTexture();
 
   (characterJSON["isPlayerCharacter"] == "true")
-      ? zone->addPlayerCharracter(character)
+      ? zone->addPlayerCharacter(character)
       : zone->addGameObject(character);
 }
 void WADLoader::addPlatform(shared_ptr<Zone> zone,

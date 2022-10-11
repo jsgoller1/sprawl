@@ -2,7 +2,6 @@
 
 #include "EntityManager.hh"
 #include "Types.hh"
-#include "Zone.hh"
 
 typedef string EntityName;
 

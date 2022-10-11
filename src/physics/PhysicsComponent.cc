@@ -33,6 +33,15 @@ shared_ptr<PhysicsManager> PhysicsComponent::getManager() const {
 void PhysicsComponent::setManager(const shared_ptr<PhysicsManager> manager) {
   this->manager = manager;
 };
+
+shared_ptr<PositionComponent> PhysicsComponent::getPositionComponent() const {
+  return this->positionComponent;
+}
+void PhysicsComponent::setPositionComponent(
+    const shared_ptr<PositionComponent> positionComponent) {
+  this->positionComponent = positionComponent;
+}
+
 shared_ptr<CollisionDetectionComponent>
 PhysicsComponent::getCollisionDetectionComponent() const {
   return this->collisionDetectionComponent;
@@ -157,19 +166,20 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
    */
   shared_ptr<CollisionTestResult> results =
       this->collisionDetectionComponent->testCollisions(movement);
-  this->positionComponent->move(results->getValidMove());
+  this->positionComponent->move(results->getValidPosition());
   this->resolveCollisions(results);
 }
+
 void PhysicsComponent::resolveCollisions(
     const shared_ptr<CollisionTestResult> result) {
   for (shared_ptr<Collision> collision : *(result->getCollisions())) {
     shared_ptr<PhysicsComponent> target =
         this->manager->getComponent(collision->targetIdentity);
-    switch (this->collisionResolutionType(target->forceResponsive)) {
-      case ELASTIC:
-      case INELASTIC:
-      case PARTIAL_ELASTIC:
-      case PSEUDO:
+    switch (this->getCollisionResolutionType(target->forceResponsive)) {
+      case CollisionResolutionType::ELASTIC:
+      case CollisionResolutionType::INELASTIC:
+      case CollisionResolutionType::PARTIAL_ELASTIC:
+      case CollisionResolutionType::PSEUDO:
         this->resolveCollisionElastic(collision);
         break;
       default:
@@ -177,6 +187,18 @@ void PhysicsComponent::resolveCollisions(
         break;
     }
   }
+}
+
+CollisionResolutionType PhysicsComponent::getCollisionResolutionType(
+    const bool isTargetForceResponsive) {
+  if (this->forceResponsive && isTargetForceResponsive) {
+    return CollisionResolutionType::ELASTIC;
+  } else if (this->forceResponsive && !isTargetForceResponsive) {
+    return CollisionResolutionType::INELASTIC;
+  } else if (!this->forceResponsive && isTargetForceResponsive) {
+    return CollisionResolutionType::PARTIAL_ELASTIC;
+  }
+  return CollisionResolutionType::PSEUDO;
 }
 
 void PhysicsComponent::resolveCollisionElastic(

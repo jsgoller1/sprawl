@@ -8,6 +8,11 @@
 #include "Math.hh"
 #include "Memory.hh"
 
+CollisionAxis determineCollisionAxis(
+    const shared_ptr<CollisionDetectionComponent> target,
+    const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> xCollisions,
+    const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> yCollisions);
+
 class CollisionDetectionComponent : public Component {
   /*
    * CollisionDetectionComponent handles all collision testing on behalf of

@@ -33,3 +33,11 @@ void GameObject::inferBoundingBoxFromTexture() {
       shared_ptr<BoundingBoxParams>(
           new BoundingBoxParams(texture->getHeight(), texture->getWidth())));
 }
+
+// Private
+void GameObject::setPhysicsComponent_impl(PhysicsComponent* const comp) {
+  this->physicsComponent = comp->getptr();
+}
+PhysicsComponent* GameObject::getPhysicsComponent_impl() const {
+  return this->physicsComponent.get();
+}
