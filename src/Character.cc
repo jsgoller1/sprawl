@@ -4,17 +4,27 @@ Character::Character(
     const shared_ptr<EntityName> entityName,
     const shared_ptr<PositionComponent> positionComponent,
     const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
-    const shared_ptr<PhysicsComponent> physicsComponent,
+    const shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent,
     const shared_ptr<DrawingComponent> drawingComponent)
     : GameObject(entityName, positionComponent, collisionDetectionComponent,
-                 physicsComponent, drawingComponent) {
+                 nullptr, drawingComponent) {
   this->moveSpeed = shared_ptr<Vect2D>(new Vect2D(10.0, 10.0));
+  this->characterPhysicsComponent =
+      (characterPhysicsComponent == nullptr)
+          ? shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(
+                this->getIdentity(), this->getPositionComponent(),
+                this->getCollisionDetectionComponent()))
+          : characterPhysicsComponent;
   this->getPhysicsComponent()->setGravityEnabled(true);
 }
 
-shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {}
+shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {
+  return this->getPhysicsComponent_impl()->getptr();
+}
 void Character::setPhysicsComponent(
-    const shared_ptr<CharacterPhysicsComponent> physicsComponent) const {}
+    const shared_ptr<CharacterPhysicsComponent> physicsComponent) {
+  this->setPhysicsComponent_impl(physicsComponent.get());
+}
 
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
@@ -54,9 +64,9 @@ void Character::jump() {
 
 // Private
 void Character::setPhysicsComponent_impl(PhysicsComponent* const comp) {
-  this->physicsComponent = shared_ptr<CharacterPhysicsComponent>(
+  this->characterPhysicsComponent = shared_ptr<CharacterPhysicsComponent>(
       new CharacterPhysicsComponent(comp->getptr()));
 }
 CharacterPhysicsComponent* Character::getPhysicsComponent_impl() const {
-  return this->physicsComponent.get();
+  return this->characterPhysicsComponent.get();
 }

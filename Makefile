@@ -37,7 +37,7 @@ MAIN_SOURCE:=$(SOURCE) src/main/*.cc
 MAIN_OUTFILE:=$(BIN_DIR)/neon-rain
 MAIN_OUTPUT:=-o $(MAIN_OUTFILE)
 MAIN_COMPILE:=$(CC_COMPILE) $(INCLUDE) $(LINK) $(MAIN_SOURCE) $(MAIN_OUTPUT) 
-MAIN_LOGFILE:=sprawl-logfile-`date --rfc-3339=ns | awk '{print $$2}'`.log
+MAIN_LOGFILE:=$(BIN_DIR)/sprawl-logfile-`date --rfc-3339=ns | awk '{print $$2}'`.log
 
 TEST_INCLUDE:=$(INCLUDE) -I src/test/include
 TEST_LINK:=$(LINK) -lgtest_main -lgtest -lgmock 

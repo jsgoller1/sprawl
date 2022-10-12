@@ -1,7 +1,14 @@
 #include "EntityManager.hh"
 
 // Public
-EntityManager::EntityManager() : entityCount(0){};
+EntityManager::EntityManager() : entityCount(0) {
+  this->identityToEntity =
+      shared_ptr<map<shared_ptr<Identity>, const Entity* const>>(
+          new map<shared_ptr<Identity>, const Entity* const>());
+  this->entityToIdentity =
+      shared_ptr<map<const Entity* const, shared_ptr<Identity>>>(
+          new map<const Entity* const, shared_ptr<Identity>>());
+};
 
 shared_ptr<Identity> EntityManager::getIdentity(
     const Entity* const entity) const {
@@ -50,5 +57,5 @@ shared_ptr<Identity> EntityManager::createIdentity() {
   this->entityCount++;
   shared_ptr<EntityID> entityID = shared_ptr<EntityID>(
       new EntityID("entity-" + to_string(this->entityCount)));
-  shared_ptr<Identity> identity = shared_ptr<Identity>(new Identity(entityID));
+  return shared_ptr<Identity>(new Identity(entityID));
 }

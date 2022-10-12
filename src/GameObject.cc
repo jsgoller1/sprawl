@@ -5,26 +5,29 @@ GameObject::GameObject(
     const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
     const shared_ptr<PhysicsComponent> physicsComponent,
     const shared_ptr<DrawingComponent> drawingComponent)
-    : positionComponent(positionComponent),
-      physicsComponent(physicsComponent),
-      collisionDetectionComponent(collisionDetectionComponent),
-      drawingComponent(drawingComponent),
-      Entity(entityName) {
-  if (this->positionComponent == nullptr) {
-    this->positionComponent =
-        shared_ptr<PositionComponent>(new PositionComponent(0.0, 0.0));
-  }
-  if (this->collisionDetectionComponent == nullptr) {
-    this->collisionDetectionComponent = shared_ptr<CollisionDetectionComponent>(
-        new CollisionDetectionComponent(this->positionComponent));
-  }
-  if (this->physicsComponent == nullptr) {
-    this->physicsComponent = shared_ptr<PhysicsComponent>(
-        new PhysicsComponent(this->identity, this->positionComponent,
-                             this->collisionDetectionComponent));
-  }
-  if (this->drawingComponent == nullptr) {
-  }
+    : Entity(entityName) {
+  this->positionComponent =
+      (positionComponent == nullptr)
+          ? shared_ptr<PositionComponent>(new PositionComponent(0.0, 0.0))
+          : positionComponent;
+
+  this->collisionDetectionComponent =
+      (collisionDetectionComponent == nullptr)
+          ? shared_ptr<CollisionDetectionComponent>(
+                new CollisionDetectionComponent(this->positionComponent))
+          : collisionDetectionComponent;
+
+  this->physicsComponent =
+      (physicsComponent == nullptr)
+          ? shared_ptr<PhysicsComponent>(
+                new PhysicsComponent(this->identity, this->positionComponent,
+                                     this->collisionDetectionComponent))
+          : physicsComponent;
+
+  this->drawingComponent = (drawingComponent == nullptr)
+                               ? shared_ptr<DrawingComponent>(
+                                     new DrawingComponent(positionComponent))
+                               : drawingComponent;
 }
 
 void GameObject::inferBoundingBoxFromTexture() {

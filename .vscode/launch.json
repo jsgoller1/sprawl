@@ -11,7 +11,7 @@
             "program": "${cwd}/bin/neon-rain",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "/home/joshua/Code/neon-rain",
+            "cwd": "/home/joshua/Code/sprawl",
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",

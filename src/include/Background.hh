@@ -9,10 +9,19 @@
 
 class Background : public Entity {
  public:
-  Background(const shared_ptr<PositionComponent> positionComponent = nullptr,
+  Background(const shared_ptr<EntityName> entityName = nullptr,
+             const shared_ptr<PositionComponent> positionComponent = nullptr,
              const shared_ptr<DrawingComponent> drawingComponent = nullptr)
-      : positionComponent(positionComponent),
-        drawingComponent(drawingComponent) {}
+      : Entity(entityName) {
+    this->positionComponent =
+        (positionComponent == nullptr)
+            ? shared_ptr<PositionComponent>(new PositionComponent())
+            : positionComponent;
+    this->drawingComponent =
+        (drawingComponent == nullptr)
+            ? shared_ptr<DrawingComponent>(new DrawingComponent())
+            : drawingComponent;
+  }
 
   shared_ptr<PositionComponent> getPositionComponent() const {
     return this->positionComponent;

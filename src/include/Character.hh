@@ -16,21 +16,22 @@ class Character : public GameObject {
    * (PC) and non-player characters (NPCs)
    */
  public:
-  Character(const shared_ptr<EntityName> name = nullptr,
-            const shared_ptr<PositionComponent> positionComponent = nullptr,
-            const shared_ptr<CollisionDetectionComponent>
-                collisionDetectionComponent = nullptr,
-            const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
-            const shared_ptr<DrawingComponent> drawingComponent = nullptr);
+  Character(
+      const shared_ptr<EntityName> name = nullptr,
+      const shared_ptr<PositionComponent> positionComponent = nullptr,
+      const shared_ptr<CollisionDetectionComponent>
+          collisionDetectionComponent = nullptr,
+      const shared_ptr<CharacterPhysicsComponent> cphysicsComponent = nullptr,
+      const shared_ptr<DrawingComponent> drawingComponent = nullptr);
   void move(const GameAction& action);
   void jump();
 
   shared_ptr<CharacterPhysicsComponent> getPhysicsComponent() const;
   void setPhysicsComponent(
-      const shared_ptr<CharacterPhysicsComponent> physicsComponent) const;
+      const shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent);
 
  private:
-  shared_ptr<CharacterPhysicsComponent> physicsComponent;
+  shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
 
   shared_ptr<Vect2D> moveSpeed;
   bool canDoubleJump;
