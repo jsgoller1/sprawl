@@ -59,3 +59,21 @@ shared_ptr<Identity> EntityManager::createIdentity() {
       new EntityID("entity-" + to_string(this->entityCount)));
   return shared_ptr<Identity>(new Identity(entityID));
 }
+
+shared_ptr<set<const Entity* const>> EntityManager::getAllEntities() {
+  shared_ptr<set<const Entity* const>> entities =
+      shared_ptr<set<const Entity* const>>(new set<const Entity* const>());
+  for (auto entry : *(this->entityToIdentity)) {
+    entities->insert(entry.first);
+  }
+  return entities;
+}
+
+shared_ptr<set<shared_ptr<Identity>>> EntityManager::getAllIdentities() {
+  shared_ptr<set<shared_ptr<Identity>>> identities =
+      shared_ptr<set<shared_ptr<Identity>>>(new set<shared_ptr<Identity>>());
+  for (auto entry : *(this->identityToEntity)) {
+    identities->insert(entry.first);
+  }
+  return identities;
+}

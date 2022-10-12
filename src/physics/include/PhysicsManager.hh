@@ -28,15 +28,14 @@ class PhysicsManager : public enable_shared_from_this<PhysicsManager> {
   std::shared_ptr<PhysicsManager> getptr();
 
  public:
-  void updateManagedComponents(const time_ms duration);
-  shared_ptr<set<shared_ptr<PhysicsComponent>>> getCollisionCandidates(
-      shared_ptr<PhysicsComponent> component);
-  void manageComponent(const shared_ptr<PhysicsComponent> component);
-  void unmanageComponent(const shared_ptr<PhysicsComponent> component);
   real getGravityConstant() const { return this->gravityConstant; }
   void setGravityConstant(const real gravityConstant) {
     this->gravityConstant = gravityConstant;
   };
+
+  void updateManagedComponents(const time_ms duration);
+  void manageComponent(const shared_ptr<PhysicsComponent> component);
+  void unmanageComponent(const shared_ptr<PhysicsComponent> component);
   shared_ptr<PhysicsComponent> getComponent(
       const shared_ptr<Identity> identity);
 

@@ -72,7 +72,7 @@ CollisionDetectionComponent::predictMovementCollision(
 
   this->positionComponent->move(movement);
   for (shared_ptr<CollisionDetectionComponent> other :
-       *(this->manager->getCollisionCandidates(this->getptr()))) {
+       *(this->getManager()->getCollisionCandidates(this->getptr()))) {
     if (this->areColliding(other)) {
       targetSet->insert(other);
     }

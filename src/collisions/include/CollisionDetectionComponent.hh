@@ -2,11 +2,13 @@
 #pragma once
 
 #include "BoundingBox.hh"
-#include "CollisionDetectionManager.hh"
 #include "CollisionTestResult.hh"
 #include "Component.hh"
 #include "Math.hh"
 #include "Memory.hh"
+
+// Forward decl
+class CollisionDetectionManager;
 
 CollisionAxis determineCollisionAxis(
     const shared_ptr<CollisionDetectionComponent> target,
@@ -45,6 +47,13 @@ class CollisionDetectionComponent : public Component {
   void setBoundingBoxParams(const shared_ptr<BoundingBoxParams> params) {
     this->boundingBoxParams = params;
   };
+
+  shared_ptr<CollisionDetectionManager> getManager() const {
+    return this->manager;
+  }
+  void setManager(const shared_ptr<CollisionDetectionManager> manager) {
+    this->manager = manager;
+  }
 
   bool getCollisionsEnabled() const { return this->collisionsEnabled; }
   void setCollisionsEnabled(const bool setting) {

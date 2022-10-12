@@ -28,6 +28,9 @@ class EntityManager {
   shared_ptr<Identity> getIdentity(const Entity* const entity) const;
   Entity* getEntity(const shared_ptr<Identity> identity) const;
 
+  shared_ptr<set<const Entity* const>> getAllEntities();
+  shared_ptr<set<shared_ptr<Identity>>> getAllIdentities();
+
  private:
   // Only Entity should be allowed to call Manage() / Unmanage() as part of its
   // construction and destruction per RAII
