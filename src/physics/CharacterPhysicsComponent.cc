@@ -5,7 +5,9 @@ CharacterPhysicsComponent::CharacterPhysicsComponent(
     const shared_ptr<PositionComponent> positionComponent,
     const shared_ptr<CollisionComponent> collisionComponent)
     : PhysicsComponent(ownerIdentity, positionComponent, collisionComponent,
-                       ENABLE_GRAVITY, ENABLE_FORCE_RESPONSIVE) {}
+                       ENABLE_GRAVITY, ENABLE_FORCE_RESPONSIVE) {
+  this->setMaxSpeed(10.0);
+}
 
 CharacterPhysicsComponent::CharacterPhysicsComponent(
     const shared_ptr<PhysicsComponent> comp)

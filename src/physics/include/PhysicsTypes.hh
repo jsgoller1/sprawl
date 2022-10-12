@@ -32,3 +32,13 @@ enum CollisionResolutionType {
   // Neither the source nor the target respond to force; there is no momentum.
   PSEUDO
 };
+
+enum DragType {
+  // The drag coefficient will be treated as a scalar multiple of the final
+  // velocity
+  LINEAR,
+  // The drag coefficient will be treated as the exponent of the duration over
+  // which the physics update is occurring, and the result will be a scalar
+  // multiple of the final velocity.
+  TIME_EXPONENTIAL
+};

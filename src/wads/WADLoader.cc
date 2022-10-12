@@ -75,6 +75,13 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
       shared_ptr<FilePath>(new FilePath(characterJSON["texturePath"]));
   shared_ptr<Texture> texture = shared_ptr<Texture>(new Texture(texturePath));
   character->getDrawingComponent()->setTexture(texture);
+  character->getPhysicsComponent()->setDragCoefficient(
+      characterJSON["dragCoefficient"]);
+  character->getPhysicsComponent()->setDragType(
+      (characterJSON["dragType"] == "linear") ? DragType::LINEAR
+                                              : DragType::TIME_EXPONENTIAL);
+  character->getPhysicsComponent()->setMaxSpeed(characterJSON["maxSpeed"]);
+
   character->inferBoundingBoxFromTexture();
 
   (characterJSON["isPlayerCharacter"] == "true")

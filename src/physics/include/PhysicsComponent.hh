@@ -50,6 +50,7 @@ class PhysicsComponent : public Component {
                    const bool gravitySetting = false,
                    const PositionUnit maxSpeed = 0.0,
                    const PositionUnit minSpeed = 0.0,
+                   const DragType dragType = DragType::TIME_EXPONENTIAL,
                    const real dragCoefficient = 0.0);
   shared_ptr<PhysicsComponent> getptr();
 
@@ -74,6 +75,8 @@ class PhysicsComponent : public Component {
   void setMaxSpeed(const PositionUnit maxSpeed);
   PositionUnit getMinSpeed();
   void setMinSpeed(const PositionUnit minSpeed);
+  DragType getDragType() const;
+  void setDragType(const DragType dragType);
   real getDragCoefficient() const;
   void setDragCoefficient(const real dragCoefficient);
   real getMass() const;
@@ -102,6 +105,7 @@ class PhysicsComponent : public Component {
   bool gravityEnabled;
   PositionUnit maxSpeed;
   PositionUnit minSpeed;
+  DragType dragType;
   real dragCoefficient;
   real mass = 1.0;
   shared_ptr<Vect2D> netForce;

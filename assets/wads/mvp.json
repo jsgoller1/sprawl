@@ -2,7 +2,6 @@
     "type": "Zone",
     "background": {
         "name": "Default background",
-        "enabled": "false",
         "texturePath": "./assets/textures/world-background.bmp",
         "position": {
             "x": 960,
@@ -20,9 +19,10 @@
                 "x": 400,
                 "y": 734
             },
-            "maxSpeed": 10.0,
+            "maxSpeed": 0.02,
             "minSpeed": 0.05,
-            "dragCoefficient": 0.005
+            "dragType": "timeExponential",
+            "dragCoefficient": 0.995
         },
         {
             "type": "Character",

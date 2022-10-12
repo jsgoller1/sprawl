@@ -66,7 +66,7 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     shared_ptr<CollisionTestResult> results =
         collisionComponent->testCollisions(
             positionDelta, this->getCollisionCandidates(collisionComponent));
-    positionComponent->move(results->getValidPosition());
+    positionComponent->setCenter(results->getValidPosition());
 
     // Resolve collisions
     for (shared_ptr<Collision> collision : *(results->getCollisions())) {

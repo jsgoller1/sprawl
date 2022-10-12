@@ -7,7 +7,7 @@ PhysicsComponent::PhysicsComponent(
     const shared_ptr<CollisionComponent> collisionComponent,
     const bool forceResponsiveSetting, const bool gravitySetting,
     const PositionUnit maxSpeed, const PositionUnit minSpeed,
-    const real dragCoefficient) {
+    const DragType dragType, const real dragCoefficient) {
   this->ownerIdentity = ownerIdentity;
   this->positionComponent = positionComponent;
   this->collisionComponent = collisionComponent;
@@ -18,6 +18,7 @@ PhysicsComponent::PhysicsComponent(
   this->velocity = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
   this->maxSpeed = maxSpeed;
   this->minSpeed = minSpeed;
+  this->dragType = dragType;
   this->dragCoefficient = dragCoefficient;
 }
 
@@ -63,6 +64,10 @@ void PhysicsComponent::setMaxSpeed(const PositionUnit maxSpeed) {
 PositionUnit PhysicsComponent::getMinSpeed() { return this->minSpeed; }
 void PhysicsComponent::setMinSpeed(const PositionUnit minSpeed) {
   this->minSpeed = minSpeed;
+}
+DragType PhysicsComponent::getDragType() const { return this->dragType; }
+void PhysicsComponent::setDragType(const DragType dragType) {
+  this->dragType = dragType;
 }
 real PhysicsComponent::getDragCoefficient() const {
   return this->dragCoefficient;
@@ -111,16 +116,16 @@ shared_ptr<Vect2D> PhysicsComponent::integrate(const time_ms duration) {
   if (duration <= 0) {
     return;
   }
-  const shared_ptr<Vect2D> movement = Vect2D::zero();
+  shared_ptr<Vect2D> movement = Vect2D::zero();
   if (this->mass > 0.0 && this->getForceResponsive()) {
-    this->updateVelocityFromNetForce(to_seconds(duration));
+    this->updateVelocityFromNetForce(duration);
     // std::cout << "netForce: " << this->netForce->to_string() << std::endl;
     // std::cout << "Acceleration: " << this->acceleration->to_string() <<
     // std::endl;
     // std::cout << "Final Velocity: " << this->velocity->to_string() <<
     // std::endl;
     // std::cout << "----------------" << std::endl;
-    const shared_ptr<Vect2D> movement = *(this->velocity) * duration;
+    movement = *(this->velocity) * duration;
   }
   this->netForce = Vect2D::zero();
   return movement;
@@ -132,7 +137,9 @@ void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   this->acceleration =
       calculateAcceleration(duration, this->netForce, this->mass);
   *(this->velocity) += *(calculateVelocity(duration, this->acceleration));
-  real drag = pow(this->dragCoefficient, duration);
+  real drag = (this->dragType == DragType::TIME_EXPONENTIAL)
+                  ? pow(this->dragCoefficient, duration)
+                  : this->dragCoefficient;
   // std::cout << "Pre-drag Velocity: " << this->velocity->to_string() <<
   // std::endl;
   *(this->velocity) *= drag;

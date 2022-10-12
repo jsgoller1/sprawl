@@ -53,7 +53,7 @@ shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
 
   // Background should be drawn first to ensure everything else gets
   // drawn over it.
-  // drawables->push_back(this->background->getDrawingComponent());
+  drawables->push_back(this->background->getDrawingComponent());
   drawables->push_back(this->player->getDrawingComponent());
   for (shared_ptr<GameObject> obj : *(this->gameObjects)) {
     shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();

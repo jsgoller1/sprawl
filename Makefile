@@ -52,7 +52,7 @@ build:
 	$(MAIN_COMPILE)
 
 run: 
-	$(VALGRIND) $(MAIN_OUTFILE) > $(MAIN_LOGFILE)
+	$(VALGRIND) $(MAIN_OUTFILE) | tee $(MAIN_LOGFILE)
 
 clean:
 	reset
