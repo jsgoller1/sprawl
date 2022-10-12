@@ -19,8 +19,7 @@ class Character : public GameObject {
   Character(
       const shared_ptr<EntityName> name = nullptr,
       const shared_ptr<PositionComponent> positionComponent = nullptr,
-      const shared_ptr<CollisionDetectionComponent>
-          collisionDetectionComponent = nullptr,
+      const shared_ptr<CollisionComponent> collisionComponent = nullptr,
       const shared_ptr<CharacterPhysicsComponent> cphysicsComponent = nullptr,
       const shared_ptr<DrawingComponent> drawingComponent = nullptr);
   void move(const GameAction& action);

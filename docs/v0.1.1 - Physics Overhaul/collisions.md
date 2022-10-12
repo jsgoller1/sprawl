@@ -63,7 +63,7 @@ Now consider the following:
 - Some ugly code here is OK at first; would rather get this working than looking clean initially 
 - All collisions
     - We need to move as close as possible to the object we collide with
-    - can implement a CollisionDetectionComponent::getClosestMove() or something
+    - can implement a CollisionComponent::getClosestMove() or something
     - If we collide with multiple objects and should apply force to targets, we're just going to apply the same force to all of them and their cumulative force back on us
         - Fine for elastic, and for all others it won't matter
 - Elastic

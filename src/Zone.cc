@@ -14,9 +14,9 @@ void Zone::setBackground(const shared_ptr<Background> background) {
   this->background = background;
 }
 
-void Zone::update(const GameAction& action, const time_ms duration) {
+void Zone::gameLoopUpdate(const GameAction& action, const time_ms duration) {
   this->handleInput(action);
-  this->physicsManager->updateManagedComponents(duration);
+  this->physicsManager->gameLoopUpdate(duration);
 }
 
 void Zone::handleInput(const GameAction& action) {
@@ -53,7 +53,7 @@ shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
 
   // Background should be drawn first to ensure everything else gets
   // drawn over it.
-  drawables->push_back(this->background->getDrawingComponent());
+  // drawables->push_back(this->background->getDrawingComponent());
   drawables->push_back(this->player->getDrawingComponent());
   for (shared_ptr<GameObject> obj : *(this->gameObjects)) {
     shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();
@@ -67,10 +67,15 @@ shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
 
 void Zone::addPlayerCharacter(const shared_ptr<Character> playerCharacter) {
   this->player = playerCharacter;
-  this->physicsManager->manageComponent(playerCharacter->getPhysicsComponent());
+  this->physicsManager->manage(playerCharacter->getIdentity(),
+                               playerCharacter->getPhysicsComponent(),
+                               playerCharacter->getPositionComponent(),
+                               playerCharacter->getCollisionComponent());
 }
 
 void Zone::addGameObject(const shared_ptr<GameObject> gameObject) {
   this->gameObjects->push_back(gameObject);
-  this->physicsManager->manageComponent(gameObject->getPhysicsComponent());
+  this->physicsManager->manage(
+      gameObject->getIdentity(), gameObject->getPhysicsComponent(),
+      gameObject->getPositionComponent(), gameObject->getCollisionComponent());
 }

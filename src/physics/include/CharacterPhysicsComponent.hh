@@ -16,8 +16,7 @@ class CharacterPhysicsComponent : public PhysicsComponent {
   CharacterPhysicsComponent(
       const shared_ptr<Identity> ownerIdentity,
       const shared_ptr<PositionComponent> positionComponent,
-      const shared_ptr<CollisionDetectionComponent>
-          collisionDetectionComponent);
+      const shared_ptr<CollisionComponent> collisionComponent);
   CharacterPhysicsComponent(const shared_ptr<PhysicsComponent> comp);
 
   // TODO: This hides the name PhysicsComponent::getptr(). This is probably

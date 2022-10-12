@@ -17,8 +17,7 @@ class GameObject : public Entity {
  public:
   GameObject(const shared_ptr<EntityName> entityName = nullptr,
              const shared_ptr<PositionComponent> positionComponent = nullptr,
-             const shared_ptr<CollisionDetectionComponent>
-                 collisionDetectionComponent = nullptr,
+             const shared_ptr<CollisionComponent> collisionComponent = nullptr,
              const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
              const shared_ptr<DrawingComponent> drawingComponent = nullptr);
 
@@ -41,26 +40,20 @@ class GameObject : public Entity {
       const shared_ptr<PositionComponent> positionComponent) {
     this->positionComponent = positionComponent;
   }
-  shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent() {
-    return this->collisionDetectionComponent;
+  shared_ptr<CollisionComponent> getCollisionComponent() {
+    return this->collisionComponent;
   }
-  void setCollisionDetectionComponent(
-      const shared_ptr<CollisionDetectionComponent>
-          collisionDetectionComponent) {
-    this->collisionDetectionComponent = collisionDetectionComponent;
+  void setCollisionComponent(
+      const shared_ptr<CollisionComponent> collisionComponent) {
+    this->collisionComponent = collisionComponent;
   }
-
-  // NOTE: GameObjectIDs should not be set except at object creation time;
-  // eventually, we will have a manager for this to ensure uniqueness.
-  shared_ptr<Identity> getIdentity() { return this->identity; }
 
   void inferBoundingBoxFromTexture();
 
  private:
-  shared_ptr<Identity> identity;
   shared_ptr<PositionComponent> positionComponent;
   shared_ptr<PhysicsComponent> physicsComponent;
-  shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
+  shared_ptr<CollisionComponent> collisionComponent;
   shared_ptr<DrawingComponent> drawingComponent;
 
   // NOTE: This is a technique we use to allow for covariant returns

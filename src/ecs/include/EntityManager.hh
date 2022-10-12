@@ -25,18 +25,18 @@ class EntityManager {
         shared_ptr<EntityManager>(new EntityManager());
     return instance;
   }
-  shared_ptr<Identity> getIdentity(const Entity* const entity) const;
+  shared_ptr<Identity> getIdentity(Entity* entity) const;
   Entity* getEntity(const shared_ptr<Identity> identity) const;
 
-  shared_ptr<set<const Entity* const>> getAllEntities();
+  shared_ptr<set<Entity*>> getAllEntities();
   shared_ptr<set<shared_ptr<Identity>>> getAllIdentities();
 
  private:
   // Only Entity should be allowed to call Manage() / Unmanage() as part of its
   // construction and destruction per RAII
   friend class Entity;
-  shared_ptr<Identity> manage(const Entity* const entity);
-  void unmanage(const Entity* const entity);
+  shared_ptr<Identity> manage(Entity* entity);
+  void unmanage(Entity* entity);
 
   // Make default constructor private and delete copy/move so extra instances
   // can't be created/moved.
@@ -57,6 +57,6 @@ class EntityManager {
   // one map is updated, the other must be as well.
   // TODO: We should probably refactor this functionality to a different class
   // and just compose it into EntityManager.
-  shared_ptr<map<shared_ptr<Identity>, const Entity* const>> identityToEntity;
-  shared_ptr<map<const Entity* const, shared_ptr<Identity>>> entityToIdentity;
+  shared_ptr<map<shared_ptr<Identity>, Entity*>> identityToEntity;
+  shared_ptr<map<Entity*, shared_ptr<Identity>>> entityToIdentity;
 };

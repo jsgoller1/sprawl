@@ -3,19 +3,19 @@
 Character::Character(
     const shared_ptr<EntityName> entityName,
     const shared_ptr<PositionComponent> positionComponent,
-    const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
+    const shared_ptr<CollisionComponent> collisionComponent,
     const shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent,
     const shared_ptr<DrawingComponent> drawingComponent)
-    : GameObject(entityName, positionComponent, collisionDetectionComponent,
-                 nullptr, drawingComponent) {
+    : GameObject(entityName, positionComponent, collisionComponent, nullptr,
+                 drawingComponent) {
   this->moveSpeed = shared_ptr<Vect2D>(new Vect2D(10.0, 10.0));
   this->characterPhysicsComponent =
       (characterPhysicsComponent == nullptr)
           ? shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(
                 this->getIdentity(), this->getPositionComponent(),
-                this->getCollisionDetectionComponent()))
+                this->getCollisionComponent()))
           : characterPhysicsComponent;
-  this->getPhysicsComponent()->setGravityEnabled(true);
+  this->getPhysicsComponent()->setGravityEnabled(false);
 }
 
 shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {

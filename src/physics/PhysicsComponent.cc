@@ -4,13 +4,13 @@
 PhysicsComponent::PhysicsComponent(
     const shared_ptr<Identity> ownerIdentity,
     const shared_ptr<PositionComponent> positionComponent,
-    const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
+    const shared_ptr<CollisionComponent> collisionComponent,
     const bool forceResponsiveSetting, const bool gravitySetting,
     const PositionUnit maxSpeed, const PositionUnit minSpeed,
     const real dragCoefficient) {
   this->ownerIdentity = ownerIdentity;
   this->positionComponent = positionComponent;
-  this->collisionDetectionComponent = collisionDetectionComponent;
+  this->collisionComponent = collisionComponent;
   this->forceResponsive = forceResponsiveSetting;
   this->gravityEnabled = gravitySetting;
   this->acceleration = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
@@ -26,14 +26,6 @@ shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
       this->shared_from_this());
 }
 
-// Owned components/object accessors
-shared_ptr<PhysicsManager> PhysicsComponent::getManager() const {
-  return this->manager;
-}
-void PhysicsComponent::setManager(const shared_ptr<PhysicsManager> manager) {
-  this->manager = manager;
-};
-
 shared_ptr<PositionComponent> PhysicsComponent::getPositionComponent() const {
   return this->positionComponent;
 }
@@ -42,13 +34,12 @@ void PhysicsComponent::setPositionComponent(
   this->positionComponent = positionComponent;
 }
 
-shared_ptr<CollisionDetectionComponent>
-PhysicsComponent::getCollisionDetectionComponent() const {
-  return this->collisionDetectionComponent;
+shared_ptr<CollisionComponent> PhysicsComponent::getCollisionComponent() const {
+  return this->collisionComponent;
 }
-void PhysicsComponent::setCollisionDetectionComponent(
-    const shared_ptr<CollisionDetectionComponent> comp) {
-  this->collisionDetectionComponent = comp;
+void PhysicsComponent::setCollisionComponent(
+    const shared_ptr<CollisionComponent> comp) {
+  this->collisionComponent = comp;
 }
 
 // Unique attribute accessors
@@ -97,7 +88,7 @@ void PhysicsComponent::applyForce(const shared_ptr<const Vect2D> force) {
     *(this->netForce) += *force;
   }
 }
-void PhysicsComponent::integrate(const time_ms duration) {
+shared_ptr<Vect2D> PhysicsComponent::integrate(const time_ms duration) {
   /*
   integrate() drives an object's physics; we apply all forces to the object
   to determine its acceleration, then its velocity, and finally attempt to
@@ -120,7 +111,7 @@ void PhysicsComponent::integrate(const time_ms duration) {
   if (duration <= 0) {
     return;
   }
-
+  const shared_ptr<Vect2D> movement = Vect2D::zero();
   if (this->mass > 0.0 && this->getForceResponsive()) {
     this->updateVelocityFromNetForce(to_seconds(duration));
     // std::cout << "netForce: " << this->netForce->to_string() << std::endl;
@@ -130,9 +121,9 @@ void PhysicsComponent::integrate(const time_ms duration) {
     // std::endl;
     // std::cout << "----------------" << std::endl;
     const shared_ptr<Vect2D> movement = *(this->velocity) * duration;
-    this->attemptMove(movement);
   }
   this->netForce = Vect2D::zero();
+  return movement;
 }
 
 void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
@@ -149,11 +140,11 @@ void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   // std::endl;
 }
 
-void PhysicsComponent::applyGravity() {
+void PhysicsComponent::applyGravity(const real gravityConstant) {
   if (this->getGravityEnabled()) {
     shared_ptr<Vect2D> force =
         shared_ptr<Vect2D>(new Vect2D(Direction::Down()));
-    force->y *= this->getManager()->getGravityConstant();
+    force->y *= gravityConstant;
     force->y *= this->mass;
     this->applyForce(force);
   }
@@ -164,28 +155,21 @@ void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
    * Attempt movement based on object's present velocity, testing for resulting
    * collisions and resolving them appropriately based on the objects
    */
-  shared_ptr<CollisionTestResult> results =
-      this->collisionDetectionComponent->testCollisions(movement);
-  this->positionComponent->move(results->getValidPosition());
-  this->resolveCollisions(results);
 }
 
-void PhysicsComponent::resolveCollisions(
-    const shared_ptr<CollisionTestResult> result) {
-  for (shared_ptr<Collision> collision : *(result->getCollisions())) {
-    shared_ptr<PhysicsComponent> target =
-        this->manager->getComponent(collision->targetIdentity);
-    switch (this->getCollisionResolutionType(target->forceResponsive)) {
-      case CollisionResolutionType::ELASTIC:
-      case CollisionResolutionType::INELASTIC:
-      case CollisionResolutionType::PARTIAL_ELASTIC:
-      case CollisionResolutionType::PSEUDO:
-        this->resolveCollisionElastic(collision);
-        break;
-      default:
-        // Log an error
-        break;
-    }
+void PhysicsComponent::resolveCollision(
+    shared_ptr<Collision> collision, const CollisionResolutionType type,
+    const shared_ptr<PhysicsComponent> target) {
+  switch (type) {
+    case CollisionResolutionType::ELASTIC:
+    case CollisionResolutionType::INELASTIC:
+    case CollisionResolutionType::PARTIAL_ELASTIC:
+    case CollisionResolutionType::PSEUDO:
+      this->resolveCollisionElastic(collision, target);
+      break;
+    default:
+      // Log an error
+      break;
   }
 }
 
@@ -202,12 +186,11 @@ CollisionResolutionType PhysicsComponent::getCollisionResolutionType(
 }
 
 void PhysicsComponent::resolveCollisionElastic(
-    const shared_ptr<Collision> collision) {
+    const shared_ptr<Collision> collision,
+    const shared_ptr<PhysicsComponent> target) {
   // TODO: Since every object in Neon Rain has the same mass, we can just hack
   // elastic collisions by swapping their velocities.
-  shared_ptr<PhysicsComponent> them =
-      this->manager->getComponent(collision->targetIdentity);
   shared_ptr<Vect2D> temp = this->velocity;
-  this->velocity = them->velocity;
-  them->velocity = temp;
+  this->velocity = target->velocity;
+  target->velocity = temp;
 }

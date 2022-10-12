@@ -7,7 +7,6 @@
                 "${workspaceFolder}",
                 "${workspaceFolder}/src/3rdparty/include",
                 "${workspaceFolder}/src/include",
-                "${workspaceFolder}/src/collisions/include",
                 "${workspaceFolder}/src/components/include",
                 "${workspaceFolder}/src/ecs/include",
                 "${workspaceFolder}/src/physics/include",

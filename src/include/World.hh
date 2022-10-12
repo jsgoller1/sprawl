@@ -20,8 +20,8 @@ class World {
   World(const shared_ptr<FilePath> wadPath);
 
   // Forward to Zone
-  void update(const GameAction& action, const time_ms duration) {
-    this->currentZone->update(action, duration);
+  void gameLoopUpdate(const GameAction& action, const time_ms duration) {
+    this->currentZone->gameLoopUpdate(action, duration);
   }
 
   shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const {

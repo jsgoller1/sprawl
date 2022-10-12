@@ -10,28 +10,23 @@
 // Forward decl
 class CollisionDetectionManager;
 
-CollisionAxis determineCollisionAxis(
-    const shared_ptr<CollisionDetectionComponent> target,
-    const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> xCollisions,
-    const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>> yCollisions);
-
-class CollisionDetectionComponent : public Component {
+class CollisionComponent : public Component {
   /*
-   * CollisionDetectionComponent handles all collision testing on behalf of
+   * CollisionComponent handles all collision testing on behalf of
    * PhysicsComponent. It knows how to work with BoundingBoxes, and how to
-   * determine if it is colliding with another CollisionDetectionComponent. It
+   * determine if it is colliding with another CollisionComponent. It
    * doesn't know anything about what should happen as a result of a collision;
    * it is only for testing.
    */
  public:
-  CollisionDetectionComponent(
+  CollisionComponent(
       const shared_ptr<PositionComponent> positionComponent = nullptr,
       const shared_ptr<BoundingBoxParams> boundingBoxParams = nullptr,
       const bool collisionsEnabled = true)
       : positionComponent(positionComponent),
         boundingBoxParams(boundingBoxParams),
         collisionsEnabled(collisionsEnabled) {}
-  shared_ptr<CollisionDetectionComponent> getptr();
+  shared_ptr<CollisionComponent> getptr();
 
   shared_ptr<PositionComponent> getPositionComponent() const {
     return this->positionComponent;
@@ -61,9 +56,11 @@ class CollisionDetectionComponent : public Component {
   }
 
   shared_ptr<BoundingBox> getBoundingBox() const;
-  bool areColliding(const shared_ptr<CollisionDetectionComponent> comp) const;
+  bool areColliding(const shared_ptr<CollisionComponent> comp) const;
   shared_ptr<CollisionTestResult> testCollisions(
-      const shared_ptr<Vect2D> movement);
+      const shared_ptr<Vect2D> movement,
+      const shared_ptr<set<shared_ptr<CollisionComponent>>>
+          collisionCandidates);
 
  private:
   bool collisionsEnabled;
@@ -71,12 +68,17 @@ class CollisionDetectionComponent : public Component {
   shared_ptr<PositionComponent> positionComponent;
   shared_ptr<CollisionDetectionManager> manager;
 
-  shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>
-  predictMovementCollision(const shared_ptr<Vect2D> movement);
+  shared_ptr<set<shared_ptr<CollisionComponent>>> predictMovementCollision(
+      const shared_ptr<Vect2D> movement,
+      const shared_ptr<set<shared_ptr<CollisionComponent>>>
+          collisionCandidates);
   CollisionAxis determineCollisionAxis(
-      const shared_ptr<CollisionDetectionComponent> target,
-      const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>
-          xCollisions,
-      const shared_ptr<set<shared_ptr<CollisionDetectionComponent>>>
-          yCollisions);
+      const shared_ptr<CollisionComponent> target,
+      const shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions,
+      const shared_ptr<set<shared_ptr<CollisionComponent>>> yCollisions);
 };
+
+CollisionAxis determineCollisionAxis(
+    const shared_ptr<CollisionComponent> target,
+    const shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions,
+    const shared_ptr<set<shared_ptr<CollisionComponent>>> yCollisions);

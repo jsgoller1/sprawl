@@ -2,6 +2,7 @@
     "type": "Zone",
     "background": {
         "name": "Default background",
+        "enabled": "false",
         "texturePath": "./assets/textures/world-background.bmp",
         "position": {
             "x": 960,

@@ -3,11 +3,11 @@
 CollisionTestResult::CollisionTestResult(
     const shared_ptr<Identity> source,
     const shared_ptr<Vect2D> originalPosition,
-    const shared_ptr<Vect2D> attemptedPosition,
+    const shared_ptr<Vect2D> attemptedMove,
     const shared_ptr<set<shared_ptr<Collision>>> collisions)
     : source(source),
       originalPosition(originalPosition),
-      attemptedPosition(attemptedPosition),
+      attemptedMove(attemptedMove),
       collisions(collisions) {}
 
 shared_ptr<set<shared_ptr<Collision>>> CollisionTestResult::getCollisions()
@@ -21,6 +21,7 @@ shared_ptr<Vect2D> CollisionTestResult::getValidPosition() const {
   // TODO: For now, let's just have the "valid move" be not moving at all, i.e.
   // the original position the object was in. This might result in
   // "forcefielding", but we can address it later.
-  return (collisions->empty()) ? this->attemptedPosition
-                               : this->originalPosition;
+  return (collisions->empty())
+             ? (*this->originalPosition + *this->attemptedMove)
+             : this->originalPosition;
 }

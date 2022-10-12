@@ -1,9 +1,18 @@
 #include "PhysicsManager.hh"
 
 PhysicsManager::PhysicsManager() {
-  this->managedComponents = shared_ptr<std::set<shared_ptr<PhysicsComponent>>>(
-      new std::set<shared_ptr<PhysicsComponent>>());
+  this->managementEntries =
+      shared_ptr<map<shared_ptr<Identity>, shared_ptr<ManagementEntry>>>(
+          new map<shared_ptr<Identity>, shared_ptr<ManagementEntry>>());
 }
+
+PhysicsManager::ManagementEntry::ManagementEntry(
+    const shared_ptr<PhysicsComponent> physicsComponent,
+    const shared_ptr<PositionComponent> positionComponent,
+    const shared_ptr<CollisionComponent> collisionComponent)
+    : physicsComponent(physicsComponent),
+      positionComponent(positionComponent),
+      collisionComponent(collisionComponent) {}
 
 std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
   // TODO: This is dangerous and leads to undefined behavior if no other
@@ -14,45 +23,86 @@ std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
   return this->shared_from_this();
 }
 
-void PhysicsManager::manageComponent(
-    const shared_ptr<PhysicsComponent> component) {
-  if (component->getManager() != nullptr) {
+void PhysicsManager::manage(
+    const shared_ptr<Identity> identity,
+    const shared_ptr<PhysicsComponent> physicsComponent,
+    const shared_ptr<PositionComponent> positionComponent,
+    const shared_ptr<CollisionComponent> collisionComponent) {
+  if (this->managementEntries->find(identity) !=
+      this->managementEntries->end()) {
     // TODO: Log a warning
     return;
   }
-  component->setManager(this->getptr());
-  this->managedComponents->insert(component);
+  shared_ptr<ManagementEntry> entry =
+      shared_ptr<ManagementEntry>(new ManagementEntry(
+          physicsComponent, positionComponent, collisionComponent));
+  this->managementEntries->insert(
+      pair<shared_ptr<Identity>, shared_ptr<ManagementEntry>>(identity, entry));
 }
-void PhysicsManager::unmanageComponent(
-    const shared_ptr<PhysicsComponent> component) {
-  if (component->getManager() != this->getptr()) {
+
+void PhysicsManager::unmanage(const shared_ptr<Identity> identity) {
+  if (this->managementEntries->find(identity) ==
+      this->managementEntries->end()) {
     // TODO: Log a warning
     return;
   }
-  component->setManager(nullptr);
-  this->managedComponents->erase(component);
+  this->managementEntries->erase(identity);
 }
 
-void PhysicsManager::updateManagedComponents(const time_ms duration) {
-  for (shared_ptr<PhysicsComponent> comp : *(this->managedComponents)) {
-    comp->applyGravity();
-    comp->integrate(duration);
+void PhysicsManager::gameLoopUpdate(const time_ms duration) {
+  for (pair<shared_ptr<Identity>, shared_ptr<ManagementEntry>> mapping :
+       *(this->managementEntries)) {
+    shared_ptr<Identity> identity = mapping.first;
+    shared_ptr<PhysicsComponent> physicsComponent =
+        mapping.second->physicsComponent;
+    shared_ptr<PositionComponent> positionComponent =
+        mapping.second->positionComponent;
+    shared_ptr<CollisionComponent> collisionComponent =
+        mapping.second->collisionComponent;
+
+    // Apply forces, attempt movement, and determine collisions
+    physicsComponent->applyGravity(this->getGravityConstant());
+    shared_ptr<Vect2D> positionDelta = physicsComponent->integrate(duration);
+    shared_ptr<CollisionTestResult> results =
+        collisionComponent->testCollisions(
+            positionDelta, this->getCollisionCandidates(collisionComponent));
+    positionComponent->move(results->getValidPosition());
+
+    // Resolve collisions
+    for (shared_ptr<Collision> collision : *(results->getCollisions())) {
+      shared_ptr<PhysicsComponent> target =
+          this->managementEntries->find(collision->targetIdentity)
+              ->second->physicsComponent;
+      CollisionResolutionType type =
+          physicsComponent->getCollisionResolutionType(
+              target->getForceResponsive());
+
+      physicsComponent->resolveCollision(collision, type, target);
+    }
   }
 }
 
-shared_ptr<PhysicsComponent> PhysicsManager::getComponent(
-    const shared_ptr<Identity> identity) {
-  shared_ptr<EntityManager> entityManager = EntityManager::instance();
-  Entity* entity = entityManager->getEntity(identity);
-  if (entity == nullptr) {
-    // TODO: Log warning
-    return nullptr;
+shared_ptr<set<shared_ptr<CollisionComponent>>>
+PhysicsManager::getCollisionCandidates(
+    const shared_ptr<CollisionComponent> source) const {
+  // TODO: Eventually, we may want to use space partitioning to limit how many
+  // objects we test collisions against; for now, we just test against
+  // everything
+  shared_ptr<set<shared_ptr<CollisionComponent>>> collisionComponents =
+      shared_ptr<set<shared_ptr<CollisionComponent>>>(
+          new set<shared_ptr<CollisionComponent>>());
+
+  shared_ptr<set<shared_ptr<Identity>>> identities =
+      EntityManager::instance()->getAllIdentities();
+  for (shared_ptr<Identity> identity : *identities) {
+    if (this->managementEntries->find(identity) ==
+        this->managementEntries->end()) {
+      // TODO: Not every Entity is a GameObject (e.g. background); per note
+      // above, we test against EVERYTHING.
+      continue;
+    }
+    collisionComponents->insert(
+        this->managementEntries->find(identity)->second->collisionComponent);
   }
-  shared_ptr<PhysicsComponent> comp =
-      static_cast<GameObject*>(entity)->getPhysicsComponent();
-  if (this->managedComponents->find(comp) == this->managedComponents->end()) {
-    // TODO: Log warning
-    return nullptr;
-  }
-  return comp;
+  return collisionComponents;
 }

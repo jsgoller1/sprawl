@@ -39,7 +39,7 @@ int main() {
     // not move the player around. We may also want the World/Zone to keep state
     // as well, e.g. "up" should do something different if the player is in a
     // vehicle, in combat, etc.
-    world.update(userAction, duration);
+    world.gameLoopUpdate(userAction, duration);
     screen.drawAll(world.getDrawables());
 
     // If we wind up taking less time than we need should we sleep?

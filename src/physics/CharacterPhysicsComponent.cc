@@ -3,15 +3,14 @@
 CharacterPhysicsComponent::CharacterPhysicsComponent(
     const shared_ptr<Identity> ownerIdentity,
     const shared_ptr<PositionComponent> positionComponent,
-    const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent)
-    : PhysicsComponent(ownerIdentity, positionComponent,
-                       collisionDetectionComponent, ENABLE_GRAVITY,
-                       ENABLE_FORCE_RESPONSIVE) {}
+    const shared_ptr<CollisionComponent> collisionComponent)
+    : PhysicsComponent(ownerIdentity, positionComponent, collisionComponent,
+                       ENABLE_GRAVITY, ENABLE_FORCE_RESPONSIVE) {}
 
 CharacterPhysicsComponent::CharacterPhysicsComponent(
     const shared_ptr<PhysicsComponent> comp)
     : PhysicsComponent(comp->getOwnerIdentity(), comp->getPositionComponent(),
-                       comp->getCollisionDetectionComponent(), ENABLE_GRAVITY,
+                       comp->getCollisionComponent(), ENABLE_GRAVITY,
                        ENABLE_FORCE_RESPONSIVE) {}
 
 shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {

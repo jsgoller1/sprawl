@@ -17,18 +17,16 @@ class CollisionTestResult {
  public:
   CollisionTestResult(const shared_ptr<Identity> source,
                       const shared_ptr<Vect2D> originalPosition,
-                      const shared_ptr<Vect2D> attemptedPosition,
+                      const shared_ptr<Vect2D> attemptedMove,
                       const shared_ptr<set<shared_ptr<Collision>>> collisions);
 
   shared_ptr<set<shared_ptr<Collision>>> getCollisions() const;
   shared_ptr<Vect2D> getValidPosition() const;
-
-  shared_ptr<Identity> getFirstCollisionTarget() const;
   shared_ptr<Direction> getCollisionDirection() const;
 
  private:
   shared_ptr<Identity> source;
   shared_ptr<Vect2D> originalPosition;
-  shared_ptr<Vect2D> attemptedPosition;
+  shared_ptr<Vect2D> attemptedMove;
   shared_ptr<set<shared_ptr<Collision>>> collisions;
 };

@@ -2,16 +2,13 @@
 
 // Public
 EntityManager::EntityManager() : entityCount(0) {
-  this->identityToEntity =
-      shared_ptr<map<shared_ptr<Identity>, const Entity* const>>(
-          new map<shared_ptr<Identity>, const Entity* const>());
-  this->entityToIdentity =
-      shared_ptr<map<const Entity* const, shared_ptr<Identity>>>(
-          new map<const Entity* const, shared_ptr<Identity>>());
+  this->identityToEntity = shared_ptr<map<shared_ptr<Identity>, Entity*>>(
+      new map<shared_ptr<Identity>, Entity*>());
+  this->entityToIdentity = shared_ptr<map<Entity*, shared_ptr<Identity>>>(
+      new map<Entity*, shared_ptr<Identity>>());
 };
 
-shared_ptr<Identity> EntityManager::getIdentity(
-    const Entity* const entity) const {
+shared_ptr<Identity> EntityManager::getIdentity(Entity* entity) const {
   auto result = this->entityToIdentity->find(entity);
   if (result == this->entityToIdentity->end()) {
     return nullptr;
@@ -27,7 +24,7 @@ Entity* EntityManager::getEntity(const shared_ptr<Identity> identity) const {
 }
 
 // Private
-shared_ptr<Identity> EntityManager::manage(const Entity* const entity) {
+shared_ptr<Identity> EntityManager::manage(Entity* entity) {
   if (this->entityToIdentity->find(entity) != this->entityToIdentity->end()) {
     // TODO: Log warning here
     return nullptr;
@@ -36,13 +33,13 @@ shared_ptr<Identity> EntityManager::manage(const Entity* const entity) {
   shared_ptr<Identity> identity = this->createIdentity();
 
   this->identityToEntity->insert(
-      pair<shared_ptr<Identity>, const Entity* const>(identity, entity));
+      pair<shared_ptr<Identity>, Entity*>(identity, entity));
   this->entityToIdentity->insert(
-      pair<const Entity* const, shared_ptr<Identity>>(entity, identity));
+      pair<Entity*, shared_ptr<Identity>>(entity, identity));
 
   return identity;
 }
-void EntityManager::unmanage(const Entity* const entity) {
+void EntityManager::unmanage(Entity* entity) {
   if (this->entityToIdentity->find(entity) == this->entityToIdentity->end()) {
     // TODO: Log warning here
     return;
@@ -60,9 +57,9 @@ shared_ptr<Identity> EntityManager::createIdentity() {
   return shared_ptr<Identity>(new Identity(entityID));
 }
 
-shared_ptr<set<const Entity* const>> EntityManager::getAllEntities() {
-  shared_ptr<set<const Entity* const>> entities =
-      shared_ptr<set<const Entity* const>>(new set<const Entity* const>());
+shared_ptr<set<Entity*>> EntityManager::getAllEntities() {
+  shared_ptr<set<Entity*>> entities =
+      shared_ptr<set<Entity*>>(new set<Entity*>());
   for (auto entry : *(this->entityToIdentity)) {
     entities->insert(entry.first);
   }

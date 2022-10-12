@@ -32,7 +32,7 @@ class Zone {
   void addPlayerCharacter(const shared_ptr<Character> playerCharacter);
   void addGameObject(const shared_ptr<GameObject> gameObject);
 
-  void update(const GameAction& action, const time_ms duration);
+  void gameLoopUpdate(const GameAction& action, const time_ms duration);
   shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const;
 
  private:

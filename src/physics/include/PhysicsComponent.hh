@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CollisionDetectionComponent.hh"
+#include "CollisionComponent.hh"
 #include "CollisionTestResult.hh"
 #include "Component.hh"
 #include "Math.hh"
@@ -43,13 +43,14 @@ class PhysicsManager;
 class PhysicsComponent : public Component {
  public:
   // ctors / dtors
-  PhysicsComponent(
-      const shared_ptr<Identity> ownerIdentity,
-      const shared_ptr<PositionComponent> positionComp,
-      const shared_ptr<CollisionDetectionComponent> collisionDetectionComponent,
-      const bool forceResponsiveSetting = false,
-      const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
-      const PositionUnit minSpeed = 0.0, const real dragCoefficient = 0.0);
+  PhysicsComponent(const shared_ptr<Identity> ownerIdentity,
+                   const shared_ptr<PositionComponent> positionComp,
+                   const shared_ptr<CollisionComponent> collisionComponent,
+                   const bool forceResponsiveSetting = false,
+                   const bool gravitySetting = false,
+                   const PositionUnit maxSpeed = 0.0,
+                   const PositionUnit minSpeed = 0.0,
+                   const real dragCoefficient = 0.0);
   shared_ptr<PhysicsComponent> getptr();
 
   // Owned components/object accessors
@@ -57,10 +58,8 @@ class PhysicsComponent : public Component {
   void setManager(const shared_ptr<PhysicsManager> manager);
   shared_ptr<PositionComponent> getPositionComponent() const;
   void setPositionComponent(const shared_ptr<PositionComponent> comp);
-  shared_ptr<CollisionDetectionComponent> getCollisionDetectionComponent()
-      const;
-  void setCollisionDetectionComponent(
-      const shared_ptr<CollisionDetectionComponent> comp);
+  shared_ptr<CollisionComponent> getCollisionComponent() const;
+  void setCollisionComponent(const shared_ptr<CollisionComponent> comp);
 
   // Forwarding methods
   bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
@@ -88,10 +87,13 @@ class PhysicsComponent : public Component {
   shared_ptr<Vect2D> getVelocity() const;
 
   void applyForce(const shared_ptr<const Vect2D> force);
-  void applyGravity();
-  void integrate(const time_ms duration);
-  shared_ptr<CollisionTestResult> determineCollisions(
-      const shared_ptr<Vect2D> movement);
+  void applyGravity(const real gravityConstant);
+  shared_ptr<Vect2D> integrate(const time_ms duration);
+  CollisionResolutionType getCollisionResolutionType(
+      const bool isTargetForceResponsive);
+  void resolveCollision(shared_ptr<Collision> collision,
+                        const CollisionResolutionType type,
+                        const shared_ptr<PhysicsComponent> target);
 
  private:
   // Attributes
@@ -107,13 +109,11 @@ class PhysicsComponent : public Component {
   shared_ptr<Vect2D> acceleration;
 
   shared_ptr<PhysicsManager> manager;
-  shared_ptr<CollisionDetectionComponent> collisionDetectionComponent;
+  shared_ptr<CollisionComponent> collisionComponent;
   shared_ptr<PositionComponent> positionComponent;
 
   void attemptMove(const shared_ptr<Vect2D> movement);
   void updateVelocityFromNetForce(const time_ms duration);
-  void resolveCollisions(const shared_ptr<CollisionTestResult> result);
-  void resolveCollisionElastic(const shared_ptr<Collision> collision);
-  CollisionResolutionType getCollisionResolutionType(
-      const bool isTargetForceResponsive);
+  void resolveCollisionElastic(const shared_ptr<Collision> collision,
+                               const shared_ptr<PhysicsComponent> target);
 };

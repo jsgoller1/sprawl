@@ -19,7 +19,8 @@ class Background : public Entity {
             : positionComponent;
     this->drawingComponent =
         (drawingComponent == nullptr)
-            ? shared_ptr<DrawingComponent>(new DrawingComponent())
+            ? shared_ptr<DrawingComponent>(
+                  new DrawingComponent(this->positionComponent))
             : drawingComponent;
   }
 

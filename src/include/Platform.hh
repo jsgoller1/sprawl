@@ -1,6 +1,6 @@
 #pragma once
 
-#include "CollisionDetectionComponent.hh"
+#include "CollisionComponent.hh"
 #include "GameObject.hh"
 #include "PhysicsComponent.hh"
 
@@ -11,9 +11,8 @@ class Platform : public GameObject {
   Platform(const shared_ptr<EntityName> entityName = nullptr,
            const shared_ptr<PositionComponent> positionComponent = nullptr,
            const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
-           const shared_ptr<CollisionDetectionComponent>
-               collisionDetectionComponent = nullptr,
+           const shared_ptr<CollisionComponent> collisionComponent = nullptr,
            const shared_ptr<DrawingComponent> drawingComponent = nullptr)
-      : GameObject(entityName, positionComponent, collisionDetectionComponent,
+      : GameObject(entityName, positionComponent, collisionComponent,
                    physicsComponent, drawingComponent) {}
 };
