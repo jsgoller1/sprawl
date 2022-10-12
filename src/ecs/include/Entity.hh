@@ -3,8 +3,6 @@
 #include "EntityManager.hh"
 #include "Types.hh"
 
-typedef string EntityName;
-
 // Forward decl
 class PhysicsComponent;
 

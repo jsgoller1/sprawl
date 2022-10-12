@@ -14,6 +14,14 @@
 
 #include "Memory.hh"
 
+// TODO: Move these to WAD
+#define SCREEN_WIDTH 1920
+#define SCREEN_HEIGHT 1080
+#define SCREEN_X_CENTER (PositionUnit)(1920 / 2)
+#define SCREEN_Y_CENTER (PositionUnit)(1080 / 2)
+
+using std::cout;
+using std::endl;
 using std::map;
 using std::pair;
 using std::set;
@@ -21,7 +29,8 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-typedef std::string FilePath;
+typedef string FilePath;
+typedef string EntityName;
 
 typedef double real;
 typedef real PositionUnit;

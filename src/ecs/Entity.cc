@@ -3,7 +3,7 @@
 Entity::Entity(const shared_ptr<EntityName> name) {
   shared_ptr<EntityManager> entityManager = EntityManager::instance();
   this->entityName = name;
-  this->identity = entityManager->manage(this);
+  this->identity = entityManager->manage(this, name);
 }
 
 Entity::~Entity() {

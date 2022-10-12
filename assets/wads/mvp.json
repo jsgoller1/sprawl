@@ -19,21 +19,29 @@
                 "x": 400,
                 "y": 734
             },
-            "maxSpeed": 0.02,
-            "minSpeed": 0.05,
+            "maxSpeed": 0.005,
+            "minSpeed": 0.00,
             "dragType": "timeExponential",
-            "dragCoefficient": 0.995
+            "dragCoefficient": 0.995,
+            "gravityEnabled": "false",
+            "collisionsEnabled": "true"
         },
         {
             "type": "Character",
             "name": "Enemy",
+            "enabled": "true",
             "isPlayerCharacter": "false",
-            "enabled": "false",
             "texturePath": "./assets/textures/enemy.bmp",
             "position": {
-                "x": 650,
+                "x": 1248,
                 "y": 734
-            }
+            },
+            "maxSpeed": 0.02,
+            "minSpeed": 0.05,
+            "dragType": "timeExponential",
+            "dragCoefficient": 0.995,
+            "gravityEnabled": "false",
+            "collisionsEnabled": "true"
         },
         {
             "type": "Platform",

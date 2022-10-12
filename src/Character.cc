@@ -15,7 +15,7 @@ Character::Character(
                 this->getIdentity(), this->getPositionComponent(),
                 this->getCollisionComponent()))
           : characterPhysicsComponent;
-  this->getPhysicsComponent()->setGravityEnabled(false);
+  this->characterPhysicsComponent->setOwnerIdentity(this->getIdentity());
 }
 
 shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {

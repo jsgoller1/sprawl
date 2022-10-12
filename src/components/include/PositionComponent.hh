@@ -13,14 +13,18 @@ class PositionComponent {
   PositionUnit getY() const { return this->y; }
   void setY(const PositionUnit y) { this->y = y; }
   shared_ptr<Vect2D> getCenter();
-  void setCenter(shared_ptr<Vect2D> center);
+  void setCenter(shared_ptr<Vect2D> center, const bool stayOnScreen = true);
 
-  void move(const shared_ptr<Vect2D> delta);
-  void moveReverse(const shared_ptr<Vect2D> delta);
-  void moveOnlyX(const shared_ptr<Vect2D> vect);
-  void moveReverseOnlyX(const shared_ptr<Vect2D> vect);
-  void moveOnlyY(const shared_ptr<Vect2D> vect);
-  void moveReverseOnlyY(const shared_ptr<Vect2D> vect);
+  void move(const shared_ptr<Vect2D> delta, const bool stayOnScreen = true);
+  void moveReverse(const shared_ptr<Vect2D> delta,
+                   const bool stayOnScreen = true);
+  void moveOnlyX(const shared_ptr<Vect2D> vect, const bool stayOnScreen = true);
+  void moveReverseOnlyX(const shared_ptr<Vect2D> vect,
+                        const bool stayOnScreen = true);
+  void moveOnlyY(const shared_ptr<Vect2D> vect, const bool stayOnScreen = true);
+  void moveReverseOnlyY(const shared_ptr<Vect2D> vect,
+                        const bool stayOnScreen = true);
+  bool validPosition(const shared_ptr<Vect2D> position);
 
  private:
   XCoord x;

@@ -1,5 +1,15 @@
 #include "CollisionComponent.hh"
 
+CollisionComponent::CollisionComponent(
+    const shared_ptr<Identity> ownerIdentity,
+    const shared_ptr<PositionComponent> positionComponent,
+    const shared_ptr<BoundingBoxParams> boundingBoxParams,
+    const bool collisionsEnabled)
+    : positionComponent(positionComponent),
+      boundingBoxParams(boundingBoxParams),
+      collisionsEnabled(collisionsEnabled),
+      Component(ownerIdentity) {}
+
 shared_ptr<CollisionComponent> CollisionComponent::getptr() {
   return static_pointer_cast<CollisionComponent, Component>(
       this->shared_from_this());
@@ -55,6 +65,9 @@ shared_ptr<CollisionTestResult> CollisionComponent::testCollisions(
     finalizedCollisionSet->insert(collision);
   }
 
+  cout << *(this->getOwnerIdentity()->getEntityID())
+       << ", collision count: " << to_string(finalizedCollisionSet->size())
+       << endl;
   return shared_ptr<CollisionTestResult>(new CollisionTestResult(
       this->getOwnerIdentity(), this->positionComponent->getCenter(),
       positionDelta, finalizedCollisionSet));
@@ -92,6 +105,10 @@ bool CollisionComponent::areColliding(
      * to determine collision.
      */
     const shared_ptr<CollisionComponent> comp) const {
+  if (this == comp.get()) {
+    // We are never colliding with ourselves
+    return false;
+  }
   shared_ptr<BoundingBox> usBox = this->getBoundingBox();
   shared_ptr<BoundingBox> themBox = comp->getBoundingBox();
   return usBox->checkCollision(themBox);

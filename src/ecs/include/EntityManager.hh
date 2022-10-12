@@ -35,7 +35,8 @@ class EntityManager {
   // Only Entity should be allowed to call Manage() / Unmanage() as part of its
   // construction and destruction per RAII
   friend class Entity;
-  shared_ptr<Identity> manage(Entity* entity);
+  shared_ptr<Identity> manage(Entity* entity,
+                              const shared_ptr<EntityName> name = nullptr);
   void unmanage(Entity* entity);
 
   // Make default constructor private and delete copy/move so extra instances
@@ -46,7 +47,8 @@ class EntityManager {
   EntityManager(EntityManager&&) = delete;
   EntityManager& operator=(EntityManager&&) = delete;
 
-  shared_ptr<Identity> createIdentity();
+  shared_ptr<Identity> createIdentity(
+      const shared_ptr<EntityName> name = nullptr);
   unsigned long long entityCount = 0;
 
   // NOTE: EntityManager's main responsibility is over the relationship between

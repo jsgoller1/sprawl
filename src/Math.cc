@@ -47,10 +47,19 @@ bool eq(const real& real1, const real& real2) {
   return ((-FLOAT_EQ_ACCEPTABLE_MARGIN_OF_ERROR < diff) &&
           (diff < FLOAT_EQ_ACCEPTABLE_MARGIN_OF_ERROR));
 }
-bool neq(const real& real1, const real& real2) { return false; };
-// TODO: Implement these
-bool lte(const real& real1, const real& real2) { return false; };
-bool gte(const real& real1, const real& real2) { return false; }
+bool lt(const real& real1, const real& real2) {
+  return real1 < real2 && !eq(real1, real2);
+}
+bool gt(const real& real1, const real& real2) {
+  return real1 > real2 && !eq(real1, real2);
+}
+bool neq(const real& real1, const real& real2) { return !eq(real1, real2); }
+bool lte(const real& real1, const real& real2) {
+  return lt(real1, real2) || eq(real1, real2);
+}
+bool gte(const real& real1, const real& real2) {
+  return gt(real1, real2) || eq(real1, real2);
+}
 
 Vect2D::Vect2D() {
   this->x = 0.0;

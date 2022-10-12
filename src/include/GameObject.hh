@@ -29,10 +29,12 @@ class GameObject : public Entity {
     this->drawingComponent = drawingComponent;
   }
   shared_ptr<PhysicsComponent> getPhysicsComponent() const {
-    return this->physicsComponent;
+    return this->getPhysicsComponent_impl()->getptr();
   }
   void setPhysicsComponent(
-      const shared_ptr<PhysicsComponent> physicsComponent) {}
+      const shared_ptr<PhysicsComponent> physicsComponent) {
+    this->setPhysicsComponent_impl(physicsComponent.get());
+  }
   shared_ptr<PositionComponent> getPositionComponent() const {
     return this->positionComponent;
   }

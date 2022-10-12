@@ -13,42 +13,57 @@ shared_ptr<Vect2D> PositionComponent::getCenter() {
   return shared_ptr<Vect2D>(new Vect2D(this->x, this->y));
 }
 
-void PositionComponent::setCenter(shared_ptr<Vect2D> center) {
-  this->x = center->x;
-  this->y = center->y;
+void PositionComponent::setCenter(shared_ptr<Vect2D> center,
+                                  const bool stayOnScreen) {
+  if (this->validPosition(center)) {
+    this->x = center->x;
+    this->y = center->y;
+  }
 }
 
-void PositionComponent::move(const shared_ptr<Vect2D> movement) {
-  this->x += movement->x;
-  this->y += movement->y;
+void PositionComponent::move(const shared_ptr<Vect2D> delta,
+                             const bool stayOnScreen) {
+  this->setCenter(
+      shared_ptr<Vect2D>(new Vect2D(this->x + delta->x, this->y + delta->y)),
+      stayOnScreen);
 }
 
-void PositionComponent::moveReverse(const shared_ptr<Vect2D> delta) {
+void PositionComponent::moveReverse(const shared_ptr<Vect2D> delta,
+                                    const bool stayOnScreen) {
   shared_ptr<Vect2D> inverted = shared_ptr<Vect2D>(new Vect2D(delta));
   inverted->invert();
-  this->move(inverted);
+  this->move(inverted, stayOnScreen);
 };
 
-void PositionComponent::moveOnlyX(const shared_ptr<Vect2D> vect) {
-  shared_ptr<Vect2D> onlyX = shared_ptr<Vect2D>(new Vect2D(vect));
+void PositionComponent::moveOnlyX(const shared_ptr<Vect2D> delta,
+                                  const bool stayOnScreen) {
+  shared_ptr<Vect2D> onlyX = shared_ptr<Vect2D>(new Vect2D(delta));
   onlyX->y = 0.0;
-  this->move(onlyX);
+  this->move(onlyX, stayOnScreen);
 };
 
-void PositionComponent::moveReverseOnlyX(const shared_ptr<Vect2D> vect) {
-  shared_ptr<Vect2D> onlyX = shared_ptr<Vect2D>(new Vect2D(vect));
+void PositionComponent::moveReverseOnlyX(const shared_ptr<Vect2D> delta,
+                                         const bool stayOnScreen) {
+  shared_ptr<Vect2D> onlyX = shared_ptr<Vect2D>(new Vect2D(delta));
   onlyX->y = 0.0;
-  this->moveReverse(onlyX);
+  this->moveReverse(onlyX, stayOnScreen);
 };
 
-void PositionComponent::moveOnlyY(const shared_ptr<Vect2D> vect) {
-  shared_ptr<Vect2D> onlyY = shared_ptr<Vect2D>(new Vect2D(vect));
+void PositionComponent::moveOnlyY(const shared_ptr<Vect2D> delta,
+                                  const bool stayOnScreen) {
+  shared_ptr<Vect2D> onlyY = shared_ptr<Vect2D>(new Vect2D(delta));
   onlyY->x = 0.0;
-  this->move(onlyY);
+  this->move(onlyY, stayOnScreen);
 };
 
-void PositionComponent::moveReverseOnlyY(const shared_ptr<Vect2D> vect) {
-  shared_ptr<Vect2D> onlyY = shared_ptr<Vect2D>(new Vect2D(vect));
+void PositionComponent::moveReverseOnlyY(const shared_ptr<Vect2D> delta,
+                                         const bool stayOnScreen) {
+  shared_ptr<Vect2D> onlyY = shared_ptr<Vect2D>(new Vect2D(delta));
   onlyY->x = 0.0;
-  this->moveReverse(onlyY);
+  this->moveReverse(onlyY, stayOnScreen);
 };
+
+bool PositionComponent::validPosition(const shared_ptr<Vect2D> position) {
+  return (0 <= position->x) && (position->x <= SCREEN_WIDTH) &&
+         (0 <= position->y) && (position->y <= SCREEN_HEIGHT);
+}

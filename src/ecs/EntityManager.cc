@@ -24,13 +24,14 @@ Entity* EntityManager::getEntity(const shared_ptr<Identity> identity) const {
 }
 
 // Private
-shared_ptr<Identity> EntityManager::manage(Entity* entity) {
+shared_ptr<Identity> EntityManager::manage(Entity* entity,
+                                           const shared_ptr<EntityName> name) {
   if (this->entityToIdentity->find(entity) != this->entityToIdentity->end()) {
     // TODO: Log warning here
     return nullptr;
   }
 
-  shared_ptr<Identity> identity = this->createIdentity();
+  shared_ptr<Identity> identity = this->createIdentity(name);
 
   this->identityToEntity->insert(
       pair<shared_ptr<Identity>, Entity*>(identity, entity));
@@ -50,10 +51,14 @@ void EntityManager::unmanage(Entity* entity) {
   entityToIdentity->erase(entity);
 }
 
-shared_ptr<Identity> EntityManager::createIdentity() {
+shared_ptr<Identity> EntityManager::createIdentity(
+    const shared_ptr<EntityName> name) {
   this->entityCount++;
-  shared_ptr<EntityID> entityID = shared_ptr<EntityID>(
-      new EntityID("entity-" + to_string(this->entityCount)));
+  EntityName actualName = ((name == nullptr) ? "Entity-" : name->c_str()) +
+                          to_string(this->entityCount);
+
+  shared_ptr<EntityID> entityID =
+      shared_ptr<EntityID>(new EntityID(actualName));
   return shared_ptr<Identity>(new Identity(entityID));
 }
 

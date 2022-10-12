@@ -20,6 +20,9 @@ int main() {
     duration = timer.tick();
     // startTime = getCurrentTime();
     userAction = inputManager.getGameAction();
+    if (userAction != GameAction::QUIT) {
+      userAction = GameAction::MOVE_RIGHT;
+    }
     if (userAction != GameAction::IDLE) {
       // log("GameAction: " + to_string(userAction));
     }

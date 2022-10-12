@@ -45,6 +45,8 @@ etc) must happen as close to the SDL boundary as possible.
 
 #define FLOAT_EQ_ACCEPTABLE_MARGIN_OF_ERROR 0.00000001
 bool eq(const real& real1, const real& real2);
+bool lt(const real& real1, const real& real2);
+bool gt(const real& real1, const real& real2);
 bool neq(const real& real1, const real& real2);
 bool lte(const real& real1, const real& real2);
 bool gte(const real& real1, const real& real2);

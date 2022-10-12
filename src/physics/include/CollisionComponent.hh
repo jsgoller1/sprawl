@@ -20,12 +20,11 @@ class CollisionComponent : public Component {
    */
  public:
   CollisionComponent(
+      const shared_ptr<Identity> ownerIdentity,
       const shared_ptr<PositionComponent> positionComponent = nullptr,
       const shared_ptr<BoundingBoxParams> boundingBoxParams = nullptr,
-      const bool collisionsEnabled = true)
-      : positionComponent(positionComponent),
-        boundingBoxParams(boundingBoxParams),
-        collisionsEnabled(collisionsEnabled) {}
+      const bool collisionsEnabled = true);
+
   shared_ptr<CollisionComponent> getptr();
 
   shared_ptr<PositionComponent> getPositionComponent() const {
@@ -43,13 +42,6 @@ class CollisionComponent : public Component {
     this->boundingBoxParams = params;
   };
 
-  shared_ptr<CollisionDetectionManager> getManager() const {
-    return this->manager;
-  }
-  void setManager(const shared_ptr<CollisionDetectionManager> manager) {
-    this->manager = manager;
-  }
-
   bool getCollisionsEnabled() const { return this->collisionsEnabled; }
   void setCollisionsEnabled(const bool setting) {
     this->collisionsEnabled = setting;
@@ -66,7 +58,6 @@ class CollisionComponent : public Component {
   bool collisionsEnabled;
   shared_ptr<BoundingBoxParams> boundingBoxParams;
   shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<CollisionDetectionManager> manager;
 
   shared_ptr<set<shared_ptr<CollisionComponent>>> predictMovementCollision(
       const shared_ptr<Vect2D> movement,

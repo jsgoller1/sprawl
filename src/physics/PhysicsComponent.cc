@@ -7,8 +7,8 @@ PhysicsComponent::PhysicsComponent(
     const shared_ptr<CollisionComponent> collisionComponent,
     const bool forceResponsiveSetting, const bool gravitySetting,
     const PositionUnit maxSpeed, const PositionUnit minSpeed,
-    const DragType dragType, const real dragCoefficient) {
-  this->ownerIdentity = ownerIdentity;
+    const DragType dragType, const real dragCoefficient)
+    : Component(ownerIdentity) {
   this->positionComponent = positionComponent;
   this->collisionComponent = collisionComponent;
   this->forceResponsive = forceResponsiveSetting;
@@ -119,12 +119,12 @@ shared_ptr<Vect2D> PhysicsComponent::integrate(const time_ms duration) {
   shared_ptr<Vect2D> movement = Vect2D::zero();
   if (this->mass > 0.0 && this->getForceResponsive()) {
     this->updateVelocityFromNetForce(duration);
-    // std::cout << "netForce: " << this->netForce->to_string() << std::endl;
-    // std::cout << "Acceleration: " << this->acceleration->to_string() <<
-    // std::endl;
-    // std::cout << "Final Velocity: " << this->velocity->to_string() <<
-    // std::endl;
-    // std::cout << "----------------" << std::endl;
+    // cout << "netForce: " << this->netForce->to_string() << endl;
+    // cout << "Acceleration: " << this->acceleration->to_string() <<
+    // endl;
+    // cout << "Final Velocity: " << this->velocity->to_string() <<
+    // endl;
+    // cout << "----------------" << endl;
     movement = *(this->velocity) * duration;
   }
   this->netForce = Vect2D::zero();
@@ -140,11 +140,11 @@ void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   real drag = (this->dragType == DragType::TIME_EXPONENTIAL)
                   ? pow(this->dragCoefficient, duration)
                   : this->dragCoefficient;
-  // std::cout << "Pre-drag Velocity: " << this->velocity->to_string() <<
-  // std::endl;
+  // cout << "Pre-drag Velocity: " << this->velocity->to_string() <<
+  // endl;
   *(this->velocity) *= drag;
-  // std::cout << "Post-drag Velocity: " << this->velocity->to_string() <<
-  // std::endl;
+  // cout << "Post-drag Velocity: " << this->velocity->to_string() <<
+  // endl;
 }
 
 void PhysicsComponent::applyGravity(const real gravityConstant) {
@@ -156,13 +156,6 @@ void PhysicsComponent::applyGravity(const real gravityConstant) {
     this->applyForce(force);
   }
 };
-
-void PhysicsComponent::attemptMove(const shared_ptr<Vect2D> movement) {
-  /*
-   * Attempt movement based on object's present velocity, testing for resulting
-   * collisions and resolving them appropriately based on the objects
-   */
-}
 
 void PhysicsComponent::resolveCollision(
     shared_ptr<Collision> collision, const CollisionResolutionType type,

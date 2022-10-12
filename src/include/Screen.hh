@@ -6,12 +6,6 @@
 #include "Renderer.hh"
 #include "Types.hh"
 
-// TODO: Move these to WAD
-#define SCREEN_WIDTH 1920
-#define SCREEN_HEIGHT 1080
-#define SCREEN_X_CENTER (PositionUnit)(1920 / 2)
-#define SCREEN_Y_CENTER (PositionUnit)(1080 / 2)
-
 class Screen {
   // Screen manages actually drawing stuff on the screen; for now, it handles
   // any SDL functionality related to drawing the window and actually putting

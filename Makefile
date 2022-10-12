@@ -1,6 +1,7 @@
 ### General vars
 SHELL:=/bin/bash
 BIN_DIR:=$(shell pwd)/bin
+MAKEFLAGS += -j2
 
 ### Uncomment this to run Clang's static analyzer while building; this makes the build slower.
 #ANALYZER:=scan-build --status-bugs
@@ -46,10 +47,15 @@ TEST_OUTFILE:=$(BIN_DIR)/neon-rain-test
 TEST_OUTPUT:=-o $(TEST_OUTFILE)
 TEST_COMPILE:=$(CC_COMPILE) $(TEST_INCLUDE) $(TEST_LINK) $(TEST_SOURCE) $(TEST_OUTPUT) 
 
+RECORD_CMD:=byzanz-record -d 5 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
+
 all: clean build run
 	
 build:
 	$(MAIN_COMPILE)
+
+record:
+	$(RECORD_CMD)
 
 run: 
 	$(VALGRIND) $(MAIN_OUTFILE) | tee $(MAIN_LOGFILE)
@@ -59,8 +65,6 @@ clean:
 	-rm -r $(BIN_DIR)/
 	-mkdir $(BIN_DIR)
 
-record:
-	byzanz-record -d 3 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
 
 install-devtools:
 	apt-get -qq install -y \

@@ -6,7 +6,6 @@
 #include "Math.hh"
 #include "Memory.hh"
 #include "PhysicsHelpers.hh"
-#include "PhysicsManager.hh"
 #include "PositionComponent.hh"
 #include "Time.hh"
 #include "Types.hh"
@@ -55,8 +54,6 @@ class PhysicsComponent : public Component {
   shared_ptr<PhysicsComponent> getptr();
 
   // Owned components/object accessors
-  shared_ptr<PhysicsManager> getManager() const;
-  void setManager(const shared_ptr<PhysicsManager> manager);
   shared_ptr<PositionComponent> getPositionComponent() const;
   void setPositionComponent(const shared_ptr<PositionComponent> comp);
   shared_ptr<CollisionComponent> getCollisionComponent() const;
@@ -100,7 +97,6 @@ class PhysicsComponent : public Component {
 
  private:
   // Attributes
-  shared_ptr<Identity> ownerIdentity;
   bool forceResponsive;
   bool gravityEnabled;
   PositionUnit maxSpeed;
@@ -116,7 +112,6 @@ class PhysicsComponent : public Component {
   shared_ptr<CollisionComponent> collisionComponent;
   shared_ptr<PositionComponent> positionComponent;
 
-  void attemptMove(const shared_ptr<Vect2D> movement);
   void updateVelocityFromNetForce(const time_ms duration);
   void resolveCollisionElastic(const shared_ptr<Collision> collision,
                                const shared_ptr<PhysicsComponent> target);

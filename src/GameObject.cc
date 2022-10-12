@@ -12,8 +12,8 @@ GameObject::GameObject(const shared_ptr<EntityName> entityName,
 
   this->collisionComponent =
       (collisionComponent == nullptr)
-          ? shared_ptr<CollisionComponent>(
-                new CollisionComponent(this->positionComponent))
+          ? shared_ptr<CollisionComponent>(new CollisionComponent(
+                this->getIdentity(), this->positionComponent))
           : collisionComponent;
 
   this->physicsComponent =

@@ -59,10 +59,9 @@ void WADLoader::addBackground(shared_ptr<Zone> zone,
 
 void WADLoader::addCharacter(shared_ptr<Zone> zone,
                              const json& characterJSON) const {
-  shared_ptr<Character> character = shared_ptr<Character>(new Character());
   shared_ptr<EntityName> name =
       shared_ptr<EntityName>(new EntityName(characterJSON["name"]));
-  character->setName(name);
+  shared_ptr<Character> character = shared_ptr<Character>(new Character(name));
 
   // Initialize position
   XCoord x = characterJSON["position"]["x"];
@@ -81,7 +80,10 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
       (characterJSON["dragType"] == "linear") ? DragType::LINEAR
                                               : DragType::TIME_EXPONENTIAL);
   character->getPhysicsComponent()->setMaxSpeed(characterJSON["maxSpeed"]);
-
+  character->getPhysicsComponent()->setGravityEnabled(
+      characterJSON["gravityEnabled"] == "true");
+  character->getCollisionComponent()->setCollisionsEnabled(
+      characterJSON["collisionsEnabled"] == "true");
   character->inferBoundingBoxFromTexture();
 
   (characterJSON["isPlayerCharacter"] == "true")
