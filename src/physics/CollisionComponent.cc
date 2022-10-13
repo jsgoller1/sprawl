@@ -65,9 +65,11 @@ shared_ptr<CollisionTestResult> CollisionComponent::testCollisions(
     finalizedCollisionSet->insert(collision);
   }
 
-  cout << *(this->getOwnerIdentity()->getEntityID())
-       << ", collision count: " << to_string(finalizedCollisionSet->size())
-       << endl;
+  /*
+    cout << *(this->getOwnerIdentity()->getEntityID())
+         << ", collision count: " << to_string(finalizedCollisionSet->size())
+         << endl;
+         */
   return shared_ptr<CollisionTestResult>(new CollisionTestResult(
       this->getOwnerIdentity(), this->positionComponent->getCenter(),
       positionDelta, finalizedCollisionSet));

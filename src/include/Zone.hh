@@ -28,6 +28,7 @@ class Zone {
   Zone();
 
   // TODO: serialize(); // needed for saving game and level editor
+  void setGravityConstant(const real gravityConstant);
   void setBackground(const shared_ptr<Background> background);
   void addPlayerCharacter(const shared_ptr<Character> playerCharacter);
   void addGameObject(const shared_ptr<GameObject> gameObject);

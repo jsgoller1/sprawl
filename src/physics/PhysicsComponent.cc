@@ -119,12 +119,10 @@ shared_ptr<Vect2D> PhysicsComponent::integrate(const time_ms duration) {
   shared_ptr<Vect2D> movement = Vect2D::zero();
   if (this->mass > 0.0 && this->getForceResponsive()) {
     this->updateVelocityFromNetForce(duration);
-    // cout << "netForce: " << this->netForce->to_string() << endl;
-    // cout << "Acceleration: " << this->acceleration->to_string() <<
-    // endl;
-    // cout << "Final Velocity: " << this->velocity->to_string() <<
-    // endl;
-    // cout << "----------------" << endl;
+    cout << "netForce: " << this->netForce->to_string() << endl;
+    cout << "Acceleration: " << this->acceleration->to_string() << endl;
+    cout << "Final Velocity: " << this->velocity->to_string() << endl;
+    cout << "----------------" << endl;
     movement = *(this->velocity) * duration;
   }
   this->netForce = Vect2D::zero();
@@ -162,11 +160,13 @@ void PhysicsComponent::resolveCollision(
     const shared_ptr<PhysicsComponent> target) {
   switch (type) {
     case CollisionResolutionType::ELASTIC:
-    case CollisionResolutionType::INELASTIC:
-    case CollisionResolutionType::PARTIAL_ELASTIC:
-    case CollisionResolutionType::PSEUDO:
       this->resolveCollisionElastic(collision, target);
       break;
+    case CollisionResolutionType::INELASTIC:
+      this->resolveCollisionInelastic(collision, target);
+      break;
+    case CollisionResolutionType::PARTIAL_ELASTIC:
+    case CollisionResolutionType::PSEUDO:
     default:
       // Log an error
       break;
@@ -193,4 +193,22 @@ void PhysicsComponent::resolveCollisionElastic(
   shared_ptr<Vect2D> temp = this->velocity;
   this->velocity = target->velocity;
   target->velocity = temp;
+}
+
+void PhysicsComponent::resolveCollisionInelastic(
+    const shared_ptr<Collision> collision,
+    const shared_ptr<PhysicsComponent> target) {
+  switch (collision->collisionAxis) {
+    case X_ONLY:
+      this->velocity->x = 0.0;
+      break;
+    case Y_ONLY:
+      this->velocity->x = 0.0;
+      break;
+    case X_AND_Y:
+    case X_OR_Y:
+      this->velocity->x = 0.0;
+      this->velocity->x = 0.0;
+      break;
+  }
 }

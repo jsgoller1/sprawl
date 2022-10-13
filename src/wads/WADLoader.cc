@@ -12,6 +12,10 @@ shared_ptr<Zone> WADLoader::zoneFromWAD(
     this->addBackground(zone, data["background"]);
   }
 
+  if (data.contains("gravityConstant")) {
+    zone->setGravityConstant(data["gravityConstant"]);
+  }
+
   // TODO: repeat clauses should be handled outside of add*() functions,
   // but they involve mutating data that each add*() is responsible for;
   // for now, just implementing them as loops inside add*()

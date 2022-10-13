@@ -115,4 +115,6 @@ class PhysicsComponent : public Component {
   void updateVelocityFromNetForce(const time_ms duration);
   void resolveCollisionElastic(const shared_ptr<Collision> collision,
                                const shared_ptr<PhysicsComponent> target);
+  void resolveCollisionInelastic(const shared_ptr<Collision> collision,
+                                 const shared_ptr<PhysicsComponent> target);
 };

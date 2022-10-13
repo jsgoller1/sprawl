@@ -1,7 +1,6 @@
 ### General vars
 SHELL:=/bin/bash
 BIN_DIR:=$(shell pwd)/bin
-MAKEFLAGS += -j2
 
 ### Uncomment this to run Clang's static analyzer while building; this makes the build slower.
 #ANALYZER:=scan-build --status-bugs

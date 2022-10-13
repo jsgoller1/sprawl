@@ -57,7 +57,7 @@ class PhysicsManager : public enable_shared_from_this<PhysicsManager> {
   shared_ptr<map<shared_ptr<Identity>, shared_ptr<ManagementEntry>>>
       managementEntries;
 
-  real gravityConstant = 10.0;
+  real gravityConstant = 0.005;
 
   shared_ptr<set<shared_ptr<CollisionComponent>>> getCollisionCandidates(
       const shared_ptr<CollisionComponent> source) const;

@@ -21,7 +21,24 @@ shared_ptr<Vect2D> CollisionTestResult::getValidPosition() const {
   // TODO: For now, let's just have the "valid move" be not moving at all, i.e.
   // the original position the object was in. This might result in
   // "forcefielding", but we can address it later.
-  return (collisions->empty())
-             ? (*this->originalPosition + *this->attemptedMove)
-             : this->originalPosition;
+  shared_ptr<Vect2D> finalPosition = shared_ptr<Vect2D>(
+      new Vect2D(*this->originalPosition + *this->attemptedMove));
+
+  for (auto collision : *this->collisions) {
+    switch (collision->collisionAxis) {
+      case X_ONLY:
+        finalPosition->x = originalPosition->x;
+        break;
+      case Y_ONLY:
+        finalPosition->y = originalPosition->y;
+        break;
+      case X_AND_Y:
+      case X_OR_Y:
+        finalPosition->x = originalPosition->x;
+        finalPosition->y = originalPosition->y;
+        break;
+    }
+  }
+
+  return finalPosition;
 }
