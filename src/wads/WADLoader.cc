@@ -89,7 +89,7 @@ void WADLoader::addCharacter(shared_ptr<Zone> zone,
   character->getCollisionComponent()->setCollisionsEnabled(
       characterJSON["collisionsEnabled"] == "true");
   character->inferBoundingBoxFromTexture();
-
+  character->getPhysicsComponent()->setMinSpeed(characterJSON["minSpeed"]);
   (characterJSON["isPlayerCharacter"] == "true")
       ? zone->addPlayerCharacter(character)
       : zone->addGameObject(character);

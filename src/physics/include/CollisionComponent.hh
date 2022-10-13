@@ -53,16 +53,16 @@ class CollisionComponent : public Component {
       const shared_ptr<Vect2D> movement,
       const shared_ptr<set<shared_ptr<CollisionComponent>>>
           collisionCandidates);
+  shared_ptr<set<shared_ptr<CollisionComponent>>> predictMovementCollision(
+      const shared_ptr<Vect2D> movement,
+      const shared_ptr<set<shared_ptr<CollisionComponent>>>
+          collisionCandidates);
 
  private:
   bool collisionsEnabled;
   shared_ptr<BoundingBoxParams> boundingBoxParams;
   shared_ptr<PositionComponent> positionComponent;
 
-  shared_ptr<set<shared_ptr<CollisionComponent>>> predictMovementCollision(
-      const shared_ptr<Vect2D> movement,
-      const shared_ptr<set<shared_ptr<CollisionComponent>>>
-          collisionCandidates);
   CollisionAxis determineCollisionAxis(
       const shared_ptr<CollisionComponent> target,
       const shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions,

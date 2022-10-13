@@ -141,6 +141,9 @@ void PhysicsComponent::updateVelocityFromNetForce(const time_ms duration) {
   // cout << "Pre-drag Velocity: " << this->velocity->to_string() <<
   // endl;
   *(this->velocity) *= drag;
+  // this->velocity->x = MAX(this->velocity->x, this->minSpeed);
+  this->velocity->y =
+      (this->velocity->y < this->minSpeed) ? 0.0 : this->velocity->y;
   // cout << "Post-drag Velocity: " << this->velocity->to_string() <<
   // endl;
 }
