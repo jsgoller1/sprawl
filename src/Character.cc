@@ -34,7 +34,7 @@ void Character::move(const GameAction& action) {
 
   switch (action) {
     case MOVE_UP:
-      // TODO: Jumping / double jumping
+      this->jump();
       break;
     case MOVE_LEFT:
       this->getPhysicsComponent()->applyMovementForce(Direction::Left());

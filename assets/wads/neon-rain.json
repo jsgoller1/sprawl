@@ -1,0 +1,72 @@
+{
+    "type": "Zone",
+    "background": {
+        "name": "Default background",
+        "texturePath": "./assets/textures/world-background.bmp",
+        "position": {
+            "x": 960,
+            "y": 540
+        }
+    },
+    "gravityConstant": 0.001,
+    "gameObjects": [
+        {
+            "type": "Character",
+            "enabled": "true",
+            "isPlayerCharacter": "true",
+            "name": "Player",
+            "texturePath": "./assets/textures/player.bmp",
+            "position": {
+                "x": 500,
+                "y": 850
+            },
+            "maxSpeed": 0.025,
+            "minSpeed": 0.05,
+            "dragType": "timeExponential",
+            "dragCoefficient": 0.995,
+            "gravityEnabled": "true",
+            "collisionsEnabled": "true"
+        },
+        {
+            "type": "Character",
+            "name": "Enemy",
+            "enabled": "true",
+            "isPlayerCharacter": "false",
+            "texturePath": "./assets/textures/enemy.bmp",
+            "position": {
+                "x": 848,
+                "y": 862
+            },
+            "maxSpeed": 0.025,
+            "minSpeed": 0.05,
+            "dragType": "timeExponential",
+            "dragCoefficient": 0.995,
+            "gravityEnabled": "true",
+            "collisionsEnabled": "true"
+        },
+        {
+            "type": "Platform",
+            "name": "wall-tall",
+            "enabled": "true",
+            "texturePath": "./assets/textures/wall-tall.bmp",
+            "position": {
+                "x": 1200,
+                "y": 810
+            }
+        },
+        {
+            "type": "Platform",
+            "name": "wall-indestructible",
+            "enabled": "true",
+            "texturePath": "./assets/textures/wall-indestructible.bmp",
+            "position": {
+                "x": 0,
+                "y": 1060
+            },
+            "repeat": {
+                "count": 8,
+                "xOffset": 300
+            }
+        }
+    ]
+}

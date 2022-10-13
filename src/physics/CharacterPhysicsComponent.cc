@@ -20,7 +20,11 @@ shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
       this->shared_from_this());
 }
 
-void CharacterPhysicsComponent::applyJumpForce() {}
+void CharacterPhysicsComponent::applyJumpForce() {
+  shared_ptr<Vect2D> moveForce = shared_ptr<Vect2D>(new Vect2D(0.0, -10.0));
+  this->applyForce(moveForce);
+}
+
 void CharacterPhysicsComponent::applyMovementForce(
     const shared_ptr<Direction> direction) {
   PositionUnit speed = this->getMaxSpeed();

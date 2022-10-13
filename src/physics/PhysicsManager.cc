@@ -64,7 +64,7 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
 
     // Apply forces, attempt movement, and determine collisions
     if (collisionComponent
-            ->predictMovementCollision(shared_ptr<Vect2D>(new Vect2D(0.0, 5.0)),
+            ->predictMovementCollision(shared_ptr<Vect2D>(new Vect2D(0.0, 3.0)),
                                        collisionCandidates)
             ->empty()) {
       /*
