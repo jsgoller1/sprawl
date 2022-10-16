@@ -47,29 +47,26 @@ class CollisionComponent : public Component {
     this->collisionsEnabled = setting;
   }
 
-  shared_ptr<BoundingBox> getBoundingBox() const;
-  bool areColliding(const shared_ptr<CollisionComponent> comp) const;
-  shared_ptr<CollisionTestResult> testCollisions(
+  shared_ptr<BoundingBox> getBoundingBox(
+      const shared_ptr<Vect2D> offset = nullptr) const;
+  shared_ptr<CollisionTestResult> predictMovementCollision(
       const shared_ptr<Vect2D> movement,
       const shared_ptr<set<shared_ptr<CollisionComponent>>>
           collisionCandidates);
-  shared_ptr<set<shared_ptr<CollisionComponent>>> predictMovementCollision(
+  bool isColliding(const shared_ptr<CollisionComponent> targetComponent,
+                   const shared_ptr<Vect2D> sourceOffset = nullptr,
+                   const shared_ptr<Vect2D> targetOffset = nullptr) const;
+  shared_ptr<set<shared_ptr<CollisionComponent>>> isCollidingBatched(
       const shared_ptr<Vect2D> movement,
-      const shared_ptr<set<shared_ptr<CollisionComponent>>>
-          collisionCandidates);
+      const shared_ptr<set<
+          shared_ptr<pair<shared_ptr<CollisionComponent>, shared_ptr<Vect2D>>>>>
+          candidateOffsetPairs);
+  CollisionAxis determineCollisionAxis(
+      const shared_ptr<Vect2D> movement,
+      const shared_ptr<CollisionComponent> target);
 
  private:
   bool collisionsEnabled;
   shared_ptr<BoundingBoxParams> boundingBoxParams;
   shared_ptr<PositionComponent> positionComponent;
-
-  CollisionAxis determineCollisionAxis(
-      const shared_ptr<CollisionComponent> target,
-      const shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions,
-      const shared_ptr<set<shared_ptr<CollisionComponent>>> yCollisions);
 };
-
-CollisionAxis determineCollisionAxis(
-    const shared_ptr<CollisionComponent> target,
-    const shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions,
-    const shared_ptr<set<shared_ptr<CollisionComponent>>> yCollisions);

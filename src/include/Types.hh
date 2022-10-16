@@ -4,6 +4,7 @@
 #include <SDL2/SDL_image.h>
 
 #include <algorithm>
+#include <cassert>
 #include <cfloat>
 #include <fstream>
 #include <iostream>
@@ -31,12 +32,3 @@ using std::vector;
 
 typedef string FilePath;
 typedef string EntityName;
-
-typedef double real;
-typedef real PositionUnit;
-typedef PositionUnit ScreenWidth;
-typedef PositionUnit ScreenHeight;
-typedef PositionUnit YCoord;
-typedef PositionUnit XCoord;
-typedef real time_ms;
-typedef real time_s;

@@ -34,8 +34,8 @@ bool BoundingBox::checkCollision(const shared_ptr<BoundingBox> otherBox) {
 
   // Highest and Lowest refer to positioning on the screen; numerically,
   // Lowest is greater than Highest
-  return areLinesIntersecting(comp1YHighest, comp1YLowest, comp2YHighest,
-                              comp2YLowest) &&
-         areLinesIntersecting(comp1XLeftmost, comp1XRightmost, comp2XLeftmost,
-                              comp2XRightmost);
+  return intervalsOverlap(comp1YHighest, comp1YLowest, comp2YHighest,
+                          comp2YLowest) &&
+         intervalsOverlap(comp1XLeftmost, comp1XRightmost, comp2XLeftmost,
+                          comp2XRightmost);
 }

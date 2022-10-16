@@ -44,7 +44,6 @@ class PhysicsComponent : public Component {
   // ctors / dtors
   PhysicsComponent(const shared_ptr<Identity> ownerIdentity,
                    const shared_ptr<PositionComponent> positionComp,
-                   const shared_ptr<CollisionComponent> collisionComponent,
                    const bool forceResponsiveSetting = false,
                    const bool gravitySetting = false,
                    const PositionUnit maxSpeed = 0.0,
@@ -56,8 +55,6 @@ class PhysicsComponent : public Component {
   // Owned components/object accessors
   shared_ptr<PositionComponent> getPositionComponent() const;
   void setPositionComponent(const shared_ptr<PositionComponent> comp);
-  shared_ptr<CollisionComponent> getCollisionComponent() const;
-  void setCollisionComponent(const shared_ptr<CollisionComponent> comp);
 
   // Forwarding methods
   bool checkCollision(const shared_ptr<PhysicsComponent> comp) const;
@@ -109,7 +106,6 @@ class PhysicsComponent : public Component {
   shared_ptr<Vect2D> acceleration;
 
   shared_ptr<PhysicsManager> manager;
-  shared_ptr<CollisionComponent> collisionComponent;
   shared_ptr<PositionComponent> positionComponent;
 
   void updateVelocityFromNetForce(const time_ms duration);

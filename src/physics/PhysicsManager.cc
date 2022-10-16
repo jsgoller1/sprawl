@@ -64,18 +64,9 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
 
     // Apply forces, attempt movement, and determine collisions
     if (collisionComponent
-            ->predictMovementCollision(shared_ptr<Vect2D>(new Vect2D(0.0, 3.0)),
-                                       collisionCandidates)
+            ->testCollisions(shared_ptr<Vect2D>(new Vect2D(0.0, 3.0)),
+                             collisionCandidates)
             ->empty()) {
-      /*
-       * NOTE: This is a bit of a hack (and I really don't like it), but
-       * if we implement gravity by constantly applying a downward force, we
-       * wind up with weird janky behavior where horizontal when an object isn't
-       * falling (e.g. a character moving across a platform) moves randomly and
-       * inconsistently; this does not occur when there's no downward velocity.
-       * To hack around this for now, we just test if a small move downward
-       * would cause a collision, and if so we don't apply gravity.
-       */
       physicsComponent->applyGravity(this->getGravityConstant());
     }
     shared_ptr<Vect2D> positionDelta = physicsComponent->integrate(duration);

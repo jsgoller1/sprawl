@@ -15,120 +15,142 @@ shared_ptr<CollisionComponent> CollisionComponent::getptr() {
       this->shared_from_this());
 }
 
-shared_ptr<BoundingBox> CollisionComponent::getBoundingBox() const {
-  return shared_ptr<BoundingBox>(new BoundingBox(
-      this->positionComponent->getCenter(), this->boundingBoxParams));
+shared_ptr<BoundingBox> CollisionComponent::getBoundingBox(
+    const shared_ptr<Vect2D> offset) const {
+  /*
+   * Create a bounding box centered on the object by default, or optionally
+   * offset by a provided distance.
+   */
+  shared_ptr<Vect2D> trueOffset = (offset == nullptr) ? Vect2D::zero() : offset;
+  return shared_ptr<BoundingBox>(
+      new BoundingBox(*(this->positionComponent->getCenter()) + *trueOffset,
+                      this->boundingBoxParams));
 };
 
-shared_ptr<CollisionTestResult> CollisionComponent::testCollisions(
+bool CollisionComponent::isColliding(
+    /*
+     * Calculates bounding boxes around this component and the target component
+     * (optional: if provided, applys offsets to center of each first), then
+     * returns if they overlap.
+     */
+    const shared_ptr<CollisionComponent> targetComponent,
+    const shared_ptr<Vect2D> sourceOffset,
+    const shared_ptr<Vect2D> targetOffset) const {
+  if (this == targetComponent.get()) {
+    // We are never colliding with ourselves
+    return false;
+  }
+  shared_ptr<BoundingBox> usBox = this->getBoundingBox(sourceOffset);
+  shared_ptr<BoundingBox> themBox =
+      targetComponent->getBoundingBox(targetOffset);
+  return usBox->checkCollision(themBox);
+}
+
+shared_ptr<set<shared_ptr<CollisionComponent>>>
+CollisionComponent::isCollidingBatched(
+    const shared_ptr<Vect2D> sourceOffset,
+    const shared_ptr<set<
+        shared_ptr<pair<shared_ptr<CollisionComponent>, shared_ptr<Vect2D>>>>>
+        targetOffsetPairs) {
+  shared_ptr<set<shared_ptr<CollisionComponent>>> targetSet =
+      shared_ptr<set<shared_ptr<CollisionComponent>>>(
+          new set<shared_ptr<CollisionComponent>>());
+
+  shared_ptr<CollisionComponent> target;
+  shared_ptr<Vect2D> targetOffset;
+  for (auto targetOffsetPair : *targetOffsetPairs) {
+    target = targetOffsetPair->first;
+    targetOffset = targetOffsetPair->second;
+    if (this->isColliding(target, sourceOffset, targetOffset)) {
+      targetSet->insert(target);
+    }
+  }
+  return targetSet;
+}
+
+bool CollisionComponent::isTrajectoryColliding(
+    const shared_ptr<Vect2D> positionDelta,
+    const shared_ptr<CollisionComponent> targetComponent) {
+  /*
+   * Treats positionDelta as the trajectory along which this
+   * component will move and determines if at any point along the trajectory it
+   * collides with targetComponent.
+   *
+   * To accomplish this, we only consider the center point of the collision
+   * source, then
+   */
+}
+
+shared_ptr<CollisionTestResult> CollisionComponent::predictMovementCollision(
     const shared_ptr<Vect2D> positionDelta,
     const shared_ptr<set<shared_ptr<CollisionComponent>>> collisionCandidates) {
   /*
    * Tests if a particular movement would cause an object to collide with
-   * another object; this function may mutate the object's position as part of
-   * testing collisions, but all mutations will be reversed.
+   * another object.
    */
+  shared_ptr<set<shared_ptr<CollisionComponent>>> collidingComponent =
+      this->testCollisions(positionDelta, collisionCandidates);
 
-  // TODO: This test "pierces" objects; e.g. if the source object is moving up
-  // and to the right and collides with an object at (1,1), it wouldn't cause a
-  // collision with an object at (2,2) during the same move (though an elastic
-  // collision could trigger one during the _next_ check). Note though that an
-  // object with height of 10 moving to the left could collide with multiple
-  // objects stacked on top of each other to its left, so we do need to test
-  // against multiple objects, but we only need to deal with the first one/ones
-  // we'd collide with.
-
-  // First, test movement on both axes to determine what collisions will
-  // actually occur.
-  shared_ptr<set<shared_ptr<CollisionComponent>>> trueCollisions =
-      this->predictMovementCollision(positionDelta, collisionCandidates);
-
-  // Next, determine which collisions occurred because of single-axis movement.
-  shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions =
-      this->predictMovementCollision(positionDelta->getXComponent(),
-                                     collisionCandidates);
-  shared_ptr<set<shared_ptr<CollisionComponent>>> yCollisions =
-      this->predictMovementCollision(positionDelta->getYComponent(),
-                                     collisionCandidates);
-
-  // For each of our "actual collisions", determine in what direction
-  // movement was necessary to cause the collision; e.g if a collision is found
-  // in both trueCollisions and xCollisions, it only required x-direction
-  // movement to occur.
   shared_ptr<set<shared_ptr<Collision>>> finalizedCollisionSet =
       shared_ptr<set<shared_ptr<Collision>>>(new set<shared_ptr<Collision>>());
-  for (shared_ptr<CollisionComponent> target : *trueCollisions) {
-    CollisionAxis axis =
-        determineCollisionAxis(target, xCollisions, yCollisions);
-    shared_ptr<Collision> collision = shared_ptr<Collision>(new Collision{
-        .targetIdentity = target->getOwnerIdentity(), .collisionAxis = axis});
-    finalizedCollisionSet->insert(collision);
+
+  for (shared_ptr<CollisionComponent> target : *collidingComponent) {
+    finalizedCollisionSet->insert(shared_ptr<Collision>(new Collision{
+        .targetIdentity = target->getOwnerIdentity(),
+        .collisionAxis = determineCollisionAxis(positionDelta, target)}));
   }
 
-  /*
-    cout << *(this->getOwnerIdentity()->getEntityID())
-         << ", collision count: " << to_string(finalizedCollisionSet->size())
-         << endl;
-         */
   return shared_ptr<CollisionTestResult>(new CollisionTestResult(
       this->getOwnerIdentity(), this->positionComponent->getCenter(),
       positionDelta, finalizedCollisionSet));
 }
 
-shared_ptr<set<shared_ptr<CollisionComponent>>>
-CollisionComponent::predictMovementCollision(
-    const shared_ptr<Vect2D> positionDelta,
-    const shared_ptr<set<shared_ptr<CollisionComponent>>> collisionCandidates) {
-  /*
-   * Helper method; determines if a move would cause a collision by
-   * performing it, testing if a collision has occurred against all relevant
-   * objects, and then reversing it. Unlike testCollisions(), this function
-   * treats the move as-is and doesn't test each axis separately.
-   * testCollisions() uses this method for testing each axis separately.
-   */
-  shared_ptr<set<shared_ptr<CollisionComponent>>> targetSet =
-      shared_ptr<set<shared_ptr<CollisionComponent>>>(
-          new set<shared_ptr<CollisionComponent>>());
+CollisionAxis CollisionComponent::determineCollisionAxis(
+    const shared_ptr<Vect2D> sourceMovement,
+    const shared_ptr<CollisionComponent> target) {
+  shared_ptr<Vect2D> usCenter = this->getPositionComponent()->getCenter();
+  shared_ptr<Vect2D> themCenter = target->getPositionComponent()->getCenter();
+  bool xCollision = gte(usCenter->x, themCenter->x) &&
+                    gte(themCenter->x, usCenter->x + sourceMovement->x);
+  bool yCollision = gte(usCenter->y, themCenter->y) &&
+                    gte(themCenter->y, usCenter->y + sourceMovement->y);
+  if (xCollision && !yCollision) {
+    return X_ONLY;
+  } else if (!xCollision && yCollision) {
+    return Y_ONLY;
+  } else if (xCollision && yCollision) {
+    return X_OR_Y;
+  } else {
+    return X_AND_Y;
+  }
+}
 
-  this->positionComponent->move(positionDelta);
-  for (shared_ptr<CollisionComponent> other : *collisionCandidates) {
-    if (this->areColliding(other)) {
-      targetSet->insert(other);
+/*
+shared_ptr<Vect2D> CollisionTestResult::getValidPosition() const {
+  // Get the position the collision source should wind up in given the
+  // collisions its movement would cause.
+  // TODO: For now, let's just have the "valid move" be not moving at all, i.e.
+  // the original position the object was in. This might result in
+  // "forcefielding", but we can address it later.
+  shared_ptr<Vect2D> finalPosition = shared_ptr<Vect2D>(
+      new Vect2D(*this->originalPosition + *this->attemptedMove));
+
+  for (auto collision : *this->collisions) {
+    switch (collision->collisionAxis) {
+      case X_ONLY:
+        finalPosition->x = originalPosition->x;
+        break;
+      case Y_ONLY:
+        finalPosition->y = originalPosition->y;
+        break;
+      case X_AND_Y:
+      case X_OR_Y:
+        finalPosition->x = originalPosition->x;
+        finalPosition->y = originalPosition->y;
+        break;
     }
   }
-  this->positionComponent->moveReverse(positionDelta);
 
-  return targetSet;
+  return finalPosition;
 }
-
-bool CollisionComponent::areColliding(
-    /*
-     * Does bounding-box test on this component and argument component
-     * to determine collision.
-     */
-    const shared_ptr<CollisionComponent> comp) const {
-  if (this == comp.get()) {
-    // We are never colliding with ourselves
-    return false;
-  }
-  shared_ptr<BoundingBox> usBox = this->getBoundingBox();
-  shared_ptr<BoundingBox> themBox = comp->getBoundingBox();
-  return usBox->checkCollision(themBox);
-}
-
-CollisionAxis CollisionComponent::determineCollisionAxis(
-    const shared_ptr<CollisionComponent> target,
-    const shared_ptr<set<shared_ptr<CollisionComponent>>> xCollisions,
-    const shared_ptr<set<shared_ptr<CollisionComponent>>> yCollisions) {
-  bool inXCollisions = (xCollisions->find(target) != xCollisions->end());
-  bool inYCollisions = (xCollisions->find(target) != yCollisions->end());
-  if (!inXCollisions && !inYCollisions) {
-    return X_AND_Y;
-  } else if (!inXCollisions && inYCollisions) {
-    return Y_ONLY;
-  } else if (inXCollisions && !inYCollisions) {
-    return X_ONLY;
-  } else {
-    return X_OR_Y;
-  }
-}
+*/

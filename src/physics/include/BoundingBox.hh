@@ -43,7 +43,5 @@ class BoundingBox {
   bool checkCollision(const shared_ptr<BoundingBox> box);
 
  private:
-  shared_ptr<Vect2D> center;
-  PositionUnit height;
-  PositionUnit width;
+  shared_ptr<Box> box;
 };

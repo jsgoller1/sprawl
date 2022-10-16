@@ -4,13 +4,11 @@
 PhysicsComponent::PhysicsComponent(
     const shared_ptr<Identity> ownerIdentity,
     const shared_ptr<PositionComponent> positionComponent,
-    const shared_ptr<CollisionComponent> collisionComponent,
     const bool forceResponsiveSetting, const bool gravitySetting,
     const PositionUnit maxSpeed, const PositionUnit minSpeed,
     const DragType dragType, const real dragCoefficient)
     : Component(ownerIdentity) {
   this->positionComponent = positionComponent;
-  this->collisionComponent = collisionComponent;
   this->forceResponsive = forceResponsiveSetting;
   this->gravityEnabled = gravitySetting;
   this->acceleration = shared_ptr<Vect2D>(new Vect2D(0.0, 0.0));
@@ -33,14 +31,6 @@ shared_ptr<PositionComponent> PhysicsComponent::getPositionComponent() const {
 void PhysicsComponent::setPositionComponent(
     const shared_ptr<PositionComponent> positionComponent) {
   this->positionComponent = positionComponent;
-}
-
-shared_ptr<CollisionComponent> PhysicsComponent::getCollisionComponent() const {
-  return this->collisionComponent;
-}
-void PhysicsComponent::setCollisionComponent(
-    const shared_ptr<CollisionComponent> comp) {
-  this->collisionComponent = comp;
 }
 
 // Unique attribute accessors
