@@ -42,7 +42,7 @@ void Character::jump() {
   // TODO: jumpCount currently does nothing useful,
   // but we will use it for double jumping eventually.
   // jumpCount++;
-  log("Jump count: " + to_string(jumpCount));
+  LOG_INFO("Jump count: {0}", jumpCount);
   if (not(jumpCount >= 2) and
       this->getPhysicsComponent()->getVelocity()->y == 0) {
     shared_ptr<Point> newVelocity = shared_ptr<Point>(new Point{

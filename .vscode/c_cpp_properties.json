@@ -5,10 +5,12 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/src/include",
+                "${workspaceFolder}/src/3rdparty/fmt/include",
+                "${workspaceFolder}/src/3rdparty/json/include",
                 "${workspaceFolder}/src/components/include",
+                "${workspaceFolder}/src/logging/include",
                 "${workspaceFolder}/src/managers/include",
                 "${workspaceFolder}/src/wads/include",
-                "${workspaceFolder}/src/3rdparty/include",
                 // TODO: Integrate SDL with Bazel; this was installed with
                 // apt and will be impossible to version-pin or distribute. 
                 "/usr/include/SDL2",

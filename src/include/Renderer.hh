@@ -1,7 +1,7 @@
 #pragma once
 
 #include "DrawingComponent.hh"
-#include "Logger.hh"
+#include "Logging.hh"
 #include "Memory.hh"
 #include "Texture.hh"
 #include "Types.hh"

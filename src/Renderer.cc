@@ -8,7 +8,7 @@ Renderer::Renderer(SDL_Window* const window, const bool useHardwareAcceleration,
   int windowDriverIndex = -1;
   this->renderer = (SDL_CreateRenderer(window, windowDriverIndex, flags));
   if (this->renderer == nullptr) {
-    logSDLError(SDL_ERROR_OCCURRED, "Renderer::Renderer()");
+    LOG_FATAL_SYS(RENDERING, "Could not create Renderer.");
   }
 }
 
@@ -25,14 +25,16 @@ void Renderer::prepare(const shared_ptr<DrawingComponent> drawable) const {
   SDL_RendererFlip flip = drawable->getFlip();
   SDL_Point center = SDL_Point{.x = drawable->getX(), .y = drawable->getY()};
 
-  logSDLError(SDL_RenderCopyEx(this->renderer, textureData, clip, &renderQuad,
-                               angle, &center, flip),
-              "Renderer::prepare()");
+  if (SDL_RenderCopyEx(this->renderer, textureData, clip, &renderQuad, angle,
+                       &center, flip)) {
+    LOG_ERROR_SYS(SDL, "Could not prepare texture: {0}",
+                  Logging::getSDLError());
+  }
 
-  // TODO: A memory leak that crashed my crashed my machine repeatedly by
-  // allocating ~1GB/sec occurred because I forgot this destroy call. Would
-  // be useful to set up textures with smart pointers that call
-  // SDL_DestroyTexture when cleaned up.
+  // TODO: A memory leak that crashed my crashed my machine
+  // repeatedly by allocating ~1GB/sec occurred because I forgot
+  // this destroy call. Would be useful to set up textures with
+  // smart pointers that call SDL_DestroyTexture when cleaned up.
   SDL_DestroyTexture(textureData);
 }
 
@@ -52,7 +54,7 @@ SDL_Texture* Renderer::prepareTexture(const shared_ptr<Texture> texture) const {
   SDL_Texture* sdlTexture =
       SDL_CreateTextureFromSurface(this->renderer, pixelData);
   if (texture == nullptr) {
-    logSDLError(SDL_ERROR_OCCURRED, "Renderer::prepareTexture");
+    LOG_ERROR_SYS(SDL, "Could not create texture.");
   }
   return sdlTexture;
 }
