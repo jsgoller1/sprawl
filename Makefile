@@ -12,10 +12,10 @@ BIN_DIR:=$(shell pwd)/bin
 CC_COMPILER:=clang++
 CC_FLAGS:=-std=c++20 -g
 WARNINGS:=-Weverything -Werror
-INCLUDE:=-I src/include -I src/3rdparty/include -I src/components/include -I src/managers/include -I src/wads/include 
+INCLUDE:=-I src/include -I src/3rdparty/fmt/include -I src/3rdparty/json/include -I src/components/include  -I src/logging/include  -I src/managers/include -I src/wads/include 
 LINK:=-lSDL2 -lSDL2_image
 CLANG_LINKER_ARGS:=-Wl,-rpath -Wl,/usr/local/lib/ # For libsdl2_image
-SOURCE:=src/*.cc src/components/*.cc src/managers/*.cc src/wads/*.cc
+SOURCE:=src/*.cc src/3rdparty/fmt/*.cc src/components/*.cc src/logging/*.cc src/managers/*.cc src/wads/*.cc
 #### Warnings we ignore, with explanations
  # Don't care about C++98 backwards compatibility.
 IGNORED_WARNINGS:=-Wno-c++98-compat -Wno-c++98-compat-pedantic  
@@ -65,6 +65,13 @@ install-devtools:
 	lldb \
 	libsdl2-dev \
 	valgrind
+
+LOGGING_INCLUDES:=-I src/logging/include -I src/3rdparty/fmt/include 
+LOGGING_SRC:=src/3rdparty/fmt/*.cc src/logging/*.cc src/logging/demo/*.cc
+LOGGING_OUTFILE:=$(BIN_DIR)/loggingDemo
+logging-demo: clean
+	$(CC_COMPILE) $(LINK) $(LOGGING_INCLUDES) $(LOGGING_SRC) -o $(LOGGING_OUTFILE) 
+	$(LOGGING_OUTFILE)
 
 test: 
 	$(TEST_COMPILE)

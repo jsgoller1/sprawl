@@ -12,7 +12,7 @@
 #include "DrawingComponent.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
-#include "Logger.hh"
+#include "Logging.hh"
 #include "Memory.hh"
 #include "PhysicsManager.hh"
 #include "Platform.hh"

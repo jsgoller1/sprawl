@@ -1,5 +1,5 @@
 #include "InputHandler.hh"
-#include "Logger.hh"
+#include "Logging.hh"
 #include "Screen.hh"
 #include "Types.hh"
 #include "World.hh"
@@ -17,7 +17,7 @@ int main() {
     // startTime = getCurrentTime();
     userAction = inputManager.getGameAction();
     if (userAction != GameAction::IDLE) {
-      log("GameAction: " + to_string(userAction));
+      LOG_DEBUG("GameAction: {0}", userAction);
     }
     /*
     TODO: UI stuff; UI can either pause the game

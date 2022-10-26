@@ -3,7 +3,7 @@
 
 #include "GameAction.hh"
 #include "GameObject.hh"
-#include "Logger.hh"
+#include "Logging.hh"
 #include "Memory.hh"
 #include "PhysicsComponent.hh"
 #include "PositionComponent.hh"

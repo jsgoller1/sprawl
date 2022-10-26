@@ -2,18 +2,14 @@
 
 Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    string message = "SDL could not initialize! SDL_Error: ";
-    message += string((char*)SDL_GetError());
-    log(message);
+    LOG_FATAL_SYS(SDL, "Could not init SDL.");
     throw;
   }
   this->window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED, width, height,
                                   SDL_WINDOW_SHOWN);
   if (this->window == nullptr) {
-    string message = "Window could not be created! SDL_Error: ";
-    message += string((char*)SDL_GetError());
-    log(message);
+    LOG_FATAL_SYS(SDL, "Window could not be created!");
     throw;
   }
 

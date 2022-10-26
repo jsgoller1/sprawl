@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GameAction.hh"
-#include "Logger.hh"
+#include "Logging.hh"
 #include "Types.hh"
 
 class InputEvent {
