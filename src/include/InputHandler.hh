@@ -6,6 +6,7 @@
 
 class InputEvent {
  public:
+  virtual ~InputEvent();
   virtual GameAction getGameAction() = 0;
 };
 
@@ -13,6 +14,7 @@ class ButtonDownEvent : public InputEvent {
   // Represents a key or mouse button being pressed
 
  public:
+  virtual ~ButtonDownEvent() override;
   ButtonDownEvent(const SDL_Keycode keycode) : keycode(keycode) {}
   GameAction getGameAction() override;
 
@@ -29,6 +31,7 @@ class ButtonUpEvent : public InputEvent {
   // Represents a key or mouse button being released
 
  public:
+  virtual ~ButtonUpEvent() override;
   ButtonUpEvent(const SDL_Keycode keycode) : keycode(keycode) {}
   GameAction getGameAction() override;
 
@@ -43,11 +46,13 @@ class ButtonUpEvent : public InputEvent {
 
 class QuitEvent : public InputEvent {
  public:
+  virtual ~QuitEvent() override;
   GameAction getGameAction() override;
 };
 
 class NoEvent : public InputEvent {
  public:
+  virtual ~NoEvent() override;
   GameAction getGameAction() override;
 };
 

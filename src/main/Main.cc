@@ -1,23 +1,35 @@
+#include "CLI.hh"
 #include "InputHandler.hh"
 #include "Logging.hh"
 #include "Screen.hh"
+#include "Time.hh"
 #include "Types.hh"
+#include "WADLoader.hh"
 #include "World.hh"
 
-int main() {
-  Screen screen = Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
-  World world = World();
-  InputHandler inputManager = InputHandler();
-  GameAction userAction;
+int main(int argc, char* argv[]) {
+  CLI args(argc, argv);
+  if (args.shouldQuit()) {
+    return args.getReturnCode();
+  }
+  WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
+  wadLoader.loadLogging();
+
+  Timer timer = Timer();
+  shared_ptr<World> world = wadLoader.loadWorld();
+  shared_ptr<Screen> screen = wadLoader.loadScreen();
+  shared_ptr<InputHandler> inputHandler = wadLoader.loadInputHandler();
+  GameAction userAction = GameAction::IDLE;
   // TODO: create message queue and kick off thread for
   // running interpreter that can read input and produce commands to
   // be given to World()
 
+  time_ms duration;
   while (userAction != QUIT) {
-    // startTime = getCurrentTime();
-    userAction = inputManager.getGameAction();
+    duration = timer.tick();
+    userAction = inputHandler->getGameAction();
     if (userAction != GameAction::IDLE) {
-      LOG_DEBUG("GameAction: {0}", userAction);
+      LOG_DEBUG_SYS(WORLD, "GameAction: {}", userAction);
     }
     /*
     TODO: UI stuff; UI can either pause the game
@@ -35,15 +47,13 @@ int main() {
     // not move the player around. We may also want the World/Zone to keep state
     // as well, e.g. "up" should do something different if the player is in a
     // vehicle, in combat, etc.
-    world.update(userAction);
-    screen.drawAll(world.getDrawables());
+    world->gameLoopUpdate(userAction, duration);
+    screen->drawAll(world->getDrawables());
 
     // If we wind up taking less time than we need should we sleep?
     // Framerates higher than 60 FPS are imperceptible, and we don't
     // want the game world moving faster than the player can handle.
     //  sleep(startTime + MS_PER_FRAME - getCurrentTime());
-
-    // log("Quitting after one loop.");
-    // return 0;
   }
+  return 0;
 }

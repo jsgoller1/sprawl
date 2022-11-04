@@ -1,0 +1,87 @@
+{
+    "screen": {
+        "width": 1920,
+        "height": 1080
+    },
+    "logging": {
+        "defaultLogLevel": "WARN",
+        "overrides": []
+    },
+    "zones": [
+        {
+            "type": "Zone",
+            "background": {
+                "enabled": true,
+                "name": "MVP background",
+                "drawing": {
+                    "texturePath": "/textures/background.bmp"
+                },
+                "position": {
+                    "x": 0,
+                    "y": 0
+                }
+            },
+            "physics": {
+                "gravityConstant": 0.01
+            },
+            "gameObjects": [
+                {
+                    "type": "Character",
+                    "enabled": true,
+                    "name": "Player",
+                    "isPlayerCharacter": true,
+                    "drawing": {
+                        "texturePath": "/textures/player.bmp"
+                    },
+                    "position": {
+                        "x": -500,
+                        "y": 0
+                    },
+                    "physics": {
+                        "maxSpeed": 0.05,
+                        "minSpeed": 0.025,
+                        "forceEnabled": true,
+                        "gravityEnabled": false,
+                        "dragEnabled": true,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true,
+                        "bbox": {
+                            "fromTexture": true
+                        }
+                    }
+                },
+                {
+                    "type": "Character",
+                    "enabled": true,
+                    "name": "Enemy",
+                    "isPlayerCharacter": false,
+                    "drawing": {
+                        "texturePath": "/textures/enemy.bmp"
+                    },
+                    "position": {
+                        "x": 400,
+                        "y": 0
+                    },
+                    "physics": {
+                        "maxSpeed": 0.05,
+                        "minSpeed": 0.025,
+                        "forceEnabled": true,
+                        "gravityEnabled": false,
+                        "dragEnabled": true,
+                        "dragType": "timeExponential",
+                        "dragCoefficient": 0.995
+                    },
+                    "collisions": {
+                        "enabled": true,
+                        "bbox": {
+                            "fromTexture": true
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

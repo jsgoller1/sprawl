@@ -8,26 +8,19 @@
 using std::map;
 using std::string;
 
-static map<LogLevel, string> logLevelNames =
-    map<LogLevel, string>{{FATAL, string("FATAL")},
-                          {ERROR, string("ERROR")},
-                          {WARN, string("WARN")},
-                          {INFO, string("INFO")},
-                          {DEBUG, string("DEBUG")}};
+static map<LogLevel, string> logLevelNames = map<LogLevel, string>{{FATAL, string("FATAL")},
+                                                                   {ERROR, string("ERROR")},
+                                                                   {WARN, string("WARN")},
+                                                                   {INFO, string("INFO")},
+                                                                   {DEBUG, string("DEBUG")}};
 
-static map<LoggingSubsystem, string> subsystemNames =
-    map<LoggingSubsystem, string>{
-        {NONE, "NONE"},           {COLLISIONS, "COLLISIONS"},
-        {INPUT, "INPUT"},         {LOGGING, "LOGGING"},
-        {MATH, "MATH"},           {PHYSICS, "PHYSICS"},
-        {RENDERING, "RENDERING"}, {SDL, "SDL"},
-        {WADLOADER, "WADLOADER"}, {WORLD, "WORLD"},
-        {ZONE, "ZONE"},
-    };
+static map<LoggingSubsystem, string> subsystemNames = map<LoggingSubsystem, string>{
+    {NONE, "NONE"},           {COLLISIONS, "COLLISIONS"}, {INPUT, "INPUT"},         {LOGGING, "LOGGING"},
+    {MATH, "MATH"},           {PHYSICS, "PHYSICS"},       {RENDERING, "RENDERING"}, {SDL, "SDL"},
+    {WADLOADER, "WADLOADER"}, {WORLD, "WORLD"},           {ZONE, "ZONE"},
+};
 
-string Logging::getName(const LoggingSubsystem& subsystem) {
-  return subsystemNames[subsystem];
-}
+string Logging::getName(const LoggingSubsystem& subsystem) { return subsystemNames[subsystem]; }
 string Logging::getName(const LogLevel& level) { return logLevelNames[level]; }
 
 LogLevel Logging::toLogLevel(const string& name) {
@@ -36,8 +29,7 @@ LogLevel Logging::toLogLevel(const string& name) {
       return p.first;
     }
   }
-  LOG_ERROR_SYS(
-      LOGGING, "Couldn't associate name with {0}, defaulting to 'DEBUG'", name);
+  LOG_ERROR_SYS(LOGGING, "Couldn't associate name with {0}, defaulting to 'DEBUG'", name);
   return DEBUG;
 }
 
@@ -47,10 +39,7 @@ LoggingSubsystem Logging::toLoggingSubsystem(const string& name) {
       return p.first;
     }
   }
-  LOG_ERROR_SYS(
-      LOGGING,
-      "Couldn't associate a subsystem name with '{0}', defaulting to 'NONE'",
-      name);
+  LOG_ERROR_SYS(LOGGING, "Couldn't associate a subsystem name with '{0}', defaulting to 'NONE'", name);
   return NONE;
 }
 

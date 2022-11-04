@@ -36,8 +36,7 @@ bool getColorUse();
 // Overrides
 void setDefaultLogLevel(const LogLevel &level);
 LogLevel getDefaultLogLevel();
-void setOverrideSubsystem(const LoggingSubsystem &subsystem,
-                          const LogLevel &level);
+void setOverrideSubsystem(const LoggingSubsystem &subsystem, const LogLevel &level);
 LogLevel getOverrideSubsystem(const LoggingSubsystem &systemName);
 void setOverrideEntity(const string &entityName, const LogLevel &level);
 LogLevel getOverrideEntity(const string &entityName);
@@ -45,8 +44,7 @@ void setOverrideFile(const string &fileName, const LogLevel &level);
 LogLevel getOverrideFile(const string &fileName);
 void setOverrideFunc(const string &funcName, const LogLevel &level);
 LogLevel getOverrideFunc(const string &funcName);
-bool shouldLoggingOccur(const LogLevel &level, const string &funcName,
-                        const string &fileName, const string &entityName,
+bool shouldLoggingOccur(const LogLevel &level, const string &funcName, const string &fileName, const string &entityName,
                         const LoggingSubsystem subsystem);
 
 // Helpers
@@ -59,9 +57,8 @@ string getSDLError();
 /*
  * Implementation of Log(). Do not call directly.
  */
-void impl_Log(const string &fileName, const int lineNo, const string &funcName,
-              const LogLevel &level, const LoggingSubsystem subsystem,
-              const string &entityName, const string &format,
+void impl_Log(const string &fileName, const int lineNo, const string &funcName, const LogLevel &level,
+              const LoggingSubsystem subsystem, const string &entityName, const string &format,
               fmt::format_args &fargs);
 
 /*
@@ -71,12 +68,10 @@ void impl_Log(const string &fileName, const int lineNo, const string &funcName,
  * just inconvenient and harder to read).
  */
 template <typename... Args>
-void Log(const string &fileName, const int lineNo, const string &funcName,
-         const LogLevel &level, const LoggingSubsystem subsystem,
-         const string &entityName, const string &format, Args &&...args) {
+void Log(const string &fileName, const int lineNo, const string &funcName, const LogLevel &level,
+         const LoggingSubsystem subsystem, const string &entityName, const string &format, Args &&...args) {
   fmt::format_args fargs = fmt::make_format_args(args...);
-  impl_Log(fileName, lineNo, funcName, level, subsystem, entityName, format,
-           fargs);
+  impl_Log(fileName, lineNo, funcName, level, subsystem, entityName, format, fargs);
 }
 
 }  // namespace Logging

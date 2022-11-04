@@ -4,7 +4,6 @@
 #include "GameAction.hh"
 #include "Memory.hh"
 #include "Types.hh"
-#include "WADLoader.hh"
 #include "Zone.hh"
 
 class World {
@@ -15,16 +14,14 @@ class World {
   // NOTE: Menus, UI, dialogue boxes, etc should not be part of the world
 
  public:
-  World()
-      : World(shared_ptr<FilePath>(new FilePath("./assets/wads/mvp.json"))){};
-  World(const shared_ptr<FilePath> wadPath);
+  World(const shared_ptr<Zone> currentZone);
 
   // Forward to Zone
-  void update(const GameAction& action) { this->currentZone->update(action); }
-
-  shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const {
-    return this->currentZone->getDrawables();
+  void gameLoopUpdate(const GameAction& action, const time_ms duration) {
+    this->currentZone->gameLoopUpdate(action, duration);
   }
+
+  shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const { return this->currentZone->getDrawables(); }
   // TODO: serialize(); // needed for saving game and level editor
 
  private:

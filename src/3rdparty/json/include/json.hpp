@@ -28,7 +28,9 @@ SOFTWARE.
 */
 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Werror"
+#pragma clang diagnostic ignored "-Weverything"
+
+
 
 #ifndef INCLUDE_NLOHMANN_JSON_HPP_
 #define INCLUDE_NLOHMANN_JSON_HPP_

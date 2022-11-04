@@ -1,10 +1,3 @@
-/*
- * A Zone is a location in the World containing GameObjects
- * TODO: Initially, all zones are rectangular, have the same height as the
- * window, and every part of them should be drawn on the screen. Eventually,
- * we'll want to be able to scroll around in them.
- */
-
 #pragma once
 
 #include "Background.hh"
@@ -23,14 +16,22 @@
 // Forward declaration
 class WADLoader;
 
+/*
+ * A Zone is a location in the World containing GameObjects.
+ * TODO: Initially, all zones are rectangular, have the same height as the window, and every part of them should be
+ * drawn on the screen. Eventually, we'll want to be able to scroll around in them.
+ */
 class Zone {
  public:
   Zone();
 
   // TODO: serialize(); // needed for saving game and level editor
-  void setBackground(const shared_ptr<FilePath> backgroundPath);
+  void setGravityConstant(const real gravityConstant);
+  void setBackground(const shared_ptr<Background> background);
+  void addPlayerCharacter(const shared_ptr<Character> playerCharacter);
+  void addGameObject(const shared_ptr<GameObject> gameObject);
 
-  void update(const GameAction& action);
+  void gameLoopUpdate(const GameAction& action, const time_ms duration);
   shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const;
 
  private:
@@ -46,6 +47,4 @@ class Zone {
   shared_ptr<Character> player;
 
   void handleInput(const GameAction& action);
-
-  friend WADLoader;
 };
