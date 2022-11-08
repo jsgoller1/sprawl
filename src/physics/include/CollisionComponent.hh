@@ -1,11 +1,13 @@
 
 #pragma once
 
+#include <set>
+#include <vector>
+
 #include "BoundingBox.hh"
 #include "Collision.hh"
 #include "Component.hh"
 #include "Math.hh"
-#include "Memory.hh"
 
 // Forward decl
 class CollisionDetectionManager;
@@ -27,13 +29,13 @@ class CollisionComponent : public Component {
    *    tests, triggers, etc.
    */
  public:
-  CollisionComponent(const shared_ptr<Identity> ownerIdentity, const shared_ptr<PositionComponent> positionComponent,
-                     const PositionUnit height = 0.0, const PositionUnit width = 0.0,
-                     const bool collisionsEnabled = false);
+  CollisionComponent(const std::shared_ptr<Identity> ownerIdentity,
+                     const std::shared_ptr<PositionComponent> positionComponent, const PositionUnit height = 0.0,
+                     const PositionUnit width = 0.0, const bool collisionsEnabled = false);
 
-  shared_ptr<CollisionComponent> getptr();
-  shared_ptr<PositionComponent> positionComponent() const;
-  void positionComponent(const shared_ptr<PositionComponent> positionComponent);
+  std::shared_ptr<CollisionComponent> getptr();
+  std::shared_ptr<PositionComponent> positionComponent() const;
+  void positionComponent(const std::shared_ptr<PositionComponent> positionComponent);
 
   bool collisionsEnabled() const;
   void collisionsEnabled(const bool setting);
@@ -43,8 +45,9 @@ class CollisionComponent : public Component {
   void width(const PositionUnit val);
 
   BoundingBox boundingBox(const Vect2D& offset = Vect2D::zero()) const;
-  shared_ptr<vector<Collision>> predictMovementCollisions(
-      Vect2D positionDelta, const shared_ptr<set<shared_ptr<CollisionComponent>>> collisionComponents) const;
+  std::shared_ptr<std::vector<Collision>> predictMovementCollisions(
+      Vect2D positionDelta,
+      const std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionComponents) const;
   bool isColliding(const Vect2D& target, const Vect2D& sourceOffset) const;
   bool isColliding(const Line& target, const Vect2D& sourceOffset) const;
   bool isColliding(const CollisionComponent& target, const Vect2D& sourceOffset) const;
@@ -55,7 +58,7 @@ class CollisionComponent : public Component {
                                 const CollisionComponent& target, const CollisionAxis collisionAxis) const;
 
  private:
-  shared_ptr<PositionComponent> _positionComponent;
+  std::shared_ptr<PositionComponent> _positionComponent;
   PositionUnit _height;
   PositionUnit _width;
   bool _collisionsEnabled;

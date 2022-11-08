@@ -10,30 +10,30 @@
 class Background : public Entity {
  public:
   Background(const EntityName entityName = EntityName(""),
-             const shared_ptr<PositionComponent> positionComponent = nullptr,
-             const shared_ptr<DrawingComponent> drawingComponent = nullptr)
+             const std::shared_ptr<PositionComponent> positionComponent = nullptr,
+             const std::shared_ptr<DrawingComponent> drawingComponent = nullptr)
       : Entity(entityName) {
     this->positionComponent = (positionComponent == nullptr)
-                                  ? shared_ptr<PositionComponent>(new PositionComponent(this->getIdentity()))
+                                  ? std::shared_ptr<PositionComponent>(new PositionComponent(this->getIdentity()))
                                   : positionComponent;
     this->drawingComponent =
         (drawingComponent == nullptr)
-            ? shared_ptr<DrawingComponent>(new DrawingComponent(this->getIdentity(), this->positionComponent))
+            ? std::shared_ptr<DrawingComponent>(new DrawingComponent(this->getIdentity(), this->positionComponent))
             : drawingComponent;
   }
 
-  shared_ptr<PositionComponent> getPositionComponent() const { return this->positionComponent; }
+  std::shared_ptr<PositionComponent> getPositionComponent() const { return this->positionComponent; }
 
-  void setPositionComponent(const shared_ptr<PositionComponent> positionComponent) {
+  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
     this->positionComponent = positionComponent;
   }
 
-  shared_ptr<DrawingComponent> getDrawingComponent() const { return this->drawingComponent; }
-  void setDrawingComponent(const shared_ptr<DrawingComponent> drawingComponent) {
+  std::shared_ptr<DrawingComponent> getDrawingComponent() const { return this->drawingComponent; }
+  void setDrawingComponent(const std::shared_ptr<DrawingComponent> drawingComponent) {
     this->drawingComponent = drawingComponent;
   }
 
  private:
-  shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<PositionComponent> positionComponent;
+  std::shared_ptr<DrawingComponent> drawingComponent;
 };

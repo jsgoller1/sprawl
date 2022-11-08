@@ -21,35 +21,35 @@ shared_ptr<InputEvent> InputHandler::getInput() {
   // time, or should we poll for all events and return a
   // collection?
   if (SDL_PollEvent(&event) == 0) {
-    shared_ptr<NoEvent> action = shared_ptr<NoEvent>(new NoEvent());
+    std::shared_ptr<NoEvent> action = std::shared_ptr<NoEvent>(new NoEvent());
     return action;
   }
 
   SDL_Keycode symbol;
-  shared_ptr<InputEvent> inputEvent;
+  std::shared_ptr<InputEvent> inputEvent;
   switch (event.type) {
     case SDL_QUIT:
-      inputEvent = shared_ptr<QuitEvent>(new QuitEvent());
+      inputEvent = std::shared_ptr<QuitEvent>(new QuitEvent());
       break;
     // TODO: For some reason, pressing a key my local keyboard causes both
     // SDL_TEXTINPUT (771) and SDL_KEYDOWN (768) on key press, but only
     // SDL_KEYUP (769) on release. Can just ignore the 771 for now.
     case SDL_KEYUP:
       symbol = event.key.keysym.sym;
-      inputEvent = shared_ptr<ButtonUpEvent>(new ButtonUpEvent(symbol));
+      inputEvent = std::shared_ptr<ButtonUpEvent>(new ButtonUpEvent(symbol));
       break;
     case SDL_KEYDOWN:
       symbol = event.key.keysym.sym;
-      inputEvent = shared_ptr<ButtonDownEvent>(new ButtonDownEvent(symbol));
+      inputEvent = std::shared_ptr<ButtonDownEvent>(new ButtonDownEvent(symbol));
       break;
     case SDL_MOUSEBUTTONDOWN:
       // TODO: This is just for debugging purposes so we can figure
       // out screen coordinates of where we clicked.
       LOG_INFO_SYS(INPUT, "Screen clicked at ({0},{1})", event.button.x, event.button.y);
-      inputEvent = shared_ptr<NoEvent>(new NoEvent());
+      inputEvent = std::shared_ptr<NoEvent>(new NoEvent());
       break;
     default:
-      inputEvent = shared_ptr<NoEvent>(new NoEvent());
+      inputEvent = std::shared_ptr<NoEvent>(new NoEvent());
       LOG_DEBUG_SYS(INPUT, "Unhandleable input event: {}", event.type, event.button.y);
       break;
   }
@@ -57,7 +57,7 @@ shared_ptr<InputEvent> InputHandler::getInput() {
 }
 
 // TODO: Later on, we should refactor this to reference something like
-// a vector<pair<SDL_Keycode,Command>> that will support both fast lookups
+// a std::vector<pair<SDL_Keycode,Command>> that will support both fast lookups
 // of commands from actions, and also rebinding different commands to
 // keys/buttons (probably can't use SDL_Keycode if we want to do mouse buttons)
 GameAction ButtonDownEvent::getGameAction() {

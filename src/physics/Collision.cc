@@ -1,9 +1,7 @@
 #include "Collision.hh"
 
-Collision::Collision(const shared_ptr<Identity> source,
-                     const shared_ptr<Identity> target,
-                     const Vect2D& originalPosition,
-                     const Vect2D& attemptedMove, const Vect2D& finalPosition,
+Collision::Collision(const std::shared_ptr<Identity> source, const std::shared_ptr<Identity> target,
+                     const Vect2D& originalPosition, const Vect2D& attemptedMove, const Vect2D& finalPosition,
                      const CollisionAxis collisionAxis)
     : _source(source),
       _target(target),

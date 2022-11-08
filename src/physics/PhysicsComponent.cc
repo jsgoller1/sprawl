@@ -1,7 +1,7 @@
 #include "PhysicsComponent.hh"
 
 // ctors / dtors
-PhysicsComponent::PhysicsComponent(const shared_ptr<Identity> ownerIdentity, const bool forceResponsiveSetting,
+PhysicsComponent::PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity, const bool forceResponsiveSetting,
                                    const bool gravitySetting, const PositionUnit maxSpeed, const PositionUnit minSpeed,
                                    const DragType dragType, const real dragCoefficient)
     : Component(ownerIdentity),

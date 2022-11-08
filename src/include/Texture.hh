@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Memory.hh"
 #include "PositionComponent.hh"
 #include "Types.hh"
 
 class Texture {
  public:
   Texture(const FilePath& path);
-  Texture(const shared_ptr<FilePath> path);
+  Texture(const std::shared_ptr<FilePath> path);
 
   ~Texture();
 

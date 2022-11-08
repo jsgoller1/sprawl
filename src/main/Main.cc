@@ -16,9 +16,9 @@ int main(int argc, char* argv[]) {
   wadLoader.loadLogging();
 
   Timer timer = Timer();
-  shared_ptr<World> world = wadLoader.loadWorld();
-  shared_ptr<Screen> screen = wadLoader.loadScreen();
-  shared_ptr<InputHandler> inputHandler = wadLoader.loadInputHandler();
+  std::shared_ptr<World> world = wadLoader.loadWorld();
+  std::shared_ptr<Screen> screen = wadLoader.loadScreen();
+  std::shared_ptr<InputHandler> inputHandler = wadLoader.loadInputHandler();
   GameAction userAction = GameAction::IDLE;
   // TODO: create message queue and kick off thread for
   // running interpreter that can read input and produce commands to

@@ -5,13 +5,14 @@
 #include "Screen.hh"
 
 Zone::Zone() {
-  this->physicsManager = shared_ptr<PhysicsManager>(new PhysicsManager());
-  this->gameObjects = shared_ptr<vector<shared_ptr<GameObject>>>(new vector<shared_ptr<GameObject>>());
+  this->physicsManager = std::shared_ptr<PhysicsManager>(new PhysicsManager());
+  this->gameObjects =
+      std::shared_ptr<std::vector<std::shared_ptr<GameObject>>>(new std::vector<std::shared_ptr<GameObject>>());
 }
 
 void Zone::setGravityConstant(const real gravityConstant) { this->physicsManager->setGravityConstant(gravityConstant); }
 
-void Zone::setBackground(const shared_ptr<Background> background) { this->background = background; }
+void Zone::setBackground(const std::shared_ptr<Background> background) { this->background = background; }
 
 void Zone::gameLoopUpdate(const GameAction& action, const time_ms duration) {
   this->handleInput(action);
@@ -45,16 +46,17 @@ void Zone::handleInput(const GameAction& action) {
   }
 }
 
-shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
-  shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables =
-      shared_ptr<vector<shared_ptr<DrawingComponent>>>(new vector<shared_ptr<DrawingComponent>>());
+shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
+  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> drawables =
+      std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>>(
+          new std::vector<std::shared_ptr<DrawingComponent>>());
 
   // Background should be drawn first to ensure everything else gets
   // drawn over it.
   drawables->push_back(this->background->getDrawingComponent());
   drawables->push_back(this->player->getDrawingComponent());
-  for (shared_ptr<GameObject> obj : *(this->gameObjects)) {
-    shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();
+  for (std::shared_ptr<GameObject> obj : *(this->gameObjects)) {
+    std::shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();
     if (comp != nullptr) {
       drawables->push_back(comp);
     }
@@ -63,13 +65,13 @@ shared_ptr<vector<shared_ptr<DrawingComponent>>> Zone::getDrawables() const {
   return drawables;
 }
 
-void Zone::addPlayerCharacter(const shared_ptr<Character> playerCharacter) {
+void Zone::addPlayerCharacter(const std::shared_ptr<Character> playerCharacter) {
   this->player = playerCharacter;
   this->physicsManager->manage(playerCharacter->getIdentity(), playerCharacter->getPhysicsComponent(),
                                playerCharacter->getPositionComponent(), playerCharacter->getCollisionComponent());
 }
 
-void Zone::addGameObject(const shared_ptr<GameObject> gameObject) {
+void Zone::addGameObject(const std::shared_ptr<GameObject> gameObject) {
   this->gameObjects->push_back(gameObject);
   this->physicsManager->manage(gameObject->getIdentity(), gameObject->getPhysicsComponent(),
                                gameObject->getPositionComponent(), gameObject->getCollisionComponent());

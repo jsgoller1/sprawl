@@ -5,7 +5,7 @@ shared_ptr<Zone> WADLoader::loadZone(const json& zoneData) const {
   // TODO: Add error checking with helpful messages. Pretending for now that
   // WADLoader files are always correctly structured json
 
-  shared_ptr<Zone> zone = shared_ptr<Zone>(new Zone());
+  std::shared_ptr<Zone> zone = std::shared_ptr<Zone>(new Zone());
   if (zoneData.contains("gravityConstant")) {
     zone->setGravityConstant(zoneData["gravityConstant"]);
   }
@@ -15,7 +15,7 @@ shared_ptr<Zone> WADLoader::loadZone(const json& zoneData) const {
   }
 
   if (zoneData.contains("gameObjects")) {
-    shared_ptr<GameObject> object;
+    std::shared_ptr<GameObject> object;
     for (auto gameObjectJSON : zoneData["gameObjects"]) {
       LOG_DEBUG_SYS(WADLOADER, "Loading GameObject: {0}", to_string(gameObjectJSON));
       if (gameObjectJSON["type"] == "Character") {
@@ -35,11 +35,12 @@ void WADLoader::loadBackground(Zone& zone, const json& jsonBody) const {
   if (!this->objectEnabled(jsonBody)) {
     return;
   }
-  shared_ptr<Background> background = shared_ptr<Background>(new Background(EntityName(jsonBody.value("name", ""))));
-  shared_ptr<PositionComponent> positionComponent =
+  std::shared_ptr<Background> background =
+      std::shared_ptr<Background>(new Background(EntityName(jsonBody.value("name", ""))));
+  std::shared_ptr<PositionComponent> positionComponent =
       this->loadPositionComponent(background->getIdentity(), jsonBody["position"]);
   background->setPositionComponent(positionComponent);
-  shared_ptr<DrawingComponent> drawingComponent =
+  std::shared_ptr<DrawingComponent> drawingComponent =
       this->loadDrawingComponent(background->getIdentity(), positionComponent, jsonBody["drawing"]);
   background->setDrawingComponent(drawingComponent);
   zone.setBackground(background);
@@ -56,16 +57,16 @@ void WADLoader::loadPlatform(Zone& zone, const json& jsonBody) const {
   json collisionsConfig = jsonBody.value("collisions", json("{}"));
 
   EntityName name;
-  shared_ptr<Platform> platform;
-  shared_ptr<Identity> identity;
-  shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<PhysicsComponent> physicsComponent;
-  shared_ptr<DrawingComponent> drawingComponent;
-  shared_ptr<CollisionComponent> collisionComponent;
+  std::shared_ptr<Platform> platform;
+  std::shared_ptr<Identity> identity;
+  std::shared_ptr<PositionComponent> positionComponent;
+  std::shared_ptr<PhysicsComponent> physicsComponent;
+  std::shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<CollisionComponent> collisionComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    platform = shared_ptr<Platform>(new Platform(name));
+    platform = std::shared_ptr<Platform>(new Platform(name));
     identity = platform->getIdentity();
 
     positionComponent = this->loadPositionComponent(identity, positionConfig);
@@ -98,23 +99,24 @@ void WADLoader::loadCharacter(Zone& zone, const json& jsonBody) const {
   json collisionsConfig = jsonBody.value("collisions", json("{}"));
 
   EntityName name;
-  shared_ptr<Character> character;
-  shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<PhysicsComponent> physicsComponent;
-  shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
-  shared_ptr<DrawingComponent> drawingComponent;
-  shared_ptr<CollisionComponent> collisionComponent;
+  std::shared_ptr<Character> character;
+  std::shared_ptr<PositionComponent> positionComponent;
+  std::shared_ptr<PhysicsComponent> physicsComponent;
+  std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
+  std::shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<CollisionComponent> collisionComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplicate", json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    character = shared_ptr<Character>(new Character(name));
+    character = std::shared_ptr<Character>(new Character(name));
 
     positionComponent = this->loadPositionComponent(character->getIdentity(), positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
     character->setPositionComponent(positionComponent);
 
     physicsComponent = this->loadPhysicsComponent(character->getIdentity(), physicsConfig);
-    characterPhysicsComponent = shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(physicsComponent));
+    characterPhysicsComponent =
+        std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(physicsComponent));
     character->setPhysicsComponent(characterPhysicsComponent);
 
     drawingComponent = this->loadDrawingComponent(character->getIdentity(), positionComponent, drawingConfig);

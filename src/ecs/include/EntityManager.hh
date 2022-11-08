@@ -1,8 +1,10 @@
 #pragma once
+
+#include <map>
+#include <set>
 #include <string>
 
 #include "Identity.hh"
-#include "Memory.hh"
 #include "Types.hh"
 
 // Forward decl
@@ -15,26 +17,26 @@ class EntityManager {
    */
 
  public:
-  static shared_ptr<EntityManager> instance() {
+  static std::shared_ptr<EntityManager> instance() {
     // Static variable initialization only occurs once, so
     // if instance() is called and this->instance is already
     // initialized, it won't be initialized again.
     // See this spec, section 6.7.4:
     // https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2010/n3092.pdf
-    static shared_ptr<EntityManager> instance = shared_ptr<EntityManager>(new EntityManager());
+    static std::shared_ptr<EntityManager> instance = std::shared_ptr<EntityManager>(new EntityManager());
     return instance;
   }
-  shared_ptr<Identity> getIdentity(Entity* entity) const;
-  Entity* getEntity(const shared_ptr<Identity> identity) const;
+  std::shared_ptr<Identity> getIdentity(Entity* entity) const;
+  Entity* getEntity(const std::shared_ptr<Identity> identity) const;
 
-  shared_ptr<set<Entity*>> getAllEntities();
-  shared_ptr<set<shared_ptr<Identity>>> getAllIdentities();
+  std::shared_ptr<std::set<Entity*>> getAllEntities();
+  std::shared_ptr<std::set<std::shared_ptr<Identity>>> getAllIdentities();
 
  private:
   // Only Entity should be allowed to call Manage() / Unmanage() as part of its
   // construction and destruction per RAII
   friend class Entity;
-  shared_ptr<Identity> manage(Entity* entity, const EntityName& = nullptr);
+  std::shared_ptr<Identity> manage(Entity* entity, const EntityName& = nullptr);
   void unmanage(Entity* entity);
 
   // Make default constructor private and delete copy/move so extra instances
@@ -45,7 +47,7 @@ class EntityManager {
   EntityManager(EntityManager&&) = delete;
   EntityManager& operator=(EntityManager&&) = delete;
 
-  shared_ptr<Identity> createIdentity(const EntityName name);
+  std::shared_ptr<Identity> createIdentity(const EntityName name);
   unsigned long long entityCount = 0;
 
   // NOTE: EntityManager's main responsibility is over the relationship between
@@ -56,6 +58,6 @@ class EntityManager {
   // one map is updated, the other must be as well.
   // TODO: We should probably refactor this functionality to a different class
   // and just compose it into EntityManager.
-  shared_ptr<map<shared_ptr<Identity>, Entity*>> identityToEntity;
-  shared_ptr<map<Entity*, shared_ptr<Identity>>> entityToIdentity;
+  std::shared_ptr<std::map<std::shared_ptr<Identity>, Entity*>> identityToEntity;
+  std::shared_ptr<std::map<Entity*, std::shared_ptr<Identity>>> entityToIdentity;
 };

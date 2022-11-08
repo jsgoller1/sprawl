@@ -27,8 +27,8 @@ void WADLoader::loadLogging() const {
 }
 
 shared_ptr<World> WADLoader::loadWorld() const {
-  shared_ptr<Zone> zone = this->loadZone(this->_jsonBody["zones"][0]);
-  return shared_ptr<World>(new World(zone));
+  std::shared_ptr<Zone> zone = this->loadZone(this->_jsonBody["zones"][0]);
+  return std::shared_ptr<World>(new World(zone));
 }
 
 shared_ptr<Screen> WADLoader::loadScreen() const {
@@ -43,7 +43,9 @@ shared_ptr<Screen> WADLoader::loadScreen() const {
     width = 800;
     height = 600;
   }
-  return shared_ptr<Screen>(new Screen(width, height));
+  return std::shared_ptr<Screen>(new Screen(width, height));
 }
 
-shared_ptr<InputHandler> WADLoader::loadInputHandler() const { return shared_ptr<InputHandler>(new InputHandler()); }
+shared_ptr<InputHandler> WADLoader::loadInputHandler() const {
+  return std::shared_ptr<InputHandler>(new InputHandler());
+}

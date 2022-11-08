@@ -1,5 +1,5 @@
 #include "Texture.hh"
-Texture::Texture(const shared_ptr<FilePath> path) : Texture(*path) {}
+Texture::Texture(const std::shared_ptr<FilePath> path) : Texture(*path) {}
 
 Texture::Texture(const FilePath& path) {
   this->path = path;

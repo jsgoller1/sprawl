@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Math.hh"
-#include "Memory.hh"
 #include "PositionComponent.hh"
 #include "Texture.hh"
 
@@ -31,7 +30,7 @@ class BoundingBox {
   bool checkCollision(const Line& line) const;
   bool checkCollision(const BoundingBox& box) const;
 
-  string toString() const;
+  std::string toString() const;
 
  private:
   // Initialize dummy bounding box so we don't need default constructor
