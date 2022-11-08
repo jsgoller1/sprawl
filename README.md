@@ -2,25 +2,7 @@
 A 2D game engine built to implement __Neon Rain__. 
 
 ## Documentation
-All documentation can be found at our public, read-only [Roam Research graph](https://roamresearch.com/#/app/sprawl-engine/page/BP_0F1_2z). Please do not put other documentation outside of source file comments in this repo.
-
-## Setup
-Linux only development at present; requires `make`.
-
-### 1) Install tools
-For clang, valgrind, etc.
-`sudo make install-devtools`
-
-### 2) Install SDL2
-`sudo apt-get install libsdl2-dev`
-
-### 3) Install SDL2_image
-Download and unzip [the source](https://github.com/libsdl-org/SDL_image/releases/download/release-2.6.2/SDL2_image-2.6.2.zip). Then inside the directory, run:
-```
-./configure
-make
-sudo make install
-```
+All documentation (including setup instructions) can be found at our public, read-only [Roam Research graph](https://roamresearch.com/#/app/sprawl-engine/page/BP_0F1_2z). Please do not put other documentation outside of source file comments in this repo.
 
 ## Credits, Resources, References
 - [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.
