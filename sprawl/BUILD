@@ -5,7 +5,6 @@ cc_library(
 
 cc_library(
     name = "Background",
-    srcs = ["Background.cc"],
     hdrs = ["Background.hh"],
 )
 

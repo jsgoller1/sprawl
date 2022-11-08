@@ -1,5 +1,0 @@
-cc_library(
-    name = "TARGET",
-    srcs = ["TARGET.cc"],
-    hdrs = ["TARGET.hh"],
-)
