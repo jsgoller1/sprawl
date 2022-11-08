@@ -1,14 +1,6 @@
-cc_library(
-    name = "Logging",
-    srcs = ["Logging.cc"],
-    hdrs = ["Logging.hh"],
-)
+load("@rules_cc//cc:defs.bzl", "cc_binary")
 
-cc_library(
-    name = "LoggingDemo",
-    srcs = ["LoggingDemo.cc"],
-)
-
+# Headers
 cc_library(
     name = "LoggingTypes",
     srcs = ["LoggingTypes.hh"],
@@ -17,6 +9,13 @@ cc_library(
 cc_library(
     name = "Macros",
     srcs = ["Macros.hh"],
+)
+
+# Libraries
+cc_library(
+    name = "Logging",
+    srcs = ["Logging.cc"],
+    hdrs = ["Logging.hh"],
 )
 
 cc_library(
@@ -32,4 +31,10 @@ cc_library(
 cc_library(
     name = "Utils",
     srcs = ["Utils.cc"],
+)
+
+# Executables
+cc_binary(
+    name = "LoggingDemo",
+    srcs = ["LoggingDemo.cc"],
 )

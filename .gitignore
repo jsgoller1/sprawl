@@ -26,10 +26,14 @@
 *.a
 *.lib
 
-# Executables
+# Executables and binaries
 *.exe
 *.out
 *.app
 bin/**
 3rdparty/sdl/
 3rdparty/sdl_image/
+bazel-bin
+bazel-out
+bazel-sprawl
+bazel-testlogs

@@ -1,0 +1,10 @@
+# Adopted from https://bazel.build/tutorials/ccp-toolchain-config
+
+build:clang_config --crosstool_top=//toolchain:clang_suite
+
+# https://bazel.build/docs/user-manual#cpu
+build:clang_config --cpu=k8
+
+# Use default C++ toolchain for internal tools / stuff Bazel may compile
+# that isn't part of Sprawl
+build:clang_config --host_crosstool_top=@bazel_tools//tools/cpp:toolchain
