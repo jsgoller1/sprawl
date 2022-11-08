@@ -5,11 +5,9 @@
 
 class TestGameObject : public GameObject {
  public:
-  TestGameObject(const shared_ptr<Vect2D> center,
-                 const shared_ptr<Identity> name,
-                 const shared_ptr<PhysicsComponent> physicsComponent = nullptr,
-                 const shared_ptr<FilePath> texturePath = nullptr,
-                 const shared_ptr<DrawingComponent> drawingComponent = nullptr)
-      : GameObject(center, name, physicsComponent, texturePath,
-                   drawingComponent){};
+  TestGameObject(const std::shared_ptr<Vect2D> center, const std::shared_ptr<Identity> name,
+                 const std::shared_ptr<PhysicsComponent> physicsComponent = nullptr,
+                 const std::shared_ptr<FilePath> texturePath = nullptr,
+                 const std::shared_ptr<DrawingComponent> drawingComponent = nullptr)
+      : GameObject(center, name, physicsComponent, texturePath, drawingComponent){};
 };

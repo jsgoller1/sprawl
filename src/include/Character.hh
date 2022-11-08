@@ -5,7 +5,6 @@
 #include "GameAction.hh"
 #include "GameObject.hh"
 #include "Logging.hh"
-#include "Memory.hh"
 #include "PhysicsComponent.hh"
 #include "PositionComponent.hh"
 #include "Types.hh"
@@ -16,20 +15,21 @@ class Character : public GameObject {
    * (PC) and non-player characters (NPCs)
    */
  public:
-  Character(const EntityName name = EntityName(""), const shared_ptr<PositionComponent> positionComponent = nullptr,
-            const shared_ptr<CollisionComponent> collisionComponent = nullptr,
-            const shared_ptr<CharacterPhysicsComponent> cphysicsComponent = nullptr,
-            const shared_ptr<DrawingComponent> drawingComponent = nullptr);
+  Character(const EntityName name = EntityName(""),
+            const std::shared_ptr<PositionComponent> positionComponent = nullptr,
+            const std::shared_ptr<CollisionComponent> collisionComponent = nullptr,
+            const std::shared_ptr<CharacterPhysicsComponent> cphysicsComponent = nullptr,
+            const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
   void move(const GameAction& action);
   void jump();
 
-  shared_ptr<CharacterPhysicsComponent> getPhysicsComponent() const;
-  void setPhysicsComponent(const shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent);
+  std::shared_ptr<CharacterPhysicsComponent> getPhysicsComponent() const;
+  void setPhysicsComponent(const std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent);
 
  private:
-  shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
+  std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
 
-  shared_ptr<Vect2D> moveSpeed;
+  std::shared_ptr<Vect2D> moveSpeed;
   bool canDoubleJump;
 
   virtual void setPhysicsComponent_impl(PhysicsComponent* const comp) override;

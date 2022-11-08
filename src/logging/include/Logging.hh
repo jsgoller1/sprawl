@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <string>
-using std::string;
 
 #include "LoggingTypes.hh"
 #include "Macros.hh"
@@ -38,27 +37,27 @@ void setDefaultLogLevel(const LogLevel &level);
 LogLevel getDefaultLogLevel();
 void setOverrideSubsystem(const LoggingSubsystem &subsystem, const LogLevel &level);
 LogLevel getOverrideSubsystem(const LoggingSubsystem &systemName);
-void setOverrideEntity(const string &entityName, const LogLevel &level);
-LogLevel getOverrideEntity(const string &entityName);
-void setOverrideFile(const string &fileName, const LogLevel &level);
-LogLevel getOverrideFile(const string &fileName);
-void setOverrideFunc(const string &funcName, const LogLevel &level);
-LogLevel getOverrideFunc(const string &funcName);
-bool shouldLoggingOccur(const LogLevel &level, const string &funcName, const string &fileName, const string &entityName,
-                        const LoggingSubsystem subsystem);
+void setOverrideEntity(const std::string &entityName, const LogLevel &level);
+LogLevel getOverrideEntity(const std::string &entityName);
+void setOverrideFile(const std::string &fileName, const LogLevel &level);
+LogLevel getOverrideFile(const std::string &fileName);
+void setOverrideFunc(const std::string &funcName, const LogLevel &level);
+LogLevel getOverrideFunc(const std::string &funcName);
+bool shouldLoggingOccur(const LogLevel &level, const std::string &funcName, const std::string &fileName,
+                        const std::string &entityName, const LoggingSubsystem subsystem);
 
 // Helpers
-string getName(const LoggingSubsystem &subsystem);
-string getName(const LogLevel &level);
-LogLevel toLogLevel(const string &name);
-LoggingSubsystem toLoggingSubsystem(const string &name);
-string getSDLError();
+std::string getName(const LoggingSubsystem &subsystem);
+std::string getName(const LogLevel &level);
+LogLevel toLogLevel(const std::string &name);
+LoggingSubsystem toLoggingSubsystem(const std::string &name);
+std::string getSDLError();
 
 /*
  * Implementation of Log(). Do not call directly.
  */
-void impl_Log(const string &fileName, const int lineNo, const string &funcName, const LogLevel &level,
-              const LoggingSubsystem subsystem, const string &entityName, const string &format,
+void impl_Log(const std::string &fileName, const int lineNo, const std::string &funcName, const LogLevel &level,
+              const LoggingSubsystem subsystem, const std::string &entityName, const std::string &format,
               fmt::format_args &fargs);
 
 /*
@@ -68,8 +67,8 @@ void impl_Log(const string &fileName, const int lineNo, const string &funcName, 
  * just inconvenient and harder to read).
  */
 template <typename... Args>
-void Log(const string &fileName, const int lineNo, const string &funcName, const LogLevel &level,
-         const LoggingSubsystem subsystem, const string &entityName, const string &format, Args &&...args) {
+void Log(const std::string &fileName, const int lineNo, const std::string &funcName, const LogLevel &level,
+         const LoggingSubsystem subsystem, const std::string &entityName, const std::string &format, Args &&...args) {
   fmt::format_args fargs = fmt::make_format_args(args...);
   impl_Log(fileName, lineNo, funcName, level, subsystem, entityName, format, fargs);
 }

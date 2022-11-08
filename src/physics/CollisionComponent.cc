@@ -3,21 +3,22 @@
 #include "Assumption.hh"
 #include "PhysicsHelpers.hh"
 
-CollisionComponent::CollisionComponent(const shared_ptr<Identity> ownerIdentity,
-                                       const shared_ptr<PositionComponent> positionComponent, const PositionUnit height,
-                                       const PositionUnit width, const bool collisionsEnabled)
+CollisionComponent::CollisionComponent(const std::shared_ptr<Identity> ownerIdentity,
+                                       const std::shared_ptr<PositionComponent> positionComponent,
+                                       const PositionUnit height, const PositionUnit width,
+                                       const bool collisionsEnabled)
     : Component(ownerIdentity),
       _positionComponent(positionComponent),
       _height(height),
       _width(width),
       _collisionsEnabled(collisionsEnabled) {}
 
-shared_ptr<CollisionComponent> CollisionComponent::getptr() {
-  return static_pointer_cast<CollisionComponent, Component>(this->shared_from_this());
+std::shared_ptr<CollisionComponent> CollisionComponent::getptr() {
+  return std::static_pointer_cast<CollisionComponent, Component>(this->shared_from_this());
 }
 
-shared_ptr<PositionComponent> CollisionComponent::positionComponent() const { return this->_positionComponent; }
-void CollisionComponent::positionComponent(const shared_ptr<PositionComponent> positionComponent) {
+std::shared_ptr<PositionComponent> CollisionComponent::positionComponent() const { return this->_positionComponent; }
+void CollisionComponent::positionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
   this->_positionComponent = positionComponent;
 }
 
@@ -48,8 +49,9 @@ bool CollisionComponent::isColliding(const CollisionComponent& targetComponent, 
   return this->boundingBox(sourceOffset).checkCollision(targetComponent.boundingBox());
 }
 
-shared_ptr<vector<Collision>> CollisionComponent::predictMovementCollisions(
-    Vect2D positionDelta, const shared_ptr<set<shared_ptr<CollisionComponent>>> collisionComponents) const {
+std::shared_ptr<std::vector<Collision>> CollisionComponent::predictMovementCollisions(
+    Vect2D positionDelta,
+    const std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionComponents) const {
   /*
    * Checks if updating our position with positionDelta causes us to collide
    * with anything. Some possible edge cases:
@@ -107,15 +109,16 @@ shared_ptr<vector<Collision>> CollisionComponent::predictMovementCollisions(
    * Handled
    */
 
-  shared_ptr<vector<Collision>> collisions = shared_ptr<vector<Collision>>(new vector<Collision>());
+  std::shared_ptr<std::vector<Collision>> collisions =
+      std::shared_ptr<std::vector<Collision>>(new std::vector<Collision>());
 
-  shared_ptr<Identity> ownerID = this->getOwnerIdentity();
+  std::shared_ptr<Identity> ownerID = this->getOwnerIdentity();
   Vect2D originalPosition = this->_positionComponent->getCenter();
   Vect2D attemptedFinalPosition = Vect2D(originalPosition + positionDelta);
 
-  for (shared_ptr<CollisionComponent> target : *collisionComponents) {
+  for (std::shared_ptr<CollisionComponent> target : *collisionComponents) {
     if (this->isColliding(*target, positionDelta)) {
-      shared_ptr<Identity> targetID = target->getOwnerIdentity();
+      std::shared_ptr<Identity> targetID = target->getOwnerIdentity();
       CollisionAxis collisionAxis = determineCollisionAxis(positionDelta, *target);
       LOG_DEBUG_SYS(COLLISIONS, "{0} collides with {1} on axis {2}", *this->getOwnerIdentity()->getEntityID(),
                     *targetID->getEntityID(), CollisionAxisToString(collisionAxis));

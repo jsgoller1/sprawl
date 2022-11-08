@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "GameAction.hh"
 #include "Logging.hh"
 #include "Types.hh"
@@ -59,5 +61,5 @@ class NoEvent : public InputEvent {
 class InputHandler {
  public:
   GameAction getGameAction();
-  shared_ptr<InputEvent> getInput();
+  std::shared_ptr<InputEvent> getInput();
 };

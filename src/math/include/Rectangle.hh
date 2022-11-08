@@ -2,7 +2,6 @@
 
 #include "Line.hh"
 #include "Logging.hh"
-#include "Memory.hh"
 #include "Real.hh"
 #include "Vect2D.hh"
 
@@ -32,7 +31,7 @@ class Rectangle {
   Vect2D topRight() const;
   Vect2D bottomLeft() const;
   Vect2D bottomRight() const;
-  string toString() const;
+  std::string toString() const;
 
  private:
   // Hide default constructor; every Rectangle needs to have the correct

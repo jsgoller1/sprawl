@@ -2,7 +2,6 @@
 
 #include "DrawingComponent.hh"
 #include "GameAction.hh"
-#include "Memory.hh"
 #include "Types.hh"
 #include "Zone.hh"
 
@@ -14,16 +13,18 @@ class World {
   // NOTE: Menus, UI, dialogue boxes, etc should not be part of the world
 
  public:
-  World(const shared_ptr<Zone> currentZone);
+  World(const std::shared_ptr<Zone> currentZone);
 
   // Forward to Zone
   void gameLoopUpdate(const GameAction& action, const time_ms duration) {
     this->currentZone->gameLoopUpdate(action, duration);
   }
 
-  shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const { return this->currentZone->getDrawables(); }
+  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const {
+    return this->currentZone->getDrawables();
+  }
   // TODO: serialize(); // needed for saving game and level editor
 
  private:
-  shared_ptr<Zone> currentZone;
+  std::shared_ptr<Zone> currentZone;
 };

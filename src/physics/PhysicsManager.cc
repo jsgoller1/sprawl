@@ -3,13 +3,13 @@
 #include "Assumption.hh"
 
 PhysicsManager::PhysicsManager() {
-  this->managementEntries = shared_ptr<map<shared_ptr<Identity>, shared_ptr<ManagementEntry>>>(
-      new map<shared_ptr<Identity>, shared_ptr<ManagementEntry>>());
+  this->managementEntries = std::shared_ptr<std::map<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>>>(
+      new std::map<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>>());
 }
 
-PhysicsManager::ManagementEntry::ManagementEntry(const shared_ptr<PhysicsComponent> physicsComponent,
-                                                 const shared_ptr<PositionComponent> positionComponent,
-                                                 const shared_ptr<CollisionComponent> collisionComponent)
+PhysicsManager::ManagementEntry::ManagementEntry(const std::shared_ptr<PhysicsComponent> physicsComponent,
+                                                 const std::shared_ptr<PositionComponent> positionComponent,
+                                                 const std::shared_ptr<CollisionComponent> collisionComponent)
     : physicsComponent(physicsComponent),
       positionComponent(positionComponent),
       collisionComponent(collisionComponent) {}
@@ -23,19 +23,21 @@ std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
   return this->shared_from_this();
 }
 
-void PhysicsManager::manage(const shared_ptr<Identity> identity, const shared_ptr<PhysicsComponent> physicsComponent,
-                            const shared_ptr<PositionComponent> positionComponent,
-                            const shared_ptr<CollisionComponent> collisionComponent) {
+void PhysicsManager::manage(const std::shared_ptr<Identity> identity,
+                            const std::shared_ptr<PhysicsComponent> physicsComponent,
+                            const std::shared_ptr<PositionComponent> positionComponent,
+                            const std::shared_ptr<CollisionComponent> collisionComponent) {
   if (this->managementEntries->find(identity) != this->managementEntries->end()) {
     // TODO: Log a warning
     return;
   }
-  shared_ptr<ManagementEntry> entry =
-      shared_ptr<ManagementEntry>(new ManagementEntry(physicsComponent, positionComponent, collisionComponent));
-  this->managementEntries->insert(pair<shared_ptr<Identity>, shared_ptr<ManagementEntry>>(identity, entry));
+  std::shared_ptr<ManagementEntry> entry =
+      std::shared_ptr<ManagementEntry>(new ManagementEntry(physicsComponent, positionComponent, collisionComponent));
+  this->managementEntries->insert(
+      std::pair<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>>(identity, entry));
 }
 
-void PhysicsManager::unmanage(const shared_ptr<Identity> identity) {
+void PhysicsManager::unmanage(const std::shared_ptr<Identity> identity) {
   if (this->managementEntries->find(identity) == this->managementEntries->end()) {
     // TODO: Log a warning
     return;
@@ -44,12 +46,12 @@ void PhysicsManager::unmanage(const shared_ptr<Identity> identity) {
 }
 
 void PhysicsManager::gameLoopUpdate(const time_ms duration) {
-  for (pair<shared_ptr<Identity>, shared_ptr<ManagementEntry>> mapping : *(this->managementEntries)) {
-    shared_ptr<Identity> identity = mapping.first;
-    shared_ptr<PhysicsComponent> physicsComponent = mapping.second->physicsComponent;
-    shared_ptr<PositionComponent> positionComponent = mapping.second->positionComponent;
-    shared_ptr<CollisionComponent> collisionComponent = mapping.second->collisionComponent;
-    shared_ptr<set<shared_ptr<CollisionComponent>>> collisionCandidates =
+  for (std::pair<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>> mapping : *(this->managementEntries)) {
+    std::shared_ptr<Identity> identity = mapping.first;
+    std::shared_ptr<PhysicsComponent> physicsComponent = mapping.second->physicsComponent;
+    std::shared_ptr<PositionComponent> positionComponent = mapping.second->positionComponent;
+    std::shared_ptr<CollisionComponent> collisionComponent = mapping.second->collisionComponent;
+    std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionCandidates =
         this->getCollisionCandidates(collisionComponent);
     LOG_DEBUG_SYS(PHYSICS, "Physics update beginning: {}", *physicsComponent->getOwnerIdentity()->getEntityID());
     LOG_DEBUG_SYS(PHYSICS, "Position: {}", positionComponent->getCenter().to_string());
@@ -70,7 +72,7 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
                   positionDelta.to_string());
 
     // Test for collisions, and determine what our final position should be.
-    shared_ptr<vector<Collision>> collisions =
+    std::shared_ptr<std::vector<Collision>> collisions =
         collisionComponent->predictMovementCollisions(positionDelta, collisionCandidates);
     Vect2D finalPosition =
         (collisions->empty()) ? positionComponent->getCenter() + positionDelta : (*collisions->begin()).finalPosition();
@@ -84,7 +86,8 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     for (Collision collision : *collisions) {
       LOG_DEBUG_SYS(PHYSICS, "Resolving collision: {} -> {}", collision.source()->getEntityID()->c_str(),
                     collision.target()->getEntityID()->c_str());
-      shared_ptr<PhysicsComponent> target = this->managementEntries->find(collision.target())->second->physicsComponent;
+      std::shared_ptr<PhysicsComponent> target =
+          this->managementEntries->find(collision.target())->second->physicsComponent;
       CollisionResolutionType type = physicsComponent->getCollisionResolutionType(target->forceEnabled());
 
       physicsComponent->resolveCollision(collision, type, *target);
@@ -94,18 +97,19 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
   }
 }
 
-shared_ptr<set<shared_ptr<CollisionComponent>>> PhysicsManager::getCollisionCandidates(
-    const shared_ptr<CollisionComponent> source) const {
+std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> PhysicsManager::getCollisionCandidates(
+    const std::shared_ptr<CollisionComponent> source) const {
   // TODO: Eventually, we may want to use space partitioning to limit how many
   // objects we test collisions against; for now, we just test against
   // everything
   (void)source;
 
-  shared_ptr<set<shared_ptr<CollisionComponent>>> collisionComponents =
-      shared_ptr<set<shared_ptr<CollisionComponent>>>(new set<shared_ptr<CollisionComponent>>());
+  std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionComponents =
+      std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>>(
+          new std::set<std::shared_ptr<CollisionComponent>>());
 
-  shared_ptr<set<shared_ptr<Identity>>> identities = EntityManager::instance()->getAllIdentities();
-  for (shared_ptr<Identity> identity : *identities) {
+  std::shared_ptr<std::set<std::shared_ptr<Identity>>> identities = EntityManager::instance()->getAllIdentities();
+  for (std::shared_ptr<Identity> identity : *identities) {
     auto entry = this->managementEntries->find(identity);
     if (entry == this->managementEntries->end() || entry->first == source->getOwnerIdentity()) {
       // We only want collision components for physics objects we're managing, excluding
@@ -124,7 +128,7 @@ shared_ptr<set<shared_ptr<CollisionComponent>>> PhysicsManager::getCollisionCand
  * return true. This function is O(n^2) (very slow); this will crush framerate!
  */
 bool PhysicsManager::diagnosticNoOverlaps() const {
-  vector<shared_ptr<CollisionComponent>> components = vector<shared_ptr<CollisionComponent>>();
+  std::vector<std::shared_ptr<CollisionComponent>> components = std::vector<std::shared_ptr<CollisionComponent>>();
   for (auto comp : *this->managementEntries) {
     components.push_back(comp.second->collisionComponent);
   }

@@ -1,8 +1,10 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include "DrawingComponent.hh"
 #include "Logging.hh"
-#include "Memory.hh"
 #include "Renderer.hh"
 #include "Types.hh"
 
@@ -24,7 +26,7 @@ class Screen {
   Screen(const Screen&);
   ~Screen();
 
-  void drawAll(const shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables) const;
+  void drawAll(const std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> drawables) const;
   void update() const;
   void clear() const;
 
@@ -34,7 +36,7 @@ class Screen {
   // TODO: Do we actually want to use C++ smart pointers
   // with these SDL objects? Any good reason to do so, and will
   // there be drawbacks (e.g accidental automatic garbage collection)?
-  unique_ptr<SDL_Surface> surface;
+  std::unique_ptr<SDL_Surface> surface;
   SDL_Window* window;
-  shared_ptr<Renderer> renderer;
+  std::shared_ptr<Renderer> renderer;
 };

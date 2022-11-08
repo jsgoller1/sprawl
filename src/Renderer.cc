@@ -15,7 +15,7 @@ Renderer::Renderer(const ScreenWidth screenWidth, const ScreenHeight screenHeigh
   }
 }
 
-void Renderer::prepare(const shared_ptr<DrawingComponent> drawable) const {
+void Renderer::prepare(const std::shared_ptr<DrawingComponent> drawable) const {
   /* Takes a DrawingComponent and prepares it off-screen for rendering.*/
 
   Vect2D drawPoint = this->toScreenCoordinates(drawable->getDrawPoint());
@@ -49,7 +49,7 @@ void Renderer::render() const {
 
 void Renderer::clear() const { SDL_RenderClear(this->renderer); }
 
-SDL_Texture* Renderer::prepareTexture(const shared_ptr<Texture> texture) const {
+SDL_Texture* Renderer::prepareTexture(const std::shared_ptr<Texture> texture) const {
   SDL_Surface* pixelData = texture->getPixelData();
   // TODO: Color key is static for now, might want to se it
   // in drawingComponentonent

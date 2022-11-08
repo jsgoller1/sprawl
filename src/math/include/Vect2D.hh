@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Memory.hh"
 #include "Real.hh"
 #include "Types.hh"
 
@@ -52,7 +51,7 @@ class Vect2D {
   Vect2D getXComponent() const;
   Vect2D getYComponent() const;
   real distance(const Vect2D& vect) const;
-  string to_string() const;
+  std::string to_string() const;
 
  private:
   /*

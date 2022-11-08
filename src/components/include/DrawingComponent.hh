@@ -1,8 +1,9 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "Entity.hh"
 #include "Math.hh"
-#include "Memory.hh"
 #include "PositionComponent.hh"
 #include "Texture.hh"
 #include "Types.hh"
@@ -11,16 +12,17 @@ typedef double Angle;
 
 class DrawingComponent : public Component {
  public:
-  DrawingComponent(const shared_ptr<Identity> ownerIdentity, const shared_ptr<PositionComponent> positionComponent,
-                   const shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+  DrawingComponent(const std::shared_ptr<Identity> ownerIdentity,
+                   const std::shared_ptr<PositionComponent> positionComponent,
+                   const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
   // Accessors for components
-  shared_ptr<PositionComponent> getPositionComponent() const { return this->positionComponent; }
-  void setPositionComponent(const shared_ptr<PositionComponent> positionComponent) {
+  std::shared_ptr<PositionComponent> getPositionComponent() const { return this->positionComponent; }
+  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
     this->positionComponent = positionComponent;
   }
-  shared_ptr<Texture> getTexture() const { return this->texture; }
-  void setTexture(const shared_ptr<Texture> texture) { this->texture = texture; }
+  std::shared_ptr<Texture> getTexture() const { return this->texture; }
+  void setTexture(const std::shared_ptr<Texture> texture) { this->texture = texture; }
 
   // Forwards to Texture
   PositionUnit getWidth() const { return this->texture->getWidth(); }
@@ -43,8 +45,8 @@ class DrawingComponent : public Component {
   Vect2D getDrawPoint() const;
 
  private:
-  shared_ptr<PositionComponent> positionComponent;
-  shared_ptr<Texture> texture;
+  std::shared_ptr<PositionComponent> positionComponent;
+  std::shared_ptr<Texture> texture;
 
   Angle angle;
   SDL_Rect* clippingRectangle;

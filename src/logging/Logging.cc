@@ -1,15 +1,14 @@
 #include "Logging.hh"
 
 #include <map>
-using std::map;
 
-static string getLoggingTime() {
+static std::string getLoggingTime() {
   // This function is originally from rxi/log.c
   time_t t = time(nullptr);
   struct tm* lt = localtime(&t);
   char buf[16];
   buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
-  return string(buf);
+  return std::string(buf);
 }
 
 static fmt::v9::text_style getLevelColor(const LogLevel& level) {
@@ -27,16 +26,14 @@ static fmt::v9::text_style getLevelColor(const LogLevel& level) {
   }
 }
 
-void Logging::impl_Log(const string& fileName, const int lineNo,
-                       const string& funcName, const LogLevel& level,
-                       const LoggingSubsystem subsystem,
-                       const string& entityName, const string& format,
-                       fmt::format_args& fargs) {
+void Logging::impl_Log(const std::string& fileName, const int lineNo, const std::string& funcName,
+                       const LogLevel& level, const LoggingSubsystem subsystem, const std::string& entityName,
+                       const std::string& format, fmt::format_args& fargs) {
   if (!shouldLoggingOccur(level, funcName, fileName, entityName, subsystem)) {
     return;
   }
 
-  string outputHeader = string("");
+  std::string outputHeader = std::string("");
   if (getShowTime()) {
     outputHeader += getLoggingTime();
   }

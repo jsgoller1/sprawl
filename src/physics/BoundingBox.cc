@@ -50,4 +50,4 @@ bool BoundingBox::checkCollision(const BoundingBox& otherBox) const {
          larger.checkCollision(smaller.box().topRight()) || larger.checkCollision(smaller.box().bottomRight());
 }
 
-string BoundingBox::toString() const { return fmt::format("BoundingBox({0})", this->_box.toString()); }
+std::string BoundingBox::toString() const { return fmt::format("BoundingBox({0})", this->_box.toString()); }

@@ -1,8 +1,8 @@
 #include "DrawingComponent.hh"
 
-DrawingComponent::DrawingComponent(const shared_ptr<Identity> ownerIdentity,
-                                   const shared_ptr<PositionComponent> positionComponent,
-                                   const shared_ptr<Texture> texture, const SDL_RendererFlip flip)
+DrawingComponent::DrawingComponent(const std::shared_ptr<Identity> ownerIdentity,
+                                   const std::shared_ptr<PositionComponent> positionComponent,
+                                   const std::shared_ptr<Texture> texture, const SDL_RendererFlip flip)
     : Component(ownerIdentity) {
   this->positionComponent = positionComponent;
   this->texture = texture;

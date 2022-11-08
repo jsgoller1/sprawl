@@ -1,5 +1,7 @@
 #include "Screen.hh"
 
+#include <vector>
+
 Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     LOG_FATAL_SYS(SDL, "Could not init SDL; {0}", Logging::getSDLError());
@@ -16,7 +18,7 @@ Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   bool useVSync = true;
   this->_height = height;
   this->_width = width;
-  this->renderer = shared_ptr<Renderer>(new Renderer(width, height, this->window, useHardwareAccel, useVSync));
+  this->renderer = std::shared_ptr<Renderer>(new Renderer(width, height, this->window, useHardwareAccel, useVSync));
 }
 
 Screen::~Screen() {
@@ -24,7 +26,7 @@ Screen::~Screen() {
   SDL_Quit();
 }
 
-void Screen::drawAll(const shared_ptr<vector<shared_ptr<DrawingComponent>>> drawables) const {
+void Screen::drawAll(const std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> drawables) const {
   this->clear();
   for (auto drawable : *(drawables.get())) {
     this->renderer->prepare(drawable);

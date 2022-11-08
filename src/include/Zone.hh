@@ -6,7 +6,6 @@
 #include "GameAction.hh"
 #include "GameObject.hh"
 #include "Logging.hh"
-#include "Memory.hh"
 #include "PhysicsManager.hh"
 #include "Platform.hh"
 #include "PositionComponent.hh"
@@ -27,12 +26,12 @@ class Zone {
 
   // TODO: serialize(); // needed for saving game and level editor
   void setGravityConstant(const real gravityConstant);
-  void setBackground(const shared_ptr<Background> background);
-  void addPlayerCharacter(const shared_ptr<Character> playerCharacter);
-  void addGameObject(const shared_ptr<GameObject> gameObject);
+  void setBackground(const std::shared_ptr<Background> background);
+  void addPlayerCharacter(const std::shared_ptr<Character> playerCharacter);
+  void addGameObject(const std::shared_ptr<GameObject> gameObject);
 
   void gameLoopUpdate(const GameAction& action, const time_ms duration);
-  shared_ptr<vector<shared_ptr<DrawingComponent>>> getDrawables() const;
+  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const;
 
  private:
   // We only need to care about physics and AI going on in currentZone,
@@ -41,10 +40,10 @@ class Zone {
   // TODO: Do we need getters and setters for these attributes? Unlikely, but
   // possible if managers within the Zone need to talk to each other. Don't need
   // them presently.
-  shared_ptr<PhysicsManager> physicsManager;
-  shared_ptr<vector<shared_ptr<GameObject>>> gameObjects;
-  shared_ptr<Background> background;
-  shared_ptr<Character> player;
+  std::shared_ptr<PhysicsManager> physicsManager;
+  std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> gameObjects;
+  std::shared_ptr<Background> background;
+  std::shared_ptr<Character> player;
 
   void handleInput(const GameAction& action);
 };

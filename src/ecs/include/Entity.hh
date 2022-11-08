@@ -15,7 +15,7 @@ class Entity {
    */
 
  public:
-  shared_ptr<Identity> getIdentity() const;
+  std::shared_ptr<Identity> getIdentity() const;
   EntityName getName() const;
   void setName(const EntityName name);
 
@@ -24,6 +24,6 @@ class Entity {
   ~Entity();
 
  private:
-  shared_ptr<Identity> _identity;
+  std::shared_ptr<Identity> _identity;
   EntityName _name;
 };

@@ -13,20 +13,19 @@ class Collision {
    * position, and attempted move), but results in simpler code.
    */
  public:
-  Collision(const shared_ptr<Identity> source, shared_ptr<Identity> target,
-            const Vect2D& originalPosition, const Vect2D& attemptedMove,
-            const Vect2D& finalPosition, const CollisionAxis collisionAxis);
+  Collision(const std::shared_ptr<Identity> source, std::shared_ptr<Identity> target, const Vect2D& originalPosition,
+            const Vect2D& attemptedMove, const Vect2D& finalPosition, const CollisionAxis collisionAxis);
 
-  shared_ptr<Identity> source() const;
-  shared_ptr<Identity> target() const;
+  std::shared_ptr<Identity> source() const;
+  std::shared_ptr<Identity> target() const;
   Vect2D originalPosition() const;
   Vect2D attemptedMove() const;
   Vect2D finalPosition() const;
   CollisionAxis collisionAxis() const;
 
  private:
-  shared_ptr<Identity> _source;
-  shared_ptr<Identity> _target;
+  std::shared_ptr<Identity> _source;
+  std::shared_ptr<Identity> _target;
   Vect2D _originalPosition;
   Vect2D _attemptedMove;
   Vect2D _finalPosition;

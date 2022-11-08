@@ -1,11 +1,12 @@
+
 #include "PositionComponent.hh"
 
-PositionComponent::PositionComponent(const shared_ptr<Identity> ownerIdentity, const Vect2D& center)
+PositionComponent::PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const Vect2D& center)
     : Component(ownerIdentity) {
   this->_x = center.x();
   this->_y = center.y();
 }
-PositionComponent::PositionComponent(const shared_ptr<Identity> ownerIdentity, const XCoord x, const YCoord y)
+PositionComponent::PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const XCoord x, const YCoord y)
     : Component(ownerIdentity) {
   this->_x = x;
   this->_y = y;

@@ -1,3 +1,6 @@
+#include <memory>
+#include <string>
+
 #include "InputHandler.hh"
 #include "Screen.hh"
 #include "WADLoader.hh"
@@ -8,7 +11,7 @@ void WADLoader::loadLogging() const {
     LOG_INFO_SYS(WADLOADER, "No logging configs present.");
     return;
   }
-  json loggingConfig = this->_jsonBody["logging"];
+  nlohmann::json loggingConfig = this->_jsonBody["logging"];
   Logging::setDefaultLogLevel(Logging::toLogLevel(loggingConfig.value("defaultLogLevel", "WARN")));
   Logging::setColorUse(loggingConfig.value("useColor", true));
 
@@ -20,22 +23,22 @@ void WADLoader::loadLogging() const {
       } else if ((override.contains("entity") && override.contains("logLevel"))) {
         Logging::setOverrideEntity(override["entity"], Logging::toLogLevel(override["logLevel"]));
       } else {
-        LOG_WARN_SYS(WADLOADER, "Skipping override: {0}", string(override));
+        LOG_WARN_SYS(WADLOADER, "Skipping override: {0}", std::string(override));
       }
     }
   }
 }
 
-shared_ptr<World> WADLoader::loadWorld() const {
-  shared_ptr<Zone> zone = this->loadZone(this->_jsonBody["zones"][0]);
-  return shared_ptr<World>(new World(zone));
+std::shared_ptr<World> WADLoader::loadWorld() const {
+  std::shared_ptr<Zone> zone = this->loadZone(this->_jsonBody["zones"][0]);
+  return std::shared_ptr<World>(new World(zone));
 }
 
-shared_ptr<Screen> WADLoader::loadScreen() const {
+std::shared_ptr<Screen> WADLoader::loadScreen() const {
   ScreenWidth width;
   ScreenHeight height;
   if (this->_jsonBody.contains("screen")) {
-    json screenJSON = this->_jsonBody["screen"];
+    nlohmann::json screenJSON = this->_jsonBody["screen"];
     width = loadKey<ScreenWidth>(screenJSON, "width", 800);
     height = loadKey<ScreenHeight>(screenJSON, "height", width - (width / 4));
   } else {
@@ -43,7 +46,9 @@ shared_ptr<Screen> WADLoader::loadScreen() const {
     width = 800;
     height = 600;
   }
-  return shared_ptr<Screen>(new Screen(width, height));
+  return std::shared_ptr<Screen>(new Screen(width, height));
 }
 
-shared_ptr<InputHandler> WADLoader::loadInputHandler() const { return shared_ptr<InputHandler>(new InputHandler()); }
+std::shared_ptr<InputHandler> WADLoader::loadInputHandler() const {
+  return std::shared_ptr<InputHandler>(new InputHandler());
+}

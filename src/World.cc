@@ -13,7 +13,7 @@
  *   }
  */
 
-World::World(const shared_ptr<Zone> currentZone) {
+World::World(const std::shared_ptr<Zone> currentZone) {
   // TODO: I really don't want World to know anything about JSON, and instead
   // would rather have WADLoader just do things via calls (e.g. initLogging(),
   // no need to pass json to it) or return actual objects like Character. This

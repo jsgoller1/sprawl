@@ -1,15 +1,15 @@
 #include "CharacterPhysicsComponent.hh"
 
-CharacterPhysicsComponent::CharacterPhysicsComponent(const shared_ptr<Identity> ownerIdentity)
+CharacterPhysicsComponent::CharacterPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity)
     : PhysicsComponent(ownerIdentity, ENABLE_GRAVITY, ENABLE_FORCE_RESPONSIVE) {
   this->maxSpeed(10.0);
 }
 
-CharacterPhysicsComponent::CharacterPhysicsComponent(const shared_ptr<PhysicsComponent> comp)
+CharacterPhysicsComponent::CharacterPhysicsComponent(const std::shared_ptr<PhysicsComponent> comp)
     : PhysicsComponent(*comp) {}
 
-shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
-  return static_pointer_cast<CharacterPhysicsComponent, Component>(this->shared_from_this());
+std::shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
+  return std::static_pointer_cast<CharacterPhysicsComponent, Component>(this->shared_from_this());
 }
 
 void CharacterPhysicsComponent::applyJumpForce() {

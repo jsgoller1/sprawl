@@ -4,7 +4,6 @@
 #include "CollisionComponent.hh"
 #include "Component.hh"
 #include "Math.hh"
-#include "Memory.hh"
 #include "PhysicsHelpers.hh"
 #include "PositionComponent.hh"
 #include "Time.hh"
@@ -42,11 +41,11 @@ class PhysicsManager;
 class PhysicsComponent : public Component {
  public:
   // ctors / dtors
-  PhysicsComponent(const shared_ptr<Identity> ownerIdentity, const bool forceResponsiveSetting = false,
+  PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity, const bool forceResponsiveSetting = false,
                    const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
                    const PositionUnit minSpeed = 0.0, const DragType dragType = DragType::TIME_EXPONENTIAL,
                    const real dragCoefficient = 0.0);
-  shared_ptr<PhysicsComponent> getptr();
+  std::shared_ptr<PhysicsComponent> getptr();
 
   // Forwarding methods
   bool checkCollision(const PhysicsComponent& comp) const;
@@ -83,7 +82,7 @@ class PhysicsComponent : public Component {
 
  private:
   // Attributes
-  shared_ptr<PhysicsManager> _manager;
+  std::shared_ptr<PhysicsManager> _manager;
 
   bool _forceResponsive;
   bool _gravityEnabled;

@@ -2,13 +2,12 @@
 #include "Component.hh"
 #include "Identity.hh"
 #include "Math.hh"
-#include "Memory.hh"
 #include "Types.hh"
 
 class PositionComponent : public Component {
  public:
-  PositionComponent(const shared_ptr<Identity> ownerIdentity, const Vect2D& center);
-  PositionComponent(const shared_ptr<Identity> ownerIdentity, const XCoord x = 0.0, const YCoord y = 0.0);
+  PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const Vect2D& center);
+  PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const XCoord x = 0.0, const YCoord y = 0.0);
 
   PositionUnit x() const { return this->_x; }
   void x(const PositionUnit x) { this->_x = x; }
