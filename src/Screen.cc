@@ -1,5 +1,7 @@
 #include "Screen.hh"
 
+#include <vector>
+
 Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     LOG_FATAL_SYS(SDL, "Could not init SDL; {0}", Logging::getSDLError());

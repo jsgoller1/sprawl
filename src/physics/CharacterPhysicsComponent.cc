@@ -8,8 +8,8 @@ CharacterPhysicsComponent::CharacterPhysicsComponent(const std::shared_ptr<Ident
 CharacterPhysicsComponent::CharacterPhysicsComponent(const std::shared_ptr<PhysicsComponent> comp)
     : PhysicsComponent(*comp) {}
 
-shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
-  return static_pointer_cast<CharacterPhysicsComponent, Component>(this->shared_from_this());
+std::shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
+  return std::static_pointer_cast<CharacterPhysicsComponent, Component>(this->shared_from_this());
 }
 
 void CharacterPhysicsComponent::applyJumpForce() {

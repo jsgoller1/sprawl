@@ -21,15 +21,15 @@ Vect2D calculateDragForce(const Vect2D& velocity, const real dragCoeff) {
   return dragForce;
 }
 
-string CollisionAxisToString(const CollisionAxis axis) {
+std::string CollisionAxisToString(const CollisionAxis axis) {
   switch (axis) {
     case X_AND_Y:
-      return string("X_AND_Y");
+      return std::string("X_AND_Y");
     case Y_ONLY:
-      return string("Y_ONLY");
+      return std::string("Y_ONLY");
     case X_ONLY:
-      return string("X_ONLY");
+      return std::string("X_ONLY");
     case X_OR_Y:
-      return string("X_OR_Y");
+      return std::string("X_OR_Y");
   }
 }

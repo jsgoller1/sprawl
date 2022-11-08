@@ -1,8 +1,10 @@
 #include "WADLoader.hh"
 
+#include <fstream>
+
 #include "Logging.hh"
 
-bool WADLoader::objectEnabled(const json& jsonBody) const { return jsonBody.value("enabled", false); }
+bool WADLoader::objectEnabled(const nlohmann::json& jsonBody) const { return jsonBody.value("enabled", false); }
 
 WADLoader::WADLoader(const FilePath& wadDir) {
   std::ifstream wadFile(wadDir + "/wad.json");
@@ -11,5 +13,5 @@ WADLoader::WADLoader(const FilePath& wadDir) {
     throw;
   }
   this->_wadDir = wadDir;
-  this->_jsonBody = json::parse(wadFile);
+  this->_jsonBody = nlohmann::json::parse(wadFile);
 }

@@ -12,8 +12,8 @@ PhysicsComponent::PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity
       _dragCoefficient(dragCoefficient),
       _dragType(dragType) {}
 
-shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
-  return static_pointer_cast<PhysicsComponent, Component>(this->shared_from_this());
+std::shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
+  return std::static_pointer_cast<PhysicsComponent, Component>(this->shared_from_this());
 }
 
 // Unique attribute accessors

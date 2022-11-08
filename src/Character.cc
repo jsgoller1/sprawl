@@ -13,7 +13,7 @@ Character::Character(const EntityName entityName, const std::shared_ptr<Position
   this->characterPhysicsComponent->setOwnerIdentity(this->getIdentity());
 }
 
-shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {
+std::shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {
   return this->getPhysicsComponent_impl()->getptr();
 }
 void Character::setPhysicsComponent(const std::shared_ptr<CharacterPhysicsComponent> physicsComponent) {

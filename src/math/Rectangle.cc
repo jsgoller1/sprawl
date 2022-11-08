@@ -1,5 +1,7 @@
 #include "Rectangle.hh"
 
+#include <cassert>
+
 Rectangle::Rectangle(const Vect2D& center, const PositionUnit height, const PositionUnit width)
     : _center(Vect2D(center)), _height(height), _width(width) {
   this->_topLeft = Vect2D(this->_center.x() - (this->_width / 2.0), this->_center.y() + (this->_height / 2.0));
@@ -46,7 +48,7 @@ Vect2D Rectangle::topRight() const { return this->_topRight; }
 Vect2D Rectangle::bottomLeft() const { return this->_bottomLeft; }
 Vect2D Rectangle::bottomRight() const { return this->_bottomRight; }
 
-string Rectangle::toString() const {
+std::string Rectangle::toString() const {
   return fmt::format("Rectangle(topLeft: {0}, topRight: {1}, bottomLeft: {2}, bottomRight: {3})",
                      this->topLeft().to_string(), this->topRight().to_string(), this->bottomLeft().to_string(),
                      this->bottomRight().to_string());

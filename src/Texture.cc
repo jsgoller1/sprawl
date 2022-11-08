@@ -1,4 +1,7 @@
 #include "Texture.hh"
+
+#include <SDL2/SDL_image.h>
+
 Texture::Texture(const std::shared_ptr<FilePath> path) : Texture(*path) {}
 
 Texture::Texture(const FilePath& path) {

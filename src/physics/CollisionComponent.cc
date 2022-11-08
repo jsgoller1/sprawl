@@ -13,11 +13,11 @@ CollisionComponent::CollisionComponent(const std::shared_ptr<Identity> ownerIden
       _width(width),
       _collisionsEnabled(collisionsEnabled) {}
 
-shared_ptr<CollisionComponent> CollisionComponent::getptr() {
-  return static_pointer_cast<CollisionComponent, Component>(this->shared_from_this());
+std::shared_ptr<CollisionComponent> CollisionComponent::getptr() {
+  return std::static_pointer_cast<CollisionComponent, Component>(this->shared_from_this());
 }
 
-shared_ptr<PositionComponent> CollisionComponent::positionComponent() const { return this->_positionComponent; }
+std::shared_ptr<PositionComponent> CollisionComponent::positionComponent() const { return this->_positionComponent; }
 void CollisionComponent::positionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
   this->_positionComponent = positionComponent;
 }
@@ -49,8 +49,9 @@ bool CollisionComponent::isColliding(const CollisionComponent& targetComponent, 
   return this->boundingBox(sourceOffset).checkCollision(targetComponent.boundingBox());
 }
 
-shared_ptr<std::vector<Collision>> CollisionComponent::predictMovementCollisions(
-    Vect2D positionDelta, const std::shared_ptr<set<std::shared_ptr<CollisionComponent>>> collisionComponents) const {
+std::shared_ptr<std::vector<Collision>> CollisionComponent::predictMovementCollisions(
+    Vect2D positionDelta,
+    const std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionComponents) const {
   /*
    * Checks if updating our position with positionDelta causes us to collide
    * with anything. Some possible edge cases:

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include "PositionComponent.hh"
 #include "Types.hh"
 

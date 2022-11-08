@@ -16,10 +16,9 @@ class Screen;
 class World;
 class Zone;
 
-using json = nlohmann::json;
-
 template <typename KeyType>
-KeyType loadKey(const json& jsonBody, const std::string& key, const KeyType& defaultVal, const LogLevel level = DEBUG) {
+KeyType loadKey(const nlohmann::json& jsonBody, const std::string& key, const KeyType& defaultVal,
+                const LogLevel level = DEBUG) {
   if (jsonBody.contains(key)) {
     return jsonBody[key];
   }
@@ -38,24 +37,24 @@ class WADLoader {
 
  private:
   FilePath _wadDir;
-  json _jsonBody;
+  nlohmann::json _jsonBody;
 
-  bool objectEnabled(const json& jsonBody) const;
-  DuplicationBehavior handleDuplication(const json& jsonBody) const;
+  bool objectEnabled(const nlohmann::json& jsonBody) const;
+  DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
 
-  std::shared_ptr<Zone> loadZone(const json& zoneData) const;
-  void loadBackground(Zone& zone, const json& jsonBody) const;
-  void loadCharacter(Zone& zone, const json& jsonBody) const;
-  void loadPlatform(Zone& zone, const json& jsonBody) const;
+  std::shared_ptr<Zone> loadZone(const nlohmann::json& zoneData) const;
+  void loadBackground(Zone& zone, const nlohmann::json& jsonBody) const;
+  void loadCharacter(Zone& zone, const nlohmann::json& jsonBody) const;
+  void loadPlatform(Zone& zone, const nlohmann::json& jsonBody) const;
 
   std::shared_ptr<PositionComponent> loadPositionComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                                           const json& jsonBody) const;
+                                                           const nlohmann::json& jsonBody) const;
   std::shared_ptr<PhysicsComponent> loadPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                                         const json& jsonBody) const;
+                                                         const nlohmann::json& jsonBody) const;
   std::shared_ptr<DrawingComponent> loadDrawingComponent(const std::shared_ptr<Identity> ownerIdentity,
                                                          const std::shared_ptr<PositionComponent> positionComponent,
-                                                         const json& jsonBody) const;
+                                                         const nlohmann::json& jsonBody) const;
   std::shared_ptr<CollisionComponent> loadCollisionComponent(const std::shared_ptr<Identity> ownerIdentity,
                                                              const std::shared_ptr<PositionComponent> positionComponent,
-                                                             const json& jsonBody) const;
+                                                             const nlohmann::json& jsonBody) const;
 };

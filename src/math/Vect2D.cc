@@ -108,4 +108,4 @@ real Vect2D::distance(const Vect2D& vect) const {
   return sqrt((xDiff * xDiff) + (yDiff * yDiff));
 }
 
-string Vect2D::to_string() const { return fmt::format("Vect2D({0}, {1})", this->_x, this->_y); }
+std::string Vect2D::to_string() const { return fmt::format("Vect2D({0}, {1})", this->_x, this->_y); }

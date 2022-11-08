@@ -15,7 +15,7 @@ GameAction InputHandler::getGameAction() {
   return this->getInput()->getGameAction();
 }
 
-shared_ptr<InputEvent> InputHandler::getInput() {
+std::shared_ptr<InputEvent> InputHandler::getInput() {
   SDL_Event event;
   // TODO: Do we only want to try to get one event at a
   // time, or should we poll for all events and return a

@@ -1,7 +1,10 @@
+#include <memory>
+#include <string>
+
 #include "WADLoader.hh"
 #include "Zone.hh"
 
-shared_ptr<Zone> WADLoader::loadZone(const json& zoneData) const {
+std::shared_ptr<Zone> WADLoader::loadZone(const nlohmann::json& zoneData) const {
   // TODO: Add error checking with helpful messages. Pretending for now that
   // WADLoader files are always correctly structured json
 
@@ -17,13 +20,13 @@ shared_ptr<Zone> WADLoader::loadZone(const json& zoneData) const {
   if (zoneData.contains("gameObjects")) {
     std::shared_ptr<GameObject> object;
     for (auto gameObjectJSON : zoneData["gameObjects"]) {
-      LOG_DEBUG_SYS(WADLOADER, "Loading GameObject: {0}", to_string(gameObjectJSON));
+      LOG_DEBUG_SYS(WADLOADER, "Loading GameObject: {0}", nlohmann::to_string(gameObjectJSON));
       if (gameObjectJSON["type"] == "Character") {
         this->loadCharacter(*zone, gameObjectJSON);
       } else if (gameObjectJSON["type"] == "Platform") {
         this->loadPlatform(*zone, gameObjectJSON);
       } else {
-        LOG_ERROR_SYS(WADLOADER, "Cannot load the following object: {}", string(gameObjectJSON));
+        LOG_ERROR_SYS(WADLOADER, "Cannot load the following object: {}", std::string(gameObjectJSON));
       }
     }
   }
@@ -31,7 +34,7 @@ shared_ptr<Zone> WADLoader::loadZone(const json& zoneData) const {
   return zone;
 }
 
-void WADLoader::loadBackground(Zone& zone, const json& jsonBody) const {
+void WADLoader::loadBackground(Zone& zone, const nlohmann::json& jsonBody) const {
   if (!this->objectEnabled(jsonBody)) {
     return;
   }
@@ -46,15 +49,15 @@ void WADLoader::loadBackground(Zone& zone, const json& jsonBody) const {
   zone.setBackground(background);
 }
 
-void WADLoader::loadPlatform(Zone& zone, const json& jsonBody) const {
+void WADLoader::loadPlatform(Zone& zone, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {
     return;
   }
-  json nameConfig = jsonBody.value("name", "");
-  json positionConfig = jsonBody.value("position", json("{}"));
-  json physicsConfig = jsonBody.value("physics", json("{}"));
-  json drawingConfig = jsonBody.value("drawing", json("{}"));
-  json collisionsConfig = jsonBody.value("collisions", json("{}"));
+  nlohmann::json nameConfig = jsonBody.value("name", "");
+  nlohmann::json positionConfig = jsonBody.value("position", nlohmann::json("{}"));
+  nlohmann::json physicsConfig = jsonBody.value("physics", nlohmann::json("{}"));
+  nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
+  nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
 
   EntityName name;
   std::shared_ptr<Platform> platform;
@@ -63,7 +66,7 @@ void WADLoader::loadPlatform(Zone& zone, const json& jsonBody) const {
   std::shared_ptr<PhysicsComponent> physicsComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
   std::shared_ptr<CollisionComponent> collisionComponent;
-  for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", json({})));
+  for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
     platform = std::shared_ptr<Platform>(new Platform(name));
@@ -88,15 +91,15 @@ void WADLoader::loadPlatform(Zone& zone, const json& jsonBody) const {
   }
 }
 
-void WADLoader::loadCharacter(Zone& zone, const json& jsonBody) const {
+void WADLoader::loadCharacter(Zone& zone, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {
     return;
   }
-  json nameConfig = jsonBody.value("name", "");
-  json positionConfig = jsonBody.value("position", json("{}"));
-  json physicsConfig = jsonBody.value("physics", json("{}"));
-  json drawingConfig = jsonBody.value("drawing", json("{}"));
-  json collisionsConfig = jsonBody.value("collisions", json("{}"));
+  nlohmann::json nameConfig = jsonBody.value("name", "");
+  nlohmann::json positionConfig = jsonBody.value("position", nlohmann::json("{}"));
+  nlohmann::json physicsConfig = jsonBody.value("physics", nlohmann::json("{}"));
+  nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
+  nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
 
   EntityName name;
   std::shared_ptr<Character> character;
@@ -105,7 +108,7 @@ void WADLoader::loadCharacter(Zone& zone, const json& jsonBody) const {
   std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
   std::shared_ptr<CollisionComponent> collisionComponent;
-  for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplicate", json({})));
+  for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplicate", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
     character = std::shared_ptr<Character>(new Character(name));
