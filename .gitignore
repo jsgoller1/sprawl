@@ -31,8 +31,11 @@
 *.out
 *.app
 bin/**
-3rdparty/sdl/
-3rdparty/sdl_image/
+3rdparty/sdl/bin/
+3rdparty/sdl/sdl/
+3rdparty/sdl_image/bin/
+3rdparty/sdl_image/sdl_image/
+
 bazel-bin
 bazel-out
 bazel-sprawl
