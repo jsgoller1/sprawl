@@ -6,6 +6,10 @@ ButtonUpEvent::~ButtonUpEvent() = default;
 QuitEvent::~QuitEvent() = default;
 NoEvent::~NoEvent() = default;
 
+ButtonDownEvent::ButtonDownEvent(const SDL_Keycode keycode) : keycode(keycode) {}
+
+SDL_Keycode ButtonDownEvent::getKeycode() { return this->keycode; }
+
 GameAction InputHandler::getGameAction() {
   // TODO: For now, this forwarding method is a code smell;
   // eventually, we'll get inputs that won't cause game actions
@@ -97,6 +101,10 @@ GameAction ButtonDownEvent::getGameAction() {
   }
   return action;
 }
+
+ButtonUpEvent::ButtonUpEvent(const SDL_Keycode keycode) : keycode(keycode) {}
+
+SDL_Keycode ButtonUpEvent::getKeycode() { return this->keycode; }
 
 GameAction ButtonUpEvent::getGameAction() {
   GameAction action;

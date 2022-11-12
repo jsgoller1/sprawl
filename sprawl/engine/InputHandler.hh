@@ -17,13 +17,13 @@ class ButtonDownEvent : public InputEvent {
 
  public:
   virtual ~ButtonDownEvent() override;
-  ButtonDownEvent(const SDL_Keycode keycode) : keycode(keycode) {}
+  ButtonDownEvent(const SDL_Keycode keycode);
   GameAction getGameAction() override;
 
   // TODO: We will need other data from
   // SDL_EVENT later on;  when the key was
   // pressed, whether it was a repeat, etc.
-  SDL_Keycode getKeycode() { return this->keycode; }
+  SDL_Keycode getKeycode();
 
  private:
   SDL_Keycode keycode;
@@ -34,13 +34,13 @@ class ButtonUpEvent : public InputEvent {
 
  public:
   virtual ~ButtonUpEvent() override;
-  ButtonUpEvent(const SDL_Keycode keycode) : keycode(keycode) {}
+  ButtonUpEvent(const SDL_Keycode keycode);
   GameAction getGameAction() override;
 
   // TODO: We will need other data from
   // SDL_EVENT later on;  when the key was
   // pressed, whether it was a repeat, etc.
-  SDL_Keycode getKeycode() { return this->keycode; }
+  SDL_Keycode getKeycode();
 
  private:
   SDL_Keycode keycode;

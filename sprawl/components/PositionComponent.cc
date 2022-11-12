@@ -12,6 +12,11 @@ PositionComponent::PositionComponent(const std::shared_ptr<Identity> ownerIdenti
   this->_y = y;
 }
 
+PositionUnit PositionComponent::x() const { return this->_x; }
+void PositionComponent::x(const PositionUnit x) { this->_x = x; }
+PositionUnit PositionComponent::y() const { return this->_y; }
+void PositionComponent::y(const PositionUnit y) { this->_y = y; }
+
 Vect2D PositionComponent::getCenter() { return Vect2D(this->x(), this->y()); }
 
 void PositionComponent::setCenter(const Vect2D& center) {

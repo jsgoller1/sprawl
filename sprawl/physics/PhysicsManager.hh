@@ -40,8 +40,8 @@ class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
               const std::shared_ptr<CollisionComponent> collisionComponent);
   void unmanage(const std::shared_ptr<Identity> identity);
 
-  real getGravityConstant() const { return this->gravityConstant; }
-  void setGravityConstant(const real gravityConstant) { this->gravityConstant = gravityConstant; }
+  real getGravityConstant() const;
+  void setGravityConstant(const real gravityConstant);
 
  private:
   typedef struct ManagementEntry {

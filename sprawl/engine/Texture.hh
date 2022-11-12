@@ -16,9 +16,9 @@ class Texture {
   // the image data loaded from disk, so if they're going to be modified,
   // it should be by loading a new texture (presently; eventually, we'll allow
   // for stuff like color masking and whatnot)
-  SDL_Surface* getPixelData() const { return this->pixelData; }
-  PositionUnit getHeight() const { return this->height; }
-  PositionUnit getWidth() const { return this->width; }
+  SDL_Surface* getPixelData() const;
+  PositionUnit getHeight() const;
+  PositionUnit getWidth() const;
 
   void render();
 

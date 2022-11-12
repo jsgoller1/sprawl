@@ -9,10 +9,10 @@ class PositionComponent : public Component {
   PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const Vect2D& center);
   PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const XCoord x = 0.0, const YCoord y = 0.0);
 
-  PositionUnit x() const { return this->_x; }
-  void x(const PositionUnit x) { this->_x = x; }
-  PositionUnit y() const { return this->_y; }
-  void y(const PositionUnit y) { this->_y = y; }
+  PositionUnit x() const;
+  void x(const PositionUnit x);
+  PositionUnit y() const;
+  void y(const PositionUnit y);
   Vect2D getCenter();
   void setCenter(const Vect2D& center);
 

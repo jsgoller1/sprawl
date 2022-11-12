@@ -45,6 +45,9 @@ void PhysicsManager::unmanage(const std::shared_ptr<Identity> identity) {
   this->managementEntries->erase(identity);
 }
 
+real PhysicsManager::getGravityConstant() const { return this->gravityConstant; }
+void PhysicsManager::setGravityConstant(const real gravityConstant) { this->gravityConstant = gravityConstant; }
+
 void PhysicsManager::gameLoopUpdate(const time_ms duration) {
   for (std::pair<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>> mapping : *(this->managementEntries)) {
     std::shared_ptr<Identity> identity = mapping.first;

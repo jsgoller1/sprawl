@@ -16,3 +16,7 @@ Texture::Texture(const FilePath& path) {
 };
 
 Texture::~Texture() { SDL_FreeSurface(this->pixelData); }
+
+SDL_Surface* Texture::getPixelData() const { return this->pixelData; }
+PositionUnit Texture::getHeight() const { return this->height; }
+PositionUnit Texture::getWidth() const { return this->width; }

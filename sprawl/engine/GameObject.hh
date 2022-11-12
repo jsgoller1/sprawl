@@ -19,22 +19,14 @@ class GameObject : public Entity {
              const std::shared_ptr<PhysicsComponent> physicsComponent = nullptr,
              const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
   virtual ~GameObject();
-  std::shared_ptr<DrawingComponent> getDrawingComponent() const { return this->drawingComponent; }
-  void setDrawingComponent(const std::shared_ptr<DrawingComponent> drawingComponent) {
-    this->drawingComponent = drawingComponent;
-  }
-  std::shared_ptr<PhysicsComponent> getPhysicsComponent() const { return this->getPhysicsComponent_impl()->getptr(); }
-  void setPhysicsComponent(const std::shared_ptr<PhysicsComponent> physicsComponent) {
-    this->setPhysicsComponent_impl(physicsComponent.get());
-  }
-  std::shared_ptr<PositionComponent> getPositionComponent() const { return this->positionComponent; }
-  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
-    this->positionComponent = positionComponent;
-  }
-  std::shared_ptr<CollisionComponent> getCollisionComponent() { return this->collisionComponent; }
-  void setCollisionComponent(const std::shared_ptr<CollisionComponent> collisionComponent) {
-    this->collisionComponent = collisionComponent;
-  }
+  std::shared_ptr<DrawingComponent> getDrawingComponent() const;
+  void setDrawingComponent(const std::shared_ptr<DrawingComponent> drawingComponent);
+  std::shared_ptr<PhysicsComponent> getPhysicsComponent() const;
+  void setPhysicsComponent(const std::shared_ptr<PhysicsComponent> physicsComponent);
+  std::shared_ptr<PositionComponent> getPositionComponent() const;
+  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent);
+  std::shared_ptr<CollisionComponent> getCollisionComponent();
+  void setCollisionComponent(const std::shared_ptr<CollisionComponent> collisionComponent);
 
   void inferBoundingBoxFromTexture();
 

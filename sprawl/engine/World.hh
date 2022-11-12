@@ -16,13 +16,8 @@ class World {
   World(const std::shared_ptr<Zone> currentZone);
 
   // Forward to Zone
-  void gameLoopUpdate(const GameAction& action, const time_ms duration) {
-    this->currentZone->gameLoopUpdate(action, duration);
-  }
-
-  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const {
-    return this->currentZone->getDrawables();
-  }
+  void gameLoopUpdate(const GameAction& action, const time_ms duration);
+  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const;
   // TODO: serialize(); // needed for saving game and level editor
 
  private:
