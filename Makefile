@@ -1,3 +1,6 @@
+# Adapted from https://stackoverflow.com/a/28663974/1320882, and
+# "Recursive Make Considered Harmful" by Peter Miller
+
 include makefiles/settings.mk
 
 MODULES:=3rdparty/fmt 3rdparty/json 3rdparty/sdl 3rdparty/sdl_image 
@@ -17,6 +20,9 @@ $(PROJECT_NAME): $(OBJ_FILES)
 
 depend: .depend
 
+# Utilizes Clang preprocessor to automatically generate dependency 
+# makefile targets; on inclusion, these will cause make to restart and load
+# the targets
 .depend: $(SRC_FILES)
 	rm -f ./.depend
 	$(CXX) $(CXXFLAGS) -MM $^>>./.depend;
