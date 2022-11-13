@@ -18,22 +18,20 @@ all: $(PROJECT_NAME)
 $(PROJECT_NAME): $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
-depend: .depend
-
 # Utilizes Clang preprocessor to automatically generate dependency 
-# makefile targets; on inclusion, these will cause make to restart and load
-# the targets
+# makefile targets; this target be evaluated every time the Makefile
+# is read, so dependencies will be recalculated regularly. Inclusion
+# will cause to make to restart with the new targets available
 .depend: $(SRC_FILES)
-	rm -f ./.depend
-	$(CXX) $(CXXFLAGS) -MM $^>>./.depend;
+	rm -f ./$@
+	$(CXX) $(CXXFLAGS) -MM $^>>./$@;
+include .depend
 
 clean:
 	rm -f $(OBJ_FILES)
 
-dist-clean: clean
-	rm -f *~ .depend
-
-include .depend
+clean-deps: clean
+	rm .depend
 
 # Ops-related makefiles; these involve automation
 # and no compilation. 
