@@ -1,7 +1,7 @@
 include makefiles/settings.mk
 
 MODULES:=3rdparty/fmt 3rdparty/json 3rdparty/sdl 3rdparty/sdl_image 
-MODULES:=$(MODULES) sprawl/ sprawl/components/ sprawl/ecs sprawl/logging 
+MODULES:=$(MODULES) sprawl/components/ sprawl/ecs sprawl/engine sprawl/logging 
 MODULES:=$(MODULES) sprawl/main sprawl/math sprawl/physics sprawl/wads 
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
@@ -13,7 +13,7 @@ SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.so")
 all: $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(OBJ_FILES)
-	$(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o ./bin/$(PROJECT_NAME)
+	$(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
 depend: .depend
 
