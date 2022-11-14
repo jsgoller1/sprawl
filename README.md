@@ -2,8 +2,7 @@
 A 2D game engine built to implement __Neon Rain__. 
 
 ## Documentation
-All documentation (including setup instructions) can be found at our public, read-only [Roam Research graph](https://roamresearch.com/#/app/sprawl-engine/page/BP_0F1_2z). Please do not put other documentation outside of souComponentLoaders.cc:(.text+0xdf0): multiple definition of `WADLoader::loadCollisionComponent(std::shared_ptr<Identity>, std::shared_ptr<PositionComponent>, nlohmann::basic_json<std::map, std::vector, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, bool, long, unsigned long, double, std::allocator, nlohmann::adl_serializer> const&) const'; sprawl/wads/ComponentLoaders.o:ComponentLoaders.cc:(.text+0xdf0): first defined here
-rce file comments in this repo.
+All documentation (including setup instructions) can be found at our public, read-only [Roam Research graph](https://roamresearch.com/#/app/sprawl-engine/page/BP_0F1_2z).
 
 ## Credits, Resources, References
 - [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.
