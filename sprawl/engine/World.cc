@@ -21,8 +21,8 @@ World::World(const std::shared_ptr<Zone> currentZone) {
   this->currentZone = currentZone;
 }
 
-void World::gameLoopUpdate(const GameAction& action, const time_ms duration) {
-  this->currentZone->gameLoopUpdate(action, duration);
+void World::gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration) {
+  this->currentZone->gameLoopUpdate(inputEvents, duration);
 }
 
 std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> World::getDrawables() const {

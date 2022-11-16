@@ -4,3 +4,4 @@
 
 typedef std::string FilePath;
 typedef std::string EntityName;
+typedef int Keycode;

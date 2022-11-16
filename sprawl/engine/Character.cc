@@ -24,7 +24,6 @@ void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
   // Character should _not_ know about Screen.
-  Vect2D newVelocity = this->getPhysicsComponent()->velocity();
 
   switch (action) {
     case MOVE_UP:
@@ -35,10 +34,6 @@ void Character::move(const GameAction& action) {
       break;
     case MOVE_RIGHT:
       this->getPhysicsComponent()->applyMovementForce(Direction::Right());
-      break;
-    case STOP_MOVE_RIGHT:
-    case STOP_MOVE_LEFT:
-      newVelocity.x(0);
       break;
     default:
       // TODO: should warn

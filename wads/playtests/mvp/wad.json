@@ -59,8 +59,8 @@
                         "y": 0
                     },
                     "physics": {
-                        "maxSpeed": 0.05,
-                        "minSpeed": 0.025,
+                        "maxSpeed": 0.0015,
+                        "minSpeed": 0.00005,
                         "forceEnabled": true,
                         "gravityEnabled": true,
                         "dragEnabled": true,

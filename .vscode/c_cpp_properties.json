@@ -9,12 +9,15 @@
                 "${workspaceFolder}/3rdparty/json/",
                 "${workspaceFolder}/sprawl/components/",
                 "${workspaceFolder}/sprawl/ecs/",
+                "${workspaceFolder}/sprawl/engine/",
+                "${workspaceFolder}/sprawl/input/",
+                "${workspaceFolder}/sprawl/input/event/",
                 "${workspaceFolder}/sprawl/logging/",
                 "${workspaceFolder}/sprawl/math/",
                 "${workspaceFolder}/sprawl/main/",
                 "${workspaceFolder}/sprawl/physics/",
-                "${workspaceFolder}/sprawl/test/",
-                "${workspaceFolder}/sprawl/wads/"
+                "${workspaceFolder}/sprawl/wads/",
+                "${workspaceFolder}/test/"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
