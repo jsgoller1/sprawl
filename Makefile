@@ -16,7 +16,7 @@ SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.so")
 all: $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(OBJ_FILES)
-	$(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
+	$(CCACHE) $(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
 # Utilizes Clang preprocessor to automatically generate dependency 
 # makefile targets; this target be evaluated every time the Makefile

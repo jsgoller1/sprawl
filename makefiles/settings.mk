@@ -13,6 +13,7 @@ ENGINE_BIN:=$(BIN_DIR)/$(PROJECT_NAME)
 #VALGRIND := valgrind -q --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=42
 
 ### Compiler settings for C++
+CCACHE:=ccache
 CXX:=clang++
 CXXFLAGS:=-std=c++20 -g
 
