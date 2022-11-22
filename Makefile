@@ -33,6 +33,9 @@ clean:
 clean-deps: clean
 	rm .depend
 
+clean-logs:
+	rm bin/*.log
+
 # Ops-related makefiles; these involve automation
 # and no compilation. 
 include makefiles/ops.mk
