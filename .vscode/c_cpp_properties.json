@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/sprawl/",
+                "${workspaceFolder}/sprawl/cli/",
                 "${workspaceFolder}/3rdparty/fmt/",
                 "${workspaceFolder}/3rdparty/json/",
                 "${workspaceFolder}/sprawl/components/",
@@ -13,7 +14,6 @@
                 "${workspaceFolder}/sprawl/input/event/",
                 "${workspaceFolder}/sprawl/logging/",
                 "${workspaceFolder}/sprawl/math/",
-                "${workspaceFolder}/sprawl/main/",
                 "${workspaceFolder}/sprawl/physics/",
                 "${workspaceFolder}/sprawl/wads/",
                 "${workspaceFolder}/test/"

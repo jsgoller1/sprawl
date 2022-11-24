@@ -2,6 +2,7 @@
 # "Recursive Make Considered Harmful" by Peter Miller
 
 include makefiles/settings.mk
+include test/integration/integration.mk
 
 MODULES:= 3rdparty 3rdparty/fmt 3rdparty/json
 MODULES:=$(MODULES) sprawl sprawl/components sprawl/ecs sprawl/input sprawl/input/event
@@ -39,4 +40,3 @@ clean-logs:
 # Ops-related makefiles; these involve automation
 # and no compilation. 
 include makefiles/ops.mk
-include makefiles/playtests.mk

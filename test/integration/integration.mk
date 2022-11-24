@@ -1,5 +1,6 @@
-PLAYTEST_DIR:=$(DIR)/test/playtests
-LOGFILE_NAME:=`date --rfc-3339=ns | awk '{print $$2}'`.log
+PLAYTEST_DIR:=$(DIR)/test/integration
+LOGFILE_NAME:=`date "+%s"`.log
+MODULES:=$(MODULES) $(PLAYTEST_DIR)
 
 mvp:
 	$(ENGINE_BIN) $(PLAYTEST_DIR)/mvp 2>&1 | tee $(BIN_DIR)/$@-$(LOGFILE_NAME)
