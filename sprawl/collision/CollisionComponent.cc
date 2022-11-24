@@ -13,10 +13,6 @@ CollisionComponent::CollisionComponent(const std::shared_ptr<Identity> ownerIden
       _width(width),
       _collisionsEnabled(collisionsEnabled) {}
 
-std::shared_ptr<CollisionComponent> CollisionComponent::getptr() {
-  return std::static_pointer_cast<CollisionComponent, Component>(this->shared_from_this());
-}
-
 std::shared_ptr<PositionComponent> CollisionComponent::positionComponent() const { return this->_positionComponent; }
 void CollisionComponent::positionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
   this->_positionComponent = positionComponent;

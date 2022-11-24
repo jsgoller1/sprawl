@@ -33,7 +33,6 @@ class CollisionComponent : public Component {
                      const std::shared_ptr<PositionComponent> positionComponent, const PositionUnit height = 0.0,
                      const PositionUnit width = 0.0, const bool collisionsEnabled = false);
 
-  std::shared_ptr<CollisionComponent> getptr();
   std::shared_ptr<PositionComponent> positionComponent() const;
   void positionComponent(const std::shared_ptr<PositionComponent> positionComponent);
 

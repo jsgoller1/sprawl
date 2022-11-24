@@ -14,15 +14,6 @@ PhysicsManager::ManagementEntry::ManagementEntry(const std::shared_ptr<PhysicsCo
       positionComponent(positionComponent),
       collisionComponent(collisionComponent) {}
 
-std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
-  // TODO: This is dangerous and leads to undefined behavior if no other
-  // shared pointers to this object exist; it would be best to force
-  // any construction to return a shared pointer, but that might not be
-  // viable. See:
-  // https://en.cppreference.com/w/cpp/memory/enable_shared_from_this
-  return this->shared_from_this();
-}
-
 void PhysicsManager::manage(const std::shared_ptr<Identity> identity,
                             const std::shared_ptr<PhysicsComponent> physicsComponent,
                             const std::shared_ptr<PositionComponent> positionComponent,
@@ -88,7 +79,7 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     for (Collision collision : *collisions) {
       physicsComponent->resolveCollision(collision);
     }
-    LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", physicsComponent->getOwnerIdentity()->getEntityID());
+    LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", *physicsComponent->getOwnerIdentity()->getEntityID());
   }
 }
 

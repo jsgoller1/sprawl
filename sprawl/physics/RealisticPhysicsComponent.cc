@@ -3,8 +3,8 @@
 // ctors / dtors
 RealisticPhysicsComponent::RealisticPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity,
                                                      const bool forceResponsiveSetting, const bool gravitySetting,
-                                                     const PositionUnit maxSpeed, const PositionUnit minSpeed,
                                                      const DragType dragType, const real dragCoefficient,
+                                                     const PositionUnit maxSpeed, const PositionUnit minSpeed,
                                                      Vect2D velocity)
     : PhysicsComponent(ownerIdentity, maxSpeed, minSpeed, velocity),
       _forceResponsive(forceResponsiveSetting),
@@ -13,10 +13,6 @@ RealisticPhysicsComponent::RealisticPhysicsComponent(const std::shared_ptr<Ident
       _dragType(dragType) {}
 
 RealisticPhysicsComponent::~RealisticPhysicsComponent() = default;
-
-std::shared_ptr<RealisticPhysicsComponent> RealisticPhysicsComponent::getptr() {
-  return std::static_pointer_cast<RealisticPhysicsComponent, Component>(this->shared_from_this());
-}
 
 // Unique attribute accessors
 bool RealisticPhysicsComponent::forceEnabled() const { return this->_forceResponsive; }
@@ -114,9 +110,8 @@ void RealisticPhysicsComponent::resolveCollision(const Collision& collision) {
   // behavior breaks some assumptions this code makes about other objects in the world (i.e. not every object with
   // physics enabled handles physics in a physically realistic way - what happens if a SimplePhysicsComponent owner
   // collides with a RealisticPhysicsComponent owner)?
-  // LOG_DEBUG_SYS(PHYSICS, "Resolving collision: {} -> {}",
-  // collision.source()->getEntityID()->c_str(),
-  //               collision.target()->getEntityID()->c_str());
+  LOG_DEBUG_SYS(PHYSICS, "Ignoring realistic collision resolution: {} -> {}", *collision.source()->getEntityID(),
+                *collision.target()->getEntityID());
   // CollisionResolutionType type = this->getCollisionResolutionType(collision.target()->forceEnabled());
   // switch (type) {
   //   case CollisionResolutionType::ELASTIC:

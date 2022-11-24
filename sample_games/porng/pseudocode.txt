@@ -1,0 +1,75 @@
+// C-like pseudocode for pong implementation
+
+
+waiting_behavior(){
+    if (key pressed){
+        launch ball into play from top on random trajectory
+        switch to playing
+    }
+}
+
+playing_input_handler(){
+    if(mouse event occurred){
+        set player paddle vertical position to same as mouse pointer
+    }
+    else if (keyboard up/down key occurred){
+        move player paddle up/down a bit
+    }
+}
+
+
+ball_collision_handler(){
+    if(ball collides with paddle){
+        play_sound(generic moaning noise) {
+            select from: untitled goose game honk, goat scream, unnh noise from orgasm library
+        }
+        ball.set_heading(-ball.heading.x, random())
+    }
+    if (ball collides with cieling/floor){
+         ball.heading(ball.heading.x, -ball.heading.y)
+    }
+}
+
+
+playing_behavior(){
+    playing_input_handler()
+    if (ball in end zone){
+        play_sound("oh fuck yes" || "this is my swamp")
+        increment score for scorer
+        display scoring message // "player scored!" or "cpu scored!"
+        switch to waiting
+    }
+    ball.move(ball's heading direction, speed)
+    ball_collision_handler()
+}
+
+finished_behavior(input){
+    display game over with win/lose message
+        bonus: message shakes and changes colors
+    play orgasm climax sound
+        player won: loud lady orgasm 
+        player lost: jontron ape/screaming noise (https://www.youtube.com/watch?v=rgcJD-1_qtM)
+    if(any non-esc key pressed):
+       switch to waiting
+    if(esc pressed):
+       switch to quitting
+}
+
+main(){ 
+    init paddles, net, ball
+    init scores to 0
+    current_state = waiting
+    running = true
+    while(running){
+        input = get_input()
+        switch(current_state){
+            case waiting:
+                waiting_behavior(input)
+            case playing:
+                playing_behavior(input)
+            case finished:
+                finished_behavior(input)
+            case quitting:
+                running = false                
+    }
+}
