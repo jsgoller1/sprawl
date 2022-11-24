@@ -10,11 +10,14 @@ class CollisionComponent;
 class DrawingComponent;
 class InputHandler;
 class Identity;
-class PhysicsComponent;
 class PositionComponent;
 class Screen;
 class World;
 class Zone;
+
+class CharacterPhysicsComponent;
+class RealisticPhysicsComponent;
+class SimplePhysicsComponent;
 
 template <typename KeyType>
 KeyType loadKey(const nlohmann::json& jsonBody, const std::string& key, const KeyType& defaultVal,
@@ -36,11 +39,14 @@ class WADLoader {
   std::shared_ptr<InputHandler> loadInputHandler() const;
 
   std::shared_ptr<PositionComponent> loadPositionComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<PhysicsComponent> loadPhysicsComponent(const nlohmann::json& jsonBody) const;
   std::shared_ptr<DrawingComponent> loadDrawingComponent(
       const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
   std::shared_ptr<CollisionComponent> loadCollisionComponent(
       const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
+
+  std::shared_ptr<SimplePhysicsComponent> loadSimplePhysicsComponent(const nlohmann::json& jsonBody) const;
+  std::shared_ptr<RealisticPhysicsComponent> loadRealisticPhysicsComponent(const nlohmann::json& jsonBody) const;
+  std::shared_ptr<CharacterPhysicsComponent> loadCharacterPhysicsComponent(const nlohmann::json& jsonBody) const;
 
  protected:
   bool objectEnabled(const nlohmann::json& jsonBody) const;

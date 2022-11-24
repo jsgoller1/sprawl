@@ -4,9 +4,10 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}",
+                "${workspaceFolder}/3rdparty/",
+                "${workspaceFolder}/sample_games/porng/porng",
                 "${workspaceFolder}/sprawl/",
                 "${workspaceFolder}/sprawl/cli/",
-                "${workspaceFolder}/3rdparty/",
                 "${workspaceFolder}/sprawl/collision/",
                 "${workspaceFolder}/sprawl/components/",
                 "${workspaceFolder}/sprawl/ecs/",
@@ -27,12 +28,19 @@
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}",
-                "${workspaceFolder}/sprawl/",
-                "${workspaceFolder}/sprawl/cli/",
+                "${workspaceFolder}/3rdparty/",
                 "${workspaceFolder}/3rdparty/fmt/",
                 "${workspaceFolder}/3rdparty/json/",
+<<<<<<< HEAD
                 "${workspaceFolder}/3rdparty/SDL2/",
                 "${workspaceFolder}/sprawl/collision/",
+=======
+                "${workspaceFolder}/3rdparty/SDL2",
+                "${workspaceFolder}/3rdparty/SDL2_Image",
+                "${workspaceFolder}/sample_games/porng/porng",
+                "${workspaceFolder}/sprawl/",
+                "${workspaceFolder}/sprawl/cli/",
+>>>>>>> ea5f2e2 (Adds Porng (Porn Pong) game with ridiculous art assets and sound.)
                 "${workspaceFolder}/sprawl/components/",
                 "${workspaceFolder}/sprawl/ecs/",
                 "${workspaceFolder}/sprawl/input/",

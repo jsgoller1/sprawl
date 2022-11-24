@@ -19,3 +19,8 @@ class Component : public std::enable_shared_from_this<Component> {
   std::shared_ptr<Identity> ownerIdentity;
   bool _enabled;
 };
+
+template <typename T>
+std::shared_ptr<T> getComponentSharedPointer(T& component) {
+  return static_pointer_cast<T, Component>(component.shared_from_this());
+}

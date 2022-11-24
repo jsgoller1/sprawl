@@ -29,6 +29,18 @@
             "miDebuggerPath": "/usr/local/bin/lldb-mi"
         },
         {
+            "name": "Porng",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "/home/joshua/Code/sprawl",
+            "program": "${cwd}/bin/sprawl",
+            "args": [
+                "${cwd}/sample_games/porng"
+            ],
+            "environment": [],
+            "MIMode": "gdb",
+        },
+        {
             "name": "Gravity test",
             "type": "cppdbg",
             "request": "launch",

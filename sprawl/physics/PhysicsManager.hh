@@ -10,7 +10,7 @@
 #include "Time.hh"
 #include "Types.hh"
 
-class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
+class PhysicsManager {
   /*
    * The PhysicsManager class handles interactions between PhysicsComponent
    * objects. Like a real-life manager, it doesn't know how to do anything

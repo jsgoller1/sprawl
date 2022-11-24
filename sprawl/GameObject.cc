@@ -45,5 +45,8 @@ void GameObject::inferBoundingBoxFromTexture() {
   this->collisionComponent->width(texture->getWidth());
 }
 
+void GameObject::move(const Vect2D& delta) { this->positionComponent->move(delta); }
+void GameObject::setCenter(const Vect2D& position) { this->positionComponent->setCenter(position); }
+
 // Private
 PhysicsComponent* GameObject::getPhysicsComponent_impl() const { return this->physicsComponent.get(); }

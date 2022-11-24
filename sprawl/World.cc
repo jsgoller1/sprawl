@@ -20,7 +20,6 @@ void World::setPhysicsManager(const std::shared_ptr<PhysicsManager> physicsManag
   this->physicsManager = physicsManager;
 }
 
-
 std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> World::getDrawables() const {
   std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> drawables =
       std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>>(
@@ -39,7 +38,6 @@ std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> World::getDrawab
   return drawables;
 }
 
-
 void World::gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration) {
   this->handleInput(inputEvents);
   this->physicsManager->gameLoopUpdate(duration);
@@ -53,7 +51,7 @@ void World::setGameObjects(const std::shared_ptr<std::vector<std::shared_ptr<Gam
 void World::addGameObject(const std::shared_ptr<GameObject> gameObject) {
   this->gameObjects->push_back(gameObject);
   if (gameObject->getPhysicsComponent() != nullptr) {
-    this->physicsManager->manage(gameObject->getIdentity(), gameObject->getPhysicsComponent(),
+    this->physicsManager->manage(gameObject->getIdentity(), gameObject->getPhysicsComponent()->getptr(),
                                  gameObject->getPositionComponent(), gameObject->getCollisionComponent());
   }
 }
