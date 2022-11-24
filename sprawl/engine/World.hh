@@ -2,6 +2,7 @@
 
 #include "DrawingComponent.hh"
 #include "GameAction.hh"
+#include "InputHandler.hh"
 #include "Types.hh"
 #include "Zone.hh"
 
@@ -16,7 +17,7 @@ class World {
   World(const std::shared_ptr<Zone> currentZone);
 
   // Forward to Zone
-  void gameLoopUpdate(const GameAction& action, const time_ms duration);
+  void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
   std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const;
   // TODO: serialize(); // needed for saving game and level editor
 

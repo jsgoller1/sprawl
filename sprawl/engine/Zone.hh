@@ -5,6 +5,7 @@
 #include "DrawingComponent.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
+#include "InputHandler.hh"
 #include "Logging.hh"
 #include "PhysicsManager.hh"
 #include "Platform.hh"
@@ -30,7 +31,7 @@ class Zone {
   void addPlayerCharacter(const std::shared_ptr<Character> playerCharacter);
   void addGameObject(const std::shared_ptr<GameObject> gameObject);
 
-  void gameLoopUpdate(const GameAction& action, const time_ms duration);
+  void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
   std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const;
 
  private:
@@ -45,5 +46,5 @@ class Zone {
   std::shared_ptr<Background> background;
   std::shared_ptr<Character> player;
 
-  void handleInput(const GameAction& action);
+  void handleInput(const std::shared_ptr<GameLoopInputEvents> inputEvents);
 };

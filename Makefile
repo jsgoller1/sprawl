@@ -4,12 +4,12 @@
 include makefiles/settings.mk
 
 MODULES:=3rdparty/fmt 3rdparty/json 3rdparty/sdl 3rdparty/sdl_image 
-MODULES:=$(MODULES) sprawl/components/ sprawl/ecs sprawl/engine sprawl/logging 
-MODULES:=$(MODULES) sprawl/main sprawl/math sprawl/physics sprawl/wads 
+MODULES:=$(MODULES) sprawl/components/ sprawl/ecs sprawl/engine sprawl/input sprawl/input/event
+MODULES:=$(MODULES) sprawl/logging sprawl/main sprawl/math sprawl/physics sprawl/wads 
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
 
-SRC_FILES:=$(shell find $(MODULES) -name "*.cc")
+SRC_FILES:=$(shell find $(MODULES) -name "*.cc" | sort -u)
 OBJ_FILES:=$(patsubst %.cc, %.o, $(SRC_FILES))
 SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.so")
 
