@@ -9,7 +9,6 @@
                 "${workspaceFolder}/3rdparty/json/",
                 "${workspaceFolder}/sprawl/components/",
                 "${workspaceFolder}/sprawl/ecs/",
-                "${workspaceFolder}/sprawl/engine/",
                 "${workspaceFolder}/sprawl/input/",
                 "${workspaceFolder}/sprawl/input/event/",
                 "${workspaceFolder}/sprawl/logging/",

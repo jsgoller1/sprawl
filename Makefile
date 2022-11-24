@@ -4,7 +4,7 @@
 include makefiles/settings.mk
 
 MODULES:=3rdparty/fmt 3rdparty/json 3rdparty/sdl 3rdparty/sdl_image 
-MODULES:=$(MODULES) sprawl/components/ sprawl/ecs sprawl/engine sprawl/input sprawl/input/event
+MODULES:=$(MODULES) sprawl/ sprawl/components/ sprawl/ecs sprawl/input sprawl/input/event
 MODULES:=$(MODULES) sprawl/logging sprawl/main sprawl/math sprawl/physics sprawl/wads 
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
