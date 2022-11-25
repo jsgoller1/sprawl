@@ -44,3 +44,7 @@ CXXFLAGS:=$(CXXFLAGS) -Wno-global-constructors -Wno-exit-time-destructors
 CXXFLAGS:=$(CXXFLAGS) -Wno-format-nonliteral
 # We need to use C headers from other projects, for now.
 CXXFLAGS:=$(CXXFLAGS) -Wno-deprecated
+# We're only building on MacOS and Linux right now, so using *nix paths is fine
+CXXFLAGS:=$(CXXFLAGS) -Wno-poison-system-directories
+# I don't personally use C-style casting, but SDL does.
+CXXFLAGS:=$(CXXFLAGS) -Wno-old-style-cast

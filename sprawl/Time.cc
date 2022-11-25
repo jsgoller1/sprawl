@@ -1,6 +1,6 @@
 #include "Time.hh"
 
-#include <SDL2/SDL.h>
+#include "SDL2/SDL.h"
 
 // Not sure if conversion from float to int / back will
 // be dangerous, but in case it is would rather have
