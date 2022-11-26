@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}",
                 "${workspaceFolder}/sprawl/",
+                "${workspaceFolder}/sprawl/cli/",
                 "${workspaceFolder}/3rdparty/fmt/",
                 "${workspaceFolder}/3rdparty/json/",
                 "${workspaceFolder}/sprawl/components/",
@@ -13,7 +14,6 @@
                 "${workspaceFolder}/sprawl/input/event/",
                 "${workspaceFolder}/sprawl/logging/",
                 "${workspaceFolder}/sprawl/math/",
-                "${workspaceFolder}/sprawl/main/",
                 "${workspaceFolder}/sprawl/physics/",
                 "${workspaceFolder}/sprawl/wads/",
                 "${workspaceFolder}/test/"
@@ -26,22 +26,24 @@
         {
             "name": "Mac",
             "includePath": [
-                "/Users/joshua/Code/SDL/include",
-                "/Users/joshua/Code/SDL_image",
                 "${workspaceFolder}",
-                "${workspaceFolder}/src/include",
-                "${workspaceFolder}/src/3rdparty/fmt/include",
-                "${workspaceFolder}/src/3rdparty/json/include",
-                "${workspaceFolder}/src/components/include",
-                "${workspaceFolder}/src/ecs/include",
-                "${workspaceFolder}/src/logging/include",
-                "${workspaceFolder}/src/math/include",
-                "${workspaceFolder}/src/physics/include",
-                "${workspaceFolder}/src/test/include",
-                "${workspaceFolder}/src/wads/include"
+                "${workspaceFolder}/sprawl/",
+                "${workspaceFolder}/sprawl/cli/",
+                "${workspaceFolder}/3rdparty/fmt/",
+                "${workspaceFolder}/3rdparty/json/",
+                "${workspaceFolder}/3rdparty/SDL2/",
+                "${workspaceFolder}/sprawl/components/",
+                "${workspaceFolder}/sprawl/ecs/",
+                "${workspaceFolder}/sprawl/input/",
+                "${workspaceFolder}/sprawl/input/event/",
+                "${workspaceFolder}/sprawl/logging/",
+                "${workspaceFolder}/sprawl/math/",
+                "${workspaceFolder}/sprawl/physics/",
+                "${workspaceFolder}/sprawl/wads/",
+                "${workspaceFolder}/test/"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/local/bin/clang-format",
             "intelliSenseMode": "macos-clang-x64",
             "configurationProvider": "ms-vscode.makefile-tools"
         }

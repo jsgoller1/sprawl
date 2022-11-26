@@ -1,13 +1,12 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-
 #include <memory>
 #include <queue>
 
 #include "KeyboardPressEvent.hh"
 #include "MouseButtonPressEvent.hh"
 #include "MouseMotionEvent.hh"
+#include "SDL2/SDL.h"
 
 /*
  * Opaque set-like collection of input events detected during a game loop. There is no guarantee of the

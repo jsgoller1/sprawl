@@ -1,12 +1,11 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-
 #include <map>
 #include <memory>
 #include <queue>
 
 #include "Logging.hh"
+#include "SDL2/SDL.h"
 
 class SDLInputInterface {
   /*

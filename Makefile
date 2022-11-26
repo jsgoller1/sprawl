@@ -2,10 +2,11 @@
 # "Recursive Make Considered Harmful" by Peter Miller
 
 include makefiles/settings.mk
+include test/integration/integration.mk
 
-MODULES:= 3rdparty 3rdparty/fmt 3rdparty/json
-MODULES:=$(MODULES) sprawl sprawl/components sprawl/ecs sprawl/input sprawl/input/event
-MODULES:=$(MODULES) sprawl/logging sprawl/main sprawl/math sprawl/physics sprawl/wads 
+MODULES:=test/integration  
+MODULES:=$(MODULES) sprawl sprawl/cli sprawl/components sprawl/ecs sprawl/input sprawl/input/event
+MODULES:=$(MODULES) sprawl/logging sprawl/main sprawl/math sprawl/physics sprawl/wads 3rdparty
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
 
@@ -15,7 +16,7 @@ SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
 
 all: $(PROJECT_NAME)
 
-$(PROJECT_NAME): $(OBJ_FILES)
+integration-test: $(OBJ_FILES)
 	$(CCACHE) $(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
 # Utilizes Clang preprocessor to automatically generate dependency 
@@ -39,4 +40,3 @@ clean-logs:
 # Ops-related makefiles; these involve automation
 # and no compilation. 
 include makefiles/ops.mk
-include makefiles/playtests.mk

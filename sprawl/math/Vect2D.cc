@@ -1,6 +1,6 @@
 #include "Vect2D.hh"
 
-#include "format.h"
+#include "fmt/format.h"
 
 /*
  * This code was adapted from cyclone-physics by Ian Millington.

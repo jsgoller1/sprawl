@@ -1,8 +1,7 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-
 #include "PositionComponent.hh"
+#include "SDL2/SDL.h"
 #include "Types.hh"
 
 class Texture {

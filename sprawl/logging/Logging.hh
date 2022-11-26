@@ -5,8 +5,8 @@
 
 #include "LoggingTypes.hh"
 #include "Macros.hh"
-#include "color.h"
-#include "format.h"
+#include "fmt/color.h"
+#include "fmt/format.h"
 
 #define DEFAULT_LOGGING_LEVEL LogLevel::Warn()
 #define DEFAULT_USE_COLORS true

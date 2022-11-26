@@ -1,6 +1,6 @@
 #include "EntityManager.hh"
 
-#include "format.h"
+#include "fmt/format.h"
 
 // Public
 EntityManager::EntityManager() : entityCount(0) {

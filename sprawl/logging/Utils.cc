@@ -1,9 +1,8 @@
-#include "SDL2/SDL.h"
-
 #include <map>
 #include <string>
 
 #include "Logging.hh"
+#include "SDL2/SDL.h"
 
 static std::map<LogLevel, std::string> logLevelNames = std::map<LogLevel, std::string>{{FATAL, std::string("FATAL")},
                                                                                        {ERROR, std::string("ERROR")},

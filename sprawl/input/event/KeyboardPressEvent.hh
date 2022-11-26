@@ -1,9 +1,8 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-
 #include "GameAction.hh"
 #include "InputEvent.hh"
+#include "SDL2/SDL.h"
 #include "Types.hh"
 
 class KeyboardPressEvent : public InputEvent {

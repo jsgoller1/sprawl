@@ -1,9 +1,8 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-
 #include <memory>
 
+#include "SDL2/SDL.h"
 #include "SDLInputInterface.hh"
 // TODO: We actually don't want GameAction here; we will have a separate class for keybindings that translate
 // InputEvents to GameActions

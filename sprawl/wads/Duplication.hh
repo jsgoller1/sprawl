@@ -3,7 +3,7 @@
 #include "Math.hh"
 #include "Real.hh"
 #include "Types.hh"
-#include "json.hpp"
+#include "json/json.hpp"
 
 class DuplicationBehavior {
  public:

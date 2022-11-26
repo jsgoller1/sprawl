@@ -1,9 +1,8 @@
 #pragma once
 
-#include "SDL2/SDL.h"
-
 #include "DrawingComponent.hh"
 #include "Logging.hh"
+#include "SDL2/SDL.h"
 #include "Texture.hh"
 #include "Types.hh"
 

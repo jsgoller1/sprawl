@@ -3,7 +3,7 @@
 
 #include "Duplication.hh"
 #include "Types.hh"
-#include "json.hpp"
+#include "json/json.hpp"
 
 // Forward decls;
 class CollisionComponent;
