@@ -36,3 +36,6 @@ bin/**
 # Third party libraries go here; we don't want
 # to commit them or the headers they come with.
 3rdparty/
+
+# MacOS files
+**/.DS_Store
