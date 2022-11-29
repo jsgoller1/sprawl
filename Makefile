@@ -28,14 +28,19 @@ integration-test: $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) -MM $^>>./$@;
 include .depend
 
-clean:
-	rm -f $(OBJ_FILES)
+clean-obj:
+	-rm -f $(OBJ_FILES)
 
-clean-deps: clean
-	rm .depend
+clean-deps:
+	-rm .depend
 
 clean-logs:
-	rm bin/*.log
+	-rm bin/*.log
+
+clean-bin:
+	-rm $(ENGINE_BIN)
+
+clean-purge: clean-obj clean-deps clean-logs clean-bin
 
 # Ops-related makefiles; these involve automation
 # and no compilation. 

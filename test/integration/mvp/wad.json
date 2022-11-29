@@ -28,107 +28,102 @@
             }
         ]
     },
-    "zones": [
+    "background": {
+        "enabled": true,
+        "name": "MVP background",
+        "drawing": {
+            "texturePath": "/textures/background.bmp"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "physics": {
+        "gravityConstant": 0.01
+    },
+    "gameObjects": [
         {
-            "type": "Zone",
-            "background": {
-                "enabled": true,
-                "name": "MVP background",
-                "drawing": {
-                    "texturePath": "/textures/background.bmp"
-                },
-                "position": {
-                    "x": 0,
-                    "y": 0
-                }
+            "type": "Character",
+            "enabled": true,
+            "name": "Player",
+            "isPlayerCharacter": true,
+            "drawing": {
+                "texturePath": "/textures/smiley.png"
+            },
+            "position": {
+                "x": -200,
+                "y": 0
             },
             "physics": {
-                "gravityConstant": 0.01
+                "maxSpeed": 0.0015,
+                "minSpeed": 0.00005,
+                "forceEnabled": true,
+                "gravityEnabled": true,
+                "dragEnabled": true,
+                "dragType": "timeExponential",
+                "dragCoefficient": 0.995
             },
-            "gameObjects": [
-                {
-                    "type": "Character",
-                    "enabled": true,
-                    "name": "Player",
-                    "isPlayerCharacter": true,
-                    "drawing": {
-                        "texturePath": "/textures/smiley.png"
-                    },
-                    "position": {
-                        "x": -200,
-                        "y": 0
-                    },
-                    "physics": {
-                        "maxSpeed": 0.0015,
-                        "minSpeed": 0.00005,
-                        "forceEnabled": true,
-                        "gravityEnabled": true,
-                        "dragEnabled": true,
-                        "dragType": "timeExponential",
-                        "dragCoefficient": 0.995
-                    },
-                    "collisions": {
-                        "enabled": true,
-                        "bbox": {
-                            "fromTexture": true
-                        }
-                    }
-                },
-                {
-                    "type": "Character",
-                    "enabled": true,
-                    "name": "Enemy",
-                    "isPlayerCharacter": false,
-                    "drawing": {
-                        "texturePath": "/textures/enemy.bmp"
-                    },
-                    "position": {
-                        "x": 300,
-                        "y": 0
-                    },
-                    "physics": {
-                        "maxSpeed": 0.025,
-                        "minSpeed": 0.05,
-                        "forceEnabled": true,
-                        "gravityEnabled": true,
-                        "dragEnabled": true,
-                        "dragType": "timeExponential",
-                        "dragCoefficient": 0.995
-                    },
-                    "collisions": {
-                        "enabled": true
-                    }
-                },
-                {
-                    "type": "Platform",
-                    "enabled": true,
-                    "name": "floor",
-                    "duplication": {
-                        "count": 10,
-                        "xOffset": 300
-                    },
-                    "isPlayerCharacter": false,
-                    "drawing": {
-                        "texturePath": "/textures/wall-indestructible.bmp"
-                    },
-                    "position": {
-                        "x": -800,
-                        "y": -400
-                    },
-                    "physics": {
-                        "maxSpeed": 0.025,
-                        "minSpeed": 0.05,
-                        "forceEnabled": false,
-                        "gravityEnabled": false,
-                        "dragEnabled": false,
-                        "dragType": "timeExponential",
-                        "dragCoefficient": 0.995
-                    },
-                    "collisions": {
-                        "enabled": true
-                    }
+            "collisions": {
+                "enabled": true,
+                "bbox": {
+                    "fromTexture": true
                 }
-            ]
+            }
+        },
+        {
+            "type": "Character",
+            "enabled": true,
+            "name": "Enemy",
+            "isPlayerCharacter": false,
+            "drawing": {
+                "texturePath": "/textures/enemy.bmp"
+            },
+            "position": {
+                "x": 300,
+                "y": 0
+            },
+            "physics": {
+                "maxSpeed": 0.025,
+                "minSpeed": 0.05,
+                "forceEnabled": true,
+                "gravityEnabled": true,
+                "dragEnabled": true,
+                "dragType": "timeExponential",
+                "dragCoefficient": 0.995
+            },
+            "collisions": {
+                "enabled": true
+            }
+        },
+        {
+            "type": "Platform",
+            "enabled": true,
+            "name": "floor",
+            "duplication": {
+                "count": 10,
+                "xOffset": 300
+            },
+            "isPlayerCharacter": false,
+            "drawing": {
+                "texturePath": "/textures/wall-indestructible.bmp"
+            },
+            "position": {
+                "x": -800,
+                "y": -400
+            },
+            "physics": {
+                "maxSpeed": 0.025,
+                "minSpeed": 0.05,
+                "forceEnabled": false,
+                "gravityEnabled": false,
+                "dragEnabled": false,
+                "dragType": "timeExponential",
+                "dragCoefficient": 0.995
+            },
+            "collisions": {
+                "enabled": true
+            }
         }
     ]
 }

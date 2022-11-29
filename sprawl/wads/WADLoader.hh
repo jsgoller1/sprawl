@@ -30,22 +30,10 @@ KeyType loadKey(const nlohmann::json& jsonBody, const std::string& key, const Ke
 class WADLoader {
  public:
   WADLoader(const FilePath& wadPath);
+  virtual ~WADLoader();
   void loadLogging() const;
-  std::shared_ptr<World> loadWorld() const;
   std::shared_ptr<Screen> loadScreen() const;
   std::shared_ptr<InputHandler> loadInputHandler() const;
-
- private:
-  FilePath _wadDir;
-  nlohmann::json _jsonBody;
-
-  bool objectEnabled(const nlohmann::json& jsonBody) const;
-  DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
-
-  std::shared_ptr<Zone> loadZone(const nlohmann::json& zoneData) const;
-  void loadBackground(Zone& zone, const nlohmann::json& jsonBody) const;
-  void loadCharacter(Zone& zone, const nlohmann::json& jsonBody) const;
-  void loadPlatform(Zone& zone, const nlohmann::json& jsonBody) const;
 
   std::shared_ptr<PositionComponent> loadPositionComponent(const std::shared_ptr<Identity> ownerIdentity,
                                                            const nlohmann::json& jsonBody) const;
@@ -57,4 +45,13 @@ class WADLoader {
   std::shared_ptr<CollisionComponent> loadCollisionComponent(const std::shared_ptr<Identity> ownerIdentity,
                                                              const std::shared_ptr<PositionComponent> positionComponent,
                                                              const nlohmann::json& jsonBody) const;
+
+ protected:
+  bool objectEnabled(const nlohmann::json& jsonBody) const;
+  DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
+  nlohmann::json getJsonBody() const;
+
+ private:
+  FilePath _wadDir;
+  nlohmann::json _jsonBody;
 };
