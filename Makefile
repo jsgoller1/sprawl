@@ -14,7 +14,7 @@ SRC_FILES:=$(shell find $(MODULES) -name "*.cc" | sort -u)
 OBJ_FILES:=$(patsubst %.cc, %.o, $(SRC_FILES))
 SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
 
-all: $(PROJECT_NAME)
+all: integration-test
 
 integration-test: $(OBJ_FILES)
 	$(CCACHE) $(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)

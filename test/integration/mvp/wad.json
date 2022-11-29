@@ -52,7 +52,7 @@
                     "name": "Player",
                     "isPlayerCharacter": true,
                     "drawing": {
-                        "texturePath": "/textures/player.bmp"
+                        "texturePath": "/textures/smiley.png"
                     },
                     "position": {
                         "x": -200,

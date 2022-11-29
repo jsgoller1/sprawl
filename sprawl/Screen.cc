@@ -7,7 +7,7 @@ Screen::Screen(const ScreenWidth width, const ScreenHeight height) {
     LOG_FATAL_SYS(SDL, "Could not init SDL; {0}", Logging::getSDLError());
     throw;
   }
-  this->window = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, int(width),
+  this->window = SDL_CreateWindow("Sprawl Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, int(width),
                                   int(height), SDL_WINDOW_SHOWN);
   if (this->window == nullptr) {
     LOG_FATAL_SYS(SDL, "Window could not be created! {0}", Logging::getSDLError());
