@@ -29,11 +29,6 @@ void WADLoader::loadLogging() const {
   }
 }
 
-std::shared_ptr<World> WADLoader::loadWorld() const {
-  std::shared_ptr<Zone> zone = this->loadZone(this->_jsonBody["zones"][0]);
-  return std::shared_ptr<World>(new World(zone));
-}
-
 std::shared_ptr<Screen> WADLoader::loadScreen() const {
   ScreenWidth width;
   ScreenHeight height;

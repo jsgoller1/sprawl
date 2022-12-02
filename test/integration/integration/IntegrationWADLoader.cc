@@ -1,40 +1,47 @@
+#include "IntegrationWADLoader.hh"
+
 #include <memory>
 #include <string>
 
-#include "WADLoader.hh"
-#include "Zone.hh"
+#include "IntegrationWorld.hh"
+#include "Platform.hh"
 
-std::shared_ptr<Zone> WADLoader::loadZone(const nlohmann::json& zoneData) const {
+IntegrationWADLoader::~IntegrationWADLoader() = default;
+IntegrationWADLoader::IntegrationWADLoader(const FilePath& wadPath) : WADLoader(wadPath) {}
+
+std::shared_ptr<IntegrationWorld> IntegrationWADLoader::loadIntegrationWorld() const {
   // TODO: Add error checking with helpful messages. Pretending for now that
-  // WADLoader files are always correctly structured json
+  // IntegrationWADLoader files are always correctly structured json
 
-  std::shared_ptr<Zone> zone = std::shared_ptr<Zone>(new Zone());
-  if (zoneData.contains("gravityConstant")) {
-    zone->setGravityConstant(zoneData["gravityConstant"]);
+  std::shared_ptr<IntegrationWorld> world = std::shared_ptr<IntegrationWorld>(new IntegrationWorld());
+  nlohmann::json jsonData = this->getJsonBody();
+
+  if (jsonData.contains("gravityConstant")) {
+    world->getPhysicsManager()->setGravityConstant(jsonData["gravityConstant"]);
   }
 
-  if (zoneData.contains("background")) {
-    this->loadBackground(*zone, zoneData["background"]);
+  if (jsonData.contains("background")) {
+    this->loadBackground(*world, jsonData["background"]);
   }
 
-  if (zoneData.contains("gameObjects")) {
+  if (jsonData.contains("gameObjects")) {
     std::shared_ptr<GameObject> object;
-    for (auto gameObjectJSON : zoneData["gameObjects"]) {
+    for (auto gameObjectJSON : jsonData["gameObjects"]) {
       LOG_DEBUG_SYS(WADLOADER, "Loading GameObject: {0}", nlohmann::to_string(gameObjectJSON));
       if (gameObjectJSON["type"] == "Character") {
-        this->loadCharacter(*zone, gameObjectJSON);
+        this->loadCharacter(*world, gameObjectJSON);
       } else if (gameObjectJSON["type"] == "Platform") {
-        this->loadPlatform(*zone, gameObjectJSON);
+        this->loadPlatform(*world, gameObjectJSON);
       } else {
         LOG_ERROR_SYS(WADLOADER, "Cannot load the following object: {}", std::string(gameObjectJSON));
       }
     }
   }
 
-  return zone;
+  return world;
 }
 
-void WADLoader::loadBackground(Zone& zone, const nlohmann::json& jsonBody) const {
+void IntegrationWADLoader::loadBackground(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
   if (!this->objectEnabled(jsonBody)) {
     return;
   }
@@ -46,10 +53,10 @@ void WADLoader::loadBackground(Zone& zone, const nlohmann::json& jsonBody) const
   std::shared_ptr<DrawingComponent> drawingComponent =
       this->loadDrawingComponent(background->getIdentity(), positionComponent, jsonBody["drawing"]);
   background->setDrawingComponent(drawingComponent);
-  zone.setBackground(background);
+  world.setBackground(background);
 }
 
-void WADLoader::loadPlatform(Zone& zone, const nlohmann::json& jsonBody) const {
+void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {
     return;
   }
@@ -87,11 +94,11 @@ void WADLoader::loadPlatform(Zone& zone, const nlohmann::json& jsonBody) const {
     platform->setCollisionComponent(collisionComponent);
     platform->inferBoundingBoxFromTexture();
 
-    zone.addGameObject(platform);
+    world.addGameObject(platform);
   }
 }
 
-void WADLoader::loadCharacter(Zone& zone, const nlohmann::json& jsonBody) const {
+void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {
     return;
   }
@@ -128,6 +135,6 @@ void WADLoader::loadCharacter(Zone& zone, const nlohmann::json& jsonBody) const 
     collisionComponent = this->loadCollisionComponent(character->getIdentity(), positionComponent, collisionsConfig);
     character->setCollisionComponent(collisionComponent);
     character->inferBoundingBoxFromTexture();
-    (jsonBody.value("isPlayerCharacter", false)) ? zone.addPlayerCharacter(character) : zone.addGameObject(character);
+    (jsonBody.value("isPlayerCharacter", false)) ? world.addPlayerCharacter(character) : world.addGameObject(character);
   }
 }

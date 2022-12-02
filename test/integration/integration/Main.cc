@@ -1,24 +1,24 @@
 #include "CLI.hh"
 #include "InputEvent.hh"
 #include "InputHandler.hh"
+#include "IntegrationWADLoader.hh"
+#include "IntegrationWorld.hh"
 #include "Logging.hh"
 #include "Screen.hh"
 #include "Time.hh"
 #include "Types.hh"
-#include "WADLoader.hh"
-#include "World.hh"
 
 int main(int argc, char* argv[]) {
   CLI args(argc, argv);
   if (args.shouldQuit()) {
     return args.getReturnCode();
   }
-  WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
+  IntegrationWADLoader wadLoader = IntegrationWADLoader(FilePath(args.getWADDir()));
   wadLoader.loadLogging();
 
   Timer timer = Timer();
   bool should_quit = false;
-  std::shared_ptr<World> world = wadLoader.loadWorld();
+  std::shared_ptr<IntegrationWorld> world = wadLoader.loadIntegrationWorld();
   std::shared_ptr<Screen> screen = wadLoader.loadScreen();
   std::shared_ptr<InputHandler> inputHandler = wadLoader.loadInputHandler();
 
