@@ -41,20 +41,6 @@ std::shared_ptr<IntegrationWorld> IntegrationWADLoader::loadIntegrationWorld() c
   return world;
 }
 
-void IntegrationWADLoader::loadBackground(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
-  if (!this->objectEnabled(jsonBody)) {
-    return;
-  }
-  std::shared_ptr<Background> background =
-      std::shared_ptr<Background>(new Background(EntityName(jsonBody.value("name", ""))));
-  std::shared_ptr<PositionComponent> positionComponent =
-      this->loadPositionComponent(background->getIdentity(), jsonBody["position"]);
-  background->setPositionComponent(positionComponent);
-  std::shared_ptr<DrawingComponent> drawingComponent =
-      this->loadDrawingComponent(background->getIdentity(), positionComponent, jsonBody["drawing"]);
-  background->setDrawingComponent(drawingComponent);
-  world.setBackground(background);
-}
 
 void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {

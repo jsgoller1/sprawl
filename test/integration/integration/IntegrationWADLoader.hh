@@ -8,7 +8,6 @@ class IntegrationWADLoader : public WADLoader {
   std::shared_ptr<IntegrationWorld> loadIntegrationWorld() const;
 
  private:
-  void loadBackground(IntegrationWorld& world, const nlohmann::json& jsonBody) const;
   void loadPlatform(IntegrationWorld& world, const nlohmann::json& jsonBody) const;
   void loadCharacter(IntegrationWorld& world, const nlohmann::json& jsonBody) const;
 };
