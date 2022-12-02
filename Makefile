@@ -6,7 +6,7 @@ include test/integration/integration.mk
 
 MODULES:=test/integration  
 MODULES:=$(MODULES) sprawl sprawl/cli sprawl/components sprawl/ecs sprawl/input sprawl/input/event
-MODULES:=$(MODULES) sprawl/logging sprawl/main sprawl/math sprawl/physics sprawl/wads 3rdparty
+MODULES:=$(MODULES) sprawl/logging sprawl/math sprawl/physics sprawl/wads 3rdparty
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
 
