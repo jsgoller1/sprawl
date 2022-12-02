@@ -20,6 +20,26 @@ void World::setPhysicsManager(const std::shared_ptr<PhysicsManager> physicsManag
   this->physicsManager = physicsManager;
 }
 
+
+std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> World::getDrawables() const {
+  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> drawables =
+      std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>>(
+          new std::vector<std::shared_ptr<DrawingComponent>>());
+
+  // Background should be drawn first to ensure everything else gets
+  // drawn over it.
+  drawables->push_back(this->getBackground()->getDrawingComponent());
+  for (std::shared_ptr<GameObject> obj : *(this->getGameObjects())) {
+    std::shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();
+    if (comp != nullptr) {
+      drawables->push_back(comp);
+    }
+  }
+
+  return drawables;
+}
+
+
 void World::gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration) {
   this->handleInput(inputEvents);
   this->physicsManager->gameLoopUpdate(duration);

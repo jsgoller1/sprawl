@@ -4,6 +4,7 @@ void IntegrationWorld::addPlayerCharacter(const std::shared_ptr<Character> playe
   this->playerCharacter = playerCharacter;
   this->getPhysicsManager()->manage(playerCharacter->getIdentity(), playerCharacter->getPhysicsComponent(),
                                     playerCharacter->getPositionComponent(), playerCharacter->getCollisionComponent());
+  this->addGameObject(playerCharacter);
 }
 
 void IntegrationWorld::handleInput(const std::shared_ptr<GameLoopInputEvents> inputEvents) {
@@ -39,23 +40,4 @@ void IntegrationWorld::handleInput(const std::shared_ptr<GameLoopInputEvents> in
     default:
       LOG_DEBUG_SYS(ZONE, std::string("Got move unknown action: {0}", action));
   }
-}
-
-std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> IntegrationWorld::getDrawables() const {
-  std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> drawables =
-      std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>>(
-          new std::vector<std::shared_ptr<DrawingComponent>>());
-
-  // Background should be drawn first to ensure everything else gets
-  // drawn over it.
-  drawables->push_back(this->getBackground()->getDrawingComponent());
-  drawables->push_back(this->playerCharacter->getDrawingComponent());
-  for (std::shared_ptr<GameObject> obj : *(this->getGameObjects())) {
-    std::shared_ptr<DrawingComponent> comp = obj->getDrawingComponent();
-    if (comp != nullptr) {
-      drawables->push_back(comp);
-    }
-  }
-
-  return drawables;
 }

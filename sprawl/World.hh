@@ -50,7 +50,7 @@ class World {
   void addGameObject(const std::shared_ptr<GameObject> gameObject);
 
   // TODO: serialize(); // needed for saving game and level editor
-  virtual std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const = 0;
+  virtual std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const;
 
   void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
 
