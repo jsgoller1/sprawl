@@ -10,9 +10,6 @@
 #include "Time.hh"
 #include "Types.hh"
 
-// Forward decls
-class PhysicsComponent;  // see PhysicsComponent.hh
-
 class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
   /*
    * The PhysicsManager class handles interactions between PhysicsComponent
@@ -39,7 +36,7 @@ class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
               const std::shared_ptr<PositionComponent> positionComponent,
               const std::shared_ptr<CollisionComponent> collisionComponent);
   void unmanage(const std::shared_ptr<Identity> identity);
-
+  std::shared_ptr<PhysicsComponent> getManagedPhysicsComponent(const std::shared_ptr<Identity> identity) const;
   real getGravityConstant() const;
   void setGravityConstant(const real gravityConstant);
 

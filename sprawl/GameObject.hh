@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "BoundingBox.hh"
+#include "CollisionComponent.hh"
 #include "DrawingComponent.hh"
 #include "Entity.hh"
 #include "PhysicsComponent.hh"
@@ -19,14 +20,10 @@ class GameObject : public Entity {
              const std::shared_ptr<PhysicsComponent> physicsComponent = nullptr,
              const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
   virtual ~GameObject();
-  std::shared_ptr<DrawingComponent> getDrawingComponent() const;
-  void setDrawingComponent(const std::shared_ptr<DrawingComponent> drawingComponent);
-  std::shared_ptr<PhysicsComponent> getPhysicsComponent() const;
-  void setPhysicsComponent(const std::shared_ptr<PhysicsComponent> physicsComponent);
   std::shared_ptr<PositionComponent> getPositionComponent() const;
-  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent);
+  std::shared_ptr<DrawingComponent> getDrawingComponent() const;
+  virtual PhysicsComponent* getPhysicsComponent() const;
   std::shared_ptr<CollisionComponent> getCollisionComponent();
-  void setCollisionComponent(const std::shared_ptr<CollisionComponent> collisionComponent);
 
   void inferBoundingBoxFromTexture();
 
