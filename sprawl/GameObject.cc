@@ -1,5 +1,7 @@
 #include "GameObject.hh"
 
+#include "SimplePhysicsComponent.hh"
+
 GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<PositionComponent> positionComponent,
                        const std::shared_ptr<CollisionComponent> collisionComponent,
                        const std::shared_ptr<PhysicsComponent> physicsComponent,
@@ -17,9 +19,10 @@ GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<Posit
           : collisionComponent;
   this->collisionComponent->setOwnerIdentity(this->getIdentity());
 
-  this->physicsComponent = (physicsComponent == nullptr)
-                               ? std::shared_ptr<PhysicsComponent>(new PhysicsComponent(this->getIdentity()))
-                               : physicsComponent;
+  this->physicsComponent =
+      (physicsComponent == nullptr)
+          ? std::shared_ptr<SimplePhysicsComponent>(new SimplePhysicsComponent(this->getIdentity()))
+          : physicsComponent;
   this->physicsComponent->setOwnerIdentity(this->getIdentity());
 
   this->drawingComponent =
@@ -32,13 +35,8 @@ GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<Posit
 GameObject::~GameObject() = default;
 
 std::shared_ptr<DrawingComponent> GameObject::getDrawingComponent() const { return this->drawingComponent; }
-
-std::shared_ptr<PhysicsComponent> GameObject::getPhysicsComponent() const {
-  return this->getPhysicsComponent_impl()->getptr();
-}
-
+PhysicsComponent* GameObject::getPhysicsComponent() const { return this->getPhysicsComponent_impl(); }
 std::shared_ptr<PositionComponent> GameObject::getPositionComponent() const { return this->positionComponent; }
-
 std::shared_ptr<CollisionComponent> GameObject::getCollisionComponent() { return this->collisionComponent; }
 
 void GameObject::inferBoundingBoxFromTexture() {
