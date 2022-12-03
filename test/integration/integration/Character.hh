@@ -2,6 +2,7 @@
 #pragma once
 
 #include "CharacterPhysicsComponent.hh"
+#include "CollisionComponent.hh"
 #include "GameAction.hh"
 #include "GameObject.hh"
 #include "Logging.hh"
@@ -23,8 +24,7 @@ class Character : public GameObject {
   void move(const GameAction& action);
   void jump();
 
-  std::shared_ptr<CharacterPhysicsComponent> getPhysicsComponent() const;
-  void setPhysicsComponent(const std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent);
+  CharacterPhysicsComponent* getPhysicsComponent() const override;
 
  private:
   std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
