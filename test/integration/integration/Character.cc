@@ -13,10 +13,6 @@ Character::Character(const EntityName entityName, const std::shared_ptr<Position
   this->characterPhysicsComponent->setOwnerIdentity(this->getIdentity());
 }
 
-std::shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {
-  return this->getPhysicsComponent_impl()->getptr();
-}
-
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
   // character cannot move past the edge of the screen.
@@ -47,5 +43,3 @@ void Character::jump() {
   }
   this->getPhysicsComponent()->applyJumpForce();
 }
-
-CharacterPhysicsComponent* Character::getPhysicsComponent_impl() const { return this->characterPhysicsComponent.get(); }

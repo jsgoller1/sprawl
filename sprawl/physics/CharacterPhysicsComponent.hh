@@ -1,19 +1,17 @@
 #pragma once
 
-#include "PhysicsComponent.hh"
-
-#define ENABLE_GRAVITY true
-#define ENABLE_FORCE_RESPONSIVE true
+#include "RealisticPhysicsComponent.hh"
 
 /*
 CharacterPhysicsComponent is a specialized version of PhysicsComponent
 that has character-related physics functionality.
 */
 
-class CharacterPhysicsComponent : public PhysicsComponent {
+class CharacterPhysicsComponent : public RealisticPhysicsComponent {
  public:
   CharacterPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr);
-  CharacterPhysicsComponent(const std::shared_ptr<PhysicsComponent> comp);
+  CharacterPhysicsComponent(const std::shared_ptr<RealisticPhysicsComponent> comp);
+  ~CharacterPhysicsComponent() override;
 
   // TODO: This hides the name PhysicsComponent::getptr(). This is probably
   // a footgun and I'm going to regret it later.
