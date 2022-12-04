@@ -16,7 +16,14 @@ Vect2D DrawingComponent::getDrawPoint() const {
   // this as the top left of the image and draws from there. We do not
   // need to account for other SDL specifics here (i.e. y-axis flip or top left
   // corner.)
-  Vect2D drawPoint = this->positionComponent->getCenter();
+  Vect2D drawPoint = Vect2D::zero();
+  if (this->positionComponent == nullptr) {
+    // TODO: This is a useless error message without a reliable way to log which component generates it, which we
+    // currently cannot do.
+    LOG_ERROR_SYS(LoggingSubsystem::RENDERING, "No PositionComponent for DrawingComponent; rendering to (0,0)");
+  } else {
+    drawPoint = this->positionComponent->getCenter();
+  }
   drawPoint.x(drawPoint.x() - this->getWidth() / 2);
   drawPoint.y(drawPoint.y() + this->getHeight() / 2);
   return drawPoint;

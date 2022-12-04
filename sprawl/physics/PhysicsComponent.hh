@@ -41,7 +41,7 @@ class PhysicsManager;
 class PhysicsComponent : public Component {
  public:
   // ctors / dtors
-  PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity, const bool forceResponsiveSetting = false,
+  PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const bool forceResponsiveSetting = false,
                    const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
                    const PositionUnit minSpeed = 0.0, const DragType dragType = DragType::TIME_EXPONENTIAL,
                    const real dragCoefficient = 0.0);

@@ -11,8 +11,8 @@ typedef double Angle;
 
 class DrawingComponent : public Component {
  public:
-  DrawingComponent(const std::shared_ptr<Identity> ownerIdentity,
-                   const std::shared_ptr<PositionComponent> positionComponent,
+  DrawingComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr,
+                   const std::shared_ptr<PositionComponent> positionComponent = nullptr,
                    const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
   // Accessors for components

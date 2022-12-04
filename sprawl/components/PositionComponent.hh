@@ -6,8 +6,8 @@
 
 class PositionComponent : public Component {
  public:
-  PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const Vect2D& center);
-  PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const XCoord x = 0.0, const YCoord y = 0.0);
+  PositionComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const XCoord x = 0.0,
+                    const YCoord y = 0.0);
 
   PositionUnit x() const;
   void x(const PositionUnit x);

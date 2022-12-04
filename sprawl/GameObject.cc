@@ -9,23 +9,27 @@ GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<Posit
       (positionComponent == nullptr)
           ? std::shared_ptr<PositionComponent>(new PositionComponent(this->getIdentity(), 0.0, 0.0))
           : positionComponent;
+  this->positionComponent->setOwnerIdentity(this->getIdentity());
 
   this->collisionComponent =
       (collisionComponent == nullptr)
           ? std::shared_ptr<CollisionComponent>(new CollisionComponent(this->getIdentity(), this->positionComponent))
           : collisionComponent;
+  this->collisionComponent->setOwnerIdentity(this->getIdentity());
 
   this->physicsComponent = (physicsComponent == nullptr)
                                ? std::shared_ptr<PhysicsComponent>(new PhysicsComponent(this->getIdentity()))
                                : physicsComponent;
+  this->physicsComponent->setOwnerIdentity(this->getIdentity());
 
   this->drawingComponent =
       (drawingComponent == nullptr)
           ? std::shared_ptr<DrawingComponent>(new DrawingComponent(this->getIdentity(), this->positionComponent))
           : drawingComponent;
+  this->drawingComponent->setOwnerIdentity(this->getIdentity());
 }
 
-GameObject::~GameObject() {}
+GameObject::~GameObject() = default;
 
 std::shared_ptr<DrawingComponent> GameObject::getDrawingComponent() const { return this->drawingComponent; }
 void GameObject::setDrawingComponent(const std::shared_ptr<DrawingComponent> drawingComponent) {
