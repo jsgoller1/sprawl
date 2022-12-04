@@ -12,7 +12,7 @@ that has character-related physics functionality.
 
 class CharacterPhysicsComponent : public PhysicsComponent {
  public:
-  CharacterPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity);
+  CharacterPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr);
   CharacterPhysicsComponent(const std::shared_ptr<PhysicsComponent> comp);
 
   // TODO: This hides the name PhysicsComponent::getptr(). This is probably
