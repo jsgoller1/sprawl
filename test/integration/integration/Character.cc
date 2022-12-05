@@ -16,9 +16,6 @@ Character::Character(const EntityName entityName, const std::shared_ptr<Position
 std::shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {
   return this->getPhysicsComponent_impl()->getptr();
 }
-void Character::setPhysicsComponent(const std::shared_ptr<CharacterPhysicsComponent> physicsComponent) {
-  this->setPhysicsComponent_impl(physicsComponent.get());
-}
 
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
@@ -51,9 +48,4 @@ void Character::jump() {
   this->getPhysicsComponent()->applyJumpForce();
 }
 
-// Private
-void Character::setPhysicsComponent_impl(PhysicsComponent* const comp) {
-  this->characterPhysicsComponent =
-      std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(comp->getptr()));
-}
 CharacterPhysicsComponent* Character::getPhysicsComponent_impl() const { return this->characterPhysicsComponent.get(); }

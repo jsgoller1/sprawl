@@ -32,6 +32,5 @@ class Character : public GameObject {
   std::shared_ptr<Vect2D> moveSpeed;
   bool canDoubleJump;
 
-  virtual void setPhysicsComponent_impl(PhysicsComponent* const comp) override;
   virtual CharacterPhysicsComponent* getPhysicsComponent_impl() const override;
 };

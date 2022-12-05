@@ -11,7 +11,7 @@
             "cwd": "/home/joshua/Code/sprawl",
             "program": "${cwd}/bin/sprawl",
             "args": [
-                "${cwd}/wads/playtests/mvp"
+                "${cwd}/test/integration/mvp"
             ],
             "environment": [],
             "MIMode": "gdb",
