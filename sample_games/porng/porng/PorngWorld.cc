@@ -14,11 +14,11 @@ void PorngWorld::handleInput(const std::shared_ptr<GameLoopInputEvents> inputEve
   switch (action) {
     case MOVE_DOWN:
       LOG_INFO_SYS(ZONE, std::string("Got move action: {0}", action));
-      this->_playerPaddle->move(action);
+      this->_playerPaddle->move(Vect2D(0.0, -10.0));
       break;
     case MOVE_UP:
       LOG_INFO_SYS(ZONE, std::string("Got move action: {0}", action));
-      this->_playerPaddle->move(action);
+      this->_playerPaddle->move(Vect2D(0.0, 10.0));
       break;
     default:
       LOG_DEBUG_SYS(ZONE, std::string("Got move unknown action: {0}", action));

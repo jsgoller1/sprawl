@@ -25,6 +25,8 @@ class GameObject : public Entity {
   virtual PhysicsComponent* getPhysicsComponent() const;
   std::shared_ptr<DrawingComponent> getDrawingComponent() const;
 
+  virtual void move(const Vect2D& delta);
+  virtual void setCenter(const Vect2D& position);
   void inferBoundingBoxFromTexture();
 
  private:

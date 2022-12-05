@@ -62,7 +62,7 @@ void PorngWADLoader::loadBall(PorngWorld& world, const nlohmann::json& jsonBody)
   nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
 
   EntityName name;
-  std::shared_ptr<Ball> net;
+  std::shared_ptr<Ball> ball;
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
@@ -70,22 +70,14 @@ void PorngWADLoader::loadBall(PorngWorld& world, const nlohmann::json& jsonBody)
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    net = std::shared_ptr<Ball>(new Ball(name));
-    identity = net->getIdentity();
-
-    positionComponent = this->loadPositionComponent(identity, positionConfig);
+    positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    net->setPositionComponent(positionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
+    ball = std::shared_ptr<Ball>(new Ball(name));
+    ball->inferBoundingBoxFromTexture();
 
-    drawingComponent = this->loadDrawingComponent(identity, positionComponent, drawingConfig);
-    net->setDrawingComponent(drawingComponent);
-
-    collisionComponent = this->loadCollisionComponent(identity, positionComponent, collisionsConfig);
-
-    net->setCollisionComponent(collisionComponent);
-    net->inferBoundingBoxFromTexture();
-
-    world.addGameObject(net);
+    world.addGameObject(ball);
   }
 }
 
@@ -107,16 +99,10 @@ void PorngWADLoader::loadNet(PorngWorld& world, const nlohmann::json& jsonBody) 
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    net = std::shared_ptr<Net>(new Net(name));
-    identity = net->getIdentity();
-
-    positionComponent = this->loadPositionComponent(identity, positionConfig);
+    positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    net->setPositionComponent(positionComponent);
-
-    drawingComponent = this->loadDrawingComponent(identity, positionComponent, drawingConfig);
-    net->setDrawingComponent(drawingComponent);
-
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    net = std::shared_ptr<Net>(new Net(name, positionComponent, drawingComponent));
     world.addGameObject(net);
   }
 }
@@ -140,19 +126,12 @@ void PorngWADLoader::loadPaddle(PorngWorld& world, const nlohmann::json& jsonBod
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    paddle = std::shared_ptr<Paddle>(new Paddle(name));
-    identity = paddle->getIdentity();
 
-    positionComponent = this->loadPositionComponent(identity, positionConfig);
+    positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    paddle->setPositionComponent(positionComponent);
-
-    drawingComponent = this->loadDrawingComponent(identity, positionComponent, drawingConfig);
-    paddle->setDrawingComponent(drawingComponent);
-
-    collisionComponent = this->loadCollisionComponent(identity, positionComponent, collisionsConfig);
-
-    paddle->setCollisionComponent(collisionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
+    paddle = std::shared_ptr<Paddle>(new Paddle(name));
     paddle->inferBoundingBoxFromTexture();
 
     world.addGameObject(paddle);

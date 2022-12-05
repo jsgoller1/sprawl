@@ -6,6 +6,8 @@ PhysicsComponent::PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity
 
 PhysicsComponent::~PhysicsComponent() = default;
 
+std::shared_ptr<PhysicsComponent> PhysicsComponent::getSharedPtr() { return this->shared_from_this(); }
+
 PositionUnit PhysicsComponent::getMaxSpeed() const { return this->_maxSpeed; }
 void PhysicsComponent::setMaxSpeed(const PositionUnit maxSpeed) { this->_maxSpeed = maxSpeed; }
 PositionUnit PhysicsComponent::getMinSpeed() { return this->_minSpeed; }

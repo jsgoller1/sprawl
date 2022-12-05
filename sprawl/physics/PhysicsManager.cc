@@ -88,7 +88,7 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     for (Collision collision : *collisions) {
       physicsComponent->resolveCollision(collision);
     }
-    LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", physicsComponent->getOwnerIdentity()->getEntityID());
+    LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", *physicsComponent->getOwnerIdentity()->getEntityID());
   }
 }
 

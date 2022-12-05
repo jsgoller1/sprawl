@@ -1,3 +1,4 @@
+#include "Paddle.hh"
 #include "World.hh"
 
 class GameStateFSM {
