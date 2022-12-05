@@ -20,13 +20,9 @@ class GameObject : public Entity {
              const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
   virtual ~GameObject();
   std::shared_ptr<DrawingComponent> getDrawingComponent() const;
-  void setDrawingComponent(const std::shared_ptr<DrawingComponent> drawingComponent);
   std::shared_ptr<PhysicsComponent> getPhysicsComponent() const;
-  void setPhysicsComponent(const std::shared_ptr<PhysicsComponent> physicsComponent);
   std::shared_ptr<PositionComponent> getPositionComponent() const;
-  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent);
   std::shared_ptr<CollisionComponent> getCollisionComponent();
-  void setCollisionComponent(const std::shared_ptr<CollisionComponent> collisionComponent);
 
   void inferBoundingBoxFromTexture();
 
@@ -44,6 +40,5 @@ class GameObject : public Entity {
   // hiding for now.
   // https://www.fluentcpp.com/2017/09/12/how-to-return-a-smart-pointer-and-use-covariance/
 
-  virtual void setPhysicsComponent_impl(PhysicsComponent* const comp);
   virtual PhysicsComponent* getPhysicsComponent_impl() const;
 };
