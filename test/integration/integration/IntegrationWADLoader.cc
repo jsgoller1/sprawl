@@ -41,7 +41,6 @@ std::shared_ptr<IntegrationWorld> IntegrationWADLoader::loadIntegrationWorld() c
   return world;
 }
 
-
 void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {
     return;
@@ -62,22 +61,15 @@ void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann:
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    platform = std::shared_ptr<Platform>(new Platform(name));
-    identity = platform->getIdentity();
-
-    positionComponent = this->loadPositionComponent(identity, positionConfig);
+    positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    platform->setPositionComponent(positionComponent);
 
-    physicsComponent = this->loadPhysicsComponent(identity, physicsConfig);
-    platform->setPhysicsComponent(physicsComponent);
+    physicsComponent = this->loadPhysicsComponent(physicsConfig);
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
-    drawingComponent = this->loadDrawingComponent(identity, positionComponent, drawingConfig);
-    platform->setDrawingComponent(drawingComponent);
-
-    collisionComponent = this->loadCollisionComponent(identity, positionComponent, collisionsConfig);
-
-    platform->setCollisionComponent(collisionComponent);
+    platform = std::shared_ptr<Platform>(
+        new Platform(name, positionComponent, physicsComponent, collisionComponent, drawingComponent));
     platform->inferBoundingBoxFromTexture();
 
     world.addGameObject(platform);
@@ -104,22 +96,18 @@ void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplicate", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
-    character = std::shared_ptr<Character>(new Character(name));
 
-    positionComponent = this->loadPositionComponent(character->getIdentity(), positionConfig);
+    positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    character->setPositionComponent(positionComponent);
 
-    physicsComponent = this->loadPhysicsComponent(character->getIdentity(), physicsConfig);
+    physicsComponent = this->loadPhysicsComponent(physicsConfig);
     characterPhysicsComponent =
         std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(physicsComponent));
-    character->setPhysicsComponent(characterPhysicsComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
-    drawingComponent = this->loadDrawingComponent(character->getIdentity(), positionComponent, drawingConfig);
-    character->setDrawingComponent(drawingComponent);
-
-    collisionComponent = this->loadCollisionComponent(character->getIdentity(), positionComponent, collisionsConfig);
-    character->setCollisionComponent(collisionComponent);
+    character = std::shared_ptr<Character>(
+        new Character(name, positionComponent, collisionComponent, characterPhysicsComponent, drawingComponent));
     character->inferBoundingBoxFromTexture();
     (jsonBody.value("isPlayerCharacter", false)) ? world.addPlayerCharacter(character) : world.addGameObject(character);
   }

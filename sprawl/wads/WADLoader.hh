@@ -35,16 +35,12 @@ class WADLoader {
   std::shared_ptr<Screen> loadScreen() const;
   std::shared_ptr<InputHandler> loadInputHandler() const;
 
-  std::shared_ptr<PositionComponent> loadPositionComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                                           const nlohmann::json& jsonBody) const;
-  std::shared_ptr<PhysicsComponent> loadPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                                         const nlohmann::json& jsonBody) const;
-  std::shared_ptr<DrawingComponent> loadDrawingComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                                         const std::shared_ptr<PositionComponent> positionComponent,
-                                                         const nlohmann::json& jsonBody) const;
-  std::shared_ptr<CollisionComponent> loadCollisionComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                                             const std::shared_ptr<PositionComponent> positionComponent,
-                                                             const nlohmann::json& jsonBody) const;
+  std::shared_ptr<PositionComponent> loadPositionComponent(const nlohmann::json& jsonBody) const;
+  std::shared_ptr<PhysicsComponent> loadPhysicsComponent(const nlohmann::json& jsonBody) const;
+  std::shared_ptr<DrawingComponent> loadDrawingComponent(
+      const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
+  std::shared_ptr<CollisionComponent> loadCollisionComponent(
+      const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
 
  protected:
   bool objectEnabled(const nlohmann::json& jsonBody) const;
