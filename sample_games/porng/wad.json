@@ -24,6 +24,7 @@
             "enabled": true,
             "name": "PlayerPaddle",
             "isPlayerCharacter": true,
+            "physics": {},
             "drawing": {
                 "texturePath": "/textures/eggplant_paddle.png"
             },
@@ -42,7 +43,7 @@
             "type": "Paddle",
             "enabled": true,
             "name": "OpponentPaddle",
-            "isPlayerCharacter": false,
+            "physics": {},
             "drawing": {
                 "texturePath": "/textures/peach_paddle.png"
             },
@@ -61,7 +62,7 @@
             "type": "Ball",
             "enabled": true,
             "name": "MoanBall",
-            "isPlayerCharacter": false,
+            "physics": {},
             "drawing": {
                 "texturePath": "/textures/moan_ball.png"
             },

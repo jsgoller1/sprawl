@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Component.hh"
 #include "Math.hh"
 #include "PositionComponent.hh"
@@ -9,12 +11,12 @@
 class Collision;
 class PhysicsManager;
 
-class PhysicsComponent : public Component {
+class PhysicsComponent : public Component, public std::enable_shared_from_this<PhysicsComponent> {
  public:
   PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const PositionUnit maxSpeed = 0.0,
                    const PositionUnit minSpeed = 0.0, const Vect2D velocity = Vect2D::zero());
   virtual ~PhysicsComponent();
-  std::shared_ptr<PhysicsComponent> getSharedPtr();
+  std::shared_ptr<PhysicsComponent> getptr();
 
   virtual PositionUnit getMaxSpeed() const;
   virtual void setMaxSpeed(const PositionUnit maxSpeed);

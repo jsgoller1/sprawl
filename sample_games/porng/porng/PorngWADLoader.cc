@@ -58,23 +58,26 @@ void PorngWADLoader::loadBall(PorngWorld& world, const nlohmann::json& jsonBody)
   nlohmann::json nameConfig = jsonBody.value("name", "");
   nlohmann::json positionConfig = jsonBody.value("position", nlohmann::json("{}"));
   nlohmann::json physicsConfig = jsonBody.value("physics", nlohmann::json("{}"));
-  nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
   nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
+  nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
 
   EntityName name;
   std::shared_ptr<Ball> ball;
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
-  std::shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<SimplePhysicsComponent> physicsComponent;
   std::shared_ptr<CollisionComponent> collisionComponent;
+  std::shared_ptr<DrawingComponent> drawingComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
     name = EntityName(nameConfig);
     positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    physicsComponent = this->loadSimplePhysicsComponent(physicsConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
-    ball = std::shared_ptr<Ball>(new Ball(name));
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    ball = std::shared_ptr<Ball>(
+        new Ball(name, positionComponent, physicsComponent, collisionComponent, drawingComponent));
     ball->inferBoundingBoxFromTexture();
 
     world.addGameObject(ball);
@@ -95,6 +98,7 @@ void PorngWADLoader::loadNet(PorngWorld& world, const nlohmann::json& jsonBody) 
   std::shared_ptr<Net> net;
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
+  std::shared_ptr<SimplePhysicsComponent> physicsComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
@@ -113,6 +117,7 @@ void PorngWADLoader::loadPaddle(PorngWorld& world, const nlohmann::json& jsonBod
   }
   nlohmann::json nameConfig = jsonBody.value("name", "");
   nlohmann::json positionConfig = jsonBody.value("position", nlohmann::json("{}"));
+  nlohmann::json physicsConfig = jsonBody.value("physics", nlohmann::json("{}"));
   nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
   nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
 
@@ -120,7 +125,7 @@ void PorngWADLoader::loadPaddle(PorngWorld& world, const nlohmann::json& jsonBod
   std::shared_ptr<Paddle> paddle;
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
-  std::shared_ptr<PhysicsComponent> physicsComponent;
+  std::shared_ptr<SimplePhysicsComponent> physicsComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
   std::shared_ptr<CollisionComponent> collisionComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
@@ -129,9 +134,12 @@ void PorngWADLoader::loadPaddle(PorngWorld& world, const nlohmann::json& jsonBod
 
     positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    physicsComponent = this->loadSimplePhysicsComponent(physicsConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
-    paddle = std::shared_ptr<Paddle>(new Paddle(name));
+    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+
+    paddle = std::shared_ptr<Paddle>(
+        new Paddle(name, positionComponent, physicsComponent, collisionComponent, drawingComponent));
     paddle->inferBoundingBoxFromTexture();
 
     world.addGameObject(paddle);
