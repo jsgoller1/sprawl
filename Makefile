@@ -40,7 +40,8 @@ clean-logs:
 clean-bin:
 	-rm $(ENGINE_BIN)
 
-clean-purge: clean-obj clean-deps clean-logs clean-bin
+clean-purge: clean-deps clean-logs clean-bin
+	find $(MODULES) -name "*.o" | sort -u | xargs rm
 
 # Ops-related makefiles; these involve automation
 # and no compilation. 
