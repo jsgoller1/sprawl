@@ -42,7 +42,6 @@ class RealisticPhysicsComponent : public PhysicsComponent {
                             const real dragCoefficient = 0.0, const PositionUnit maxSpeed = 0.0,
                             const PositionUnit minSpeed = 0.0, Vect2D velocity = Vect2D::zero());
   ~RealisticPhysicsComponent() override;
-  std::shared_ptr<RealisticPhysicsComponent> getptr();
 
   // Unique attribute accessors
   bool forceEnabled() const;

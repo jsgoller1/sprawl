@@ -14,10 +14,6 @@ RealisticPhysicsComponent::RealisticPhysicsComponent(const std::shared_ptr<Ident
 
 RealisticPhysicsComponent::~RealisticPhysicsComponent() = default;
 
-std::shared_ptr<RealisticPhysicsComponent> RealisticPhysicsComponent::getptr() {
-  return std::static_pointer_cast<RealisticPhysicsComponent, PhysicsComponent>(this->shared_from_this());
-}
-
 // Unique attribute accessors
 bool RealisticPhysicsComponent::forceEnabled() const { return this->_forceResponsive; }
 void RealisticPhysicsComponent::forceEnabled(const bool setting) { this->_forceResponsive = setting; }
