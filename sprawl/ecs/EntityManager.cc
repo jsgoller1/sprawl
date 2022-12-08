@@ -1,5 +1,6 @@
 #include "EntityManager.hh"
 
+#include "Entity.hh"
 #include "fmt/format.h"
 
 // Public
@@ -31,12 +32,9 @@ std::shared_ptr<Identity> EntityManager::manage(Entity* entity, const EntityName
     // TODO: Log warning here
     return nullptr;
   }
-
   std::shared_ptr<Identity> identity = this->createIdentity(name);
-
   this->identityToEntity->insert(std::pair<std::shared_ptr<Identity>, Entity*>(identity, entity));
   this->entityToIdentity->insert(std::pair<Entity*, std::shared_ptr<Identity>>(entity, identity));
-
   return identity;
 }
 void EntityManager::unmanage(Entity* entity) {
@@ -53,9 +51,7 @@ void EntityManager::unmanage(Entity* entity) {
 std::shared_ptr<Identity> EntityManager::createIdentity(const EntityName name) {
   this->entityCount++;
   EntityName actualName = fmt::format("{0}-{1}", (name.size() ? name : "Entity-"), std::to_string(this->entityCount));
-
-  std::shared_ptr<EntityID> entityID = std::shared_ptr<EntityID>(new EntityID(actualName));
-  return std::shared_ptr<Identity>(new Identity(entityID));
+  return std::shared_ptr<Identity>(new Identity(actualName));
 }
 
 std::shared_ptr<std::set<Entity*>> EntityManager::getAllEntities() {

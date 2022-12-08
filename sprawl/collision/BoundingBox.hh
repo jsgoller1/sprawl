@@ -22,6 +22,7 @@ class BoundingBox {
    */
  public:
   BoundingBox(const Vect2D& center, const PositionUnit height, const PositionUnit width);
+  BoundingBox(const Rectangle& box);
   BoundingBox(const BoundingBox& boundingBox);
 
   Rectangle box() const;

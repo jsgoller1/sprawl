@@ -8,27 +8,20 @@
 #include "Types.hh"
 
 typedef double Angle;
+typedef int DrawingLayer;
 
 class DrawingComponent : public Component {
  public:
   DrawingComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr,
-                   const std::shared_ptr<PositionComponent> positionComponent = nullptr,
                    const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
 
   // Accessors for components
-  std::shared_ptr<PositionComponent> getPositionComponent() const;
-  void setPositionComponent(const std::shared_ptr<PositionComponent> positionComponent);
   std::shared_ptr<Texture> getTexture() const;
   void setTexture(const std::shared_ptr<Texture> texture);
 
   // Forwards to Texture
   PositionUnit getWidth() const;
   PositionUnit getHeight() const;
-
-  // Forwards to PositionComponent
-  real getX() const;
-  real getY() const;
-  Vect2D getCenter() const;
 
   // Accessors for attributes
   Angle getAngle() const;
@@ -38,13 +31,9 @@ class DrawingComponent : public Component {
   SDL_Rect* getClippingRectangle() const;
   void setClippingRectangle(SDL_Rect* const clippingRectangle);
 
-  // Unique methods
-  Vect2D getDrawPoint() const;
-
  private:
-  std::shared_ptr<PositionComponent> positionComponent;
   std::shared_ptr<Texture> texture;
-
+  DrawingLayer layer;
   Angle angle;
   SDL_Rect* clippingRectangle;
   SDL_RendererFlip flip;

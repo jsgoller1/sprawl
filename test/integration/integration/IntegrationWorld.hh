@@ -5,6 +5,7 @@
 
 class IntegrationWorld : public World {
  public:
+  IntegrationWorld(const GraphicsSettings& screenParameters);
   void addPlayerCharacter(const std::shared_ptr<Character> playerCharacter);
 
  private:

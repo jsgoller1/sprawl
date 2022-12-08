@@ -2,20 +2,19 @@
 
 Character::Character(const EntityName entityName, const std::shared_ptr<PositionComponent> positionComponent,
                      const std::shared_ptr<CollisionComponent> collisionComponent,
-                     const std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent,
+                     const std::shared_ptr<CharacterPhysicsComponent> physicsComponent,
                      const std::shared_ptr<DrawingComponent> drawingComponent)
     : GameObject(entityName, positionComponent, collisionComponent, nullptr, drawingComponent) {
+  std::shared_ptr<Identity> id = this->getIdentity().shared_from_this();
+
   this->moveSpeed = std::shared_ptr<Vect2D>(new Vect2D(10.0, 10.0));
-  this->characterPhysicsComponent =
-      (characterPhysicsComponent == nullptr)
-          ? std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(this->getIdentity()))
-          : characterPhysicsComponent;
-  this->characterPhysicsComponent->setOwnerIdentity(this->getIdentity());
+  this->_physicsComponent = (physicsComponent == nullptr)
+                                ? std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(id))
+                                : physicsComponent;
+  this->_physicsComponent->setOwnerIdentity(id);
 }
 
-std::shared_ptr<CharacterPhysicsComponent> Character::getPhysicsComponent() const {
-  return this->getPhysicsComponent_impl()->getptr();
-}
+CharacterPhysicsComponent& Character::getPhysicsComponent() const { return *this->_physicsComponent; }
 
 void Character::move(const GameAction& action) {
   // TODO: For now, no scrolling is implemented, so the
@@ -27,10 +26,10 @@ void Character::move(const GameAction& action) {
       this->jump();
       break;
     case MOVE_LEFT:
-      this->getPhysicsComponent()->applyMovementForce(Direction::Left());
+      this->getPhysicsComponent().applyMovementForce(Direction::Left());
       break;
     case MOVE_RIGHT:
-      this->getPhysicsComponent()->applyMovementForce(Direction::Right());
+      this->getPhysicsComponent().applyMovementForce(Direction::Right());
       break;
     default:
       // TODO: should warn
@@ -42,10 +41,8 @@ void Character::jump() {
   if (not this->canDoubleJump) {
     return;
   }
-  if (this->getPhysicsComponent()->isMidair()) {
+  if (this->getPhysicsComponent().isMidair()) {
     this->canDoubleJump = false;
   }
-  this->getPhysicsComponent()->applyJumpForce();
+  this->getPhysicsComponent().applyJumpForce();
 }
-
-CharacterPhysicsComponent* Character::getPhysicsComponent_impl() const { return this->characterPhysicsComponent.get(); }

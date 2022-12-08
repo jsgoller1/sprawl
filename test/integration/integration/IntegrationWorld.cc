@@ -1,9 +1,12 @@
 #include "IntegrationWorld.hh"
 
+#include "GameLoopInputEvents.hh"
+#include "PhysicsManager.hh"
+
+IntegrationWorld::IntegrationWorld(const GraphicsSettings& graphicsSettings) : World(graphicsSettings) {}
+
 void IntegrationWorld::addPlayerCharacter(const std::shared_ptr<Character> playerCharacter) {
   this->playerCharacter = playerCharacter;
-  this->getPhysicsManager()->manage(playerCharacter->getIdentity(), playerCharacter->getPhysicsComponent(),
-                                    playerCharacter->getPositionComponent(), playerCharacter->getCollisionComponent());
   this->addGameObject(playerCharacter);
 }
 

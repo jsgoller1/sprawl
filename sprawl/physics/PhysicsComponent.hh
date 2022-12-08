@@ -45,7 +45,6 @@ class PhysicsComponent : public Component {
                    const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
                    const PositionUnit minSpeed = 0.0, const DragType dragType = DragType::TIME_EXPONENTIAL,
                    const real dragCoefficient = 0.0);
-  std::shared_ptr<PhysicsComponent> getptr();
 
   // Forwarding methods
   bool checkCollision(const PhysicsComponent& comp) const;

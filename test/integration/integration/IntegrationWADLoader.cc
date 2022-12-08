@@ -4,6 +4,7 @@
 #include <string>
 
 #include "IntegrationWorld.hh"
+#include "PhysicsManager.hh"
 #include "Platform.hh"
 
 IntegrationWADLoader::~IntegrationWADLoader() = default;
@@ -13,11 +14,12 @@ std::shared_ptr<IntegrationWorld> IntegrationWADLoader::loadIntegrationWorld() c
   // TODO: Add error checking with helpful messages. Pretending for now that
   // IntegrationWADLoader files are always correctly structured json
 
-  std::shared_ptr<IntegrationWorld> world = std::shared_ptr<IntegrationWorld>(new IntegrationWorld());
   nlohmann::json jsonData = this->getJsonBody();
+  std::shared_ptr<IntegrationWorld> world =
+      std::make_shared<IntegrationWorld>(this->loadGraphicsSettings(jsonData["graphics"]));
 
   if (jsonData.contains("gravityConstant")) {
-    world->getPhysicsManager()->setGravityConstant(jsonData["gravityConstant"]);
+    world->getPhysicsManager().setGravityConstant(jsonData["gravityConstant"]);
   }
 
   if (jsonData.contains("background")) {
@@ -27,6 +29,9 @@ std::shared_ptr<IntegrationWorld> IntegrationWADLoader::loadIntegrationWorld() c
   if (jsonData.contains("gameObjects")) {
     std::shared_ptr<GameObject> object;
     for (auto gameObjectJSON : jsonData["gameObjects"]) {
+      if (gameObjectJSON["enabled"] == false) {
+        continue;
+      }
       LOG_DEBUG_SYS(WADLOADER, "Loading GameObject: {0}", nlohmann::to_string(gameObjectJSON));
       if (gameObjectJSON["type"] == "Character") {
         this->loadCharacter(*world, gameObjectJSON);
@@ -65,7 +70,7 @@ void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann:
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
 
     physicsComponent = this->loadPhysicsComponent(physicsConfig);
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
     platform = std::shared_ptr<Platform>(
@@ -103,7 +108,7 @@ void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann
     physicsComponent = this->loadPhysicsComponent(physicsConfig);
     characterPhysicsComponent =
         std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(physicsComponent));
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
     character = std::shared_ptr<Character>(

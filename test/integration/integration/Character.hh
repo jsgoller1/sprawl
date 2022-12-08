@@ -23,14 +23,11 @@ class Character : public GameObject {
   void move(const GameAction& action);
   void jump();
 
-  std::shared_ptr<CharacterPhysicsComponent> getPhysicsComponent() const;
-  void setPhysicsComponent(const std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent);
+  CharacterPhysicsComponent& getPhysicsComponent() const override;
 
  private:
-  std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
+  std::shared_ptr<CharacterPhysicsComponent> _physicsComponent;
 
   std::shared_ptr<Vect2D> moveSpeed;
   bool canDoubleJump;
-
-  virtual CharacterPhysicsComponent* getPhysicsComponent_impl() const override;
 };

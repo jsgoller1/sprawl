@@ -8,11 +8,11 @@
 // Forward decls;
 class CollisionComponent;
 class DrawingComponent;
+struct GraphicsSettings;
 class InputHandler;
 class Identity;
 class PhysicsComponent;
 class PositionComponent;
-class Screen;
 class World;
 class Zone;
 
@@ -32,13 +32,12 @@ class WADLoader {
   WADLoader(const FilePath& wadPath);
   virtual ~WADLoader();
   void loadLogging() const;
-  std::shared_ptr<Screen> loadScreen() const;
-  std::shared_ptr<InputHandler> loadInputHandler() const;
 
+  std::shared_ptr<InputHandler> loadInputHandler() const;
+  GraphicsSettings loadGraphicsSettings(const nlohmann::json& jsonBody) const;
   std::shared_ptr<PositionComponent> loadPositionComponent(const nlohmann::json& jsonBody) const;
   std::shared_ptr<PhysicsComponent> loadPhysicsComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<DrawingComponent> loadDrawingComponent(
-      const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
+  std::shared_ptr<DrawingComponent> loadDrawingComponent(const nlohmann::json& jsonBody) const;
   std::shared_ptr<CollisionComponent> loadCollisionComponent(
       const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
 

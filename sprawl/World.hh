@@ -1,24 +1,28 @@
 #pragma once
 
+#include <memory>
+#include <vector>
+
 #include "Background.hh"
-#include "DrawingComponent.hh"
-#include "GameAction.hh"
-#include "GameObject.hh"
-#include "InputHandler.hh"
-#include "Logging.hh"
+#include "DrawingManager.hh"
+#include "GraphicsSettings.hh"
+#include "Math.hh"
 #include "PhysicsManager.hh"
-#include "PositionComponent.hh"
-#include "Texture.hh"
 #include "Types.hh"
 
 // Forward declaration
+class Background;
+class DrawingManager;
+class GameObject;
+class GameLoopInputEvents;
+class PhysicsManager;
 class WADLoader;
 
 /*
- * Originally, we were testing if an object goes off the screen in PositionComponent. Instead, we should have each World
- * own a WorldFence object or something. In Unity, there is no (to my knowledge) inherent limit on the world size;
- * instead, the player must construct boundaries and a skybox to keep the player inside a play area, and kill them if
- * they leave. We should follow suit, but make it easy to keep the player in the boundary area.
+ * Originally, we were testing if an object goes off the screen in PositionComponent. Instead, we should have each
+ * World own a WorldFence object or something. In Unity, there is no (to my knowledge) inherent limit on the world
+ * size; instead, the player must construct boundaries and a skybox to keep the player inside a play area, and kill
+ * them if they leave. We should follow suit, but make it easy to keep the player in the boundary area.
  *
  * Original bounding code:
  *   bool PositionComponent::validPosition(const Vect2D& position) {
@@ -39,18 +43,14 @@ class World {
    * should be drawn on the screen. Eventually, we'll want to be able to scroll around in them.
    */
  public:
-  World();
+  World(const GraphicsSettings& screenParameters);
   virtual ~World();
-  std::shared_ptr<Background> getBackground() const;
+  std::shared_ptr<Background> getBackground();
   void setBackground(const std::shared_ptr<Background> background);
-  std::shared_ptr<PhysicsManager> getPhysicsManager() const;
-  void setPhysicsManager(const std::shared_ptr<PhysicsManager> physicsManager);
-  std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> getGameObjects() const;
-  void setGameObjects(const std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> gameObjects);
+  PhysicsManager& getPhysicsManager();
+  void setPhysicsManager(const PhysicsManager& physicsManager);
+  std::vector<std::shared_ptr<GameObject>>& getGameObjects();
   void addGameObject(const std::shared_ptr<GameObject> gameObject);
-
-  // TODO: serialize(); // needed for saving game and level editor
-  virtual std::shared_ptr<std::vector<std::shared_ptr<DrawingComponent>>> getDrawables() const;
 
   void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
 
@@ -61,13 +61,16 @@ class World {
   // TODO: Do we need getters and setters for these attributes? Unlikely, but
   // possible if managers within the World need to talk to each other. Don't need
   // them presently.
-  std::shared_ptr<Background> background;
-  std::shared_ptr<PhysicsManager> physicsManager;
+  PhysicsManager physicsManager = PhysicsManager();
+
+  // TODO: Because of SDL behavior, we cannot currently double-init the drawing manager.
+  DrawingManager drawingManager;
 
   // TODO: Since GameObjects have a unique ID, we should be able to insert them into
   // a set. Furthermore, we might not even need a distinct GameObject collection if we make
   // just forward to the EntityManager. We need to resolve "who owns game objects?"
-  std::shared_ptr<std::vector<std::shared_ptr<GameObject>>> gameObjects;
+  std::shared_ptr<Background> background;
+  std::vector<std::shared_ptr<GameObject>> gameObjects;
 
   virtual void handleInput(const std::shared_ptr<GameLoopInputEvents> inputEvents) = 0;
 };

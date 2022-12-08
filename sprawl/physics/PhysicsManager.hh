@@ -32,7 +32,6 @@ class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
   // TODO: We can probably factor out of this a variadic template Manager
   // class, but we don't need it until we have at least 3-4 manager systems.
   PhysicsManager();
-  std::shared_ptr<PhysicsManager> getptr();
   void gameLoopUpdate(const time_ms duration);
 
   void manage(const std::shared_ptr<Identity> identity, const std::shared_ptr<PhysicsComponent> physicsComponent,

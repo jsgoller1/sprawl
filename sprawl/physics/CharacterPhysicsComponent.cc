@@ -8,10 +8,6 @@ CharacterPhysicsComponent::CharacterPhysicsComponent(const std::shared_ptr<Ident
 CharacterPhysicsComponent::CharacterPhysicsComponent(const std::shared_ptr<PhysicsComponent> comp)
     : PhysicsComponent(*comp) {}
 
-std::shared_ptr<CharacterPhysicsComponent> CharacterPhysicsComponent::getptr() {
-  return std::static_pointer_cast<CharacterPhysicsComponent, Component>(this->shared_from_this());
-}
-
 void CharacterPhysicsComponent::applyJumpForce() {
   Vect2D moveForce = Vect2D(0.0, 10.0);
   this->applyForce(moveForce);

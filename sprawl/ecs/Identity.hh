@@ -7,14 +7,18 @@
 
 typedef std::string EntityID;
 
-class Identity {
+const EntityID NullIdentity = EntityID("NullIdentity");
+
+class Identity : public std::enable_shared_from_this<Identity> {
  public:
-  std::shared_ptr<const EntityID> getEntityID() const;
+  const EntityID& getEntityID() const;
   std::string toString();
+
+  static Identity null() { return Identity(NullIdentity); }
 
  private:
   friend class EntityManager;
-  Identity(const std::shared_ptr<EntityID> entityID);
+  Identity(const EntityID& entityID);
 
-  std::shared_ptr<const EntityID> entityID;
+  EntityID _entityID;
 };

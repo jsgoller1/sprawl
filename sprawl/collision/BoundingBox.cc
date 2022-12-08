@@ -3,6 +3,9 @@
 BoundingBox::BoundingBox(const Vect2D& center, const PositionUnit height, const PositionUnit width) {
   this->_box = Rectangle(center, height, width);
 }
+
+BoundingBox::BoundingBox(const Rectangle& box) { this->_box = Rectangle(box); }
+
 BoundingBox::BoundingBox(const BoundingBox& boundingBox) { this->_box = Rectangle(boundingBox.box()); }
 
 Rectangle BoundingBox::box() const { return this->_box; }

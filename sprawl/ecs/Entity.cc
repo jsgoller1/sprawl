@@ -1,5 +1,7 @@
 #include "Entity.hh"
 
+#include "EntityManager.hh"
+
 Entity::Entity(const EntityName name) {
   std::shared_ptr<EntityManager> entityManager = EntityManager::instance();
   this->_name = name;
@@ -11,7 +13,7 @@ Entity::~Entity() {
   entityManager->unmanage(this);
 }
 
-std::shared_ptr<Identity> Entity::getIdentity() const { return this->_identity; }
+Identity& Entity::getIdentity() const { return *(this->_identity); }
 
 EntityName Entity::getName() const { return this->_name; }
 void Entity::setName(const EntityName name) { this->_name = name; }

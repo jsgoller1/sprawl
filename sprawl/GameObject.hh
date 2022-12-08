@@ -1,12 +1,14 @@
 #pragma once
-
+#include <memory>
 #include <vector>
 
-#include "BoundingBox.hh"
-#include "DrawingComponent.hh"
 #include "Entity.hh"
-#include "PhysicsComponent.hh"
-#include "PositionComponent.hh"
+
+// Forward decls
+class PositionComponent;
+class CollisionComponent;
+class PhysicsComponent;
+class DrawingComponent;
 
 class GameObject : public Entity {
   /*
@@ -19,10 +21,10 @@ class GameObject : public Entity {
              const std::shared_ptr<PhysicsComponent> physicsComponent = nullptr,
              const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
   virtual ~GameObject();
-  std::shared_ptr<DrawingComponent> getDrawingComponent() const;
-  std::shared_ptr<PhysicsComponent> getPhysicsComponent() const;
-  std::shared_ptr<PositionComponent> getPositionComponent() const;
-  std::shared_ptr<CollisionComponent> getCollisionComponent();
+  virtual DrawingComponent& getDrawingComponent() const;
+  virtual PhysicsComponent& getPhysicsComponent() const;
+  virtual PositionComponent& getPositionComponent() const;
+  virtual CollisionComponent& getCollisionComponent() const;
 
   void inferBoundingBoxFromTexture();
 
@@ -31,14 +33,4 @@ class GameObject : public Entity {
   std::shared_ptr<PhysicsComponent> physicsComponent;
   std::shared_ptr<CollisionComponent> collisionComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
-
-  // NOTE: This is a technique we use to allow for covariant returns
-  // with smart pointers; unfortunately, it doesn't also work for
-  // setters because of restrictions on parameters that don't apply to
-  // return types. We might be able to get a complicated solution mixing
-  // inheiritance and templates, but we'll settle with some unfortunate name
-  // hiding for now.
-  // https://www.fluentcpp.com/2017/09/12/how-to-return-a-smart-pointer-and-use-covariance/
-
-  virtual PhysicsComponent* getPhysicsComponent_impl() const;
 };
