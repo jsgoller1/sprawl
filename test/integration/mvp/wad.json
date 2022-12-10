@@ -1,7 +1,7 @@
 {
-    "screen": {
-        "width": 1920,
-        "height": 1080
+    "graphics": {
+        "screenWidth": 1920,
+        "screenHeight": 1080
     },
     "logging": {
         "defaultLogLevel": "WARN",
@@ -29,7 +29,7 @@
         ]
     },
     "background": {
-        "enabled": true,
+        "enabled": false,
         "name": "MVP background",
         "drawing": {
             "texturePath": "/textures/background.bmp"

@@ -13,10 +13,6 @@ CollisionComponent::CollisionComponent(const std::shared_ptr<Identity> ownerIden
       _width(width),
       _collisionsEnabled(collisionsEnabled) {}
 
-std::shared_ptr<CollisionComponent> CollisionComponent::getptr() {
-  return std::static_pointer_cast<CollisionComponent, Component>(this->shared_from_this());
-}
-
 std::shared_ptr<PositionComponent> CollisionComponent::positionComponent() const { return this->_positionComponent; }
 void CollisionComponent::positionComponent(const std::shared_ptr<PositionComponent> positionComponent) {
   this->_positionComponent = positionComponent;
@@ -120,17 +116,17 @@ std::shared_ptr<std::vector<Collision>> CollisionComponent::predictMovementColli
     if (this->isColliding(*target, positionDelta)) {
       std::shared_ptr<Identity> targetID = target->getOwnerIdentity();
       CollisionAxis collisionAxis = determineCollisionAxis(positionDelta, *target);
-      LOG_DEBUG_SYS(COLLISIONS, "{0} collides with {1} on axis {2}", *this->getOwnerIdentity()->getEntityID(),
-                    *targetID->getEntityID(), CollisionAxisToString(collisionAxis));
-      LOG_DEBUG_SYS(COLLISIONS, "{0} (source) is at {1}", *this->getOwnerIdentity()->getEntityID(),
+      LOG_DEBUG_SYS(COLLISIONS, "{0} collides with {1} on axis {2}", this->getOwnerIdentity()->getEntityID(),
+                    targetID->getEntityID(), CollisionAxisToString(collisionAxis));
+      LOG_DEBUG_SYS(COLLISIONS, "{0} (source) is at {1}", this->getOwnerIdentity()->getEntityID(),
                     this->positionComponent()->getCenter().to_string());
-      LOG_DEBUG_SYS(COLLISIONS, "{0} (target) is at {1}", *targetID->getEntityID(),
+      LOG_DEBUG_SYS(COLLISIONS, "{0} (target) is at {1}", targetID->getEntityID(),
                     target->positionComponent()->getCenter().to_string());
-      LOG_DEBUG_SYS(COLLISIONS, "{0} attempted to move to {1}", *this->getOwnerIdentity()->getEntityID(),
+      LOG_DEBUG_SYS(COLLISIONS, "{0} attempted to move to {1}", this->getOwnerIdentity()->getEntityID(),
                     attemptedFinalPosition.to_string());
       Vect2D trueFinalPosition =
           this->determineFinalPosition(this->_positionComponent->getCenter(), positionDelta, *target, collisionAxis);
-      LOG_DEBUG_SYS(COLLISIONS, "{0} actually moves {1}", *this->getOwnerIdentity()->getEntityID(),
+      LOG_DEBUG_SYS(COLLISIONS, "{0} actually moves {1}", this->getOwnerIdentity()->getEntityID(),
                     trueFinalPosition.to_string());
       collisions->push_back(
           Collision(ownerID, targetID, originalPosition, positionDelta, trueFinalPosition, collisionAxis));
@@ -138,8 +134,8 @@ std::shared_ptr<std::vector<Collision>> CollisionComponent::predictMovementColli
       attemptedFinalPosition = trueFinalPosition;
       // attemptedFinalPosition = closest(originalPosition, trueFinalPosition, attemptedFinalPosition);
     } else {
-      LOG_DEBUG_SYS(COLLISIONS, "{0} does not collide with {1}", *this->getOwnerIdentity()->getEntityID(),
-                    *target->getOwnerIdentity()->getEntityID());
+      LOG_DEBUG_SYS(COLLISIONS, "{0} does not collide with {1}", this->getOwnerIdentity()->getEntityID(),
+                    target->getOwnerIdentity()->getEntityID());
     }
   }
   // Skip collisions with any objects that should not occur due to source
@@ -175,7 +171,7 @@ CollisionAxis CollisionComponent::determineCollisionAxis(const Vect2D& sourceMov
   } else if (xCollision && yCollision) {
     return X_OR_Y;
   } else {
-    LOG_WARN_SYS(COLLISIONS, "{0} colliding due to X and Y movement.", *this->getOwnerIdentity()->getEntityID());
+    LOG_WARN_SYS(COLLISIONS, "{0} colliding due to X and Y movement.", this->getOwnerIdentity()->getEntityID());
     return X_AND_Y;
   }
 }
@@ -205,32 +201,32 @@ Vect2D CollisionComponent::determineFinalPosition(const Vect2D& sourcePosition, 
   Vect2D finalPosition = sourcePosition + positionDelta;
   Vect2D targetCenter = target.positionComponent()->getCenter();
   Rectangle usBox = this->boundingBox().box();
-  LOG_DEBUG_SYS(COLLISIONS, "{0} (source) bbox: {1}", *this->getOwnerIdentity()->getEntityID(), usBox.toString());
+  LOG_DEBUG_SYS(COLLISIONS, "{0} (source) bbox: {1}", this->getOwnerIdentity()->getEntityID(), usBox.toString());
   Rectangle targetBox = target.boundingBox().box();
-  LOG_DEBUG_SYS(COLLISIONS, "{0} (target) bbox: {1}", *target.getOwnerIdentity()->getEntityID(), targetBox.toString());
+  LOG_DEBUG_SYS(COLLISIONS, "{0} (target) bbox: {1}", target.getOwnerIdentity()->getEntityID(), targetBox.toString());
 
   // TODO: There is a bug here with X_OR_Y movements causing finalPosition inside other objects
   // TODO: Actually, this doesn't ensure that the final position doesn't put us inside another object;
 
-  LOG_DEBUG_SYS(COLLISIONS, "{0} (target) is {1} {2} (source)", *target.getOwnerIdentity()->getEntityID(),
+  LOG_DEBUG_SYS(COLLISIONS, "{0} (target) is {1} {2} (source)", target.getOwnerIdentity()->getEntityID(),
                 (target.positionComponent()->getCenter().above(sourcePosition) ? "above" : "below"),
-                *this->getOwnerIdentity()->getEntityID());
+                this->getOwnerIdentity()->getEntityID());
   if (collisionAxis != X_ONLY) {
     if (targetCenter.above(sourcePosition)) {
-      finalPosition.y(targetCenter.y() - (targetBox.height() / 2.0) - (usBox.height() / 2.0) - 1.0);
+      finalPosition.y(targetCenter.y() - (targetBox.getHeight() / 2.0) - (usBox.getHeight() / 2.0) - 1.0);
     } else {
-      finalPosition.y(targetCenter.y() + (targetBox.height() / 2.0) + (usBox.height() / 2.0) + 1.0);
+      finalPosition.y(targetCenter.y() + (targetBox.getHeight() / 2.0) + (usBox.getHeight() / 2.0) + 1.0);
     }
   }
 
-  LOG_DEBUG_SYS(COLLISIONS, "{0} (target) is {1} {2}'s (source)", *target.getOwnerIdentity()->getEntityID(),
+  LOG_DEBUG_SYS(COLLISIONS, "{0} (target) is {1} {2}'s (source)", target.getOwnerIdentity()->getEntityID(),
                 (target.positionComponent()->getCenter().leftOf(sourcePosition) ? "left of" : "right of"),
-                *this->getOwnerIdentity()->getEntityID());
+                this->getOwnerIdentity()->getEntityID());
   if (collisionAxis != Y_ONLY) {
     if (targetCenter.rightOf(sourcePosition)) {
-      finalPosition.x(targetCenter.x() - (targetBox.width() / 2.0) - (usBox.width() / 2.0) - 1.0);
+      finalPosition.x(targetCenter.x() - (targetBox.getWidth() / 2.0) - (usBox.getWidth() / 2.0) - 1.0);
     } else {
-      finalPosition.x(targetCenter.x() + (targetBox.width() / 2.0) + (usBox.width() / 2.0) + 1.0);
+      finalPosition.x(targetCenter.x() + (targetBox.getWidth() / 2.0) + (usBox.getWidth() / 2.0) + 1.0);
     }
   }
   return finalPosition;

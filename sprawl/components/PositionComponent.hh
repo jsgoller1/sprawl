@@ -6,16 +6,26 @@
 
 class PositionComponent : public Component {
  public:
-  PositionComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const XCoord x = 0.0,
-                    const YCoord y = 0.0);
+  PositionComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const Vect2D& center = Vect2D::zero(),
+                    const PositionUnit height = 1.0, const PositionUnit width = 1.0);
 
+  // Getters / setters
+  // Forwarding
   PositionUnit x() const;
   void x(const PositionUnit x);
   PositionUnit y() const;
   void y(const PositionUnit y);
-  Vect2D getCenter();
+  Vect2D getCenter() const;
+  Vect2D getTopLeft() const;
   void setCenter(const Vect2D& center);
+  Rectangle& getArea();
+  void setArea(const Rectangle& area);
+  PositionUnit getWidth();
+  void setWidth(const PositionUnit width);
+  PositionUnit getHeight();
+  void setHeight(const PositionUnit height);
 
+  // Special behavior
   void move(const Vect2D& delta);
   void moveReverse(const Vect2D& delta);
   void moveOnlyX(const Vect2D& vect);
@@ -24,6 +34,5 @@ class PositionComponent : public Component {
   void moveReverseOnlyY(const Vect2D& vect);
 
  private:
-  XCoord _x;
-  YCoord _y;
+  Rectangle _area = Rectangle(Vect2D::zero(), 0.0, 0.0);
 };

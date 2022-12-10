@@ -5,8 +5,8 @@ include makefiles/settings.mk
 include test/integration/integration.mk
 
 MODULES:=test/integration  
-MODULES:=$(MODULES) sprawl sprawl/cli sprawl/components sprawl/ecs sprawl/input sprawl/input/event
-MODULES:=$(MODULES) sprawl/logging sprawl/math sprawl/physics sprawl/wads 3rdparty
+MODULES:=$(MODULES) sprawl sprawl/cli sprawl/collision sprawl/components sprawl/drawing sprawl/ecs \
+sprawl/input sprawl/input/event sprawl/logging sprawl/math sprawl/physics sprawl/wads 3rdparty
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
 

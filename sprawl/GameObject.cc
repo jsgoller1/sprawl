@@ -1,51 +1,49 @@
 #include "GameObject.hh"
 
+#include "BoundingBox.hh"
+#include "DrawingComponent.hh"
+#include "Identity.hh"
+#include "PhysicsComponent.hh"
+#include "PositionComponent.hh"
+
 GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<PositionComponent> positionComponent,
                        const std::shared_ptr<CollisionComponent> collisionComponent,
                        const std::shared_ptr<PhysicsComponent> physicsComponent,
                        const std::shared_ptr<DrawingComponent> drawingComponent)
     : Entity(entityName) {
-  this->positionComponent =
-      (positionComponent == nullptr)
-          ? std::shared_ptr<PositionComponent>(new PositionComponent(this->getIdentity(), 0.0, 0.0))
-          : positionComponent;
-  this->positionComponent->setOwnerIdentity(this->getIdentity());
+  std::shared_ptr<Identity> id = this->getIdentity().shared_from_this();
 
-  this->collisionComponent =
-      (collisionComponent == nullptr)
-          ? std::shared_ptr<CollisionComponent>(new CollisionComponent(this->getIdentity(), this->positionComponent))
-          : collisionComponent;
-  this->collisionComponent->setOwnerIdentity(this->getIdentity());
+  this->drawingComponent = (drawingComponent == nullptr) ? std::make_shared<DrawingComponent>(id) : drawingComponent;
+  this->drawingComponent->setOwnerIdentity(id);
 
-  this->physicsComponent = (physicsComponent == nullptr)
-                               ? std::shared_ptr<PhysicsComponent>(new PhysicsComponent(this->getIdentity()))
-                               : physicsComponent;
-  this->physicsComponent->setOwnerIdentity(this->getIdentity());
+  if (positionComponent == nullptr) {
+    this->positionComponent = std::make_shared<PositionComponent>(id);
 
-  this->drawingComponent =
-      (drawingComponent == nullptr)
-          ? std::shared_ptr<DrawingComponent>(new DrawingComponent(this->getIdentity(), this->positionComponent))
-          : drawingComponent;
-  this->drawingComponent->setOwnerIdentity(this->getIdentity());
+  } else {
+    this->positionComponent = positionComponent;
+  }
+  this->positionComponent->setOwnerIdentity(id);
+  this->positionComponent->setWidth(this->drawingComponent->getWidth());
+  this->positionComponent->setHeight(this->drawingComponent->getHeight());
+
+  this->collisionComponent = (collisionComponent == nullptr)
+                                 ? std::make_shared<CollisionComponent>(id, positionComponent)
+                                 : collisionComponent;
+  this->collisionComponent->setOwnerIdentity(id);
+
+  this->physicsComponent = (physicsComponent == nullptr) ? std::make_shared<PhysicsComponent>(id) : physicsComponent;
+  this->physicsComponent->setOwnerIdentity(id);
 }
 
 GameObject::~GameObject() = default;
 
-std::shared_ptr<DrawingComponent> GameObject::getDrawingComponent() const { return this->drawingComponent; }
-
-std::shared_ptr<PhysicsComponent> GameObject::getPhysicsComponent() const {
-  return this->getPhysicsComponent_impl()->getptr();
-}
-
-std::shared_ptr<PositionComponent> GameObject::getPositionComponent() const { return this->positionComponent; }
-
-std::shared_ptr<CollisionComponent> GameObject::getCollisionComponent() { return this->collisionComponent; }
+DrawingComponent& GameObject::getDrawingComponent() const { return *(this->drawingComponent.get()); }
+PhysicsComponent& GameObject::getPhysicsComponent() const { return *(this->physicsComponent.get()); }
+PositionComponent& GameObject::getPositionComponent() const { return *(this->positionComponent.get()); }
+CollisionComponent& GameObject::getCollisionComponent() const { return *(this->collisionComponent.get()); }
 
 void GameObject::inferBoundingBoxFromTexture() {
   std::shared_ptr<Texture> texture = this->drawingComponent->getTexture();
   this->collisionComponent->height(texture->getHeight());
   this->collisionComponent->width(texture->getWidth());
 }
-
-// Private
-PhysicsComponent* GameObject::getPhysicsComponent_impl() const { return this->physicsComponent.get(); }

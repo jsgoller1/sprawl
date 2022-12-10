@@ -12,10 +12,6 @@ PhysicsComponent::PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity
       _dragCoefficient(dragCoefficient),
       _dragType(dragType) {}
 
-std::shared_ptr<PhysicsComponent> PhysicsComponent::getptr() {
-  return std::static_pointer_cast<PhysicsComponent, Component>(this->shared_from_this());
-}
-
 // Unique attribute accessors
 bool PhysicsComponent::forceEnabled() const { return this->_forceResponsive; }
 void PhysicsComponent::forceEnabled(const bool setting) { this->_forceResponsive = setting; }
@@ -67,11 +63,11 @@ Vect2D PhysicsComponent::integrate(const time_ms duration) {
   }
   if (this->_mass > 0.0 && this->forceEnabled()) {
     this->updateVelocityFromNetForce(duration);
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "Integrating");
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "netForce: {}", this->_netForce.to_string());
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "Acceleration: {}",
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Integrating");
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "netForce: {}", this->_netForce.to_string());
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Acceleration: {}",
                       this->_acceleration.to_string());
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "Final Velocity: {}",
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Final Velocity: {}",
                       this->_velocity.to_string());
     movement = this->_velocity * duration;
   }

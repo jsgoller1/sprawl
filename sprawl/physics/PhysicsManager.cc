@@ -14,15 +14,6 @@ PhysicsManager::ManagementEntry::ManagementEntry(const std::shared_ptr<PhysicsCo
       positionComponent(positionComponent),
       collisionComponent(collisionComponent) {}
 
-std::shared_ptr<PhysicsManager> PhysicsManager::getptr() {
-  // TODO: This is dangerous and leads to undefined behavior if no other
-  // shared pointers to this object exist; it would be best to force
-  // any construction to return a shared pointer, but that might not be
-  // viable. See:
-  // https://en.cppreference.com/w/cpp/memory/enable_shared_from_this
-  return this->shared_from_this();
-}
-
 void PhysicsManager::manage(const std::shared_ptr<Identity> identity,
                             const std::shared_ptr<PhysicsComponent> physicsComponent,
                             const std::shared_ptr<PositionComponent> positionComponent,
@@ -56,7 +47,7 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     std::shared_ptr<CollisionComponent> collisionComponent = mapping.second->collisionComponent;
     std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionCandidates =
         this->getCollisionCandidates(collisionComponent);
-    LOG_DEBUG_SYS(PHYSICS, "Physics update beginning: {}", *physicsComponent->getOwnerIdentity()->getEntityID());
+    LOG_DEBUG_SYS(PHYSICS, "Physics update beginning: {}", physicsComponent->getOwnerIdentity()->getEntityID());
     LOG_DEBUG_SYS(PHYSICS, "Position: {}", positionComponent->getCenter().to_string());
 
     // Apply forces and determine movement. Skip collisions if no movement
@@ -68,10 +59,10 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     Vect2D positionDelta = physicsComponent->integrate(duration);
     if (positionDelta == Vect2D::zero()) {
       LOG_DEBUG_SYS(PHYSICS, "No movement, collisions skipped: {}",
-                    physicsComponent->getOwnerIdentity()->getEntityID()->c_str());
+                    physicsComponent->getOwnerIdentity()->getEntityID());
       continue;
     }
-    LOG_DEBUG_SYS(PHYSICS, "{} attempting movement {}", physicsComponent->getOwnerIdentity()->getEntityID()->c_str(),
+    LOG_DEBUG_SYS(PHYSICS, "{} attempting movement {}", physicsComponent->getOwnerIdentity()->getEntityID(),
                   positionDelta.to_string());
 
     // Test for collisions, and determine what our final position should be.
@@ -87,15 +78,14 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
 
     // Resolve collisions
     for (Collision collision : *collisions) {
-      LOG_DEBUG_SYS(PHYSICS, "Resolving collision: {} -> {}", collision.source()->getEntityID()->c_str(),
-                    collision.target()->getEntityID()->c_str());
+      LOG_DEBUG_SYS(PHYSICS, "Resolving collision: {} -> {}", collision.source()->getEntityID(),
+                    collision.target()->getEntityID());
       std::shared_ptr<PhysicsComponent> target =
           this->managementEntries->find(collision.target())->second->physicsComponent;
       CollisionResolutionType type = physicsComponent->getCollisionResolutionType(target->forceEnabled());
 
       physicsComponent->resolveCollision(collision, type, *target);
-      LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}",
-                    physicsComponent->getOwnerIdentity()->getEntityID()->c_str());
+      LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", physicsComponent->getOwnerIdentity()->getEntityID());
     }
   }
 }
@@ -141,8 +131,8 @@ bool PhysicsManager::diagnosticNoOverlaps() const {
     for (unsigned long j = i + 1; j < components.size(); j++) {
       CollisionComponent target = *components[j];
       if (source.isColliding(target, Vect2D::zero())) {
-        LOG_ERROR_SYS(COLLISIONS, "{} is overlapping with {}!", *source.getOwnerIdentity()->getEntityID(),
-                      *target.getOwnerIdentity()->getEntityID());
+        LOG_ERROR_SYS(COLLISIONS, "{} is overlapping with {}!", source.getOwnerIdentity()->getEntityID(),
+                      target.getOwnerIdentity()->getEntityID());
         return false;
       }
     }

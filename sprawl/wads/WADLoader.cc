@@ -22,14 +22,10 @@ void WADLoader::loadBackground(World& world, const nlohmann::json& jsonBody) con
   if (!this->objectEnabled(jsonBody)) {
     return;
   }
-  std::shared_ptr<Background> background =
-      std::shared_ptr<Background>(new Background(EntityName(jsonBody.value("name", ""))));
   std::shared_ptr<PositionComponent> positionComponent = this->loadPositionComponent(jsonBody["position"]);
-  background->setPositionComponent(positionComponent);
-  std::shared_ptr<DrawingComponent> drawingComponent =
-      this->loadDrawingComponent(jsonBody["drawing"], positionComponent);
-  background->setDrawingComponent(drawingComponent);
-  world.setBackground(background);
+  std::shared_ptr<DrawingComponent> drawingComponent = this->loadDrawingComponent(jsonBody["drawing"]);
+  world.setBackground(
+      std::make_shared<Background>(EntityName(jsonBody.value("name", "")), positionComponent, drawingComponent));
 }
 
 bool WADLoader::objectEnabled(const nlohmann::json& jsonBody) const { return jsonBody.value("enabled", false); }

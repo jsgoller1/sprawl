@@ -1,8 +1,8 @@
 #include <memory>
 #include <string>
 
+#include "GraphicsSettings.hh"
 #include "InputHandler.hh"
-#include "Screen.hh"
 #include "WADLoader.hh"
 #include "World.hh"
 
@@ -29,19 +29,15 @@ void WADLoader::loadLogging() const {
   }
 }
 
-std::shared_ptr<Screen> WADLoader::loadScreen() const {
-  ScreenWidth width;
-  ScreenHeight height;
-  if (this->_jsonBody.contains("screen")) {
-    nlohmann::json screenJSON = this->_jsonBody["screen"];
-    width = loadKey<ScreenWidth>(screenJSON, "width", 800);
-    height = loadKey<ScreenHeight>(screenJSON, "height", width - (width / 4));
-  } else {
-    LOG_ERROR("Cannot find 'screen' section in WAD; will set screen size to 800x600");
-    width = 800;
-    height = 600;
-  }
-  return std::shared_ptr<Screen>(new Screen(width, height));
+GraphicsSettings WADLoader::loadGraphicsSettings(const nlohmann::json& jsonBody) const {
+  ScreenWidth width = loadKey<ScreenWidth>(jsonBody, "screenWidth", 800);
+  ScreenHeight height = loadKey<ScreenHeight>(jsonBody, "screenHeight", width - (width / 4));
+  bool useHardwareAcceleration = loadKey<bool>(jsonBody, "useHardwareAcceleration", true);
+  bool useVSync = loadKey<bool>(jsonBody, "useVSync", true);
+  return GraphicsSettings{.screenWidth = width,
+                          .screenHeight = height,
+                          .useHardwareAcceleration = useHardwareAcceleration,
+                          .useVSync = useVSync};
 }
 
 std::shared_ptr<InputHandler> WADLoader::loadInputHandler() const {
