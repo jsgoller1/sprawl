@@ -1,0 +1,98 @@
+{
+    "screen": {
+        "width": 1920,
+        "height": 1080
+    },
+    "logging": {
+        "defaultLogLevel": "WARN"
+    },
+    "type": "Zone",
+    "background": {
+        "enabled": true,
+        "name": "Porng background",
+        "drawing": {
+            "texturePath": "/textures/background.png"
+        },
+        "position": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "gameObjects": [
+        {
+            "type": "Paddle",
+            "enabled": true,
+            "name": "PlayerPaddle",
+            "isPlayerCharacter": true,
+            "physics": {},
+            "drawing": {
+                "texturePath": "/textures/eggplant_paddle.png"
+            },
+            "position": {
+                "x": -925,
+                "y": 0
+            },
+            "collisions": {
+                "enabled": true,
+                "bbox": {
+                    "fromTexture": true
+                }
+            }
+        },
+        {
+            "type": "Paddle",
+            "enabled": true,
+            "name": "OpponentPaddle",
+            "physics": {},
+            "drawing": {
+                "texturePath": "/textures/peach_paddle.png"
+            },
+            "position": {
+                "x": 925,
+                "y": 0
+            },
+            "collisions": {
+                "enabled": true,
+                "bbox": {
+                    "fromTexture": true
+                }
+            }
+        },
+        {
+            "type": "Ball",
+            "enabled": true,
+            "name": "MoanBall",
+            "physics": {},
+            "drawing": {
+                "texturePath": "/textures/moan_ball.png"
+            },
+            "position": {
+                "x": -100,
+                "y": 0
+            },
+            "collisions": {
+                "enabled": true,
+                "bbox": {
+                    "fromTexture": true
+                }
+            }
+        },
+        {
+            "type": "Net",
+            "enabled": true,
+            "name": "SweatNet",
+            "duplication": {
+                "count": 11,
+                "yOffset": 100
+            },
+            "isPlayerCharacter": false,
+            "drawing": {
+                "texturePath": "/textures/sweat_droplet_net.png"
+            },
+            "position": {
+                "x": 0,
+                "y": -500
+            }
+        }
+    ]
+}

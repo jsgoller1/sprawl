@@ -1,0 +1,42 @@
+// C-like pseudocode for set implementation
+
+all_same(item1, item2, item3) {
+    return item1 == item2 && item2 == item3
+}
+
+all_differ(item1, item2, item3) {
+    return item1 != item2 && \ 
+           item2 != item3 && \
+           item3 != item1
+}
+
+legal_choice(item1, item2, item3) {
+    return all_same(item1, item, item3) || all_differ(item1, item, item3)
+}
+
+check_selection(card1, card2, card3){
+    valid = legal_choice(card1.count(), card2.count(), card3.count())
+    valid &= legal_choice(card1.color(), card2.color(), card3.color())
+    valid &= legal_choice(card1.shape(), card2.shape(), card3.shape())
+    valid &= legal_choice(card1.shading(), card2.shading(), card3.shading())
+    return valid
+}
+
+get_valid_set() {}
+
+main(){ 
+    current_player_selection = []
+    running = true
+    while(running){
+        input = get_input()
+        switch(current_state){
+            case waiting:
+                waiting_behavior(input)
+            case playing:
+                playing_behavior(input)
+            case finished:
+                finished_behavior(input)
+            case quitting:
+                running = false                
+    }
+}
