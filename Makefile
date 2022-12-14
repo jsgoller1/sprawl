@@ -89,6 +89,11 @@ integration-test: sprawl
 # makefile targets; this target be evaluated every time the Makefile
 # is read, so dependencies will be recalculated regularly. Inclusion
 # will cause to make to restart with the new targets available
+
+# TODO: we probably want to regenerate the DAG a lot, but if we can split
+# this down into smaller individual targets (maybe one for each file?)
+# we can take advantage of parallel building with make -j, and then combine them
+# at the end
 .depend: $(SRC_FILES)
 	rm -f ./$@
 	$(CXX) $(CXXFLAGS) -MM $^>>./$@;
