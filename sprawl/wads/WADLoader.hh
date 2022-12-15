@@ -11,8 +11,9 @@ class DrawingComponent;
 struct GraphicsSettings;
 class InputHandler;
 class Identity;
-class PhysicsComponent;
 class PositionComponent;
+class RealisticPhysicsComponent;
+class SimplePhysicsComponent;
 class World;
 class Zone;
 
@@ -36,7 +37,8 @@ class WADLoader {
   std::shared_ptr<InputHandler> loadInputHandler() const;
   GraphicsSettings loadGraphicsSettings(const nlohmann::json& jsonBody) const;
   std::shared_ptr<PositionComponent> loadPositionComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<PhysicsComponent> loadPhysicsComponent(const nlohmann::json& jsonBody) const;
+  std::shared_ptr<RealisticPhysicsComponent> loadRealisticPhysicsComponent(const nlohmann::json& jsonBody) const;
+  std::shared_ptr<SimplePhysicsComponent> loadSimplePhysicsComponent(const nlohmann::json& jsonBody) const;
   std::shared_ptr<DrawingComponent> loadDrawingComponent(const nlohmann::json& jsonBody) const;
   std::shared_ptr<CollisionComponent> loadCollisionComponent(
       const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;

@@ -3,6 +3,7 @@
 #include <memory>
 #include <string>
 
+#include "CharacterPhysicsComponent.hh"
 #include "IntegrationWorld.hh"
 #include "PhysicsManager.hh"
 #include "Platform.hh"
@@ -46,6 +47,13 @@ std::shared_ptr<IntegrationWorld> IntegrationWADLoader::loadIntegrationWorld() c
   return world;
 }
 
+std::shared_ptr<CharacterPhysicsComponent> IntegrationWADLoader::loadCharacterPhysicsComponent(
+    const nlohmann::json& jsonBody) const {
+  std::shared_ptr<CharacterPhysicsComponent> physicsComponent = std::shared_ptr<CharacterPhysicsComponent>(
+      new CharacterPhysicsComponent(this->loadRealisticPhysicsComponent(jsonBody)));
+  return physicsComponent;
+}
+
 void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann::json& jsonBody) const {
   if (jsonBody["enabled"] == "false") {
     return;
@@ -69,7 +77,7 @@ void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann:
     positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
 
-    physicsComponent = this->loadPhysicsComponent(physicsConfig);
+    physicsComponent = this->loadRealisticPhysicsComponent(physicsConfig);
     drawingComponent = this->loadDrawingComponent(drawingConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
@@ -94,7 +102,6 @@ void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann
   EntityName name;
   std::shared_ptr<Character> character;
   std::shared_ptr<PositionComponent> positionComponent;
-  std::shared_ptr<PhysicsComponent> physicsComponent;
   std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
   std::shared_ptr<CollisionComponent> collisionComponent;
@@ -105,9 +112,7 @@ void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann
     positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
 
-    physicsComponent = this->loadPhysicsComponent(physicsConfig);
-    characterPhysicsComponent =
-        std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(physicsComponent));
+    characterPhysicsComponent = this->loadCharacterPhysicsComponent(physicsConfig);
     drawingComponent = this->loadDrawingComponent(drawingConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 

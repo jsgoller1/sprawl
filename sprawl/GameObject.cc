@@ -1,10 +1,11 @@
 #include "GameObject.hh"
 
 #include "BoundingBox.hh"
+#include "CollisionComponent.hh"
 #include "DrawingComponent.hh"
 #include "Identity.hh"
-#include "PhysicsComponent.hh"
 #include "PositionComponent.hh"
+#include "SimplePhysicsComponent.hh"
 
 GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<PositionComponent> positionComponent,
                        const std::shared_ptr<CollisionComponent> collisionComponent,
@@ -31,7 +32,8 @@ GameObject::GameObject(const EntityName& entityName, const std::shared_ptr<Posit
                                  : collisionComponent;
   this->collisionComponent->setOwnerIdentity(id);
 
-  this->physicsComponent = (physicsComponent == nullptr) ? std::make_shared<PhysicsComponent>(id) : physicsComponent;
+  this->physicsComponent =
+      (physicsComponent == nullptr) ? std::make_shared<SimplePhysicsComponent>(id) : physicsComponent;
   this->physicsComponent->setOwnerIdentity(id);
 }
 

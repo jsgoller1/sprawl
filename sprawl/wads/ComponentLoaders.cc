@@ -4,8 +4,9 @@
 #include "CollisionComponent.hh"
 #include "DrawingComponent.hh"
 #include "Logging.hh"
-#include "PhysicsComponent.hh"
 #include "PositionComponent.hh"
+#include "RealisticPhysicsComponent.hh"
+#include "SimplePhysicsComponent.hh"
 #include "Texture.hh"
 #include "WADLoader.hh"
 
@@ -19,14 +20,25 @@ std::shared_ptr<PositionComponent> WADLoader::loadPositionComponent(const nlohma
   return std::shared_ptr<PositionComponent>(new PositionComponent(nullptr, Vect2D(x, y), height, width));
 }
 
-std::shared_ptr<PhysicsComponent> WADLoader::loadPhysicsComponent(const nlohmann::json& jsonBody) const {
-  std::shared_ptr<PhysicsComponent> physicsComponent = std::shared_ptr<PhysicsComponent>(new PhysicsComponent());
+std::shared_ptr<SimplePhysicsComponent> WADLoader::loadSimplePhysicsComponent(const nlohmann::json& jsonBody) const {
+  std::shared_ptr<SimplePhysicsComponent> physicsComponent =
+      std::shared_ptr<SimplePhysicsComponent>(new SimplePhysicsComponent());
+
+  physicsComponent->setMaxSpeed(jsonBody.value("maxSpeed", 0.0));
+  physicsComponent->setMinSpeed(jsonBody.value("minSpeed", 0.0));
+  return physicsComponent;
+}
+
+std::shared_ptr<RealisticPhysicsComponent> WADLoader::loadRealisticPhysicsComponent(
+    const nlohmann::json& jsonBody) const {
+  std::shared_ptr<RealisticPhysicsComponent> physicsComponent =
+      std::shared_ptr<RealisticPhysicsComponent>(new RealisticPhysicsComponent());
 
   physicsComponent->dragCoefficient(jsonBody.value("dragCoefficient", 0.0));
   physicsComponent->dragType((jsonBody.value("dragType", "linear") == "linear") ? DragType::LINEAR
                                                                                 : DragType::TIME_EXPONENTIAL);
-  physicsComponent->maxSpeed(jsonBody.value("maxSpeed", 0.0));
-  physicsComponent->minSpeed(jsonBody.value("minSpeed", 0.0));
+  physicsComponent->setMaxSpeed(jsonBody.value("maxSpeed", 0.0));
+  physicsComponent->setMinSpeed(jsonBody.value("minSpeed", 0.0));
   physicsComponent->gravityEnabled(jsonBody.value("gravityEnabled", true));
   physicsComponent->forceEnabled(jsonBody.value("forceEnabled", true));
   return physicsComponent;

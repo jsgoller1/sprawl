@@ -50,12 +50,6 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     LOG_DEBUG_SYS(PHYSICS, "Physics update beginning: {}", physicsComponent->getOwnerIdentity()->getEntityID());
     LOG_DEBUG_SYS(PHYSICS, "Position: {}", positionComponent->getCenter().to_string());
 
-    // Apply forces and determine movement. Skip collisions if no movement
-    // occurs.
-    if (physicsComponent->gravityEnabled() &&
-        collisionComponent->predictMovementCollisions(Vect2D(0.0, -1.0), collisionCandidates)->empty()) {
-      physicsComponent->applyGravity(this->getGravityConstant());
-    }
     Vect2D positionDelta = physicsComponent->integrate(duration);
     if (positionDelta == Vect2D::zero()) {
       LOG_DEBUG_SYS(PHYSICS, "No movement, collisions skipped: {}",
@@ -76,17 +70,10 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     ASSUMPTION(this->diagnosticNoOverlaps(), "No objects on screen are overlapping.")
 #endif
 
-    // Resolve collisions
     for (Collision collision : *collisions) {
-      LOG_DEBUG_SYS(PHYSICS, "Resolving collision: {} -> {}", collision.source()->getEntityID(),
-                    collision.target()->getEntityID());
-      std::shared_ptr<PhysicsComponent> target =
-          this->managementEntries->find(collision.target())->second->physicsComponent;
-      CollisionResolutionType type = physicsComponent->getCollisionResolutionType(target->forceEnabled());
-
-      physicsComponent->resolveCollision(collision, type, *target);
-      LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", physicsComponent->getOwnerIdentity()->getEntityID());
+      physicsComponent->resolveCollision(collision);
     }
+    LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", physicsComponent->getOwnerIdentity()->getEntityID());
   }
 }
 

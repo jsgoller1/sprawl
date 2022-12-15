@@ -20,10 +20,10 @@
             "name": "MVP (MacOS)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/bin/neon-rain",
+            "program": "${cwd}/bin/sprawl",
             "cwd": "${workspaceFolder}",
             "args": [
-                "${workspaceFolder}/assets/playtests/wads/mvp-macos.json"
+                "${cwd}/test/integration/mvp"
             ],
             "stopAtEntry": false,
             "miDebuggerPath": "/usr/local/bin/lldb-mi"
