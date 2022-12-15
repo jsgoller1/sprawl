@@ -1,5 +1,11 @@
 #include "PorngWorld.hh"
 
+#include "GameLoopInputEvents.hh"
+#include "GraphicsSettings.hh"
+#include "World.hh"
+
+PorngWorld::PorngWorld(const GraphicsSettings& screenParameters) : World(screenParameters) {}
+
 void PorngWorld::handleInput(const std::shared_ptr<GameLoopInputEvents> inputEvents) {
   /*
    * TODO: Presently, we assume that there is only one InputEvent to be handled. This

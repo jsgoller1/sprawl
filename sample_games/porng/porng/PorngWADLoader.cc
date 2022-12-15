@@ -20,12 +20,12 @@ PorngWADLoader::~PorngWADLoader() = default;
 std::shared_ptr<PorngWorld> PorngWADLoader::loadPorngWorld() const {
   // TODO: Add error checking with helpful messages. Pretending for now that
   // IntegrationWADLoader files are always correctly structured json
-
-  std::shared_ptr<PorngWorld> world = std::shared_ptr<PorngWorld>(new PorngWorld());
   nlohmann::json jsonData = this->getJsonBody();
+  std::shared_ptr<PorngWorld> world =
+      std::shared_ptr<PorngWorld>(new PorngWorld(this->loadGraphicsSettings(jsonData["graphics"])));
 
   if (jsonData.contains("gravityConstant")) {
-    world->getPhysicsManager()->setGravityConstant(jsonData["gravityConstant"]);
+    world->getPhysicsManager().setGravityConstant(jsonData["gravityConstant"]);
   }
 
   if (jsonData.contains("background")) {
@@ -75,7 +75,7 @@ void PorngWADLoader::loadBall(PorngWorld& world, const nlohmann::json& jsonBody)
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
     physicsComponent = this->loadSimplePhysicsComponent(physicsConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig);
     ball = std::shared_ptr<Ball>(
         new Ball(name, positionComponent, physicsComponent, collisionComponent, drawingComponent));
     ball->inferBoundingBoxFromTexture();
@@ -105,7 +105,7 @@ void PorngWADLoader::loadNet(PorngWorld& world, const nlohmann::json& jsonBody) 
     name = EntityName(nameConfig);
     positionComponent = this->loadPositionComponent(positionConfig);
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig);
     net = std::shared_ptr<Net>(new Net(name, positionComponent, drawingComponent));
     world.addGameObject(net);
   }
@@ -136,7 +136,7 @@ void PorngWADLoader::loadPaddle(PorngWorld& world, const nlohmann::json& jsonBod
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
     physicsComponent = this->loadSimplePhysicsComponent(physicsConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
-    drawingComponent = this->loadDrawingComponent(drawingConfig, positionComponent);
+    drawingComponent = this->loadDrawingComponent(drawingConfig);
 
     paddle = std::shared_ptr<Paddle>(
         new Paddle(name, positionComponent, physicsComponent, collisionComponent, drawingComponent));

@@ -13,8 +13,12 @@ class GameStateFSM {
    */
 };
 
+// Forward decls
+class GameLoopInputEvents;
+
 class PorngWorld : public World {
  public:
+  PorngWorld(const GraphicsSettings& screenParameters);
   void setPlayerPaddle();
   std::shared_ptr<Paddle> getPlayerPaddle();
   void setAIPaddle();

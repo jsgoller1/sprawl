@@ -4,7 +4,7 @@
 include makefiles/settings.mk
 include test/integration/integration.mk
 
-MODULES:=test/integration  
+MODULES:=sample_games/porng/porng  
 MODULES:=$(MODULES) sprawl sprawl/cli sprawl/collision sprawl/components sprawl/drawing sprawl/ecs \
 sprawl/input sprawl/input/event sprawl/logging sprawl/math sprawl/physics sprawl/wads 3rdparty
 INCLUDES:=$(patsubst %, -I %,$(MODULES))
@@ -14,9 +14,13 @@ SRC_FILES:=$(shell find $(MODULES) -name "*.cc" | sort -u)
 OBJ_FILES:=$(patsubst %.cc, %.o, $(SRC_FILES))
 SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
 
-all: integration-test
+all: porng
 
-integration-test: $(OBJ_FILES)
+porng: sprawl
+	$(ENGINE_BIN) sample_games/porng 2>&1 | tee $(BIN_DIR)/$@-$(LOGFILE_NAME)
+
+
+sprawl: $(OBJ_FILES)
 	$(CCACHE) $(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
 # Utilizes Clang preprocessor to automatically generate dependency 

@@ -1,7 +1,7 @@
 {
-    "screen": {
-        "width": 1920,
-        "height": 1080
+    "graphics": {
+        "screenWidth": 1200,
+        "screenHeight": 800
     },
     "logging": {
         "defaultLogLevel": "WARN"
@@ -29,7 +29,7 @@
                 "texturePath": "/textures/eggplant_paddle.png"
             },
             "position": {
-                "x": -925,
+                "x": -500,
                 "y": 0
             },
             "collisions": {
@@ -48,7 +48,7 @@
                 "texturePath": "/textures/peach_paddle.png"
             },
             "position": {
-                "x": 925,
+                "x": 500,
                 "y": 0
             },
             "collisions": {

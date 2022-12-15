@@ -3,7 +3,6 @@
 #include "InputHandler.hh"
 #include "Logging.hh"
 #include "PorngWADLoader.hh"
-#include "Screen.hh"
 #include "Time.hh"
 #include "Types.hh"
 #include "World.hh"
@@ -18,9 +17,7 @@ int main(int argc, char* argv[]) {
 
   Timer timer = Timer();
   bool should_quit = false;
-  // TODO: Refactor world to an  class?
-  std::shared_ptr<World> world = wadLoader.loadPorngWorld();
-  std::shared_ptr<Screen> screen = wadLoader.loadScreen();
+  std::shared_ptr<PorngWorld> world = wadLoader.loadPorngWorld();
   std::shared_ptr<InputHandler> inputHandler = wadLoader.loadInputHandler();
 
   while (!should_quit) {
@@ -28,7 +25,6 @@ int main(int argc, char* argv[]) {
     std::shared_ptr<GameLoopInputEvents> inputEvents = inputHandler->getGameLoopInputEvents();
     should_quit = inputEvents->getShouldQuit();
     world->gameLoopUpdate(inputEvents, duration);
-    screen->drawAll(world->getDrawables());
   }
   return 0;
 }

@@ -9,3 +9,5 @@ Paddle::Paddle(const EntityName entityName, const std::shared_ptr<PositionCompon
     : GameObject(entityName, positionComponent, collisionComponent, physicsComponent, drawingComponent) {}
 
 Paddle::~Paddle() = default;
+
+void Paddle::move(const Vect2D& move) { (void)move; }
