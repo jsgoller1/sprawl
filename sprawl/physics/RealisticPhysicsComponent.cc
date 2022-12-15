@@ -74,11 +74,11 @@ Vect2D RealisticPhysicsComponent::integrate(const time_ms duration) {
     // }
 
     this->updateVelocityFromNetForce(duration);
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "Integrating");
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "netForce: {}", this->_netForce.to_string());
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "Acceleration: {}",
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Integrating");
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "netForce: {}", this->_netForce.to_string());
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Acceleration: {}",
                       this->_acceleration.to_string());
-    LOG_DEBUG_SYS_ENT(PHYSICS, *this->getOwnerIdentity()->getEntityID(), "Final Velocity: {}",
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Final Velocity: {}",
                       this->getVelocity().to_string());
     movement = this->getVelocity() * duration;
   }
@@ -110,6 +110,7 @@ void RealisticPhysicsComponent::applyGravity(const real gravityConstant) {
 };
 
 void RealisticPhysicsComponent::resolveCollision(const Collision& collision) {
+  (void)collision;
   // TODO: Physically realistic collisions are presently disabled because splitting out the PhysicsComponent
   // behavior breaks some assumptions this code makes about other objects in the world (i.e. not every object with
   // physics enabled handles physics in a physically realistic way - what happens if a SimplePhysicsComponent owner

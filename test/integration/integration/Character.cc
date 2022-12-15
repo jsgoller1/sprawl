@@ -5,13 +5,8 @@ Character::Character(const EntityName entityName, const std::shared_ptr<Position
                      const std::shared_ptr<CharacterPhysicsComponent> physicsComponent,
                      const std::shared_ptr<DrawingComponent> drawingComponent)
     : GameObject(entityName, positionComponent, collisionComponent, nullptr, drawingComponent) {
-  std::shared_ptr<Identity> id = this->getIdentity().shared_from_this();
-
-  this->moveSpeed = std::shared_ptr<Vect2D>(new Vect2D(10.0, 10.0));
-  this->_physicsComponent = (physicsComponent == nullptr)
-                                ? std::shared_ptr<CharacterPhysicsComponent>(new CharacterPhysicsComponent(id))
-                                : physicsComponent;
-  this->_physicsComponent->setOwnerIdentity(id);
+  this->_physicsComponent = physicsComponent;
+  this->_physicsComponent->setOwnerIdentity(this->getIdentity().shared_from_this());
 }
 
 CharacterPhysicsComponent& Character::getPhysicsComponent() const { return *this->_physicsComponent; }

@@ -3,7 +3,7 @@
 
 class SimplePhysicsComponent : public PhysicsComponent {
  public:
-  SimplePhysicsComponent(const std::shared_ptr<Identity> ownerIdentity, const PositionUnit maxSpeed = 0.0,
+  SimplePhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const PositionUnit maxSpeed = 0.0,
                          const PositionUnit minSpeed = 0.0, const Vect2D velocity = Vect2D::zero());
   ~SimplePhysicsComponent() override;
 

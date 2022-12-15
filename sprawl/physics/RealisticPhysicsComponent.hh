@@ -37,10 +37,11 @@ class PhysicsManager;
 class RealisticPhysicsComponent : public PhysicsComponent {
  public:
   // ctors / dtors
-  RealisticPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity, const bool forceResponsiveSetting = false,
-                            const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
-                            const PositionUnit minSpeed = 0.0, const DragType dragType = DragType::TIME_EXPONENTIAL,
-                            const real dragCoefficient = 0.0, Vect2D velocity = Vect2D::zero());
+  RealisticPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr,
+                            const bool forceResponsiveSetting = false, const bool gravitySetting = false,
+                            const PositionUnit maxSpeed = 0.0, const PositionUnit minSpeed = 0.0,
+                            const DragType dragType = DragType::TIME_EXPONENTIAL, const real dragCoefficient = 0.0,
+                            Vect2D velocity = Vect2D::zero());
   ~RealisticPhysicsComponent() override;
   std::shared_ptr<RealisticPhysicsComponent> getptr();
 
