@@ -52,7 +52,10 @@ class World {
   std::vector<std::shared_ptr<GameObject>>& getGameObjects();
   void addGameObject(const std::shared_ptr<GameObject> gameObject);
 
-  void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
+  // TODO: This is only virtual while we have no event system; eventually, we won't want developers touching
+  // this method, and instead they should implement whatever behavior they need each loop in various classes that
+  // support event handling.
+  virtual void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
 
  private:
   // We only need to care about physics and AI going on in currentWorld,

@@ -6,6 +6,24 @@
 
 PorngWorld::PorngWorld(const GraphicsSettings& screenParameters) : World(screenParameters) {}
 
+void PorngWorld::setPlayerPaddle(const std::shared_ptr<Paddle> playerPaddle) { this->_playerPaddle = playerPaddle; }
+Paddle& PorngWorld::getPlayerPaddle() { return *this->_playerPaddle; }
+void PorngWorld::setAIPaddle(const std::shared_ptr<Paddle> aiPaddle) { this->_aiPaddle = aiPaddle; }
+Paddle& PorngWorld::getAIPaddle() { return *this->_aiPaddle; }
+void PorngWorld::gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration) {
+  World::gameLoopUpdate(inputEvents, duration);
+  switch (this->currentState) {
+    case BETWEEN_MATCHES:
+      break;
+    case BETWEEN_ROUNDS:
+      break;
+    case ROUND_ONGOING:
+      break;
+    case QUITTING:
+      break;
+  }
+}
+
 void PorngWorld::handleInput(const std::shared_ptr<GameLoopInputEvents> inputEvents) {
   /*
    * TODO: Presently, we assume that there is only one InputEvent to be handled. This
