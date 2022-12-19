@@ -8,15 +8,26 @@
 #include "Screen.hh"
 
 Game::Game(const int brickCols, const int brickRows) {
-  this->_screen = new Screen();
+  // 100 px for each brick, plus 1px of space between each
+  int screenWidth = (brickCols * 100) + brickCols;
+  // Roughly 2x the amount of vertical space needed
+  int screenHeight = brickRows * 50 * 3;
+
+  this->_screen = new Screen(screenWidth, screenHeight);
 
   Vect2D brickMatrixTopLeft;
   int brickWidth = 0;
   int brickHeight = 0;
   this->_bricks = new BrickMatrix(brickMatrixTopLeft, brickWidth, brickHeight, brickCols, brickRows);
 
-  this->_paddle = new Paddle(PADDLE_START_POSITION, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
-  this->_ball = new Ball(BALL_START_POSITION, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
+  // Start paddle at center of the bottom
+  Vect2D paddleStart = Vect2D{0, screenHeight / 2 * -1 + PADDLE_HEIGHT + 2};
+  this->_paddle = new Paddle(paddleStart, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
+
+  // Start ball just above paddle
+  Vect2D ballStart = paddleStart;
+  ballStart.y += BALL_RADIUS;
+  this->_ball = new Ball(ballStart, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
 }
 
 Game::~Game() {

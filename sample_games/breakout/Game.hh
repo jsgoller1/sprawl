@@ -10,7 +10,7 @@ enum GameState { LAUNCHING = 0, PLAYING = 1 };
 
 class Game {
  public:
-  Game(const int brickCols, const int brickRows);
+  Game(const int brickCols = 10, const int brickRows = 6);
   ~Game();
   void getInput();
   void update();

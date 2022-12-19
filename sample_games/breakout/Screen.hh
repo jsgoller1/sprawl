@@ -7,7 +7,7 @@ class Vect2D;
 
 class Screen {
  public:
-  Screen(const int width = 600, const int height = 800);
+  Screen(const int width, const int height);
   ~Screen();
   void prepare(const Vect2D& center, const int height, const int width, SDL_Surface* texture);
   void draw();
