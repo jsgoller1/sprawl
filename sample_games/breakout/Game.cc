@@ -1,19 +1,30 @@
 #include "Game.hh"
 
 #include "Ball.hh"
-#include "BrickCollection.hh"
+#include "Brick.hh"
+#include "BrickMatrix.hh"
 #include "Input.hh"
 #include "Paddle.hh"
 #include "Screen.hh"
 
-Game::Game() {
+Game::Game(const int brickCols, const int brickRows) {
   this->_screen = new Screen();
-  this->_bricks = BrickCollection();
-  this->_paddle = Paddle();
-  this->_ball = Ball();
+
+  Vect2D brickMatrixTopLeft;
+  int brickWidth = 0;
+  int brickHeight = 0;
+  this->_bricks = new BrickMatrix(brickMatrixTopLeft, brickWidth, brickHeight, brickCols, brickRows);
+
+  this->_paddle = new Paddle(PADDLE_START_POSITION, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
+  this->_ball = new Ball(BALL_START_POSITION, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
 }
 
-Game::~Game() { delete this->_screen; }
+Game::~Game() {
+  delete this->_screen;
+  delete this->_bricks;
+  delete this->_paddle;
+  delete this->_ball;
+}
 
 void Game::getInput() { this->_input = Input(); }
 
@@ -53,17 +64,29 @@ void Game::moveBall() {
 }
 
 void Game::update() {
-  this->_paddle.move();
+  // this->_paddle.move();
   this->moveBall();
   this->doCollisions();
 }
 
 void Game::draw() {
-  // clear current screen
-  // prepare paddle
-  // prepare ball
-  // for brick in brick collection, prepare brick
-  // draw current screen
+  this->_screen->clear();
+
+  // TODO: Implement some kind of "DrawData" struct to make this API opaque
+  this->_screen->prepare(this->_paddle->getCenter(), this->_paddle->getHeight(), this->_paddle->getWidth(),
+                         this->_paddle->getTexture());
+  this->_screen->prepare(this->_ball->getCenter(), this->_ball->getHeight(), this->_ball->getWidth(),
+                         this->_ball->getTexture());
+
+  std::vector<Brick *> *bricks = this->_bricks->getBricks();
+  for (Brick *brick : *bricks) {
+    this->_screen->prepare(brick->getCenter(), brick->getHeight(), brick->getWidth(), brick->getTexture());
+  }
+  this->_screen->draw();
+  delete bricks;
 }
 
-bool Game::shouldQuit() { return this->_bricks.empty(); }
+bool Game::shouldQuit() {
+  // If this->input is SDL_QUIT or escape
+  return this->_bricks->empty();
+}

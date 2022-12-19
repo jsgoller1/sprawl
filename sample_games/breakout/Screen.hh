@@ -2,11 +2,14 @@
 
 #include "SDL2/SDL.h"
 
+// Forward decl
+class Vect2D;
+
 class Screen {
  public:
   Screen(const int width = 600, const int height = 800);
   ~Screen();
-  void prepare(const Vect2D& center, const int height, const int width, SDL_Texture* texture);
+  void prepare(const Vect2D& center, const int height, const int width, SDL_Surface* texture);
   void draw();
   void clear();
 

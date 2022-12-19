@@ -2,6 +2,5 @@
 
 #include "Vect2D.hh"
 
-Brick::Brick() {}
-
-Brick::~Brick() { SDL_DestroyTexture(this->_texture;); }
+Brick::Brick(const Vect2D& center, const int height, const int width, const std::string& texturePath)
+    : Drawable(center, height, width, texturePath) {}

@@ -29,7 +29,7 @@ Screen::~Screen() {
   SDL_Quit();
 }
 
-void Screen::prepare(const Vect2D& center, const int height, const int width, SDL_Texture* texture) {
+void Screen::prepare(const Vect2D& center, const int height, const int width, SDL_Surface* pixelData) {
   Vect2D drawPoint = this->toScreenCoordinates(this->getDrawPoint(center, height, width));
 
   SDL_Rect renderQuad = {drawPoint.x, drawPoint.y, width, height};
@@ -37,7 +37,7 @@ void Screen::prepare(const Vect2D& center, const int height, const int width, SD
   double angle = 0.0;
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_Point sdlCenter = SDL_Point{.x = drawPoint.x, .y = drawPoint.y};
-
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, pixelData);
   if (SDL_RenderCopyEx(this->_renderer, texture, clip, &renderQuad, angle, &sdlCenter, flip)) {
     std::cout << "Couldn't draw texture" << std::endl;
     this->printSDLError();
@@ -67,7 +67,7 @@ Vect2D Screen::toScreenCoordinates(const Vect2D& vect) const {
    */
 
   Vect2D screenCoords = Vect2D(vect);
-  screenCoords.y = screenCoords.y * -1.0;
+  screenCoords.y = screenCoords.y * -1;
   screenCoords.x = screenCoords.x + (this->_width / 2);
   screenCoords.y = screenCoords.y + (this->_height / 2);
   return screenCoords;

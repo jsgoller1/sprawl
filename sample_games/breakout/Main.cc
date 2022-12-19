@@ -2,8 +2,11 @@
 
 #include "Game.hh"
 
+#define BRICK_ROWS 6
+#define BRICK_COLS 10
+
 int main() {
-  Game game = Game();
+  Game game = Game(BRICK_COLS, BRICK_ROWS);
   while (!(game.shouldQuit())) {
     game.getInput();
     game.update();
