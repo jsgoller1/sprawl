@@ -42,6 +42,7 @@ void Screen::prepare(const Vect2D& center, const int height, const int width, SD
     std::cout << "Couldn't draw texture" << std::endl;
     this->printSDLError();
   }
+  SDL_DestroyTexture(texture);
 }
 
 void Screen::draw() { SDL_RenderPresent(this->_renderer); }
@@ -73,4 +74,8 @@ Vect2D Screen::toScreenCoordinates(const Vect2D& vect) const {
   return screenCoords;
 }
 
-void Screen::printSDLError() {}
+void Screen::printSDLError() {
+  std::string error = std::string(SDL_GetError());
+  std::cout << "SDL Error message: " << error << std::endl;
+  SDL_ClearError();
+}

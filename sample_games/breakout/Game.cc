@@ -74,16 +74,18 @@ void Game::draw() {
 
   // TODO: Implement some kind of "DrawData" struct to make this API opaque
   this->_screen->prepare(this->_paddle->getCenter(), this->_paddle->getHeight(), this->_paddle->getWidth(),
-                         this->_paddle->getTexture());
+                         this->_paddle->getPixelData());
   this->_screen->prepare(this->_ball->getCenter(), this->_ball->getHeight(), this->_ball->getWidth(),
-                         this->_ball->getTexture());
+                         this->_ball->getPixelData());
 
+  /*
   std::vector<Brick *> *bricks = this->_bricks->getBricks();
   for (Brick *brick : *bricks) {
-    this->_screen->prepare(brick->getCenter(), brick->getHeight(), brick->getWidth(), brick->getTexture());
+    this->_screen->prepare(brick->getCenter(), brick->getHeight(), brick->getWidth(), brick->getPixelData());
   }
-  this->_screen->draw();
   delete bricks;
+  */
+  this->_screen->draw();
 }
 
 bool Game::shouldQuit() {

@@ -7,7 +7,7 @@
 class Drawable {
  public:
   Drawable(const Vect2D& center, const int height, const int width, const std::string& texturePath);
-  ~Drawable();
+  virtual ~Drawable();
 
   virtual void move();
 

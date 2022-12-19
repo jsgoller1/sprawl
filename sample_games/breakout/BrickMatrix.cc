@@ -13,4 +13,4 @@ BrickMatrix::BrickMatrix(const Vect2D& topLeft, const int brickWidth, const int 
 
 bool BrickMatrix::empty() { return false; }
 
-std::vector<Brick*>* BrickMatrix::getBricks() const {}
+std::vector<Brick*>* BrickMatrix::getBricks() const { return nullptr; }

@@ -4,9 +4,11 @@
 
 Drawable::Drawable(const Vect2D& center, const int height, const int width, const std::string& texturePath)
     : _center(center), _height(height), _width(width) {
-  SDL_Surface* pixelData = IMG_Load(texturePath.c_str());
-  SDL_SetColorKey(pixelData, SDL_FALSE, SDL_MapRGB(pixelData->format, 0, 0xFF, 0xFF));
+  this->_pixelData = IMG_Load(texturePath.c_str());
+  SDL_SetColorKey(this->_pixelData, SDL_TRUE, SDL_MapRGB(this->_pixelData->format, 0xff, 0xff, 0xff));
 }
+
+void Drawable::move() {}
 
 Drawable::~Drawable() { SDL_FreeSurface(this->_pixelData); }
 
