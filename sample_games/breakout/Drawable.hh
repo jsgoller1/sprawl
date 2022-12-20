@@ -8,12 +8,16 @@ class Drawable {
  public:
   Drawable(const Vect2D& center, const int height, const int width, const std::string& texturePath);
   virtual ~Drawable();
-  void updateCenter(const Vect2D& delta);
-  void setCenter(const Vect2D& center);
-  Vect2D getCenter() const;
-  Vect2D getTopLeft() const;
   int getHeight() const;
   int getWidth() const;
+  Vect2D getCenter() const;
+  void setCenter(const Vect2D& center);
+  void updateCenter(const Vect2D& delta);
+  Vect2D getTopLeft() const;
+  Vect2D getTopRight() const;
+  Vect2D getBottomLeft() const;
+  Vect2D getBottomRight() const;
+
   SDL_Surface* getPixelData() const;
   virtual SDL_Rect getBoundingBox() const;
 

@@ -21,6 +21,9 @@ class Ball : public Drawable {
   Vect2D getVelocity() const;
   void setVelocity(const Vect2D& velocity);
 
+  void handleHorizontalCollision();
+  void handleVerticalCollision();
+
  private:
-  Vect2D _velocity = Vect2D{0, 5};
+  Vect2D _velocity = Vect2D{0, 10};
 };

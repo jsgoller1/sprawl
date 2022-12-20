@@ -1,5 +1,7 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
 #include <vector>
 
 // Foward decls
@@ -11,7 +13,7 @@ class BrickMatrix {
  public:
   BrickMatrix(const Vect2D& topLeft, const int brickWidth, const int brickHeight, const int brickCols,
               const int brickRows);
-  void handleCollisions(const Ball& ball);
+  void erase(Brick* brick);
   bool empty();
   std::vector<Brick*>& getBricks();
 

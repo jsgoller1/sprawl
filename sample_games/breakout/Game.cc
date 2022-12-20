@@ -1,9 +1,6 @@
 #include "Game.hh"
 
-#include <cstdlib>
-#include <ctime>
 #include <iostream>
-#include <random>
 
 #include "Ball.hh"
 #include "Brick.hh"
@@ -26,8 +23,6 @@ Game::Game(const int brickCols, const int brickRows) {
   this->_ball = new Ball(Vect2D{0, 0}, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
   this->_input = Input();
   this->state = LAUNCHING;
-
-  std::srand((unsigned)std::time(nullptr));
 }
 
 Game::~Game() {
@@ -36,6 +31,11 @@ Game::~Game() {
   delete this->_paddle;
   delete this->_ball;
 }
+
+Vect2D Game::getTopLeft() const { return this->_screen->toWorldCoordinates(this->_screen->getTopLeft()); }
+Vect2D Game::getTopRight() const { return this->_screen->toWorldCoordinates(this->_screen->getTopRight()); }
+Vect2D Game::getBottomLeft() const { return this->_screen->toWorldCoordinates(this->_screen->getBottomLeft()); }
+Vect2D Game::getBottomRight() const { return this->_screen->toWorldCoordinates(this->_screen->getBottomRight()); }
 
 void Game::getInput() {
   SDL_Event event;
@@ -56,63 +56,6 @@ void Game::getInput() {
     }
   }
 }
-
-Vect2D Game::getTopLeft() const { return this->_screen->toWorldCoordinates(this->_screen->getTopLeft()); }
-Vect2D Game::getTopRight() const { return this->_screen->toWorldCoordinates(this->_screen->getTopRight()); }
-Vect2D Game::getBottomLeft() const { return this->_screen->toWorldCoordinates(this->_screen->getBottomLeft()); }
-Vect2D Game::getBottomRight() const { return this->_screen->toWorldCoordinates(this->_screen->getBottomRight()); }
-
-void Game::doCollisions() {
-  if (this->_ball->getLeftmostPoint().left(this->getBottomLeft()) ||
-      this->_ball->getRightmostPoint().right(this->getBottomRight())) {
-    Vect2D newVelocity = this->_ball->getVelocity();
-    newVelocity.x *= -1;
-    this->_ball->setVelocity(newVelocity);
-  }
-
-  if (this->_ball->getTopPoint().above(this->getTopLeft())) {
-    Vect2D newVelocity = this->_ball->getVelocity();
-    newVelocity.x = 1 + std::rand() % 100;
-    newVelocity.x = newVelocity.x * (std::rand() % 2) ? -1 : 1;
-    newVelocity.y = newVelocity.y *= -1;
-    this->_ball->setVelocity(newVelocity);
-  }
-
-  if (this->_ball->getBottomPoint().below(this->getBottomRight())) {
-    this->state = LAUNCHING;
-    this->_ball->setVelocity(Vect2D(0, 10));
-  }
-
-  SDL_Rect ballBox = this->_ball->getBoundingBox(), paddleBox = this->_paddle->getBoundingBox();
-  if (SDL_HasIntersection(&ballBox, &paddleBox)) {
-    Vect2D newVelocity = this->_ball->getVelocity();
-    newVelocity.x = 1 + (std::rand() % 100);
-    newVelocity.x = newVelocity.x * (std::rand() % 2) ? -1 : 1;
-    newVelocity.y = newVelocity.y *= -1;
-    this->_ball->setVelocity(newVelocity);
-    // play collision sound
-  }
-
-  this->_bricks->handleCollisions(*this->_ball);
-}
-
-void Game::moveBall() {
-  if (this->state == LAUNCHING) {
-    // Move ball to directly above center of paddle
-    Vect2D ballPosition = this->getPaddlePosition();
-    ballPosition.y += BALL_RADIUS;
-    this->_ball->setCenter(ballPosition);
-  } else {
-    this->_ball->updateCenter(this->_ball->getVelocity());
-  }
-}
-
-Vect2D Game::getPaddlePosition() {
-  Vect2D paddleCenter = this->_screen->toWorldCoordinates(this->_input.mousePos);
-  paddleCenter.y = this->_screen->getHeight() / 2 * -1 + PADDLE_HEIGHT + 2;
-  return paddleCenter;
-}
-
 void Game::update() {
   if (this->_input.buttonPressed) {
     this->state = PLAYING;
@@ -126,7 +69,6 @@ void Game::update() {
   this->moveBall();
   this->doCollisions();
 }
-
 void Game::draw() {
   this->_screen->clear();
 
@@ -142,8 +84,96 @@ void Game::draw() {
   }
   this->_screen->draw();
 }
-
 bool Game::shouldQuit() {
   // If this->input is SDL_QUIT or escape
   return this->_bricks->empty() || this->_input.shouldQuit == true;
+}
+
+void Game::doCollisions() {
+  if (this->ballHitsWall()) {
+    this->_ball->handleHorizontalCollision();
+  }
+
+  if (this->ballHitsCieling()) {
+    this->_ball->handleVerticalCollision();
+  }
+
+  if (this->ballHitsFloor()) {
+    this->handleFloorCollision();
+  }
+
+  if (ballHitsPaddle()) {
+    this->handlePaddleCollision();
+  }
+
+  Brick *collidingBrick = this->ballHitsBrick();
+  if (collidingBrick != nullptr) {
+    this->handleBrickCollision(collidingBrick);
+  }
+}
+bool Game::ballHitsCieling() const { return this->_ball->getTopPoint().above(this->getTopLeft()); }
+bool Game::ballHitsWall() const {
+  return this->_ball->getLeftmostPoint().left(this->getBottomLeft()) ||
+         this->_ball->getRightmostPoint().right(this->getBottomRight());
+}
+bool Game::ballHitsFloor() const { return this->_ball->getBottomPoint().below(this->getBottomRight()); }
+bool Game::ballHitsPaddle() const {
+  SDL_Rect ballBox = this->_ball->getBoundingBox(), paddleBox = this->_paddle->getBoundingBox();
+  return SDL_HasIntersection(&ballBox, &paddleBox);
+}
+Brick *Game::ballHitsBrick() {
+  SDL_Rect ballBox = this->_ball->getBoundingBox();
+  SDL_Rect brickBox;
+  std::vector<Brick *> bricks = this->_bricks->getBricks();
+
+  for (unsigned long i = 0; i < bricks.size(); ++i) {
+    Brick *brick = bricks.at(i);
+    brickBox = brick->getBoundingBox();
+    if (SDL_HasIntersection(&ballBox, &brickBox)) {
+      return brick;
+    }
+  }
+  return nullptr;
+}
+
+void Game::handleFloorCollision() {
+  this->state = LAUNCHING;
+  this->_ball->setVelocity(Vect2D(0, 10));
+}
+void Game::handlePaddleCollision() const {
+  Vect2D newVelocity = this->_ball->getVelocity();
+  // The ball's horizontal movement becomes more severe the closer to the edge of the paddle it hits
+  Vect2D paddleCenter = this->_paddle->getCenter(), ballCenter = this->_ball->getCenter();
+
+  newVelocity.y *= -1;
+  newVelocity.x = int((ballCenter.x - paddleCenter.x) / 2);
+  this->_ball->setVelocity(newVelocity);
+}
+void Game::handleBrickCollision(Brick *brick) {
+  // If the ball's center falls within the brick's width, it must be a
+  // vertical strike; otherwise, it is a horizontal / side strike
+  Vect2D ballCenter = this->_ball->getCenter(), brickBottomLeft = brick->getBottomLeft(),
+         brickBottomRight = brick->getBottomRight();
+  if (brickBottomLeft.left(ballCenter) && brickBottomRight.right(ballCenter)) {
+    this->_ball->handleVerticalCollision();
+  } else
+    // The ball hit the brick from the sides
+    this->_ball->handleHorizontalCollision();
+  this->_bricks->erase(brick);
+}
+
+void Game::moveBall() {
+  if (this->state == LAUNCHING) {
+    // Move ball to directly above center of paddle
+    Vect2D ballPosition = this->getPaddlePosition();
+    ballPosition.y += BALL_RADIUS;
+    this->_ball->setCenter(ballPosition);
+  } else {
+    this->_ball->updateCenter(this->_ball->getVelocity());
+  }
+}
+Vect2D Game::getPaddlePosition() {
+  Vect2D paddleCenter = this->_screen->toWorldCoordinates(this->_input.mousePos);
+  paddleCenter.y = this->_screen->getHeight() / 2 * -1 + PADDLE_HEIGHT + 2;
+  return paddleCenter;
 }

@@ -25,21 +25,16 @@ BrickMatrix::BrickMatrix(const Vect2D& topLeft, const int brickWidth, const int 
   }
 }
 
-bool BrickMatrix::empty() { return false; }
-
-std::vector<Brick*>& BrickMatrix::getBricks() { return this->_bricks; }
-
-void BrickMatrix::handleCollisions(const Ball& ball) {
-  SDL_Rect ballBox = ball.getBoundingBox();
-  SDL_Rect brickBox;
+void BrickMatrix::erase(Brick* brick) {
   for (unsigned long i = 0; i < this->_bricks.size(); ++i) {
-    Brick* brick = this->_bricks.at(i);
-    brickBox = brick->getBoundingBox();
-    if (SDL_HasIntersection(&ballBox, &brickBox)) {
-      this->_bricks.erase(this->_bricks.begin() + (int)i);
-      break;
-      //  determine new ball direction : if ball above or below brick, reverse y if ball left or right of brick,
-      //      reverse x play collision sound
+    if (brick == this->_bricks.at(i)) {
+      this->_bricks.erase(this->_bricks.begin() + (long)i);
+      delete brick;
+      return;
     }
   }
 }
+
+bool BrickMatrix::empty() { return this->_bricks.empty(); }
+
+std::vector<Brick*>& BrickMatrix::getBricks() { return this->_bricks; }
