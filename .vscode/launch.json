@@ -5,6 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Breakout",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "/home/joshua/Code/sprawl",
+            "program": "${cwd}/bin/breakout",
+            "environment": [],
+            "MIMode": "gdb",
+        },
+        {
             "name": "MVP",
             "type": "cppdbg",
             "request": "launch",
