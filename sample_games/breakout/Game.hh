@@ -27,4 +27,5 @@ class Game {
 
   void doCollisions();
   void moveBall();
+  Vect2D getPaddlePosition();
 };

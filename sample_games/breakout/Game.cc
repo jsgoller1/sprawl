@@ -17,15 +17,8 @@ Game::Game(const int brickCols, const int brickRows) {
   Vect2D brickMatrixTopLeft{.x = -(screenWidth / 2), .y = screenHeight / 2};
   this->_bricks = new BrickMatrix(brickMatrixTopLeft, BRICK_WIDTH, BRICK_HEIGHT, brickCols, brickRows);
 
-  // Start paddle at center of the bottom
-  Vect2D paddleStart = Vect2D{0, screenHeight / 2 * -1 + PADDLE_HEIGHT + 2};
-  this->_paddle = new Paddle(paddleStart, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
-
-  // Start ball just above paddle
-  Vect2D ballStart = paddleStart;
-  ballStart.y += BALL_RADIUS;
-  this->_ball = new Ball(ballStart, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
-
+  this->_paddle = new Paddle(Vect2D{0, 0}, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
+  this->_ball = new Ball(Vect2D{0, 0}, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
   this->_input = Input();
 }
 
@@ -82,15 +75,22 @@ void Game::doCollisions() {
 void Game::moveBall() {
   if (this->state == LAUNCHING) {
     // Move ball to directly above center of paddle
+    Vect2D ballPosition = this->getPaddlePosition();
+    ballPosition.y += BALL_RADIUS;
+    this->_ball->setCenter(ballPosition);
   } else {
     // Move ball according to its velocity
   }
 }
 
-void Game::update() {
+Vect2D Game::getPaddlePosition() {
   Vect2D paddleCenter = this->_screen->toWorldCoordinates(this->_input.mousePos);
   paddleCenter.y = this->_screen->getHeight() / 2 * -1 + PADDLE_HEIGHT + 2;
-  this->_paddle->setCenter(paddleCenter);
+  return paddleCenter;
+}
+
+void Game::update() {
+  this->_paddle->setCenter(this->getPaddlePosition());
   this->moveBall();
   this->doCollisions();
 }
