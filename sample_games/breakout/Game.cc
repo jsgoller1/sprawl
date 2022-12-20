@@ -88,12 +88,17 @@ void Game::doCollisions() {
     determine new ball direction : if ball above or below brick, reverse y if ball left or right of brick,
         reverse x play collision sound
   }
-  if (ball colliding with paddle) {
-    reverse ball y;
-    randomize ball x;
-    play collision sound
+   */
+
+  SDL_Rect ballBox = this->_ball->getBoundingBox(), paddleBox = this->_paddle->getBoundingBox();
+  if (SDL_HasIntersection(&ballBox, &paddleBox)) {
+    Vect2D newVelocity = this->_ball->getVelocity();
+    newVelocity.x = 1 + (std::rand() % 100);
+    newVelocity.x = newVelocity.x * (std::rand() % 2) ? -1 : 1;
+    newVelocity.y = newVelocity.y *= -1;
+    this->_ball->setVelocity(newVelocity);
+    // play collision sound
   }
- */
 }
 
 void Game::moveBall() {

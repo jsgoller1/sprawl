@@ -33,4 +33,8 @@ class Brick : public Drawable {
  public:
   Brick(const Vect2D& center, const int width, const int height, const std::string& texturePath);
   ~Brick() override;
+  SDL_Rect getBoundingBox() const override;
+
+ private:
+  SDL_Rect _boundingBox;
 };

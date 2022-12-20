@@ -16,7 +16,18 @@ void Drawable::updateCenter(const Vect2D& delta) {
 }
 
 Vect2D Drawable::getCenter() const { return this->_center; }
+Vect2D Drawable::getTopLeft() const {
+  Vect2D topLeft = this->_center;
+  topLeft.x -= this->_width / 2;
+  topLeft.y += this->_height / 2;
+  return topLeft;
+}
+
 void Drawable::setCenter(const Vect2D& center) { this->_center = center; }
 int Drawable::getHeight() const { return this->_height; }
 int Drawable::getWidth() const { return this->_width; }
 SDL_Surface* Drawable::getPixelData() const { return this->_pixelData; }
+SDL_Rect Drawable::getBoundingBox() const {
+  Vect2D topLeft = this->getTopLeft();
+  return SDL_Rect{.x = topLeft.x, .y = topLeft.y, .w = this->_width, .h = this->_height};
+}

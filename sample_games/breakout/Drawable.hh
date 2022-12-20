@@ -11,9 +11,11 @@ class Drawable {
   void updateCenter(const Vect2D& delta);
   void setCenter(const Vect2D& center);
   Vect2D getCenter() const;
+  Vect2D getTopLeft() const;
   int getHeight() const;
   int getWidth() const;
   SDL_Surface* getPixelData() const;
+  virtual SDL_Rect getBoundingBox() const;
 
  private:
   Vect2D _center;
