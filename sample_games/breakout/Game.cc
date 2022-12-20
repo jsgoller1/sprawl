@@ -82,13 +82,6 @@ void Game::doCollisions() {
     this->state = LAUNCHING;
     this->_ball->setVelocity(Vect2D(0, 10));
   }
-  /*
-  if (ball colliding with brick) {
-    remove brick;
-    determine new ball direction : if ball above or below brick, reverse y if ball left or right of brick,
-        reverse x play collision sound
-  }
-   */
 
   SDL_Rect ballBox = this->_ball->getBoundingBox(), paddleBox = this->_paddle->getBoundingBox();
   if (SDL_HasIntersection(&ballBox, &paddleBox)) {
@@ -99,6 +92,8 @@ void Game::doCollisions() {
     this->_ball->setVelocity(newVelocity);
     // play collision sound
   }
+
+  this->_bricks->handleCollisions(*this->_ball);
 }
 
 void Game::moveBall() {
