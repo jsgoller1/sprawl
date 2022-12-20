@@ -9,8 +9,7 @@ class Drawable {
   Drawable(const Vect2D& center, const int height, const int width, const std::string& texturePath);
   virtual ~Drawable();
 
-  virtual void move();
-
+  void setCenter(const Vect2D& center);
   Vect2D getCenter() const;
   int getHeight() const;
   int getWidth() const;

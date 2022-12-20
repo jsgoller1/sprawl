@@ -23,7 +23,6 @@ class Game {
   BrickMatrix* _bricks;
   Paddle* _paddle;
   Ball* _ball;
-
   Input _input;
 
   void doCollisions();

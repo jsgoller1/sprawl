@@ -49,6 +49,9 @@ void Screen::draw() { SDL_RenderPresent(this->_renderer); }
 
 void Screen::clear() { SDL_RenderClear(this->_renderer); }
 
+int Screen::getHeight() const { return this->_height; }
+int Screen::getWidth() const { return this->_width; }
+
 Vect2D Screen::getDrawPoint(const Vect2D& center, const int height, const int width) const {
   // Get the specific point SDL should use for drawing; SDL treats
   // this as the top left of the image and draws from there. We do not
@@ -72,6 +75,14 @@ Vect2D Screen::toScreenCoordinates(const Vect2D& vect) const {
   screenCoords.x = screenCoords.x + (this->_width / 2);
   screenCoords.y = screenCoords.y + (this->_height / 2);
   return screenCoords;
+}
+
+Vect2D Screen::toWorldCoordinates(const Vect2D& vect) const {
+  Vect2D worldCoords = Vect2D(vect);
+  worldCoords.y = worldCoords.y * -1;
+  worldCoords.x = worldCoords.x - (this->_width / 2);
+  worldCoords.y = worldCoords.y - (this->_height / 2);
+  return worldCoords;
 }
 
 void Screen::printSDLError() {

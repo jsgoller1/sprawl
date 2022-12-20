@@ -25,6 +25,8 @@ Game::Game(const int brickCols, const int brickRows) {
   Vect2D ballStart = paddleStart;
   ballStart.y += BALL_RADIUS;
   this->_ball = new Ball(ballStart, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
+
+  this->_input = Input();
 }
 
 Game::~Game() {
@@ -34,7 +36,21 @@ Game::~Game() {
   delete this->_ball;
 }
 
-void Game::getInput() { this->_input = Input(); }
+void Game::getInput() {
+  SDL_Event event;
+  while (SDL_PollEvent(&event) != 0) {
+    switch (event.type) {
+      case SDL_MOUSEMOTION:
+        this->_input.mousePos = Vect2D{.x = event.motion.x, .y = event.motion.y};
+        break;
+      case SDL_QUIT:
+        this->_input.shouldQuit = true;
+        break;
+      default:
+        break;
+    }
+  }
+}
 
 void Game::doCollisions() {
   /*
@@ -72,7 +88,9 @@ void Game::moveBall() {
 }
 
 void Game::update() {
-  // this->_paddle.move();
+  Vect2D paddleCenter = this->_screen->toWorldCoordinates(this->_input.mousePos);
+  paddleCenter.y = this->_screen->getHeight() / 2 * -1 + PADDLE_HEIGHT + 2;
+  this->_paddle->setCenter(paddleCenter);
   this->moveBall();
   this->doCollisions();
 }
@@ -95,5 +113,5 @@ void Game::draw() {
 
 bool Game::shouldQuit() {
   // If this->input is SDL_QUIT or escape
-  return this->_bricks->empty();
+  return this->_bricks->empty() || this->_input.shouldQuit == true;
 }

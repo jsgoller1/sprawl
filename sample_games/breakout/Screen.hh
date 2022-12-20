@@ -13,12 +13,17 @@ class Screen {
   void draw();
   void clear();
 
+  int getHeight() const;
+  int getWidth() const;
+
+  Vect2D toScreenCoordinates(const Vect2D& center) const;
+  Vect2D toWorldCoordinates(const Vect2D& vect) const;
+
  private:
   int _width;
   int _height;
   SDL_Window* _window;
   SDL_Renderer* _renderer;
-  Vect2D toScreenCoordinates(const Vect2D& center) const;
   Vect2D getDrawPoint(const Vect2D& center, const int height, const int width) const;
   void printSDLError();
 };

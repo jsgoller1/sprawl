@@ -6,8 +6,8 @@
 #include "Drawable.hh"
 #include "Vect2D.hh"
 
-#define BRICK_WIDTH 30
-#define BRICK_HEIGHT 10
+#define BRICK_WIDTH 150
+#define BRICK_HEIGHT 50
 
 constexpr std::string_view RED_BRICK_TEXTURE_PATH =
     "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-red.png";
