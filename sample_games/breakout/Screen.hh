@@ -16,6 +16,11 @@ class Screen {
   int getHeight() const;
   int getWidth() const;
 
+  Vect2D getTopLeft() const;
+  Vect2D getTopRight() const;
+  Vect2D getBottomLeft() const;
+  Vect2D getBottomRight() const;
+
   Vect2D toScreenCoordinates(const Vect2D& center) const;
   Vect2D toWorldCoordinates(const Vect2D& vect) const;
 

@@ -52,13 +52,23 @@ void Screen::clear() { SDL_RenderClear(this->_renderer); }
 int Screen::getHeight() const { return this->_height; }
 int Screen::getWidth() const { return this->_width; }
 
+Vect2D Screen::getTopLeft() const { return Vect2D{0, 0}; }
+Vect2D Screen::getTopRight() const { return Vect2D{this->_width, 0}; }
+Vect2D Screen::getBottomLeft() const { return Vect2D{0, this->_height}; }
+Vect2D Screen::getBottomRight() const {
+  return Vect2D{
+      this->_width,
+      this->_height,
+  };
+}
+
 Vect2D Screen::getDrawPoint(const Vect2D& center, const int height, const int width) const {
   // Get the specific point SDL should use for drawing; SDL treats
   // this as the top left of the image and draws from there. We do not
   // need to account for other SDL specifics here (i.e. y-axis flip or top left
   // corner.)
 
-  return Vect2D{.x = center.x - width / 2, .y = center.y + height / 2};
+  return Vect2D(center.x - width / 2, center.y + height / 2);
 }
 
 Vect2D Screen::toScreenCoordinates(const Vect2D& vect) const {
@@ -71,9 +81,9 @@ Vect2D Screen::toScreenCoordinates(const Vect2D& vect) const {
    */
 
   Vect2D screenCoords = Vect2D(vect);
-  screenCoords.y = screenCoords.y * -1;
+  screenCoords.y = screenCoords.y - (this->_height / 2);
   screenCoords.x = screenCoords.x + (this->_width / 2);
-  screenCoords.y = screenCoords.y + (this->_height / 2);
+  screenCoords.y = screenCoords.y * -1;
   return screenCoords;
 }
 
@@ -81,7 +91,7 @@ Vect2D Screen::toWorldCoordinates(const Vect2D& vect) const {
   Vect2D worldCoords = Vect2D(vect);
   worldCoords.y = worldCoords.y * -1;
   worldCoords.x = worldCoords.x - (this->_width / 2);
-  worldCoords.y = worldCoords.y - (this->_height / 2);
+  worldCoords.y = worldCoords.y + (this->_height / 2);
   return worldCoords;
 }
 

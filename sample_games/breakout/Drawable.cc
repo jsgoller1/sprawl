@@ -10,6 +10,11 @@ Drawable::Drawable(const Vect2D& center, const int width, const int height, cons
 
 Drawable::~Drawable() { SDL_FreeSurface(this->_pixelData); }
 
+void Drawable::updateCenter(const Vect2D& delta) {
+  this->_center.x += delta.x;
+  this->_center.y += delta.y;
+}
+
 Vect2D Drawable::getCenter() const { return this->_center; }
 void Drawable::setCenter(const Vect2D& center) { this->_center = center; }
 int Drawable::getHeight() const { return this->_height; }

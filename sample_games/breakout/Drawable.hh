@@ -8,7 +8,7 @@ class Drawable {
  public:
   Drawable(const Vect2D& center, const int height, const int width, const std::string& texturePath);
   virtual ~Drawable();
-
+  void updateCenter(const Vect2D& delta);
   void setCenter(const Vect2D& center);
   Vect2D getCenter() const;
   int getHeight() const;

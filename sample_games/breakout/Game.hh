@@ -17,6 +17,11 @@ class Game {
   void draw();
   bool shouldQuit();
 
+  Vect2D getTopLeft() const;
+  Vect2D getTopRight() const;
+  Vect2D getBottomLeft() const;
+  Vect2D getBottomRight() const;
+
  private:
   GameState state = LAUNCHING;
   Screen* _screen;

@@ -1,5 +1,10 @@
 #include "Game.hh"
 
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <random>
+
 #include "Ball.hh"
 #include "Brick.hh"
 #include "BrickMatrix.hh"
@@ -14,13 +19,15 @@ Game::Game(const int brickCols, const int brickRows) {
   int screenHeight = brickRows * BRICK_HEIGHT * 3;
   this->_screen = new Screen(screenWidth, screenHeight);
 
-  Vect2D brickMatrixTopLeft{.x = -(screenWidth / 2), .y = screenHeight / 2};
-  this->_bricks = new BrickMatrix(brickMatrixTopLeft, BRICK_WIDTH, BRICK_HEIGHT, brickCols, brickRows);
+  // Vect2D brickMatrixTopLeft{.x = -(screenWidth / 2), .y = screenHeight / 2};
+  this->_bricks = new BrickMatrix(this->getTopLeft(), BRICK_WIDTH, BRICK_HEIGHT, brickCols, brickRows);
 
   this->_paddle = new Paddle(Vect2D{0, 0}, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
   this->_ball = new Ball(Vect2D{0, 0}, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
   this->_input = Input();
   this->state = LAUNCHING;
+
+  std::srand((unsigned)std::time(nullptr));
 }
 
 Game::~Game() {
@@ -36,9 +43,10 @@ void Game::getInput() {
     switch (event.type) {
       case SDL_MOUSEBUTTONDOWN:
         this->_input.buttonPressed = true;
+        std::cout << event.button.x << "," << event.button.y << std::endl;
         break;
       case SDL_MOUSEMOTION:
-        this->_input.mousePos = Vect2D{.x = event.motion.x, .y = event.motion.y};
+        this->_input.mousePos = Vect2D(event.motion.x, event.motion.y);
         break;
       case SDL_QUIT:
         this->_input.shouldQuit = true;
@@ -49,31 +57,43 @@ void Game::getInput() {
   }
 }
 
+Vect2D Game::getTopLeft() const { return this->_screen->toWorldCoordinates(this->_screen->getTopLeft()); }
+Vect2D Game::getTopRight() const { return this->_screen->toWorldCoordinates(this->_screen->getTopRight()); }
+Vect2D Game::getBottomLeft() const { return this->_screen->toWorldCoordinates(this->_screen->getBottomLeft()); }
+Vect2D Game::getBottomRight() const { return this->_screen->toWorldCoordinates(this->_screen->getBottomRight()); }
+
 void Game::doCollisions() {
+  if (this->_ball->getLeftmostPoint().left(this->getBottomLeft()) ||
+      this->_ball->getRightmostPoint().right(this->getBottomRight())) {
+    Vect2D newVelocity = this->_ball->getVelocity();
+    newVelocity.x *= -1;
+    this->_ball->setVelocity(newVelocity);
+  }
+
+  if (this->_ball->getTopPoint().above(this->getTopLeft())) {
+    Vect2D newVelocity = this->_ball->getVelocity();
+    newVelocity.x = 1 + std::rand() % 100;
+    newVelocity.x = newVelocity.x * (std::rand() % 2) ? -1 : 1;
+    newVelocity.y = newVelocity.y *= -1;
+    this->_ball->setVelocity(newVelocity);
+  }
+
+  if (this->_ball->getBottomPoint().below(this->getBottomRight())) {
+    this->state = LAUNCHING;
+    this->_ball->setVelocity(Vect2D(0, 10));
+  }
   /*
-    if (ball position at either wall) {
-      reverse ball x;
-    }
-    if (ball position at cieling) {
-      reverse ball y;
-    }
-    if (ball position at floor) {
-      set state back to launching;
-      decrement remaining balls;
-    }
-    if (ball colliding with brick) {
-      remove brick;
-      determine new ball direction:
-        if ball above or below brick, reverse y
-        if ball left or right of brick, reverse x
-      play collision sound
-    }
-    if (ball colliding with paddle) {
-      reverse ball y;
-      randomize ball x;
-      play collision sound
-    }
-    */
+  if (ball colliding with brick) {
+    remove brick;
+    determine new ball direction : if ball above or below brick, reverse y if ball left or right of brick,
+        reverse x play collision sound
+  }
+  if (ball colliding with paddle) {
+    reverse ball y;
+    randomize ball x;
+    play collision sound
+  }
+ */
 }
 
 void Game::moveBall() {
@@ -83,7 +103,7 @@ void Game::moveBall() {
     ballPosition.y += BALL_RADIUS;
     this->_ball->setCenter(ballPosition);
   } else {
-    // Move ball according to its velocity
+    this->_ball->updateCenter(this->_ball->getVelocity());
   }
 }
 
