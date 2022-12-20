@@ -20,6 +20,7 @@ Game::Game(const int brickCols, const int brickRows) {
   this->_paddle = new Paddle(Vect2D{0, 0}, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
   this->_ball = new Ball(Vect2D{0, 0}, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
   this->_input = Input();
+  this->state = LAUNCHING;
 }
 
 Game::~Game() {
@@ -33,6 +34,9 @@ void Game::getInput() {
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0) {
     switch (event.type) {
+      case SDL_MOUSEBUTTONDOWN:
+        this->_input.buttonPressed = true;
+        break;
       case SDL_MOUSEMOTION:
         this->_input.mousePos = Vect2D{.x = event.motion.x, .y = event.motion.y};
         break;
@@ -90,6 +94,14 @@ Vect2D Game::getPaddlePosition() {
 }
 
 void Game::update() {
+  if (this->_input.buttonPressed) {
+    this->state = PLAYING;
+    this->_input.buttonPressed = false;
+  }
+  if (this->_ball->getCenter().y <= -this->_screen->getHeight() / 2) {
+    this->state = LAUNCHING;
+  }
+
   this->_paddle->setCenter(this->getPaddlePosition());
   this->moveBall();
   this->doCollisions();
