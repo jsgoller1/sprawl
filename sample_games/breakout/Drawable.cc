@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL_image.h>
 
-Drawable::Drawable(const Vect2D& center, const int height, const int width, const std::string& texturePath)
+Drawable::Drawable(const Vect2D& center, const int width, const int height, const std::string& texturePath)
     : _center(center), _height(height), _width(width) {
   this->_pixelData = IMG_Load(texturePath.c_str());
   SDL_SetColorKey(this->_pixelData, SDL_TRUE, SDL_MapRGB(this->_pixelData->format, 0xff, 0xff, 0xff));

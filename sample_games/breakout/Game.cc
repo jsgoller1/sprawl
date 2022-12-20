@@ -9,16 +9,13 @@
 
 Game::Game(const int brickCols, const int brickRows) {
   // 100 px for each brick, plus 1px of space between each
-  int screenWidth = (brickCols * 100) + brickCols;
-  // Roughly 2x the amount of vertical space needed
-  int screenHeight = brickRows * 50 * 3;
-
+  int screenWidth = (brickCols * BRICK_WIDTH) + brickCols;
+  // Roughly 3x the amount of vertical space needed
+  int screenHeight = brickRows * BRICK_HEIGHT * 3;
   this->_screen = new Screen(screenWidth, screenHeight);
 
-  Vect2D brickMatrixTopLeft;
-  int brickWidth = 0;
-  int brickHeight = 0;
-  this->_bricks = new BrickMatrix(brickMatrixTopLeft, brickWidth, brickHeight, brickCols, brickRows);
+  Vect2D brickMatrixTopLeft{.x = -(screenWidth / 2), .y = screenHeight / 2};
+  this->_bricks = new BrickMatrix(brickMatrixTopLeft, BRICK_WIDTH, BRICK_HEIGHT, brickCols, brickRows);
 
   // Start paddle at center of the bottom
   Vect2D paddleStart = Vect2D{0, screenHeight / 2 * -1 + PADDLE_HEIGHT + 2};
@@ -89,13 +86,10 @@ void Game::draw() {
   this->_screen->prepare(this->_ball->getCenter(), this->_ball->getHeight(), this->_ball->getWidth(),
                          this->_ball->getPixelData());
 
-  /*
-  std::vector<Brick *> *bricks = this->_bricks->getBricks();
-  for (Brick *brick : *bricks) {
+  std::vector<Brick *> bricks = this->_bricks->getBricks();
+  for (Brick *brick : bricks) {
     this->_screen->prepare(brick->getCenter(), brick->getHeight(), brick->getWidth(), brick->getPixelData());
   }
-  delete bricks;
-  */
   this->_screen->draw();
 }
 

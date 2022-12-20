@@ -3,7 +3,7 @@
 #include "Game.hh"
 
 #define BRICK_ROWS 6
-#define BRICK_COLS 10
+#define BRICK_COLS 8
 
 int main() {
   Game game = Game(BRICK_COLS, BRICK_ROWS);

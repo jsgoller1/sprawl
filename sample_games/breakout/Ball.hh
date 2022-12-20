@@ -10,6 +10,6 @@
 
 class Ball : public Drawable {
  public:
-  Ball(const Vect2D& center, const int height, const int width, const std::string& texturePath);
+  Ball(const Vect2D& center, const int width, const int height, const std::string& texturePath);
   ~Ball() override;
 };
