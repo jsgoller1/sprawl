@@ -5,6 +5,7 @@
 #include "Input.hh"
 #include "Paddle.hh"
 #include "Screen.hh"
+#include "UIElement.hh"
 
 enum GameState { LAUNCHING = 0, PLAYING = 1 };
 
@@ -29,6 +30,8 @@ class Game {
   Paddle* _paddle;
   Ball* _ball;
   Input _input;
+  UIElement* _ballsRemaining;
+  BallsCounter* _ballsCounter;
 
   void doCollisions();
   bool ballHitsCieling() const;
@@ -43,4 +46,6 @@ class Game {
 
   void moveBall();
   Vect2D getPaddlePosition();
+  bool gameOver();
+  void gameOverBehavior();
 };

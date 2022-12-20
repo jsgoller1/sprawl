@@ -10,6 +10,7 @@ class Screen {
   Screen(const int width, const int height);
   ~Screen();
   void prepare(const Vect2D& center, const int height, const int width, SDL_Surface* texture);
+
   void draw();
   void clear();
 

@@ -8,6 +8,7 @@
 #include "Input.hh"
 #include "Paddle.hh"
 #include "Screen.hh"
+#include "UIElement.hh"
 
 Game::Game(const int brickCols, const int brickRows) {
   // 100 px for each brick, plus 1px of space between each
@@ -15,12 +16,13 @@ Game::Game(const int brickCols, const int brickRows) {
   // Roughly 3x the amount of vertical space needed
   int screenHeight = brickRows * BRICK_HEIGHT * 3;
   this->_screen = new Screen(screenWidth, screenHeight);
-
-  // Vect2D brickMatrixTopLeft{.x = -(screenWidth / 2), .y = screenHeight / 2};
   this->_bricks = new BrickMatrix(this->getTopLeft(), BRICK_WIDTH, BRICK_HEIGHT, brickCols, brickRows);
-
   this->_paddle = new Paddle(Vect2D{0, 0}, PADDLE_HEIGHT, PADDLE_WIDTH, PADDLE_TEXTURE_PATH);
   this->_ball = new Ball(Vect2D{0, 0}, BALL_RADIUS, BALL_RADIUS, BALL_TEXTURE_PATH);
+  this->_ballsRemaining =
+      new UIElement(Vect2D(-screenWidth / 2 + 150, -screenWidth / 2 + 50), 320, 50, BALLS_REMAINING_TEXTURE_PATH);
+  this->_ballsCounter =
+      new BallsCounter(Vect2D(-screenWidth / 2 + 100, -screenWidth / 2 + 50), 50, 50, BALLS_COUNT_3_TEXTURE_PATH, 3);
   this->_input = Input();
   this->state = LAUNCHING;
 }
@@ -57,12 +59,14 @@ void Game::getInput() {
   }
 }
 void Game::update() {
+  if (this->gameOver()) {
+    this->gameOverBehavior();
+    return;
+  }
+
   if (this->_input.buttonPressed) {
     this->state = PLAYING;
     this->_input.buttonPressed = false;
-  }
-  if (this->_ball->getCenter().y <= -this->_screen->getHeight() / 2) {
-    this->state = LAUNCHING;
   }
 
   this->_paddle->setCenter(this->getPaddlePosition());
@@ -72,7 +76,10 @@ void Game::update() {
 void Game::draw() {
   this->_screen->clear();
 
-  // TODO: Implement some kind of "DrawData" struct to make this API opaque
+  this->_screen->prepare(this->_ballsRemaining->getCenter(), this->_ballsRemaining->getHeight(),
+                         this->_ballsRemaining->getWidth(), this->_ballsRemaining->getPixelData());
+  this->_screen->prepare(this->_ballsCounter->getCenter(), this->_ballsCounter->getHeight(),
+                         this->_ballsCounter->getWidth(), this->_ballsCounter->getPixelData());
   this->_screen->prepare(this->_paddle->getCenter(), this->_paddle->getHeight(), this->_paddle->getWidth(),
                          this->_paddle->getPixelData());
   this->_screen->prepare(this->_ball->getCenter(), this->_ball->getHeight(), this->_ball->getWidth(),
@@ -86,7 +93,7 @@ void Game::draw() {
 }
 bool Game::shouldQuit() {
   // If this->input is SDL_QUIT or escape
-  return this->_bricks->empty() || this->_input.shouldQuit == true;
+  return this->_input.shouldQuit == true;
 }
 
 void Game::doCollisions() {
@@ -139,6 +146,7 @@ Brick *Game::ballHitsBrick() {
 void Game::handleFloorCollision() {
   this->state = LAUNCHING;
   this->_ball->setVelocity(Vect2D(0, 10));
+  this->_ballsCounter->decrement();
 }
 void Game::handlePaddleCollision() const {
   Vect2D newVelocity = this->_ball->getVelocity();
@@ -177,3 +185,5 @@ Vect2D Game::getPaddlePosition() {
   paddleCenter.y = this->_screen->getHeight() / 2 * -1 + PADDLE_HEIGHT + 2;
   return paddleCenter;
 }
+bool Game::gameOver() { return this->_bricks->empty() || this->_ballsCounter->getBallsCount() <= 0; }
+void Game::gameOverBehavior() {}
