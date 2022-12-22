@@ -2,7 +2,6 @@
 # "Recursive Make Considered Harmful" by Peter Miller
 
 include makefiles/settings.mk
-include test/integration/integration.mk
 
 MODULES:=sample_games/breakout 3rdparty
 #MODULES:=$(MODULES) sprawl sprawl/cli sprawl/collision sprawl/components sprawl/drawing sprawl/ecs \
