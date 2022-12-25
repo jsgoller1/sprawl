@@ -20,9 +20,9 @@ BERZERK_CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
 BERZERK_OBJ_FILES:=$(patsubst %.cc, %.o, $(BERZERK_SRC_FILES))
 BERZERK_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
-breakout: $(BERZERK_OBJ_FILES)
+berzerk: $(BERZERK_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
-	./bin/breakout
+	./bin/berzerk
 
 BREAKOUT_MODULES:=sample_games/breakout 3rdparty
 BREAKOUT_INCLUDES:=$(patsubst %, -I %,$(BREAKOUT_MODULES))
@@ -40,7 +40,7 @@ breakout: $(BREAKOUT_OBJ_FILES)
 # makefile targets; this target be evaluated every time the Makefile
 # is read, so dependencies will be recalculated regularly. Inclusion
 # will cause to make to restart with the new targets available
-.depend: $(BREAKOUT_SRC_FILES) $(SPRAWL_SRC_FILES)
+.depend: $(BERZERK_SRC_FILES) # $(BREAKOUT_SRC_FILES) $(SPRAWL_SRC_FILES)
 	rm -f ./$@
 	$(CXX) $(CXXFLAGS) -MM $^>>./$@;
 include .depend

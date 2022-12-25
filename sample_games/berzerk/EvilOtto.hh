@@ -2,6 +2,6 @@
 
 #include "GameObject.hh"
 #include "IAnimation.hh"
-#include "IMovement.hh"
+#include "ICollision.hh"
 
 class EvilOtto : public GameObject, public ICollision, public IAnimation {};
