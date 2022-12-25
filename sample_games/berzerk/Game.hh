@@ -1,35 +1,39 @@
 #pragma once
+#include <memory>
+
+#include "Level.hh"
+#include "SpriteManager.hh"
 
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800
 
 // fwd decls
-class Robot;
+class CLI;
+class InputHandler;
 class Screen;
-class Input;
 
 class Game {
  public:
-  Game();
-  ~Game();
+  Game(Screen& screen, InputHandler& inputHandler, const CLI& args);
 
-  void initUI();
   bool getShouldQuit() const;
-
-  // Core game loop functions
   void getInput();
-  void updateLoseConditions();
-  void updateAnimations();
-  void updateAI();
-  void updateCollisions();
-  void moveCharacters();
+  void update();
   void draw() const;
 
  private:
+  Screen& _screen;
+  InputHandler& _inputHandler;
+  std::unique_ptr<Level> _currentLevel;
+
+  std::unique_ptr<LevelSpriteManager> _levelSpriteManager;
+  std::unique_ptr<PlayerSpriteManager> _playerSpriteManager;
+  std::unique_ptr<RobotSpriteManager> _robotSpriteManager;
+  std::unique_ptr<TextSpriteManager> _textSpriteManager;
+
   bool _shouldQuit = false;
   int playerLives = 3;
-  Screen* _screen;
-  Input* _input;
 
-  // owns: currentLevel
+  void initUI();
+  void updateLoseConditions();
 };

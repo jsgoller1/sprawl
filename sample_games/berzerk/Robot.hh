@@ -15,5 +15,5 @@ class Robot : public GameObject, public ICollision, public IShooting, public IAn
   // RobotState _state;
 
   Direction lineScan(const GameObject& target);
-  void move() override;
+  void move();
 };

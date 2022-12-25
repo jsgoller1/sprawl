@@ -1,10 +1,23 @@
 #include "Screen.hh"
 
 #include <iostream>
+#include <memory>
 
 #include "Vect2D.hh"
 
 Screen::Screen(const int width, const int height) : _width(width), _height(height) {
+  this->_screenDrawingProxy = std::unique_ptr<ScreenDrawingProxy>(new ScreenDrawingProxy(*this));
+  this->initSDL();
+}
+
+Screen::~Screen() {
+  SDL_DestroyWindow(this->_window);
+  SDL_Quit();
+}
+
+Screen::ScreenDrawingProxy::ScreenDrawingProxy(Screen& screen) : _screen(screen) {}
+
+void Screen::initSDL() {
   // Init SDL, create SDL window, create SDL renderer
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     throw;
@@ -24,9 +37,10 @@ Screen::Screen(const int width, const int height) : _width(width), _height(heigh
   }
 }
 
-Screen::~Screen() {
-  SDL_DestroyWindow(this->_window);
-  SDL_Quit();
+void Screen::ScreenDrawingProxy::draw(const Vect2D& center, const int width, const int height, SDL_Surface* pixelData) {
+  // Proxy users don't need to know this, but technically ScreenDrawingProxy::draw just sends pixel data to
+  // SDL for drawing; SDL draws everything at once when the screen is updated.
+  this->_screen.prepare(center, height, width, pixelData);
 }
 
 void Screen::prepare(const Vect2D& center, const int height, const int width, SDL_Surface* pixelData) {
@@ -45,22 +59,14 @@ void Screen::prepare(const Vect2D& center, const int height, const int width, SD
   SDL_DestroyTexture(texture);
 }
 
-void Screen::draw() { SDL_RenderPresent(this->_renderer); }
-
+void Screen::drawAll() { SDL_RenderPresent(this->_renderer); }
 void Screen::clear() { SDL_RenderClear(this->_renderer); }
 
 int Screen::getHeight() const { return this->_height; }
 int Screen::getWidth() const { return this->_width; }
 
 Vect2D Screen::getTopLeft() const { return Vect2D{0, 0}; }
-Vect2D Screen::getTopRight() const { return Vect2D{this->_width, 0}; }
-Vect2D Screen::getBottomLeft() const { return Vect2D{0, this->_height}; }
-Vect2D Screen::getBottomRight() const {
-  return Vect2D{
-      this->_width,
-      this->_height,
-  };
-}
+Screen::ScreenDrawingProxy& Screen::getScreenDrawingProxy() const { return *this->_screenDrawingProxy; }
 
 Vect2D Screen::getDrawPoint(const Vect2D& center, const int height, const int width) const {
   // Get the specific point SDL should use for drawing; SDL treats

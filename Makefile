@@ -20,9 +20,12 @@ BERZERK_CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
 BERZERK_OBJ_FILES:=$(patsubst %.cc, %.o, $(BERZERK_SRC_FILES))
 BERZERK_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
+BERZERK_LEVEL_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/textures/level-sprites.png
+BERZERK_CHARACTER_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/textures/character-sprites.png
+BERZERK_TEXT_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/textures/text-sprites.png
 berzerk: $(BERZERK_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
-	./bin/berzerk
+	./bin/berzerk $(BERZERK_LEVEL_SPRITES) $(BERZERK_CHARACTER_SPRITES) $(BERZERK_TEXT_SPRITES)
 
 BREAKOUT_MODULES:=sample_games/breakout 3rdparty
 BREAKOUT_INCLUDES:=$(patsubst %, -I %,$(BREAKOUT_MODULES))

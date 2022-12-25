@@ -1,14 +1,23 @@
+#include "CLI.hh"
 #include "Game.hh"
+#include "InputHandler.hh"
+#include "Screen.hh"
 
-int main() {
-  Game game = Game();
+#define DEFAULT_SCREEN_WIDTH 1200
+#define DEFAULT_SCREEN_HEIGHT 800
+
+int main(int argc, char* argv[]) {
+  CLI args(argc, argv);
+  if (args.shouldQuit()) {
+    return args.getReturnCode();
+  }
+  InputHandler inputHandler = InputHandler();
+  Screen screen = Screen(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
+
+  Game game = Game(screen, inputHandler, args);
   while (!(game.getShouldQuit())) {
     game.getInput();
-    game.updateLoseConditions();
-    game.updateAnimations();  // probably involves something time based and selecting a texture from a sprite sheet
-    game.updateAI();
-    game.moveCharacters();  // according to their velocity
-    game.updateCollisions();
+    game.update();
     game.draw();
   }
 }
