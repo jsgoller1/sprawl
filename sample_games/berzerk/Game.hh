@@ -1,7 +1,12 @@
 #pragma once
 
+#define SCREEN_WIDTH 1200
+#define SCREEN_HEIGHT 800
+
 // fwd decls
 class Robot;
+class Screen;
+class Input;
 
 class Game {
  public:
@@ -21,7 +26,10 @@ class Game {
   void draw() const;
 
  private:
-  bool shouldQuit = false;
+  bool _shouldQuit = false;
   int playerLives = 3;
+  Screen* _screen;
+  Input* _input;
+
   // owns: currentLevel
 };

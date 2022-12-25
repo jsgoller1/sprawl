@@ -1,7 +1,18 @@
 #include "Game.hh"
 
-Game::Game() {}
-Game::~Game() = default;
+#include <iostream>
+
+#include "Input.hh"
+#include "Screen.hh"
+
+Game::Game() {
+  this->_screen = new Screen(SCREEN_WIDTH, SCREEN_HEIGHT);
+  this->_input = new Input();
+}
+Game::~Game() {
+  delete this->_screen;
+  delete this->_input;
+}
 
 void Game::initUI() {
   // The UI (lives remaining and score) should take up
@@ -9,17 +20,25 @@ void Game::initUI() {
 }
 
 void Game::getInput() {
-  //   case WASD:
-  //     player.setVelocity();
-  //   case shootButton:
-  //     this->launchBullet(/* player's velocity direction */);
-  //   case escape:
-  //     this->shouldQuit = true;
+  SDL_Event event;
+  while (SDL_PollEvent(&event) != 0) {
+    switch (event.type) {
+        //   case WASD:
+        //     player.setVelocity();
+        //   case shootButton:
+        //     this->launchBullet(/* player's velocity direction */);
+      case SDL_QUIT:
+        this->_shouldQuit = true;
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 void Game::updateLoseConditions() {
   if (this->playerLives <= 0) {
-    this->shouldQuit = true;
+    this->_shouldQuit = true;
   }
 }
 
@@ -57,4 +76,4 @@ void Game::draw() const {
   // draw textures and stuff
 }
 
-bool Game::getShouldQuit() const { return this->shouldQuit; }
+bool Game::getShouldQuit() const { return this->_shouldQuit; }
