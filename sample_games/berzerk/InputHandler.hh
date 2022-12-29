@@ -1,5 +1,9 @@
 #pragma once
+
+#include <SDL2/SDL.h>
+
 #include "Vect2D.hh"
+
 class InputHandler {
  public:
   bool gotSDLQuit() const;
@@ -8,7 +12,7 @@ class InputHandler {
   bool downArrowPressed() const;
   bool leftArrowPressed() const;
   bool rightArrowPressed() const;
-  bool lCntrlPressed() const;
+  bool lCtrlPressed() const;
 
   bool bothHorizontalKeysPressed() const;
   bool bothVerticalKeysPressed() const;
@@ -22,5 +26,7 @@ class InputHandler {
   bool _downArrowPressed = false;
   bool _leftArrowPressed = false;
   bool _rightArrowPressed = false;
-  bool _lCntrlPressed = false;
+  bool _lCtrlPressed = false;
+
+  void keyboardEventHandler(const Uint32 eventType, const SDL_Keycode keycode);
 };
