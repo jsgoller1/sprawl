@@ -16,6 +16,7 @@ class InputHandler {
 
   bool bothHorizontalKeysPressed() const;
   bool bothVerticalKeysPressed() const;
+  bool shouldQuit() const;
 
   void getKeyboardInput();
 

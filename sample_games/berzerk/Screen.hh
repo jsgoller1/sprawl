@@ -7,6 +7,7 @@
 
 // Forward decl
 class Vect2D;
+class Sprite;
 
 class Screen {
  public:
@@ -20,13 +21,14 @@ class Screen {
   Vect2D toScreenCoordinates(const Vect2D& center) const;
   Vect2D toWorldCoordinates(const Vect2D& vect) const;
 
-  void drawAll();
+  void render();
   void clear();
 
   class ScreenDrawingProxy : public DrawingProxy {
    public:
     ScreenDrawingProxy(Screen& screen);
-    void draw(const Vect2D& center, const int width, const int height, SDL_Surface* pixelData) override;
+    void draw(const Vect2D& center, const int width, const int height,
+              std::shared_ptr<Sprite> pixelData) override;
 
    private:
     Screen& _screen;
@@ -42,7 +44,7 @@ class Screen {
 
   void initSDL();
 
-  void prepare(const Vect2D& center, const int height, const int width, SDL_Surface* texture);
+  void prepare(const Vect2D& center, const int height, const int width, std::shared_ptr<Sprite> texture);
 
   Vect2D getDrawPoint(const Vect2D& center, const int height, const int width) const;
   void printSDLError();

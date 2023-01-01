@@ -4,23 +4,25 @@
 #include <memory>
 #include <string>
 
+#include "Sprite.hh"
 #include "Vect2D.hh"
 
 class SpriteManager {
  public:
   SpriteManager(const std::string& spriteSheetPath);
-  std::shared_ptr<SDL_Surface> loadSpriteData(const Vect2D& topLeft, const int width, const int height);
+  ~SpriteManager();
+  SDL_Surface* getSpriteSheet() const;
 
  private:
-  std::string _spriteSheetPath;
+  SDL_Surface* _spriteSheet;
 };
 class LevelSpriteManager : public SpriteManager {
  public:
   LevelSpriteManager(const std::string& spriteSheetPath);
-  std::shared_ptr<SDL_Surface> horizontalBorderWall();
-  std::shared_ptr<SDL_Surface> verticalBorderWall();
-  std::shared_ptr<SDL_Surface> horizontalInternalWall();
-  std::shared_ptr<SDL_Surface> verticalInternalWall();
+  std::shared_ptr<Sprite> horizontalBorderWall() const;
+  std::shared_ptr<Sprite> verticalBorderWall() const;
+  std::shared_ptr<Sprite> horizontalInternalWall() const;
+  std::shared_ptr<Sprite> verticalInternalWall() const;
 };
 
 class RobotSpriteManager : public SpriteManager {
@@ -32,9 +34,9 @@ class PlayerSpriteManager : public SpriteManager {
  public:
   PlayerSpriteManager(const std::string& spriteSheetPath);
 
-  std::shared_ptr<SDL_Surface> standing();
-  std::shared_ptr<SDL_Surface> faceLeft();
-  std::shared_ptr<SDL_Surface> faceRight();
+  std::shared_ptr<Sprite> standing() const;
+  std::shared_ptr<Sprite> faceLeft() const;
+  std::shared_ptr<Sprite> faceRight() const;
 };
 class TextSpriteManager : public SpriteManager {
  public:

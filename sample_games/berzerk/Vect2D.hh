@@ -3,6 +3,8 @@
 class Vect2D {
  public:
   Vect2D(const int x, const int y);
+  static Vect2D zero() { return Vect2D(0, 0); }
+
   int x = 0;
   int y = 0;
   bool above(const Vect2D& other);

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 
+#include "Sprite.hh"
 #include "Vect2D.hh"
 
 Screen::Screen(const int width, const int height) : _width(width), _height(height) {
@@ -37,21 +38,22 @@ void Screen::initSDL() {
   }
 }
 
-void Screen::ScreenDrawingProxy::draw(const Vect2D& center, const int width, const int height, SDL_Surface* pixelData) {
+void Screen::ScreenDrawingProxy::draw(const Vect2D& center, const int width, const int height,
+                                      std::shared_ptr<Sprite> pixelData) {
   // Proxy users don't need to know this, but technically ScreenDrawingProxy::draw just sends pixel data to
   // SDL for drawing; SDL draws everything at once when the screen is updated.
   this->_screen.prepare(center, height, width, pixelData);
 }
 
-void Screen::prepare(const Vect2D& center, const int height, const int width, SDL_Surface* pixelData) {
+void Screen::prepare(const Vect2D& center, const int height, const int width, std::shared_ptr<Sprite> sprite) {
   Vect2D drawPoint = this->toScreenCoordinates(this->getDrawPoint(center, height, width));
 
   SDL_Rect renderQuad = {drawPoint.x, drawPoint.y, width, height};
-  SDL_Rect* clip = nullptr;
+  SDL_Rect* clip = sprite->getClipRectangle();
   double angle = 0.0;
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_Point sdlCenter = SDL_Point{.x = drawPoint.x, .y = drawPoint.y};
-  SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, pixelData);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, sprite->getSpriteSheet());
   if (SDL_RenderCopyEx(this->_renderer, texture, clip, &renderQuad, angle, &sdlCenter, flip)) {
     std::cout << "Couldn't draw texture" << std::endl;
     this->printSDLError();
@@ -59,7 +61,7 @@ void Screen::prepare(const Vect2D& center, const int height, const int width, SD
   SDL_DestroyTexture(texture);
 }
 
-void Screen::drawAll() { SDL_RenderPresent(this->_renderer); }
+void Screen::render() { SDL_RenderPresent(this->_renderer); }
 void Screen::clear() { SDL_RenderClear(this->_renderer); }
 
 int Screen::getHeight() const { return this->_height; }

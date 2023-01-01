@@ -5,47 +5,57 @@
 
 #include "ShootingProxy.hh"
 #include "SpriteManager.hh"
+#include "Wall.hh"
 
 // Fwd decls
-class Wall;
 class Direction;
-class Vect2D;
 class DrawingProxy;
+class InputHandler;
+class Vect2D;
+
+/*
+ * Berserk levels are always the same size
+ * and are always constructed the same way,
+ * so we can safely label each wall and then
+ * use constants to grab specific ones.
+ *
+ *   ——0—— ——1—— ——2—— ——3—— ——4——
+ *  |     |     |     |     |     |
+ *  20    21    22    23    24    25
+ *  |     |     |     |     |     |
+ *   ——5—— ——6—— ——7—— ——8—— ——9——
+ *  |     |     |     |     |     |
+ *  26    27    28    29    30    31
+ *  |     |     |     |     |     |
+ *   ——10— ——11— ——12— ——13— ——14—
+ *  |     |     |     |     |     |
+ *  32    33    34    35    36    37
+ *  |     |     |     |     |     |
+ *   ——15— ——16— ——17— ——18— ——19—
+ */
+
+constexpr int WALLS_COUNT = 37;
+constexpr int EXIT_N = 2;
+constexpr int BORDER_WALLS_N[] = {0, 1, 3, 4};
+constexpr int EXIT_W = 26;
+constexpr int BORDER_WALLS_W[] = {20, 32};
+constexpr int EXIT_E = 31;
+constexpr int BORDER_WALLS_E[] = {25, 37};
+constexpr int EXIT_S = 17;
+constexpr int BORDER_WALLS_S[] = {15, 16, 18, 19};
+constexpr int INTERNAL_WALLS[] = {5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18,
+                                  19, 21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
+
+Vect2D getWallPosition(const unsigned wallIndex);
 
 class Level {
  public:
-  /*
-   * Berserk levels are always the same size
-   * and are always constructed the same way,
-   * so we can safely label each wall and then
-   * use getters to grab specific ones.
-   *
-   *   ——0—— ——1—— ——2—— ——3—— ——4——
-   *  |     |     |     |     |     |
-   *  20    21    22    23    24    25
-   *  |     |     |     |     |     |
-   *   ——5—— ——6—— ——7—— ——8—— ——9——
-   *  |     |     |     |     |     |
-   *  26    27    28    29    30    31
-   *  |     |     |     |     |     |
-   *   ——10— ——11— ——12— ——13— ——14—
-   *  |     |     |     |     |     |
-   *  32    33    34    35    36    37
-   *  |     |     |     |     |     |
-   *   ——15— ——16— ——17— ——18— ——19—
-   */
-
   Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
-        const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
-        const TextSpriteManager& textSpriteManager);
-
-  // Core game loop functions
-  void updateAnimations();
-  void updateAI();
-  void updateCollisions();
-  void moveCharacters();
+        const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager);
 
   bool playerAtExit() const;
+  void update(const InputHandler& inputHandler);
+  void draw();
 
  private:
   // Owns walls, player, bullets from player, robots, and bullets from robots collection<Wall*> _walls;
@@ -58,7 +68,16 @@ class Level {
   const LevelSpriteManager& _levelSpriteManager;
   const PlayerSpriteManager& _playerSpriteManager;
   const RobotSpriteManager& _robotSpriteManager;
-  const TextSpriteManager& _textSpriteManager;
-  std::unique_ptr<std::vector<std::shared_ptr<Wall>>> _horizontalWalls;
-  std::unique_ptr<std::vector<std::shared_ptr<Wall>>> _verticalWalls;
+  std::unique_ptr<Wall> _walls[37];
+
+  void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);
+  void initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy);
+  void initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
+
+  // Core game loop functions
+  void updatePlayer(const InputHandler& inputHandler);
+  void updateAI();
+  void updateAnimations();
+  void moveCharacters();
+  void updateCollisions();
 };

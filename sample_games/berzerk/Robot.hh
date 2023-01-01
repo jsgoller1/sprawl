@@ -1,11 +1,8 @@
 #pragma once
 
 #include "GameObject.hh"
-#include "IAnimation.hh"
-#include "ICollision.hh"
-#include "IShooting.hh"
 
-class Robot : public GameObject, public ICollision, public IShooting, public IAnimation {
+class Robot : public GameObject {
  public:
   void aiBehavior(const Vect2D& playerPosition);
 

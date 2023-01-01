@@ -9,21 +9,19 @@
 
 // fwd decls
 class CLI;
+class DrawingProxy;
 class InputHandler;
 class Screen;
 
 class Game {
  public:
-  Game(Screen& screen, InputHandler& inputHandler, const CLI& args);
+  Game(const CLI& args, DrawingProxy& drawingProxy);
 
   bool getShouldQuit() const;
-  void getInput();
-  void update();
-  void draw() const;
+  void update(const InputHandler& inputHandler);
+  void draw(Screen& screen);
 
  private:
-  Screen& _screen;
-  InputHandler& _inputHandler;
   std::unique_ptr<Level> _currentLevel;
 
   std::unique_ptr<LevelSpriteManager> _levelSpriteManager;
@@ -34,6 +32,6 @@ class Game {
   bool _shouldQuit = false;
   int playerLives = 3;
 
-  void initUI();
+  void initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy);
   void updateLoseConditions();
 };

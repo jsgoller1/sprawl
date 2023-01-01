@@ -1,15 +1,17 @@
 #pragma once
 
-// Fwd decls
-class ShootingProxy;
+#include "ShootingProxy.hh"
+
+// Fwd decl
 class Direction;
 class Vect2D;
 
 class IShooting {
  public:
-  IShooting(const ShootingProxy& proxy) : _proxy(proxy) {}
+  IShooting(ShootingProxy& shootingProxy);
   void shoot(const Direction& direction, const Vect2D& origin);
 
  private:
-  const ShootingProxy& _proxy;
+  // IShooting
+  ShootingProxy& _shootingProxy;
 };

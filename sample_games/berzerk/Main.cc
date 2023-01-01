@@ -14,10 +14,10 @@ int main(int argc, char* argv[]) {
   InputHandler inputHandler = InputHandler();
   Screen screen = Screen(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
 
-  Game game = Game(screen, inputHandler, args);
-  while (!(game.getShouldQuit())) {
-    game.getInput();
-    game.update();
-    game.draw();
+  Game game = Game(args, screen.getScreenDrawingProxy());
+  while (!(game.getShouldQuit() || inputHandler.shouldQuit())) {
+    inputHandler.getKeyboardInput();
+    game.update(inputHandler);
+    game.draw(screen);
   }
 }

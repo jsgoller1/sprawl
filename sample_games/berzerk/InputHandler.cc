@@ -9,6 +9,7 @@ bool InputHandler::rightArrowPressed() const { return this->_rightArrowPressed; 
 bool InputHandler::lCtrlPressed() const { return this->_lCtrlPressed; }
 bool InputHandler::bothHorizontalKeysPressed() const { return this->_leftArrowPressed && this->_rightArrowPressed; }
 bool InputHandler::bothVerticalKeysPressed() const { return this->_upArrowPressed && this->_downArrowPressed; }
+bool InputHandler::shouldQuit() const { return this->_escapePressed || this->_gotSDLQuit; }
 
 void InputHandler::getKeyboardInput() {
   SDL_Event event;

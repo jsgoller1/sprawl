@@ -3,47 +3,44 @@
 #include <iostream>
 
 #include "CLI.hh"
+#include "DrawingProxy.hh"
 #include "InputHandler.hh"
 #include "Screen.hh"
 
-Game::Game(Screen& screen, InputHandler& inputHandler, const CLI& args)
-    : _screen(screen),
-      _inputHandler(inputHandler),
-      _levelSpriteManager(std::unique_ptr<LevelSpriteManager>(new LevelSpriteManager(args.getLevelSpriteSheetPath()))),
+// Public
+Game::Game(const CLI& args, DrawingProxy& drawingProxy)
+    : _levelSpriteManager(std::unique_ptr<LevelSpriteManager>(new LevelSpriteManager(args.getLevelSpriteSheetPath()))),
       _playerSpriteManager(
           std::unique_ptr<PlayerSpriteManager>(new PlayerSpriteManager(args.getCharacterSpriteSheetPath()))),
       _robotSpriteManager(
           std::unique_ptr<RobotSpriteManager>(new RobotSpriteManager(args.getCharacterSpriteSheetPath()))),
       _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))) {
-  this->initUI();
-  this->_currentLevel = std::unique_ptr<Level>(new Level(this->_screen.getScreenDrawingProxy(),
-                                                         *this->_levelSpriteManager, *this->_playerSpriteManager,
-                                                         *this->_robotSpriteManager, *this->_textSpriteManager));
+  this->initUI(*this->_textSpriteManager, drawingProxy);
+  this->_currentLevel = std::unique_ptr<Level>(
+      new Level(drawingProxy, *this->_levelSpriteManager, *this->_playerSpriteManager, *this->_robotSpriteManager));
 }
-
-// Public
 
 bool Game::getShouldQuit() const { return this->_shouldQuit; }
 
-void Game::getInput() {
-  this->_inputHandler.getKeyboardInput();
-  if (this->_inputHandler.escapePressed() || this->_inputHandler.gotSDLQuit()) {
-    this->_shouldQuit = true;
-  }
+void Game::update(const InputHandler& inputHandler) {
+  this->updateLoseConditions();
+  _currentLevel->update(inputHandler);
 }
 
-void Game::update() { this->updateLoseConditions(); }
-
-void Game::draw() const {
-  this->_screen.clear();
-  this->_screen.drawAll();
+void Game::draw(Screen& screen) {
+  screen.clear();
+  this->_currentLevel->draw();
+  screen.render();
 }
 
 // Private
 
-void Game::initUI() {
+void Game::initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy) {
   // The UI (lives remaining and score) should take up
   // the bottom 10% of the screen or less
+
+  (void)textSpriteManager;
+  (void)drawingProxy;
 }
 
 void Game::updateLoseConditions() {
