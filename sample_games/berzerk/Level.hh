@@ -50,6 +50,8 @@ constexpr int HORIZONTAL_INTERNAL_WALLS_COUNT = 10;
 constexpr int HORIZONTAL_INTERNAL_WALLS[] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 constexpr int VERTICAL_INTERNAL_WALLS_COUNT = 12;
 constexpr int VERTICAL_INTERNAL_WALLS[] = {21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
+constexpr int FIXED_LEVEL_LAYOUT_WALLS_COUNT = 6;
+constexpr int FIXED_LEVEL_LAYOUT_WALLS[] = {21, 27, 8, 9, 35, 34};
 
 class Level {
  public:

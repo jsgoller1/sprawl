@@ -126,14 +126,29 @@ void Level::initBorderWalls(const LevelSpriteManager& levelSpriteManager, Drawin
   }
 }
 
+static bool isFixedStateWall(const int idx) {
+  for (int i = 0; i < FIXED_LEVEL_LAYOUT_WALLS_COUNT; i++) {
+    if (idx == FIXED_LEVEL_LAYOUT_WALLS[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
 void Level::initInternalWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
   for (int i = 0; i < VERTICAL_INTERNAL_WALLS_COUNT; i++) {
     int idx = VERTICAL_INTERNAL_WALLS[i];
+    if (!isFixedStateWall(idx)) {
+      continue;
+    }
     this->_walls[idx] = std::shared_ptr<Wall>(
         new Wall(Wall::VerticalInternalWall(getWallPosition((unsigned)idx), levelSpriteManager, drawingProxy)));
   }
   for (int i = 0; i < HORIZONTAL_INTERNAL_WALLS_COUNT; i++) {
     int idx = HORIZONTAL_INTERNAL_WALLS[i];
+    if (!isFixedStateWall(idx)) {
+      continue;
+    }
     this->_walls[idx] = std::shared_ptr<Wall>(
         new Wall(Wall::HorizontalInternalWall(getWallPosition((unsigned)idx), levelSpriteManager, drawingProxy)));
   }
