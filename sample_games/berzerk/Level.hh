@@ -34,7 +34,7 @@ class Vect2D;
  *   ——15— ——16— ——17— ——18— ——19—
  */
 
-constexpr int WALLS_COUNT = 37;
+constexpr int WALLS_COUNT = 38;
 constexpr int HORIZONTAL_BORDER_WALLS_COUNT = 4;
 constexpr int BORDER_WALLS_N[] = {0, 1, 3, 4};
 constexpr int BORDER_WALLS_S[] = {15, 16, 18, 19};
@@ -46,10 +46,10 @@ constexpr int EXIT_S = 17;
 constexpr int EXIT_W = 26;
 constexpr int EXIT_E = 31;
 constexpr int EXIT_COUNT = 4;
-constexpr int INTERNAL_WALLS[] = {5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18,
-                                  19, 21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
-constexpr int INTERNAL_WALLS_COUNT =
-    WALLS_COUNT - VERTICAL_BORDER_WALLS_COUNT - HORIZONTAL_BORDER_WALLS_COUNT - EXIT_COUNT;
+constexpr int HORIZONTAL_INTERNAL_WALLS_COUNT = 10;
+constexpr int HORIZONTAL_INTERNAL_WALLS[] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+constexpr int VERTICAL_INTERNAL_WALLS_COUNT = 12;
+constexpr int VERTICAL_INTERNAL_WALLS[] = {21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
 
 class Level {
  public:
@@ -75,6 +75,9 @@ class Level {
 
   void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);
   void initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy);
+
+  void initInternalWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
+  void initBorderWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
   void initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
 
   // Core game loop functions
