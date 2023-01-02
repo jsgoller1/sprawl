@@ -1,23 +1,7 @@
 #include "Level.hh"
 
 #include "InputHandler.hh"
-
-// TODO: This is just a temporary hack while we hardcode screen size; we can make the screen adjustable and textures
-// stretchable as needed later.
-#include "Screen.hh"
-
-Vect2D getWallPosition(const unsigned wallIndex) {
-  if (wallIndex < 19) {
-    // Horizontal wall; the top left corner of the topmost leftmost wall is at (-SCREEN_WIDTH, SCREEN_HEIGHT), so it's
-    // center is at (wall width / 2, wall height / 2)
-    // int row = wallIndex / 5;
-    // int col = wallIndex % 5;
-    return Vect2D::zero();
-  } else {
-    // Vertical wall
-    return Vect2D::zero();
-  }
-}
+#include "Wall.hh"
 
 Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
              const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager)
@@ -114,14 +98,54 @@ void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProx
 }
 
 void Level::initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
+  //  TODO: Every level should always have border walls; for now though, we want to draw every wall.
+  // This function should probably be responsible for the random layout, but not "how to draw walls"
+
   /*
-  //  Every level should always have border walls.
-  for (int i = 0; i < 4; i++) {
-    int north = BORDER_WALLS_N[i], south = BORDER_WALLS_S[i];
-    this->_walls[north] = std::unique_ptr<Wall>(new Wall());
-    this->_walls[south] = std::unique_ptr<Wall>(new Wall());
-  }
+  constexpr int WALLS_COUNT = 37;
+  constexpr int VERTICAL_BORDER_WALLS_COUNT = 4;
+  constexpr int BORDER_WALLS_N[] = {0, 1, 3, 4};
+  constexpr int BORDER_WALLS_S[] = {15, 16, 18, 19};
+  constexpr int HORIZONTAL_BORDER_WALLS_COUNT = 2;
+  constexpr int BORDER_WALLS_W[] = {20, 32};
+  constexpr int BORDER_WALLS_E[] = {25, 37};
+  constexpr int EXIT_N = 2;
+  constexpr int EXIT_S = 17;
+  constexpr int EXIT_W = 26;
+  constexpr int EXIT_E = 31;
+  constexpr int INTERNAL_WALLS[] = {5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18,
+                                    19, 21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
+
   */
-  this->_walls[0] = std::unique_ptr<Wall>(
-      new Wall(Vect2D::zero(), VERTICAL_WALL_HEIGHT, VERTICAL_WALL_WIDTH, levelSpriteManager, drawingProxy));
+
+  // TODO: The below is super janky looking, though tecnically it works. All we actually want is a shared_ptr<Wall>,
+  // and we want to be able to get that from functions that hide some of the parameters to Wall (i.e.
+  // Wall::HorizontalBorderWall()). We end up calling one of these functions, passing it to a copy constructor, which is
+  // in turn used by new inside shared pointer construction, not at all straightforward. make_shared() has some issue
+  // with construct_at, don't know why. Would like to do something less confusing.
+
+  // Vertical borders
+  for (int i = 0; i < VERTICAL_BORDER_WALLS_COUNT; i++) {
+    int west = BORDER_WALLS_W[i];
+    this->_walls[west] = std::shared_ptr<Wall>(
+        new Wall(Wall::VerticalBorderWall(getWallPosition((unsigned)west), levelSpriteManager, drawingProxy)));
+
+    int east = BORDER_WALLS_E[i];
+    this->_walls[east] = std::shared_ptr<Wall>(
+        new Wall(Wall::VerticalBorderWall(getWallPosition((unsigned)east), levelSpriteManager, drawingProxy)));
+  }
+
+  // Horizontal borders
+  for (int i = 0; i < HORIZONTAL_BORDER_WALLS_COUNT; i++) {
+    int north = BORDER_WALLS_N[i];
+    this->_walls[north] = std::shared_ptr<Wall>(
+        new Wall(Wall::HorizontalBorderWall(getWallPosition((unsigned)north), levelSpriteManager, drawingProxy)));
+
+    int south = BORDER_WALLS_S[i];
+    this->_walls[south] = std::shared_ptr<Wall>(
+        new Wall(Wall::HorizontalBorderWall(getWallPosition((unsigned)south), levelSpriteManager, drawingProxy)));
+  }
+
+  // One of the exits, if needed.
+  // Internal walls
 }

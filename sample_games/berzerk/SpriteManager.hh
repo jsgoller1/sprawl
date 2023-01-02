@@ -23,6 +23,8 @@ class LevelSpriteManager : public SpriteManager {
   std::shared_ptr<Sprite> verticalBorderWall() const;
   std::shared_ptr<Sprite> horizontalInternalWall() const;
   std::shared_ptr<Sprite> verticalInternalWall() const;
+  std::shared_ptr<Sprite> horizontalExitWall() const;
+  std::shared_ptr<Sprite> verticalExitWall() const;
 };
 
 class RobotSpriteManager : public SpriteManager {

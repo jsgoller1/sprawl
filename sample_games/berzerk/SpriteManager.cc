@@ -16,7 +16,15 @@ std::shared_ptr<Sprite> LevelSpriteManager::horizontalBorderWall() const {
   int topLeftY = 8;
   int wallWidth = 54;
   int wallHeight = 4;
-  return std::make_shared<Sprite>(this->getSpriteSheet(), 19, 8, 54, 4);
+  return std::make_shared<Sprite>(this->getSpriteSheet(), topLeftX, topLeftY, wallWidth, wallHeight);
+}
+std::shared_ptr<Sprite> LevelSpriteManager::verticalBorderWall() const {
+  // 19,8 is the top left corner
+  int topLeftX = 19;
+  int topLeftY = 8;
+  int wallWidth = 4;
+  int wallHeight = 54;
+  return std::make_shared<Sprite>(this->getSpriteSheet(), topLeftX, topLeftY, wallWidth, wallHeight);
 }
 
 RobotSpriteManager::RobotSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}

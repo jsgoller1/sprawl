@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include "PositionComponent.hh"
 #include "SDL2/SDL.h"
 #include "Vect2D.hh"
 
@@ -21,15 +22,10 @@ class Sprite;
 
 class GameObject {
  public:
-  GameObject(const Vect2D& position, const Vect2D& velocity, const int height, const int width,
-             const SpriteManager& spriteManager, DrawingProxy& drawingProxy);
+  GameObject(const Vect2D& position, const Vect2D& velocity);
   virtual ~GameObject();
-
-  // IPosition
-  void IPositionCtor(const Vect2D& position);
-  virtual Vect2D getPosition() const;
-  virtual void setPosition(const Vect2D& position);
-  virtual void updatePosition(const Vect2D& delta);
+  Vect2D getPosition();
+  PositionComponent& getPositionComponent();
 
   // IMovement
   void IMovementCtor(const Vect2D& velocity);
@@ -41,30 +37,12 @@ class GameObject {
   bool collisionTest(const GameObject& target) const;
   virtual void resolveCollision(GameObject& target) = 0;
 
-  // IDrawing/IAnimation
-  void IDrawingCtor();
-  void IDrawingDtor();
-  int getHeight() const;
-  int getWidth() const;
-  Vect2D getTopLeft() const;
-  virtual const SpriteManager& getSpriteManager() const = 0;
-  virtual std::shared_ptr<Sprite> getCurrentSprite() const = 0;
-  void draw() const;
-
  private:
-  // IPosition
-  Vect2D _position = Vect2D::zero();
+  std::unique_ptr<PositionComponent> _positionComponent;
 
-  // IMovement
   Vect2D _velocity = Vect2D::zero();
 
   // ICollision
-
-  // IDrawing
-  int _height;
-  int _width;
-  const SpriteManager& _spriteManager;
-  DrawingProxy& _drawingProxy;
 
   // IAnimation
 };

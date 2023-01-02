@@ -5,6 +5,11 @@
 #include "DrawingProxy.hh"
 #include "SDL2/SDL.h"
 
+constexpr int DEFAULT_SCREEN_WIDTH = 1700;
+constexpr int DEFAULT_SCREEN_HEIGHT = 1100;
+constexpr int INTERNAL_PLAY_AREA_WIDTH = DEFAULT_SCREEN_WIDTH - 200;
+constexpr int INTERNAL_PLAY_AREA_HEIGHT = DEFAULT_SCREEN_HEIGHT - 200;
+
 // Forward decl
 class Vect2D;
 class Sprite;
@@ -27,8 +32,7 @@ class Screen {
   class ScreenDrawingProxy : public DrawingProxy {
    public:
     ScreenDrawingProxy(Screen& screen);
-    void draw(const Vect2D& center, const int width, const int height,
-              std::shared_ptr<Sprite> pixelData) override;
+    void draw(const Vect2D& center, const int width, const int height, std::shared_ptr<Sprite> pixelData) override;
 
    private:
     Screen& _screen;
