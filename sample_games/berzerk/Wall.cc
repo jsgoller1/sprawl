@@ -43,7 +43,10 @@ Wall::Wall(const Vect2D& position, const int height, const int width, const std:
     : GameObject(position, Vect2D::zero()),
       IStaticDrawing(this->getPositionComponent(), height, width, drawingProxy, sprite) {}
 
-Wall::Wall(Wall& copy)
+// NOTE: Implementing the copy constructor here is not strictly necessary because the implicitly generated one works
+// fine. For some reason, VSCode claims the implicit copy constructor is deleted. I'm not sure what's going on here, so
+// I've defined it explicitly just to be safe.
+Wall::Wall(const Wall& copy)
     : Wall(copy.getPosition(), copy.getHeight(), copy.getWidth(), copy.getCurrentSprite(), copy.getDrawingProxy()) {}
 
 void Wall::resolveCollision(GameObject& target) {

@@ -24,8 +24,8 @@ class GameObject {
  public:
   GameObject(const Vect2D& position, const Vect2D& velocity);
   virtual ~GameObject();
-  Vect2D getPosition();
-  PositionComponent& getPositionComponent();
+  Vect2D getPosition() const;
+  PositionComponent& getPositionComponent() const;
 
   // IMovement
   void IMovementCtor(const Vect2D& velocity);

@@ -2,7 +2,10 @@
 #include <memory>
 
 #include "Level.hh"
-#include "SpriteManager.hh"
+#include "LevelSpriteManager.hh"
+#include "PlayerSpriteManager.hh"
+#include "RobotSpriteManager.hh"
+#include "TextSpriteManager.hh"
 
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800

@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "GameObject.hh"
-#include "IDrawing.hh"
+#include "IStaticDrawing.hh"
+#include "LevelSpriteManager.hh"
 #include "Screen.hh"
-#include "SpriteManager.hh"
 
 constexpr int WALL_THICCNESS = 10;
 constexpr int VERTICAL_WALL_WIDTH = WALL_THICCNESS;
@@ -17,7 +17,7 @@ Vect2D getWallPosition(unsigned wallIndex);
 
 class Wall : public GameObject, public IStaticDrawing {
  public:
-  Wall(Wall& copy);
+  Wall(const Wall& copy);
   static Wall HorizontalBorderWall(const Vect2D& center, const LevelSpriteManager& levelSpriteManager,
                                    DrawingProxy& drawingProxy) {
     return Wall(center, HORIZONTAL_WALL_HEIGHT, HORIZONTAL_WALL_WIDTH, levelSpriteManager.horizontalBorderWall(),

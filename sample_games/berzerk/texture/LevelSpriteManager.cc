@@ -1,13 +1,4 @@
-#include "SpriteManager.hh"
-
-#include "SDL2/SDL_image.h"
-
-SpriteManager::SpriteManager(const std::string& spriteSheetPath) {
-  this->_spriteSheet = IMG_Load(spriteSheetPath.c_str());
-}
-SpriteManager::~SpriteManager() { SDL_FreeSurface(this->_spriteSheet); }
-
-SDL_Surface* SpriteManager::getSpriteSheet() const { return this->_spriteSheet; }
+#include "LevelSpriteManager.hh"
 
 LevelSpriteManager::LevelSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}
 std::shared_ptr<Sprite> LevelSpriteManager::horizontalBorderWall() const {
@@ -42,9 +33,3 @@ std::shared_ptr<Sprite> LevelSpriteManager::verticalInternalWall() const {
   int wallHeight = 54;
   return std::make_shared<Sprite>(this->getSpriteSheet(), topLeftX, topLeftY, wallWidth, wallHeight);
 }
-
-RobotSpriteManager::RobotSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}
-
-PlayerSpriteManager::PlayerSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}
-
-TextSpriteManager::TextSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}

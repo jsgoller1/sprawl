@@ -1,6 +1,7 @@
 #include "Level.hh"
 
 #include "InputHandler.hh"
+#include "Player.hh"
 #include "Wall.hh"
 
 Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
@@ -9,6 +10,7 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
       _robotSpriteManager(robotSpriteManager) {
+  this->_levelShootingProxy = LevelShootingProxy();
   this->initPlayer(this->_playerSpriteManager, this->_drawingProxy);
   this->initRobots(this->_robotSpriteManager, this->_drawingProxy);
   this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
@@ -30,6 +32,7 @@ void Level::draw() {
       this->_walls[i]->draw();
     }
   }
+  this->_player->draw();
 }
 
 bool Level::playerAtExit() const { return false; }
@@ -88,8 +91,12 @@ void Level::LevelShootingProxy::shoot(const Direction& direction, const Vect2D& 
 }
 
 void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
+  // TODO: Randomize player position
+  // TODO: Ensure player isn't being drawn on top of robots
   (void)playerSpriteManager;
   (void)drawingProxy;
+  this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
+                                           playerSpriteManager);
 }
 
 void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {

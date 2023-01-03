@@ -4,14 +4,17 @@
 #include <vector>
 
 #include "ShootingProxy.hh"
-#include "SpriteManager.hh"
+#include "Vect2D.hh"
 #include "Wall.hh"
 
 // Fwd decls
 class Direction;
 class DrawingProxy;
 class InputHandler;
-class Vect2D;
+class LevelSpriteManager;
+class Player;
+class PlayerSpriteManager;
+class RobotSpriteManager;
 
 /*
  * Berserk levels are always the same size
@@ -52,6 +55,8 @@ constexpr int VERTICAL_INTERNAL_WALLS_COUNT = 12;
 constexpr int VERTICAL_INTERNAL_WALLS[] = {21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
 constexpr int FIXED_LEVEL_LAYOUT_WALLS_COUNT = 6;
 constexpr int FIXED_LEVEL_LAYOUT_WALLS[] = {21, 27, 8, 9, 35, 34};
+const Vect2D NORTH_START_POSITION =
+    Vect2D(getWallPosition(EXIT_N).x, getWallPosition(EXIT_N).y - VERTICAL_WALL_HEIGHT / 2);
 
 class Level {
  public:
@@ -68,11 +73,13 @@ class Level {
    public:
     void shoot(const Direction& direction, const Vect2D& origin) const override;
   };
+  LevelShootingProxy _levelShootingProxy;
 
   DrawingProxy& _drawingProxy;
   const LevelSpriteManager& _levelSpriteManager;
   const PlayerSpriteManager& _playerSpriteManager;
   const RobotSpriteManager& _robotSpriteManager;
+  std::shared_ptr<Player> _player;
   std::shared_ptr<Wall> _walls[38];
 
   void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);

@@ -14,15 +14,15 @@ SPRAWL_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so"
 sprawl: $(SPRAWL_OBJ_FILES)
 	$(CCACHE) $(CXX) $(SPRAWL_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
-BERZERK_MODULES:=sample_games/berzerk 3rdparty
+BERZERK_MODULES:=sample_games/berzerk sample_games/berzerk/drawing sample_games/berzerk/texture 3rdparty
 BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
-BERZERK_CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
+CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
 BERZERK_OBJ_FILES:=$(patsubst %.cc, %.o, $(BERZERK_SRC_FILES))
 BERZERK_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
-BERZERK_LEVEL_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/textures/level-sprites.png
-BERZERK_CHARACTER_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/textures/character-sprites.png
-BERZERK_TEXT_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/textures/text-sprites.png
+BERZERK_LEVEL_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png
+BERZERK_CHARACTER_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png
+BERZERK_TEXT_SPRITES:=/home/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png
 berzerk: $(BERZERK_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
 	./bin/berzerk $(BERZERK_LEVEL_SPRITES) $(BERZERK_CHARACTER_SPRITES) $(BERZERK_TEXT_SPRITES)
@@ -36,8 +36,6 @@ BREAKOUT_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.s
 breakout: $(BREAKOUT_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BREAKOUT_CXXFLAGS) $(BREAKOUT_OBJ_FILES) $(BREAKOUT_SHARED_OBJ_FILES) -o ./bin/$@
 	./bin/breakout
-
-
 
 # Utilizes Clang preprocessor to automatically generate dependency 
 # makefile targets; this target be evaluated every time the Makefile

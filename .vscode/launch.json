@@ -22,9 +22,9 @@
             "environment": [],
             "MIMode": "gdb",
             "args": [
-                "/home/joshua/Code/sprawl/sample_games/berzerk/textures/level-sprites.png",
-                "/home/joshua/Code/sprawl/sample_games/berzerk/textures/character-sprites.png",
-                "/home/joshua/Code/sprawl/sample_games/berzerk/textures/text-sprites.png"
+                "/home/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png",
+                "/home/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png",
+                "/home/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png"
             ]
         },
         {
