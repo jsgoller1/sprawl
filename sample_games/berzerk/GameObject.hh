@@ -31,6 +31,7 @@ class GameObject {
   void IMovementCtor(const Vect2D& velocity);
   virtual Vect2D getVelocity() const;
   virtual void setVelocity(const Vect2D& velocity);
+  void move();
 
   // ICollision
   // virtual ~ICollision();

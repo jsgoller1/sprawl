@@ -16,7 +16,11 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
   this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
 }
 
-void Level::update(const InputHandler& inputHandler) {
+void Level::update(const InputHandler& inputHandler, const time_ms delta_t) {
+  // TODO: thought we'd need time for movement, but we don't; pinching this off here
+  // since we'll need it for animation.
+  (void)delta_t;
+
   this->updatePlayer(inputHandler);
   this->updateAI();
   this->updateAnimations();
@@ -39,8 +43,40 @@ bool Level::playerAtExit() const { return false; }
 
 /* Private */
 void Level::updatePlayer(const InputHandler& inputHandler) {
-  // TODO: Handle player movement and shooting here.
-  (void)inputHandler;
+  // TODO: Should this be done by Player, since Player already
+  // moves itself and Level knows nothing about velocity?
+
+  // If they're shooting, set velocity to 0
+  if (inputHandler.lCtrlPressed()) {
+    this->_player->setVelocity(Vect2D::zero());
+    return;
+  }
+
+  Vect2D newVelocity = this->_player->getVelocity();
+  // Determine x-axis velocity
+  // TODO: update state
+  if (inputHandler.bothHorizontalKeysPressed()) {
+    newVelocity.x = 0;
+  } else if (inputHandler.leftArrowPressed()) {
+    newVelocity.x = -PLAYER_MOVE_SPEED;
+  } else if (inputHandler.rightArrowPressed()) {
+    newVelocity.x = PLAYER_MOVE_SPEED;
+  } else {
+    newVelocity.x = 0;
+  }
+
+  // Determine y-axis velocity
+  if (inputHandler.bothVerticalKeysPressed()) {
+    newVelocity.y = 0;
+  } else if (inputHandler.downArrowPressed()) {
+    newVelocity.y = -PLAYER_MOVE_SPEED;
+  } else if (inputHandler.upArrowPressed()) {
+    newVelocity.y = PLAYER_MOVE_SPEED;
+  } else {
+    newVelocity.y = 0;
+  }
+
+  this->_player->setVelocity(newVelocity);
 }
 
 void Level::updateAI() {
@@ -57,6 +93,7 @@ void Level::moveCharacters() {
   for each bullet, robot, and the character:
     Move in the direction of its velocity
   */
+  this->_player->move();
 }
 
 void Level::updateCollisions() {

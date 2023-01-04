@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "ShootingProxy.hh"
+#include "Time.hh"
 #include "Vect2D.hh"
 #include "Wall.hh"
 
@@ -64,7 +65,7 @@ class Level {
         const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager);
 
   bool playerAtExit() const;
-  void update(const InputHandler& inputHandler);
+  void update(const InputHandler& inputHandler, const time_ms delta_t);
   void draw();
 
  private:

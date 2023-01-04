@@ -2,6 +2,7 @@
 #include "Game.hh"
 #include "InputHandler.hh"
 #include "Screen.hh"
+#include "Time.hh"
 
 int main(int argc, char* argv[]) {
   CLI args(argc, argv);
@@ -11,11 +12,13 @@ int main(int argc, char* argv[]) {
   InputHandler inputHandler = InputHandler();
   Screen screen = Screen(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
   Screen::ScreenDrawingProxy screenDrawingProxy = screen.getScreenDrawingProxy();
+  Timer timer = Timer();
 
   Game game = Game(args, screenDrawingProxy);
   while (!(game.getShouldQuit() || inputHandler.shouldQuit())) {
+    time_ms duration = timer.tick();
     inputHandler.getKeyboardInput();
-    game.update(inputHandler);
+    game.update(inputHandler, duration);
     game.draw(screen);
   }
 }

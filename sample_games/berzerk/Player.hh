@@ -6,6 +6,8 @@
 #include "IAnimatedDrawing.hh"
 #include "IShooting.hh"
 
+constexpr int PLAYER_MOVE_SPEED = 5;
+
 // Forward decls
 class PlayerSpriteManager;
 class AnimationSequence;

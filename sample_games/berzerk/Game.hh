@@ -6,6 +6,7 @@
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
 #include "TextSpriteManager.hh"
+#include "Time.hh"
 
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800
@@ -21,7 +22,7 @@ class Game {
   Game(const CLI& args, DrawingProxy& drawingProxy);
 
   bool getShouldQuit() const;
-  void update(const InputHandler& inputHandler);
+  void update(const InputHandler& inputHandler, const time_ms delta_t);
   void draw(Screen& screen);
 
  private:

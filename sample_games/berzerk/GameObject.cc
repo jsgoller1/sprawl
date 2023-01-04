@@ -17,6 +17,10 @@ PositionComponent& GameObject::getPositionComponent() const { return *this->_pos
 // IMovement
 Vect2D GameObject::getVelocity() const { return this->_velocity; }
 void GameObject::setVelocity(const Vect2D& velocity) { this->_velocity = velocity; }
+void GameObject::move() {
+  Vect2D currentPosition = this->_positionComponent->getPosition();
+  this->_positionComponent->setPosition(currentPosition + this->_velocity);
+}
 
 // ICollision
 bool GameObject::collisionTest(const GameObject& target) const {

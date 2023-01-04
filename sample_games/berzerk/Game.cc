@@ -22,9 +22,9 @@ Game::Game(const CLI& args, DrawingProxy& drawingProxy)
 
 bool Game::getShouldQuit() const { return this->_shouldQuit; }
 
-void Game::update(const InputHandler& inputHandler) {
+void Game::update(const InputHandler& inputHandler, const time_ms delta_t) {
   this->updateLoseConditions();
-  _currentLevel->update(inputHandler);
+  _currentLevel->update(inputHandler, delta_t);
 }
 
 void Game::draw(Screen& screen) {
