@@ -1,5 +1,7 @@
 #include "InputHandler.hh"
 
+#include "Direction.hh"
+
 bool InputHandler::gotSDLQuit() const { return this->_gotSDLQuit; }
 bool InputHandler::escapePressed() const { return this->_escapePressed; }
 bool InputHandler::upArrowPressed() const { return this->_upArrowPressed; }
@@ -10,6 +12,34 @@ bool InputHandler::lCtrlPressed() const { return this->_lCtrlPressed; }
 bool InputHandler::bothHorizontalKeysPressed() const { return this->_leftArrowPressed && this->_rightArrowPressed; }
 bool InputHandler::bothVerticalKeysPressed() const { return this->_upArrowPressed && this->_downArrowPressed; }
 bool InputHandler::shouldQuit() const { return this->_escapePressed || this->_gotSDLQuit; }
+
+Direction InputHandler::getArrowKeyVerticalDirection() const {
+  if (this->bothHorizontalKeysPressed()) {
+    return Direction::None();
+  } else if (this->upArrowPressed()) {
+    return Direction::North();
+  } else {
+    return Direction::South();
+  }
+}
+
+Direction InputHandler::getArrowKeyHorizontalDirection() const {
+  if (this->bothHorizontalKeysPressed()) {
+    return Direction::None();
+  } else if (this->leftArrowPressed()) {
+    return Direction::West();
+  } else {
+    return Direction::East();
+  }
+}
+
+Direction InputHandler::getArrowKeyDirection() const {
+  return this->getArrowKeyVerticalDirection() + this->getArrowKeyHorizontalDirection();
+}
+
+bool InputHandler::movementKeysPressed() const {
+  return this->_upArrowPressed || this->_downArrowPressed || this->_leftArrowPressed || this->_rightArrowPressed;
+}
 
 void InputHandler::getKeyboardInput() {
   SDL_Event event;

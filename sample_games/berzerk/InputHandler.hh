@@ -4,6 +4,9 @@
 
 #include "Vect2D.hh"
 
+// Fwd decl
+class Direction;
+
 class InputHandler {
  public:
   bool gotSDLQuit() const;
@@ -14,9 +17,13 @@ class InputHandler {
   bool rightArrowPressed() const;
   bool lCtrlPressed() const;
 
+  bool movementKeysPressed() const;
   bool bothHorizontalKeysPressed() const;
   bool bothVerticalKeysPressed() const;
   bool shouldQuit() const;
+  Direction getArrowKeyVerticalDirection() const;
+  Direction getArrowKeyHorizontalDirection() const;
+  Direction getArrowKeyDirection() const;
 
   void getKeyboardInput();
 

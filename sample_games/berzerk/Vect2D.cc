@@ -25,3 +25,5 @@ void Vect2D::operator-=(const Vect2D& vect) {
   this->x -= vect.x;
   this->y -= vect.y;
 }
+
+bool Vect2D::operator==(const Vect2D& vect) { return this->x == vect.x && this->y == vect.y; }

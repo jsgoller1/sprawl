@@ -14,10 +14,11 @@ class AnimationSequence {
   AnimationSequence();
   AnimationSequence(const std::shared_ptr<Sprite> sprite);
   AnimationSequence(const std::vector<std::shared_ptr<Sprite>>& spriteCollection);
+  void addSprite(const std::shared_ptr<Sprite> sprite);
 
   std::shared_ptr<Sprite> getCurrentSprite() const;
-  std::shared_ptr<Sprite> getNextSprite();
-  void resetSequence();
+  void nextSprite();
+  void reset();
 
  private:
   unsigned int _spriteIdx = 0;

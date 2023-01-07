@@ -7,7 +7,6 @@
 
 // Forward decls
 class PositionComponent;
-class PlayerAnimationSet;
 
 class IAnimatedDrawing : public IDrawing {
  public:
@@ -18,7 +17,9 @@ class IAnimatedDrawing : public IDrawing {
   void draw() override;
   std::shared_ptr<Sprite> getCurrentSprite() const override;
 
+  void updateAnimationSequence();
   void setAnimationSequence(const std::shared_ptr<AnimationSequence> animation);
+  // AnimationSequence& getAnimationSequence() const;
 
  private:
   PositionComponent& _positionComponent;

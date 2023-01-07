@@ -1,5 +1,7 @@
 #include "LevelSpriteManager.hh"
 
+#include "Sprite.hh"
+
 LevelSpriteManager::LevelSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}
 std::shared_ptr<Sprite> LevelSpriteManager::horizontalBorderWall() const {
   // 19,8 is the top left corner

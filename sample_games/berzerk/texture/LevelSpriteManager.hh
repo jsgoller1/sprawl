@@ -2,6 +2,9 @@
 
 #include "SpriteManager.hh"
 
+// Fwd decl
+class Sprite;
+
 class LevelSpriteManager : public SpriteManager {
  public:
   LevelSpriteManager(const std::string& spriteSheetPath);

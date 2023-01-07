@@ -1,5 +1,8 @@
 #pragma once
 
+// fwd decl
+class Vect2D;
+
 constexpr int Y_NORTH = 1;
 constexpr int Y_NONE = 0;
 constexpr int Y_SOUTH = -1;
@@ -18,9 +21,12 @@ class Direction {
   static Direction NorthWest() { return Direction(X_WEST, Y_NORTH); }
   static Direction SouthEast() { return Direction(X_EAST, Y_SOUTH); }
   static Direction SouthWest() { return Direction(X_WEST, Y_SOUTH); }
-
+  Direction(const Vect2D& vect);
   int getX() const;
   int getY() const;
+
+  Direction operator+(const Direction& other) const;
+  bool operator==(const Direction& other) const;
 
  private:
   Direction(int x, int y) : _x(x), _y(y) {}

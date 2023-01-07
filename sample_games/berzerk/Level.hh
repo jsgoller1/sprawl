@@ -91,7 +91,6 @@ class Level {
   void initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
 
   // Core game loop functions
-  void updatePlayer(const InputHandler& inputHandler);
   void updateAI();
   void updateAnimations();
   void moveCharacters();

@@ -5,38 +5,17 @@
 #include "GameObject.hh"
 #include "IAnimatedDrawing.hh"
 #include "IShooting.hh"
+#include "PlayerAnimationSet.hh"
+#include "PlayerState.hh"
 
 constexpr int PLAYER_MOVE_SPEED = 5;
 
 // Forward decls
-class PlayerSpriteManager;
 class AnimationSequence;
+class InputHandler;
+class PlayerSpriteManager;
 
-enum PlayerState {
-  // NOTE: the original arcade used west/east facing animations for moving north and south;
-  // there was no "moving north" animation.
-  IDLE,
-  MOVING_W,
-  MOVING_E,
-  SHOOTING_N,
-  SHOOTING_E,
-  SHOOTING_S,
-  SHOOTING_W,
-  SHOOTING_NE,
-  SHOOTING_SE,
-  SHOOTING_NW,
-  SHOOTING_SW,
-  DYING
-};
-
-class PlayerAnimationSet {
- public:
-  PlayerAnimationSet(const PlayerSpriteManager& playerSpriteManager);
-  std::shared_ptr<AnimationSequence> getAnimation(const PlayerState& state);
-
- private:
-  std::map<PlayerState, std::shared_ptr<AnimationSequence>> _animations;
-};
+Vect2D getBulletPositionOffset(const Vect2D& shooterPosition);
 
 /*
  *  Player needs to satisfy the following constructors:
@@ -52,7 +31,13 @@ class Player : public GameObject, public IShooting, public IAnimatedDrawing {
   Player(const Vect2D& position, const Vect2D& velocity, ShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
          const PlayerSpriteManager& playerSpriteManager);
   void resolveCollision(GameObject& target) override;
+  void update(const InputHandler& inputHandler);
 
  private:
-  std::unique_ptr<PlayerAnimationSet> _playerAnimationSet;
+  PlayerState _state;
+  std::unique_ptr<PlayerAnimationSet> _playerAnimationSet = nullptr;
+
+  PlayerState updateState(const PlayerState currentState, const InputHandler& inputHandler) const;
+  Vect2D updateVelocity(const PlayerState currentState, const InputHandler& inputHandler) const;
+  void updateAnimation(const PlayerState oldState, const PlayerState newState, const Vect2D& newVelocity);
 };

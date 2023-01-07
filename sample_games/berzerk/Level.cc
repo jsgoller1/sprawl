@@ -21,7 +21,7 @@ void Level::update(const InputHandler& inputHandler, const time_ms delta_t) {
   // since we'll need it for animation.
   (void)delta_t;
 
-  this->updatePlayer(inputHandler);
+  this->_player->update(inputHandler);
   this->updateAI();
   this->updateAnimations();
   this->moveCharacters();
@@ -31,54 +31,18 @@ void Level::update(const InputHandler& inputHandler, const time_ms delta_t) {
 void Level::draw() {
   // TODO: For now, we're just going to draw every game object while knowing what type it is. Later on,
   // maybe we will represent drawable GameObjects with a collection of IDrawables or something?
+  this->_player->draw();
+
   for (int i = 0; i < WALLS_COUNT; i++) {
     if (this->_walls[i] != nullptr) {
       this->_walls[i]->draw();
     }
   }
-  this->_player->draw();
 }
 
 bool Level::playerAtExit() const { return false; }
 
 /* Private */
-void Level::updatePlayer(const InputHandler& inputHandler) {
-  // TODO: Should this be done by Player, since Player already
-  // moves itself and Level knows nothing about velocity?
-
-  // If they're shooting, set velocity to 0
-  if (inputHandler.lCtrlPressed()) {
-    this->_player->setVelocity(Vect2D::zero());
-    return;
-  }
-
-  Vect2D newVelocity = this->_player->getVelocity();
-  // Determine x-axis velocity
-  // TODO: update state
-  if (inputHandler.bothHorizontalKeysPressed()) {
-    newVelocity.x = 0;
-  } else if (inputHandler.leftArrowPressed()) {
-    newVelocity.x = -PLAYER_MOVE_SPEED;
-  } else if (inputHandler.rightArrowPressed()) {
-    newVelocity.x = PLAYER_MOVE_SPEED;
-  } else {
-    newVelocity.x = 0;
-  }
-
-  // Determine y-axis velocity
-  if (inputHandler.bothVerticalKeysPressed()) {
-    newVelocity.y = 0;
-  } else if (inputHandler.downArrowPressed()) {
-    newVelocity.y = -PLAYER_MOVE_SPEED;
-  } else if (inputHandler.upArrowPressed()) {
-    newVelocity.y = PLAYER_MOVE_SPEED;
-  } else {
-    newVelocity.y = 0;
-  }
-
-  this->_player->setVelocity(newVelocity);
-}
-
 void Level::updateAI() {
   //   Robot* robot;
   //   for (/* each Robot */) {

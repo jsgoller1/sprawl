@@ -10,12 +10,16 @@ std::shared_ptr<Sprite> IAnimatedDrawing::getCurrentSprite() const {
   return this->_animationSequence->getCurrentSprite();
 }
 
+void IAnimatedDrawing::updateAnimationSequence() { return this->_animationSequence->nextSprite(); }
+
+// AnimationSequence& IAnimatedDrawing::getAnimationSequence() const { return *this->_animationSequence; }
+
 void IAnimatedDrawing::setAnimationSequence(const std::shared_ptr<AnimationSequence> animation) {
   this->_animationSequence = animation;
-  this->_animationSequence->resetSequence();
+  this->_animationSequence->reset();
 }
 
 void IAnimatedDrawing::draw() {
   this->getDrawingProxy().draw(this->_positionComponent.getPosition(), this->getWidth(), this->getHeight(),
-                               this->_animationSequence->getNextSprite());
+                               this->_animationSequence->getCurrentSprite());
 }

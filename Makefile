@@ -14,7 +14,8 @@ SPRAWL_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so"
 sprawl: $(SPRAWL_OBJ_FILES)
 	$(CCACHE) $(CXX) $(SPRAWL_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
-BERZERK_MODULES:=sample_games/berzerk sample_games/berzerk/drawing sample_games/berzerk/texture 3rdparty
+BERZERK_DIR:=sample_games/berzerk
+BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/drawing $(BERZERK_DIR)/player $(BERZERK_DIR)/texture 
 BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)

@@ -15,4 +15,5 @@ class Vect2D {
   void operator+=(const Vect2D& vect);
   Vect2D operator-(const Vect2D& vect) const;
   void operator-=(const Vect2D& vect);
+  bool operator==(const Vect2D& vect);
 };
