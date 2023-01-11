@@ -9,12 +9,14 @@ bool InputHandler::downArrowPressed() const { return this->_downArrowPressed; }
 bool InputHandler::leftArrowPressed() const { return this->_leftArrowPressed; }
 bool InputHandler::rightArrowPressed() const { return this->_rightArrowPressed; }
 bool InputHandler::lCtrlPressed() const { return this->_lCtrlPressed; }
+bool InputHandler::noHorizontalKeysPressed() const { return !this->_leftArrowPressed && !this->_rightArrowPressed; }
 bool InputHandler::bothHorizontalKeysPressed() const { return this->_leftArrowPressed && this->_rightArrowPressed; }
+bool InputHandler::noVerticalKeysPressed() const { return !this->_upArrowPressed && !this->_downArrowPressed; }
 bool InputHandler::bothVerticalKeysPressed() const { return this->_upArrowPressed && this->_downArrowPressed; }
 bool InputHandler::shouldQuit() const { return this->_escapePressed || this->_gotSDLQuit; }
 
 Direction InputHandler::getArrowKeyVerticalDirection() const {
-  if (this->bothHorizontalKeysPressed()) {
+  if (this->bothVerticalKeysPressed() || this->noVerticalKeysPressed()) {
     return Direction::None();
   } else if (this->upArrowPressed()) {
     return Direction::North();
@@ -24,7 +26,7 @@ Direction InputHandler::getArrowKeyVerticalDirection() const {
 }
 
 Direction InputHandler::getArrowKeyHorizontalDirection() const {
-  if (this->bothHorizontalKeysPressed()) {
+  if (this->bothHorizontalKeysPressed() || this->noHorizontalKeysPressed()) {
     return Direction::None();
   } else if (this->leftArrowPressed()) {
     return Direction::West();

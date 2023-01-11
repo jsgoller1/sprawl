@@ -18,7 +18,9 @@ class InputHandler {
   bool lCtrlPressed() const;
 
   bool movementKeysPressed() const;
+  bool noHorizontalKeysPressed() const;
   bool bothHorizontalKeysPressed() const;
+  bool noVerticalKeysPressed() const;
   bool bothVerticalKeysPressed() const;
   bool shouldQuit() const;
   Direction getArrowKeyVerticalDirection() const;

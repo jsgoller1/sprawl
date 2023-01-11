@@ -1,6 +1,10 @@
 #include "Vect2D.hh"
 
+#include "Direction.hh"
+
 Vect2D::Vect2D(const int x, const int y) : x(x), y(y) {}
+
+Vect2D::Vect2D(const Direction& direction) : x(direction.getX()), y(direction.getY()) {}
 
 bool Vect2D::above(const Vect2D& other) { return this->y > other.y; }
 bool Vect2D::below(const Vect2D& other) { return this->y < other.y; }
@@ -26,4 +30,6 @@ void Vect2D::operator-=(const Vect2D& vect) {
   this->y -= vect.y;
 }
 
-bool Vect2D::operator==(const Vect2D& vect) { return this->x == vect.x && this->y == vect.y; }
+bool Vect2D::operator==(const Vect2D& vect) const { return this->x == vect.x && this->y == vect.y; }
+
+Vect2D Vect2D::operator*(const int scalar) const { return Vect2D(this->x * scalar, this->y * scalar); }

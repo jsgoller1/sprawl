@@ -24,7 +24,7 @@ void GameObject::move() {
 }
 
 // TODO: This does NOT belong here; Screen knows how to turn world coordinates into Screen coordinates.
-// We either need to use a helper function, or find some better way to do this.
+// We should probably add a ScreenCoordinateTranslator proxy object to Screen, then pass it to Level.
 static Vect2D toScreenCoordinates(const Vect2D& vect) {
   Vect2D screenCoords = Vect2D(vect);
   screenCoords.y = screenCoords.y - (1100 / 2);

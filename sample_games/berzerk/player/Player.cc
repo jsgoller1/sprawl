@@ -28,6 +28,7 @@ void Player::resolveCollision(GameObject& target) {
   (void)target;
   // TODO: I'd prefer we didn't do either state or animation setting here; both already have
   // respective update functions, and should be done there.
+  // TODO: Maybe we should have an event queue of some kind and state updates process events on that queue?
   if (this->_state != DYING) {
     this->_state = DYING;
     this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getDyingSequence());
@@ -35,91 +36,38 @@ void Player::resolveCollision(GameObject& target) {
 }
 
 void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
-  PlayerState nextState = this->updateState(this->_state, inputHandler);
-  Vect2D newVelocity = this->updateVelocity(nextState, inputHandler);
+  this->_state = this->getNewState(this->_state, inputHandler);
+  this->setVelocity(this->getNewVelocity(this->_state, inputHandler));
+  this->updateAnimation(deltaT, inputHandler.getArrowKeyDirection(), this->_state);
 
-  this->updateAnimation(deltaT, Direction(newVelocity), this->_state, nextState);
-  this->setVelocity(newVelocity);
-  this->_state = nextState;
   if (this->_state == SHOOTING) {
     this->shoot(inputHandler.getArrowKeyDirection(), getBulletPositionOffset(this->getPosition()));
   }
   this->move();
 }
 
-PlayerState Player::updateState(const PlayerState currentState, const InputHandler& inputHandler) const {
-  switch (currentState) {
-    case IDLE:
-      if (inputHandler.lCtrlPressed()) {
-        return SHOOTING;
-      }
-      if (inputHandler.movementKeysPressed()) {
-        return MOVING;
-      }
-      return IDLE;
-    case MOVING:
-      if (inputHandler.lCtrlPressed()) {
-        return SHOOTING;
-      }
-      if (!inputHandler.movementKeysPressed()) {
-        return IDLE;
-      }
-      return MOVING;
-    case SHOOTING:
-      if (!inputHandler.movementKeysPressed() && !inputHandler.lCtrlPressed()) {
-        return IDLE;
-      }
-      if (inputHandler.movementKeysPressed() && !inputHandler.lCtrlPressed()) {
-        return MOVING;
-      }
-      return SHOOTING;
-    case DYING:
-      return DYING;
+PlayerState Player::getNewState(const PlayerState currentState, const InputHandler& inputHandler) const {
+  if (currentState == DYING) {
+    return DYING;
   }
-  // TODO: This should not be necessary, but the compiler requires all paths to return a value.
+  if (inputHandler.lCtrlPressed() && inputHandler.movementKeysPressed()) {
+    return SHOOTING;
+  }
+  if (inputHandler.movementKeysPressed()) {
+    return MOVING;
+  }
+  return IDLE;
 }
 
-Vect2D Player::updateVelocity(const PlayerState state, const InputHandler& inputHandler) const {
+Vect2D Player::getNewVelocity(const PlayerState state, const InputHandler& inputHandler) const {
   if (state != MOVING) {
     return Vect2D::zero();
   }
-
-  Vect2D newVelocity = this->getVelocity();
-
-  // Determine x-axis velocity
-  if (inputHandler.bothHorizontalKeysPressed()) {
-    newVelocity.x = 0;
-  } else if (inputHandler.leftArrowPressed()) {
-    newVelocity.x = -PLAYER_MOVE_SPEED;
-  } else if (inputHandler.rightArrowPressed()) {
-    newVelocity.x = PLAYER_MOVE_SPEED;
-  } else {
-    newVelocity.x = 0;
-  }
-
-  // Determine y-axis velocity
-  if (inputHandler.bothVerticalKeysPressed()) {
-    newVelocity.y = 0;
-  } else if (inputHandler.downArrowPressed()) {
-    newVelocity.y = -PLAYER_MOVE_SPEED;
-  } else if (inputHandler.upArrowPressed()) {
-    newVelocity.y = PLAYER_MOVE_SPEED;
-  } else {
-    newVelocity.y = 0;
-  }
-
-  return newVelocity;
+  return Vect2D(inputHandler.getArrowKeyDirection()) * PLAYER_MOVE_SPEED;
 }
 
-void Player::updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState oldState,
-                             const PlayerState newState) {
-  if (oldState == newState) {
-    // No state change occurred, so just advance the current animation sequence
-    this->_drawingComponent->updateAnimationSequence(deltaT);
-    return;
-  }
-
-  switch (newState) {
+void Player::updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState state) {
+  switch (state) {
     case IDLE:
       this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
       break;
@@ -135,4 +83,5 @@ void Player::updateAnimation(const time_ms deltaT, const Direction& movementDire
       this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getDyingSequence());
       break;
   }
+  this->_drawingComponent->updateAnimationSequence(deltaT);
 }

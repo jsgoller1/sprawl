@@ -1,8 +1,12 @@
 #pragma once
 
+// Fwd decl
+class Direction;
+
 class Vect2D {
  public:
   Vect2D(const int x, const int y);
+  Vect2D(const Direction& direction);
   static Vect2D zero() { return Vect2D(0, 0); }
 
   int x = 0;
@@ -15,5 +19,6 @@ class Vect2D {
   void operator+=(const Vect2D& vect);
   Vect2D operator-(const Vect2D& vect) const;
   void operator-=(const Vect2D& vect);
-  bool operator==(const Vect2D& vect);
+  bool operator==(const Vect2D& vect) const;
+  Vect2D operator*(const int scalar) const;
 };

@@ -19,7 +19,7 @@ void AnimatedDrawingComponent::updateAnimationSequence(const time_ms deltaT) {
 
 void AnimatedDrawingComponent::setAnimationSequence(const std::shared_ptr<AnimationSequence> animation) {
   this->_animationSequence = animation;
-  this->_animationSequence->reset();
+  // this->_animationSequence->reset();
 }
 
 void AnimatedDrawingComponent::draw() {

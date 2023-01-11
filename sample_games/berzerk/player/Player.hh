@@ -41,8 +41,7 @@ class Player : public GameObject, public IShooting {
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent;
   std::unique_ptr<PlayerAnimationSet> _playerAnimationSet = nullptr;
 
-  PlayerState updateState(const PlayerState currentState, const InputHandler& inputHandler) const;
-  Vect2D updateVelocity(const PlayerState currentState, const InputHandler& inputHandler) const;
-  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState oldState,
-                       const PlayerState newState);
+  PlayerState getNewState(const PlayerState currentState, const InputHandler& inputHandler) const;
+  Vect2D getNewVelocity(const PlayerState currentState, const InputHandler& inputHandler) const;
+  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState state);
 };

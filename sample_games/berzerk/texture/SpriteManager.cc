@@ -18,8 +18,15 @@ SpriteManager::~SpriteManager() { SDL_FreeSurface(this->_spriteSheet); }
 SDL_Surface* SpriteManager::getSpriteSheet() const { return this->_spriteSheet; }
 
 std::shared_ptr<Sprite> SpriteManager::getSprite(const int col, const int row) const {
-  std::cout << "x: " << this->_topLeft.x + (col * (this->_spriteWidthPx + this->_spriteBorderSizePx)) << std::endl;
-  std::cout << "y: " << this->_topLeft.y + (row * (this->_spriteHeightPx + this->_spriteBorderSizePx)) << std::endl;
+  /*
+   * TODO: The interface to this function is confusing. We're following x,y coordinates by doing X first, but
+   * matrix form expects row before column. Pick one and be consistent.
+   */
+
+  std::cout << "Getting sprite x: " << this->_topLeft.x + (col * (this->_spriteWidthPx + this->_spriteBorderSizePx))
+            << std::endl;
+  std::cout << "Getting sprite y: " << this->_topLeft.y + (row * (this->_spriteHeightPx + this->_spriteBorderSizePx))
+            << std::endl;
 
   return std::make_shared<Sprite>(this->getSpriteSheet(),
                                   this->_topLeft.x + (col * (this->_spriteWidthPx + this->_spriteBorderSizePx)),

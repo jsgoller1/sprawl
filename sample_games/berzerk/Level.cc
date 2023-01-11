@@ -36,6 +36,7 @@ void Level::draw() {
 }
 
 bool Level::playerAtExit() const { return false; }
+
 void Level::updateCollisions() {
   // There are not going to be that many walls, robots, or projectiles; probably 10
   // robots and a player, each of whom can fire a projectile (so 22 objects at most). We

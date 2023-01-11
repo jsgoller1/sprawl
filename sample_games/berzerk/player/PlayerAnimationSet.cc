@@ -1,5 +1,6 @@
 #include "PlayerAnimationSet.hh"
 
+#include <iostream>
 #include <vector>
 
 #include "Direction.hh"
@@ -47,13 +48,21 @@ PlayerAnimationSet::PlayerAnimationSet(const PlayerSpriteManager& playerSpriteMa
   this->_movingESequence = std::make_shared<MovingESequence>(playerSpriteManager);
   this->_dyingSequence = std::make_shared<DyingSequence>(playerSpriteManager);
 
+  std::cout << "Loading shooting sequence: N" << std::endl;
   this->_shootingNSequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingN());
+  std::cout << "Loading shooting sequence: E" << std::endl;
   this->_shootingESequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingE());
+  std::cout << "Loading shooting sequence: S" << std::endl;
   this->_shootingSSequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingS());
+  std::cout << "Loading shooting sequence: W" << std::endl;
   this->_shootingWSequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingW());
+  std::cout << "Loading shooting sequence: NE" << std::endl;
   this->_shootingNESequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingNE());
+  std::cout << "Loading shooting sequence: SE" << std::endl;
   this->_shootingSESequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingSE());
+  std::cout << "Loading shooting sequence: NW" << std::endl;
   this->_shootingNWSequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingNW());
+  std::cout << "Loading shooting sequence: SW" << std::endl;
   this->_shootingSWSequence = std::make_shared<AnimationSequence>(playerSpriteManager.shootingSW());
   this->_idleSequence = std::make_shared<AnimationSequence>(playerSpriteManager.standing());
 };
@@ -64,20 +73,28 @@ std::shared_ptr<AnimationSequence> PlayerAnimationSet::getDyingSequence() const 
 
 std::shared_ptr<AnimationSequence> PlayerAnimationSet::getShootingSequence(const Direction& direction) {
   if (direction == Direction::North()) {
+    std::cout << "Switching to shooting sequence: N" << std::endl;
     return this->getShootingNSequence();
   } else if (direction == Direction::South()) {
+    std::cout << "Switching to shooting sequence: S" << std::endl;
     return this->getShootingSSequence();
   } else if (direction == Direction::East()) {
+    std::cout << "Switching to shooting sequence: E" << std::endl;
     return this->getShootingESequence();
   } else if (direction == Direction::West()) {
+    std::cout << "Switching to shooting sequence: W" << std::endl;
     return this->getShootingWSequence();
   } else if (direction == Direction::NorthEast()) {
+    std::cout << "Switching to shooting sequence: NE" << std::endl;
     return this->getShootingNESequence();
   } else if (direction == Direction::SouthEast()) {
+    std::cout << "Switching to shooting sequence: SE" << std::endl;
     return this->getShootingSESequence();
   } else if (direction == Direction::SouthWest()) {
+    std::cout << "Switching to shooting sequence: SW" << std::endl;
     return this->getShootingSWSequence();
   } else {  // NorthWest
+    std::cout << "Switching to shooting sequence: NW" << std::endl;
     return this->getShootingNWSequence();
   }
 }
