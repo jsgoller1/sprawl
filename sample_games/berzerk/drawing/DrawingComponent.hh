@@ -10,10 +10,10 @@
 class Sprite;
 class SpriteManager;
 
-class IDrawing {
+class DrawingComponent {
  public:
-  IDrawing(PositionComponent& _positionComponent, const int height, const int width, DrawingProxy& drawingProxy);
-  virtual ~IDrawing();
+  DrawingComponent(PositionComponent& _positionComponent, const int height, const int width, DrawingProxy& drawingProxy);
+  virtual ~DrawingComponent();
   int getHeight() const;
   int getWidth() const;
   Vect2D getTopLeft() const;

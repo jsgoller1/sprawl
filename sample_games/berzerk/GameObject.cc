@@ -1,5 +1,6 @@
 #include "GameObject.hh"
 
+#include "DrawingComponent.hh"
 #include "DrawingProxy.hh"
 #include "SDL2/SDL_image.h"
 #include "ShootingProxy.hh"
@@ -22,9 +23,28 @@ void GameObject::move() {
   this->_positionComponent->setPosition(currentPosition + this->_velocity);
 }
 
+// TODO: This does NOT belong here; Screen knows how to turn world coordinates into Screen coordinates.
+// We either need to use a helper function, or find some better way to do this.
+static Vect2D toScreenCoordinates(const Vect2D& vect) {
+  Vect2D screenCoords = Vect2D(vect);
+  screenCoords.y = screenCoords.y - (1100 / 2);
+  screenCoords.x = screenCoords.x + (1700 / 2);
+  screenCoords.y = screenCoords.y * -1;
+  return screenCoords;
+}
+
 // ICollision
 bool GameObject::collisionTest(const GameObject& target) const {
-  // TODO: Collision testing
-  (void)target;
-  return false;
+  Vect2D usTopLeft = toScreenCoordinates(this->getDrawingComponent().getTopLeft());
+  SDL_Rect us{.x = usTopLeft.x,
+              .y = usTopLeft.y,
+              .w = this->getDrawingComponent().getWidth(),
+              .h = this->getDrawingComponent().getHeight()};
+
+  Vect2D themTopLeft = toScreenCoordinates(target.getDrawingComponent().getTopLeft());
+  SDL_Rect them{.x = themTopLeft.x,
+                .y = themTopLeft.y,
+                .w = target.getDrawingComponent().getWidth(),
+                .h = target.getDrawingComponent().getHeight()};
+  return SDL_HasIntersection(&us, &them);
 }

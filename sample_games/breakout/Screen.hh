@@ -5,6 +5,8 @@
 // Forward decl
 class Vect2D;
 
+Vect2D toScreenCoordinates(const Vect2D& vect);
+
 class Screen {
  public:
   Screen(const int width, const int height);

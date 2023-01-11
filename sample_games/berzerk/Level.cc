@@ -1,5 +1,7 @@
 #include "Level.hh"
 
+#include <iostream>
+
 #include "InputHandler.hh"
 #include "Player.hh"
 #include "Wall.hh"
@@ -18,16 +20,17 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
 
 void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
   this->_player->update(inputHandler, deltaT);
+  this->updateCollisions();
 }
 
 void Level::draw() {
   // TODO: For now, we're just going to draw every game object while knowing what type it is. Later on,
   // maybe we will represent drawable GameObjects with a collection of IDrawables or something?
-  this->_player->draw();
+  this->_player->getDrawingComponent().draw();
 
   for (int i = 0; i < WALLS_COUNT; i++) {
     if (this->_walls[i] != nullptr) {
-      this->_walls[i]->draw();
+      this->_walls[i]->getDrawingComponent().draw();
     }
   }
 }
@@ -51,6 +54,14 @@ void Level::updateCollisions() {
   //       }
   //     }
   //   }
+  std::shared_ptr<Wall> currentWall = nullptr;
+  for (int i = 0; i < WALLS_COUNT; i++) {
+    currentWall = this->_walls[i];
+    if (currentWall != nullptr && this->_player->collisionTest(*currentWall)) {
+      std::cout << "Player collided with wall " << i << std::endl;
+      this->_player->resolveCollision(*currentWall);
+    }
+  }
 }
 
 // std::vector<std::shared_ptr<Wall>>& Level::getWalls() { return *this->_walls; }

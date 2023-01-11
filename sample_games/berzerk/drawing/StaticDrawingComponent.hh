@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include "IDrawing.hh"
+#include "DrawingComponent.hh"
 
-class IStaticDrawing : public IDrawing {
+class StaticDrawingComponent : public DrawingComponent {
  public:
-  IStaticDrawing(PositionComponent& _positionComponent, const int height, const int width, DrawingProxy& drawingProxy,
+  StaticDrawingComponent(PositionComponent& _positionComponent, const int height, const int width, DrawingProxy& drawingProxy,
                  const std::shared_ptr<Sprite> sprite);
 
   // Get the current sprite, which is the only sprite we ever use

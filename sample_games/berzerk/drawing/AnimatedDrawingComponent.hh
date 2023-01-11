@@ -3,16 +3,16 @@
 #include <memory>
 
 #include "AnimationSequence.hh"
-#include "IDrawing.hh"
+#include "DrawingComponent.hh"
 #include "Time.hh"
 
 // Forward decls
 class PositionComponent;
 
-class IAnimatedDrawing : public IDrawing {
+class AnimatedDrawingComponent : public DrawingComponent {
  public:
-  IAnimatedDrawing(PositionComponent& _positionComponent, const int height, const int width, DrawingProxy& drawingProxy,
-                   const std::shared_ptr<AnimationSequence> animationSequence);
+  AnimatedDrawingComponent(PositionComponent& _positionComponent, const int height, const int width,
+                           DrawingProxy& drawingProxy, const std::shared_ptr<AnimationSequence> animationSequence);
 
   // Get the current sprite by getting the next animation
   void draw() override;

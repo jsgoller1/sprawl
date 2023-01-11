@@ -8,6 +8,7 @@
 
 // Forward decls
 class Direction;
+class DrawingComponent;
 class DrawingProxy;
 class SpriteManager;
 class Sprite;
@@ -26,6 +27,7 @@ class GameObject {
   virtual ~GameObject();
   Vect2D getPosition() const;
   PositionComponent& getPositionComponent() const;
+  virtual DrawingComponent& getDrawingComponent() const = 0;
 
   // IMovement
   void IMovementCtor(const Vect2D& velocity);

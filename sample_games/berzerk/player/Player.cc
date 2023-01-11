@@ -14,16 +14,25 @@ Vect2D getBulletPositionOffset(const Vect2D& shooterPosition) {
 
 Player::Player(const Vect2D& position, const Vect2D& velocity, ShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
                const PlayerSpriteManager& playerSpriteManager)
-    : GameObject(position, velocity),
-      IShooting(shootingProxy),
-      IAnimatedDrawing(this->getPositionComponent(), PLAYER_DEFAULT_HEIGHT, PLAYER_DEFAULT_WIDTH, drawingProxy,
-                       nullptr) {
+    : GameObject(position, velocity), IShooting(shootingProxy) {
+  this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(new AnimatedDrawingComponent(
+      this->getPositionComponent(), PLAYER_DEFAULT_HEIGHT, PLAYER_DEFAULT_WIDTH, drawingProxy, nullptr));
   this->_state = IDLE;
   this->_playerAnimationSet = std::unique_ptr<PlayerAnimationSet>(new PlayerAnimationSet(playerSpriteManager));
-  this->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
+  this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
 }
 
-void Player::resolveCollision(GameObject& target) { (void)target; }
+AnimatedDrawingComponent& Player::getDrawingComponent() const { return *this->_drawingComponent; }
+
+void Player::resolveCollision(GameObject& target) {
+  (void)target;
+  // TODO: I'd prefer we didn't do either state or animation setting here; both already have
+  // respective update functions, and should be done there.
+  if (this->_state != DYING) {
+    this->_state = DYING;
+    this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getDyingSequence());
+  }
+}
 
 void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
   PlayerState nextState = this->updateState(this->_state, inputHandler);
@@ -39,11 +48,6 @@ void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
 }
 
 PlayerState Player::updateState(const PlayerState currentState, const InputHandler& inputHandler) const {
-  // DEBUG: This is just a hack for now to test the death animation until we have wall collisions working
-  if (this->getPosition().y < -150) {
-    return DYING;
-  }
-
   switch (currentState) {
     case IDLE:
       if (inputHandler.lCtrlPressed()) {
@@ -111,23 +115,24 @@ void Player::updateAnimation(const time_ms deltaT, const Direction& movementDire
                              const PlayerState newState) {
   if (oldState == newState) {
     // No state change occurred, so just advance the current animation sequence
-    this->updateAnimationSequence(deltaT);
+    this->_drawingComponent->updateAnimationSequence(deltaT);
     return;
   }
 
   switch (newState) {
     case IDLE:
-      this->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
+      this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
       break;
     case MOVING:
-      this->setAnimationSequence((movementDirection.getX() == 1) ? this->_playerAnimationSet->getMovingESequence()
-                                                                 : this->_playerAnimationSet->getMovingWSequence());
+      this->_drawingComponent->setAnimationSequence((movementDirection.getX() == 1)
+                                                        ? this->_playerAnimationSet->getMovingESequence()
+                                                        : this->_playerAnimationSet->getMovingWSequence());
       break;
     case SHOOTING:
-      this->setAnimationSequence(this->_playerAnimationSet->getShootingSequence(movementDirection));
+      this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getShootingSequence(movementDirection));
       break;
     case DYING:
-      this->setAnimationSequence(this->_playerAnimationSet->getDyingSequence());
+      this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getDyingSequence());
       break;
   }
 }

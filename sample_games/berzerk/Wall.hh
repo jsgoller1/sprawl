@@ -3,9 +3,9 @@
 #include <memory>
 
 #include "GameObject.hh"
-#include "IStaticDrawing.hh"
 #include "LevelSpriteManager.hh"
 #include "Screen.hh"
+#include "StaticDrawingComponent.hh"
 
 constexpr int WALL_THICCNESS = 10;
 constexpr int VERTICAL_WALL_WIDTH = WALL_THICCNESS;
@@ -15,7 +15,7 @@ constexpr int HORIZONTAL_WALL_HEIGHT = WALL_THICCNESS;
 
 Vect2D getWallPosition(unsigned wallIndex);
 
-class Wall : public GameObject, public IStaticDrawing {
+class Wall : public GameObject {
  public:
   Wall(const Wall& copy);
   static Wall HorizontalBorderWall(const Vect2D& center, const LevelSpriteManager& levelSpriteManager,
@@ -54,8 +54,12 @@ class Wall : public GameObject, public IStaticDrawing {
   }
 
   void resolveCollision(GameObject& target) override;
+  StaticDrawingComponent& getDrawingComponent() const override;
 
  protected:
   Wall(const Vect2D& position, const int height, const int width, const std::shared_ptr<Sprite> sprite,
        DrawingProxy& drawingProxy);
+
+ private:
+  std::unique_ptr<StaticDrawingComponent> _drawingComponent;
 };
