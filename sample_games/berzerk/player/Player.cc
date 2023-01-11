@@ -18,26 +18,28 @@ Player::Player(const Vect2D& position, const Vect2D& velocity, ShootingProxy& sh
       IShooting(shootingProxy),
       IAnimatedDrawing(this->getPositionComponent(), PLAYER_DEFAULT_HEIGHT, PLAYER_DEFAULT_WIDTH, drawingProxy,
                        nullptr) {
+  this->_state = IDLE;
   this->_playerAnimationSet = std::unique_ptr<PlayerAnimationSet>(new PlayerAnimationSet(playerSpriteManager));
   this->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
 }
 
 void Player::resolveCollision(GameObject& target) { (void)target; }
 
-void Player::update(const InputHandler& inputHandler) {
+void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
   PlayerState nextState = this->updateState(this->_state, inputHandler);
-  Vect2D newVelocity = this->updateVelocity(this->_state, inputHandler);
+  Vect2D newVelocity = this->updateVelocity(nextState, inputHandler);
 
-  this->updateAnimation(this->_state, nextState, newVelocity);
+  this->updateAnimation(deltaT, Direction(newVelocity), this->_state, nextState);
   this->setVelocity(newVelocity);
   this->_state = nextState;
   if (this->_state == SHOOTING) {
     this->shoot(inputHandler.getArrowKeyDirection(), getBulletPositionOffset(this->getPosition()));
   }
+  this->move();
 }
 
 PlayerState Player::updateState(const PlayerState currentState, const InputHandler& inputHandler) const {
-  // TODO: This is just a hack for now to test the death animation until we have wall collisions working
+  // DEBUG: This is just a hack for now to test the death animation until we have wall collisions working
   if (this->getPosition().y < -150) {
     return DYING;
   }
@@ -50,7 +52,7 @@ PlayerState Player::updateState(const PlayerState currentState, const InputHandl
       if (inputHandler.movementKeysPressed()) {
         return MOVING;
       }
-      break;
+      return IDLE;
     case MOVING:
       if (inputHandler.lCtrlPressed()) {
         return SHOOTING;
@@ -58,7 +60,7 @@ PlayerState Player::updateState(const PlayerState currentState, const InputHandl
       if (!inputHandler.movementKeysPressed()) {
         return IDLE;
       }
-      break;
+      return MOVING;
     case SHOOTING:
       if (!inputHandler.movementKeysPressed() && !inputHandler.lCtrlPressed()) {
         return IDLE;
@@ -66,12 +68,11 @@ PlayerState Player::updateState(const PlayerState currentState, const InputHandl
       if (inputHandler.movementKeysPressed() && !inputHandler.lCtrlPressed()) {
         return MOVING;
       }
-      break;
+      return SHOOTING;
     case DYING:
       return DYING;
   }
   // TODO: This should not be necessary, but the compiler requires all paths to return a value.
-  return IDLE;
 }
 
 Vect2D Player::updateVelocity(const PlayerState state, const InputHandler& inputHandler) const {
@@ -106,13 +107,11 @@ Vect2D Player::updateVelocity(const PlayerState state, const InputHandler& input
   return newVelocity;
 }
 
-void Player::updateAnimation(const PlayerState oldState, const PlayerState newState, const Vect2D& newVelocity) {
-  // TODO: Why did we need newVelocity here? Did we just need the direction? Can we remove this parameter?
-  (void)newVelocity;
-
+void Player::updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState oldState,
+                             const PlayerState newState) {
   if (oldState == newState) {
     // No state change occurred, so just advance the current animation sequence
-    this->updateAnimationSequence();
+    this->updateAnimationSequence(deltaT);
     return;
   }
 
@@ -121,8 +120,11 @@ void Player::updateAnimation(const PlayerState oldState, const PlayerState newSt
       this->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
       break;
     case MOVING:
+      this->setAnimationSequence((movementDirection.getX() == 1) ? this->_playerAnimationSet->getMovingESequence()
+                                                                 : this->_playerAnimationSet->getMovingWSequence());
       break;
     case SHOOTING:
+      this->setAnimationSequence(this->_playerAnimationSet->getShootingSequence(movementDirection));
       break;
     case DYING:
       this->setAnimationSequence(this->_playerAnimationSet->getDyingSequence());

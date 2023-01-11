@@ -7,10 +7,10 @@
 PlayerSpriteManager::PlayerSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}
 
 std::shared_ptr<Sprite> PlayerSpriteManager::movingE(const int frameNo) const {
-  return this->getSprite(0, 1 + frameNo);
+  return this->getSprite(1 + frameNo, 0);
 }
 std::shared_ptr<Sprite> PlayerSpriteManager::movingW(const int frameNo) const {
-  return this->getSprite(1, 1 + frameNo);
+  return this->getSprite(1 + frameNo, 1);
 }
 std::shared_ptr<Sprite> PlayerSpriteManager::dying(const int frameNo) const {
   std::cout << "Getting dying animation frame: " << frameNo << std::endl;

@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Direction.hh"
 #include "PlayerSpriteManager.hh"
 #include "PlayerState.hh"
 #include "Sprite.hh"
@@ -60,6 +61,26 @@ PlayerAnimationSet::PlayerAnimationSet(const PlayerSpriteManager& playerSpriteMa
 std::shared_ptr<AnimationSequence> PlayerAnimationSet::getMovingWSequence() const { return this->_movingWSequence; }
 std::shared_ptr<AnimationSequence> PlayerAnimationSet::getMovingESequence() const { return this->_movingESequence; }
 std::shared_ptr<AnimationSequence> PlayerAnimationSet::getDyingSequence() const { return this->_dyingSequence; }
+
+std::shared_ptr<AnimationSequence> PlayerAnimationSet::getShootingSequence(const Direction& direction) {
+  if (direction == Direction::North()) {
+    return this->getShootingNSequence();
+  } else if (direction == Direction::South()) {
+    return this->getShootingSSequence();
+  } else if (direction == Direction::East()) {
+    return this->getShootingESequence();
+  } else if (direction == Direction::West()) {
+    return this->getShootingWSequence();
+  } else if (direction == Direction::NorthEast()) {
+    return this->getShootingNESequence();
+  } else if (direction == Direction::SouthEast()) {
+    return this->getShootingSESequence();
+  } else if (direction == Direction::SouthWest()) {
+    return this->getShootingSWSequence();
+  } else {  // NorthWest
+    return this->getShootingNWSequence();
+  }
+}
 
 std::shared_ptr<AnimationSequence> PlayerAnimationSet::getShootingNSequence() const { return this->_shootingNSequence; }
 std::shared_ptr<AnimationSequence> PlayerAnimationSet::getShootingESequence() const { return this->_shootingESequence; }

@@ -16,9 +16,9 @@ int main(int argc, char* argv[]) {
 
   Game game = Game(args, screenDrawingProxy);
   while (!(game.getShouldQuit() || inputHandler.shouldQuit())) {
-    time_ms duration = timer.tick();
+    time_ms deltaT = timer.tick();
     inputHandler.getKeyboardInput();
-    game.update(inputHandler, duration);
+    game.update(inputHandler, deltaT);
     game.draw(screen);
   }
 }

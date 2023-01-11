@@ -7,6 +7,7 @@
 
 // Fwd decls
 class PlayerSpriteManager;
+class Direction;
 
 class PlayerAnimationSet {
  public:
@@ -16,6 +17,7 @@ class PlayerAnimationSet {
   std::shared_ptr<AnimationSequence> getMovingESequence() const;
   std::shared_ptr<AnimationSequence> getDyingSequence() const;
 
+  std::shared_ptr<AnimationSequence> getShootingSequence(const Direction& direction);
   std::shared_ptr<AnimationSequence> getShootingNSequence() const;
   std::shared_ptr<AnimationSequence> getShootingESequence() const;
   std::shared_ptr<AnimationSequence> getShootingSSequence() const;
@@ -24,6 +26,7 @@ class PlayerAnimationSet {
   std::shared_ptr<AnimationSequence> getShootingSESequence() const;
   std::shared_ptr<AnimationSequence> getShootingNWSequence() const;
   std::shared_ptr<AnimationSequence> getShootingSWSequence() const;
+
   std::shared_ptr<AnimationSequence> getIdleSequence() const;
 
  private:

@@ -5,9 +5,8 @@ AnimationSequence::AnimationSequence() { this->_sprites = std::vector<std::share
 AnimationSequence::AnimationSequence(const std::shared_ptr<Sprite> sprite) {
   this->_sprites = std::vector<std::shared_ptr<Sprite>>{sprite};
 }
-AnimationSequence::AnimationSequence(const std::vector<std::shared_ptr<Sprite>>& spriteCollection) {
-  this->_sprites = std::vector<std::shared_ptr<Sprite>>(spriteCollection);
-}
+AnimationSequence::AnimationSequence(const std::vector<std::shared_ptr<Sprite>> sprites, const time_ms frameShowLength)
+    : _frameShowLength(frameShowLength), _sprites(sprites) {}
 
 void AnimationSequence::addSprite(const std::shared_ptr<Sprite> sprite) { this->_sprites.push_back(sprite); }
 
@@ -18,5 +17,12 @@ std::shared_ptr<Sprite> AnimationSequence::getCurrentSprite() const {
   return this->_sprites[this->_spriteIdx];
 }
 
-void AnimationSequence::nextSprite() { this->_spriteIdx = (this->_spriteIdx + 1) % this->_sprites.size(); }
+void AnimationSequence::update(const time_ms deltaT) {
+  this->_sinceLastUpdate += deltaT;
+  if (_sinceLastUpdate > _frameShowLength) {
+    this->_spriteIdx = (this->_spriteIdx + 1) % this->_sprites.size();
+    this->_sinceLastUpdate = 0;
+  }
+}
+
 void AnimationSequence::reset() { this->_spriteIdx = 0; }

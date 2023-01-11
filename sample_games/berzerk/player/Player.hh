@@ -31,7 +31,7 @@ class Player : public GameObject, public IShooting, public IAnimatedDrawing {
   Player(const Vect2D& position, const Vect2D& velocity, ShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
          const PlayerSpriteManager& playerSpriteManager);
   void resolveCollision(GameObject& target) override;
-  void update(const InputHandler& inputHandler);
+  void update(const InputHandler& inputHandler, const time_ms deltaT);
 
  private:
   PlayerState _state;
@@ -39,5 +39,6 @@ class Player : public GameObject, public IShooting, public IAnimatedDrawing {
 
   PlayerState updateState(const PlayerState currentState, const InputHandler& inputHandler) const;
   Vect2D updateVelocity(const PlayerState currentState, const InputHandler& inputHandler) const;
-  void updateAnimation(const PlayerState oldState, const PlayerState newState, const Vect2D& newVelocity);
+  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState oldState,
+                       const PlayerState newState);
 };

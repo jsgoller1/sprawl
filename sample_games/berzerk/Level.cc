@@ -16,16 +16,8 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
   this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
 }
 
-void Level::update(const InputHandler& inputHandler, const time_ms delta_t) {
-  // TODO: thought we'd need time for movement, but we don't; pinching this off here
-  // since we'll need it for animation.
-  (void)delta_t;
-
-  this->_player->update(inputHandler);
-  this->updateAI();
-  this->updateAnimations();
-  this->moveCharacters();
-  this->updateCollisions();
+void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
+  this->_player->update(inputHandler, deltaT);
 }
 
 void Level::draw() {
@@ -41,25 +33,6 @@ void Level::draw() {
 }
 
 bool Level::playerAtExit() const { return false; }
-
-/* Private */
-void Level::updateAI() {
-  //   Robot* robot;
-  //   for (/* each Robot */) {
-  //     robot->aiBehavior();
-  //   }
-}
-
-void Level::updateAnimations() {}
-
-void Level::moveCharacters() {
-  /*
-  for each bullet, robot, and the character:
-    Move in the direction of its velocity
-  */
-  this->_player->move();
-}
-
 void Level::updateCollisions() {
   // There are not going to be that many walls, robots, or projectiles; probably 10
   // robots and a player, each of whom can fire a projectile (so 22 objects at most). We

@@ -4,6 +4,7 @@
 
 #include "AnimationSequence.hh"
 #include "IDrawing.hh"
+#include "Time.hh"
 
 // Forward decls
 class PositionComponent;
@@ -17,7 +18,7 @@ class IAnimatedDrawing : public IDrawing {
   void draw() override;
   std::shared_ptr<Sprite> getCurrentSprite() const override;
 
-  void updateAnimationSequence();
+  void updateAnimationSequence(const time_ms deltaT);
   void setAnimationSequence(const std::shared_ptr<AnimationSequence> animation);
   // AnimationSequence& getAnimationSequence() const;
 

@@ -50,6 +50,9 @@ void InputHandler::getKeyboardInput() {
       keyboardEventHandler(event.type, event.key.keysym.sym);
     }
   }
+
+  // DEBUG: This is just a hack for generating input while debugging.
+  // this->_rightArrowPressed = true;
 }
 
 void InputHandler::keyboardEventHandler(const Uint32 eventType, const SDL_Keycode keycode) {

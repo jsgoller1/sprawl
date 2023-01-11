@@ -92,7 +92,7 @@ class Level {
 
   // Core game loop functions
   void updateAI();
-  void updateAnimations();
+  void updateAnimations(const time_ms deltaT);
   void moveCharacters();
   void updateCollisions();
 };

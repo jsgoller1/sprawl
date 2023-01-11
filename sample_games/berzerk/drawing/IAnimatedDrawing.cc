@@ -10,7 +10,9 @@ std::shared_ptr<Sprite> IAnimatedDrawing::getCurrentSprite() const {
   return this->_animationSequence->getCurrentSprite();
 }
 
-void IAnimatedDrawing::updateAnimationSequence() { return this->_animationSequence->nextSprite(); }
+void IAnimatedDrawing::updateAnimationSequence(const time_ms deltaT) {
+  return this->_animationSequence->update(deltaT);
+}
 
 // AnimationSequence& IAnimatedDrawing::getAnimationSequence() const { return *this->_animationSequence; }
 
