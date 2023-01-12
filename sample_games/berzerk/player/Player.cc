@@ -7,17 +7,17 @@
 #define PLAYER_DEFAULT_HEIGHT 100
 #define PLAYER_DEFAULT_WIDTH 30
 
-Vect2D getBulletPositionOffset(const Vect2D& shooterPosition) {
-  (void)shooterPosition;
-  return Vect2D::zero();
-}
+constexpr int PLAYER_SHOOT_DELAY_MS = 750;
 
-Player::Player(const Vect2D& position, const Vect2D& velocity, ShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
-               const PlayerSpriteManager& playerSpriteManager)
+Vect2D getBulletPositionOffset(const Vect2D& shooterPosition) { return shooterPosition; }
+
+Player::Player(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
+               DrawingProxy& drawingProxy, const PlayerSpriteManager& playerSpriteManager)
     : GameObject(position, velocity), IShooting(shootingProxy) {
   this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(new AnimatedDrawingComponent(
       this->getPositionComponent(), PLAYER_DEFAULT_HEIGHT, PLAYER_DEFAULT_WIDTH, drawingProxy, nullptr));
   this->_state = IDLE;
+  this->_sinceLastShot = 0;
   this->_playerAnimationSet = std::unique_ptr<PlayerAnimationSet>(new PlayerAnimationSet(playerSpriteManager));
   this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->getIdleSequence());
 }
@@ -40,8 +40,11 @@ void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
   this->setVelocity(this->getNewVelocity(this->_state, inputHandler));
   this->updateAnimation(deltaT, inputHandler.getArrowKeyDirection(), this->_state);
 
-  if (this->_state == SHOOTING) {
-    this->shoot(inputHandler.getArrowKeyDirection(), getBulletPositionOffset(this->getPosition()));
+  // TODO: Shooting should be its own function since it involves a delay
+  this->_sinceLastShot += deltaT;
+  if (this->_state == SHOOTING && this->_sinceLastShot > PLAYER_SHOOT_DELAY_MS) {
+    this->_sinceLastShot = 0;
+    this->shoot(inputHandler.getArrowKeyDirection(), getBulletPositionOffset(this->getPosition()), GREEN);
   }
   this->move();
 }

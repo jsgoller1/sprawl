@@ -17,18 +17,9 @@ class PlayerSpriteManager;
 
 Vect2D getBulletPositionOffset(const Vect2D& shooterPosition);
 
-/*
- *  Player needs to satisfy the following constructors:
- *
- *  GameObject(const Vect2D& position, const Vect2D& velocity);
- *  IShooting(ShootingProxy& shootingProxy);
- *  AnimatedDrawingComponent(PositionComponent& _positionComponent, const int height, const int width, DrawingProxy&
- *    drawingProxy, const std::shared_ptr<AnimationSequence> animation);
- *
- */
 class Player : public GameObject, public IShooting {
  public:
-  Player(const Vect2D& position, const Vect2D& velocity, ShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
+  Player(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
          const PlayerSpriteManager& playerSpriteManager);
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
@@ -38,6 +29,7 @@ class Player : public GameObject, public IShooting {
 
  private:
   PlayerState _state;
+  time_ms _sinceLastShot;
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent;
   std::unique_ptr<PlayerAnimationSet> _playerAnimationSet = nullptr;
 

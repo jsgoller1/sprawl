@@ -11,18 +11,20 @@ class Sprite;
 
 class SpriteManager {
  public:
-  SpriteManager(const std::string& spriteSheetPath, const Vect2D& topLeft = Vect2D::zero(), const int spriteWidthPx = 8,
-                const int spriteHeightPx = 16, const int spriteBorderSize = 1);
+  SpriteManager(const std::string& spriteSheetPath, const Vect2D& topLeft, const int spriteWidthPx,
+                const int spriteHeightPx, const int spriteBorderSize);
   ~SpriteManager();
   SDL_Surface* getSpriteSheet() const;
 
  protected:
-  std::shared_ptr<Sprite> getSprite(const int row, const int col) const;
+  std::shared_ptr<Sprite> getSprite(const int col, const int row) const;
+  std::shared_ptr<Sprite> getSprite(const int col, const int row, const int spriteWidthPx, const int spriteHeightPx,
+                                    const int _spriteBorderSizePx) const;
 
- private:
+  // private:
   SDL_Surface* _spriteSheet;
-  Vect2D _topLeft = Vect2D::zero();
-  int _spriteWidthPx = 8;
-  int _spriteHeightPx = 16;
-  int _spriteBorderSizePx = 1;
+  Vect2D _topLeft;
+  int _spriteWidthPx;
+  int _spriteHeightPx;
+  int _spriteBorderSizePx;
 };

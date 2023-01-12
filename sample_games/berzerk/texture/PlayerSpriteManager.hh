@@ -19,9 +19,4 @@ class PlayerSpriteManager : public SpriteManager {
   std::shared_ptr<Sprite> shootingNW() const;
   std::shared_ptr<Sprite> shootingSW() const;
   std::shared_ptr<Sprite> standing() const;
-
-  std::shared_ptr<Sprite> bulletVertical() const;
-  std::shared_ptr<Sprite> bulletHorizontal() const;
-  std::shared_ptr<Sprite> bulletNE() const;
-  std::shared_ptr<Sprite> bulletSE() const;
 };

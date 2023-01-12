@@ -2,10 +2,15 @@
 
 #include <iostream>
 
+#include "BulletSpriteManager.hh"
 #include "CLI.hh"
 #include "DrawingProxy.hh"
 #include "InputHandler.hh"
+#include "LevelSpriteManager.hh"
+#include "PlayerSpriteManager.hh"
+#include "RobotSpriteManager.hh"
 #include "Screen.hh"
+#include "TextSpriteManager.hh"
 
 // Public
 Game::Game(const CLI& args, DrawingProxy& drawingProxy)
@@ -14,10 +19,13 @@ Game::Game(const CLI& args, DrawingProxy& drawingProxy)
           std::unique_ptr<PlayerSpriteManager>(new PlayerSpriteManager(args.getCharacterSpriteSheetPath()))),
       _robotSpriteManager(
           std::unique_ptr<RobotSpriteManager>(new RobotSpriteManager(args.getCharacterSpriteSheetPath()))),
-      _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))) {
+      _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))),
+      _bulletSpriteManager(
+          std::unique_ptr<BulletSpriteManager>(new BulletSpriteManager(args.getBulletSpriteSheetPath()))) {
   this->initUI(*this->_textSpriteManager, drawingProxy);
-  this->_currentLevel = std::unique_ptr<Level>(
-      new Level(drawingProxy, *this->_levelSpriteManager, *this->_playerSpriteManager, *this->_robotSpriteManager));
+  this->_currentLevel =
+      std::unique_ptr<Level>(new Level(drawingProxy, *this->_levelSpriteManager, *this->_playerSpriteManager,
+                                       *this->_robotSpriteManager, *this->_bulletSpriteManager));
 }
 
 bool Game::getShouldQuit() const { return this->_shouldQuit; }

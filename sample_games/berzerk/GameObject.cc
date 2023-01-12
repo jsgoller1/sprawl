@@ -2,8 +2,8 @@
 
 #include "DrawingComponent.hh"
 #include "DrawingProxy.hh"
+#include "LevelShootingProxy.hh"
 #include "SDL2/SDL_image.h"
-#include "ShootingProxy.hh"
 #include "SpriteManager.hh"
 
 GameObject::GameObject(const Vect2D& position, const Vect2D& velocity) : _velocity(velocity) {
@@ -48,3 +48,6 @@ bool GameObject::collisionTest(const GameObject& target) const {
                 .h = target.getDrawingComponent().getHeight()};
   return SDL_HasIntersection(&us, &them);
 }
+
+bool GameObject::getShouldRemove() const { return this->_shouldRemove; }
+void GameObject::setShouldRemove(const bool setting) { this->_shouldRemove = setting; }

@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+#include "BulletSpriteManager.hh"
 #include "Level.hh"
 #include "LevelSpriteManager.hh"
 #include "PlayerSpriteManager.hh"
@@ -32,6 +33,7 @@ class Game {
   std::unique_ptr<PlayerSpriteManager> _playerSpriteManager;
   std::unique_ptr<RobotSpriteManager> _robotSpriteManager;
   std::unique_ptr<TextSpriteManager> _textSpriteManager;
+  std::unique_ptr<BulletSpriteManager> _bulletSpriteManager;
 
   bool _shouldQuit = false;
   int playerLives = 3;

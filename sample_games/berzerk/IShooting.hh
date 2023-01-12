@@ -1,6 +1,7 @@
 #pragma once
 
-#include "ShootingProxy.hh"
+#include "BulletSpriteManager.hh"
+#include "LevelShootingProxy.hh"
 
 // Fwd decl
 class Direction;
@@ -8,10 +9,10 @@ class Vect2D;
 
 class IShooting {
  public:
-  IShooting(ShootingProxy& shootingProxy);
-  void shoot(const Direction& direction, const Vect2D& origin);
+  IShooting(LevelShootingProxy& shootingProxy);
+  void shoot(const Direction& direction, const Vect2D& origin, const BulletColor color);
 
  private:
   // IShooting
-  ShootingProxy& _shootingProxy;
+  LevelShootingProxy& _shootingProxy;
 };

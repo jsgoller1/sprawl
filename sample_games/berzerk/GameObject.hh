@@ -40,12 +40,12 @@ class GameObject {
   bool collisionTest(const GameObject& target) const;
   virtual void resolveCollision(GameObject& target) = 0;
 
+  // Other
+  bool getShouldRemove() const;
+  void setShouldRemove(const bool setting);
+
  private:
+  bool _shouldRemove = false;
   std::unique_ptr<PositionComponent> _positionComponent;
-
   Vect2D _velocity = Vect2D::zero();
-
-  // ICollision
-
-  // IAnimation
 };

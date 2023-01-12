@@ -33,6 +33,7 @@ CLI::CLI(const int argc, const char* const argv[]) {
   this->_levelSpriteSheetPath = std::string(DEFAULT_LEVEL_SPRITE_SHEET_PATH);
   this->_characterSpriteSheetPath = std::string(DEFAULT_CHARACTER_SPRITE_SHEET_PATH);
   this->_textSpriteSheetPath = std::string(DEFAULT_TEXT_SPRITE_SHEET_PATH);
+  this->_bulletSpriteSheetPath = std::string(DEFAULT_BULLET_SPRITE_SHEET_PATH);
 }
 
 int CLI::getReturnCode() const { return this->_returnCode; }
@@ -40,6 +41,7 @@ bool CLI::shouldQuit() const { return this->_quit; }
 const std::string& CLI::getLevelSpriteSheetPath() const { return this->_levelSpriteSheetPath; }
 const std::string& CLI::getCharacterSpriteSheetPath() const { return this->_characterSpriteSheetPath; }
 const std::string& CLI::getTextSpriteSheetPath() const { return this->_textSpriteSheetPath; }
+const std::string& CLI::getBulletSpriteSheetPath() const { return this->_bulletSpriteSheetPath; }
 
 // Private
 bool CLI::argsCountValid(const int argc) const {

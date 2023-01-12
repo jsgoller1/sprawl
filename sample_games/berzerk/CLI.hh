@@ -5,6 +5,7 @@
 #define DEFAULT_LEVEL_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png"
 #define DEFAULT_CHARACTER_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png"
 #define DEFAULT_TEXT_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png"
+#define DEFAULT_BULLET_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/bullet-sprites.png"
 
 class CLI {
  public:
@@ -15,6 +16,7 @@ class CLI {
   const std::string& getLevelSpriteSheetPath() const;
   const std::string& getCharacterSpriteSheetPath() const;
   const std::string& getTextSpriteSheetPath() const;
+  const std::string& getBulletSpriteSheetPath() const;
 
  private:
   bool _quit;
@@ -22,6 +24,7 @@ class CLI {
   std::string _levelSpriteSheetPath;
   std::string _characterSpriteSheetPath;
   std::string _textSpriteSheetPath;
+  std::string _bulletSpriteSheetPath;
 
   bool argsCountValid(const int argc) const;
   bool confirmFileExists(const char* const path);

@@ -3,17 +3,19 @@
 #include <string>
 #include <vector>
 
-#include "ShootingProxy.hh"
+#include "LevelShootingProxy.hh"
+#include "Player.hh"
 #include "Time.hh"
 #include "Vect2D.hh"
 #include "Wall.hh"
 
 // Fwd decls
+class Bullet;
+class BulletSpriteManager;
 class Direction;
 class DrawingProxy;
 class InputHandler;
 class LevelSpriteManager;
-class Player;
 class PlayerSpriteManager;
 class RobotSpriteManager;
 
@@ -62,7 +64,8 @@ const Vect2D NORTH_START_POSITION =
 class Level {
  public:
   Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
-        const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager);
+        const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
+        const BulletSpriteManager& bulletSpriteManager);
 
   bool playerAtExit() const;
   void update(const InputHandler& inputHandler, const time_ms delta_t);
@@ -70,29 +73,24 @@ class Level {
 
  private:
   // Owns walls, player, bullets from player, robots, and bullets from robots collection<Wall*> _walls;
-  class LevelShootingProxy : public ShootingProxy {
-   public:
-    void shoot(const Direction& direction, const Vect2D& origin) const override;
-  };
-  LevelShootingProxy _levelShootingProxy;
 
   DrawingProxy& _drawingProxy;
   const LevelSpriteManager& _levelSpriteManager;
   const PlayerSpriteManager& _playerSpriteManager;
   const RobotSpriteManager& _robotSpriteManager;
+  const BulletSpriteManager& _bulletSpriteManager;
   std::shared_ptr<Player> _player;
+  std::unique_ptr<std::vector<std::shared_ptr<Bullet>>> _bullets;
   std::shared_ptr<Wall> _walls[38];
+  std::unique_ptr<LevelShootingProxy> _levelShootingProxy;
 
   void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);
   void initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy);
-
   void initInternalWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
   void initBorderWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
   void initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
 
-  // Core game loop functions
-  void updateAI();
-  void updateAnimations(const time_ms deltaT);
-  void moveCharacters();
+  // Game loop functions
+  void removeMarked();
   void updateCollisions();
 };

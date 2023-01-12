@@ -2,17 +2,26 @@
 
 #include <iostream>
 
+#include "Bullet.hh"
+#include "BulletSpriteManager.hh"
+#include "Direction.hh"
 #include "InputHandler.hh"
-#include "Player.hh"
-#include "Wall.hh"
+#include "PlayerSpriteManager.hh"
 
 Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
-             const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager)
+             const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
+             const BulletSpriteManager& bulletSpriteManager)
     : _drawingProxy(drawingProxy),
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
-      _robotSpriteManager(robotSpriteManager) {
-  this->_levelShootingProxy = LevelShootingProxy();
+      _robotSpriteManager(robotSpriteManager),
+      _bulletSpriteManager(bulletSpriteManager),
+      _bullets(std::unique_ptr<std::vector<std::shared_ptr<Bullet>>>(new std::vector<std::shared_ptr<Bullet>>())),
+      _levelShootingProxy(std::unique_ptr<LevelShootingProxy>(
+          new LevelShootingProxy(*this->_bullets, this->_bulletSpriteManager, drawingProxy))) {
+  // TODO: Not sure if I like this constructor; feels shitty to initialize bullets and proxy like above, maybe
+  // we want functions like we have below for player, robots, and walls? Although there are no bullets to start
+  // with, and each below has initial state we need to set up.
   this->initPlayer(this->_playerSpriteManager, this->_drawingProxy);
   this->initRobots(this->_robotSpriteManager, this->_drawingProxy);
   this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
@@ -20,7 +29,11 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
 
 void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
   this->_player->update(inputHandler, deltaT);
+  for (size_t i = 0; i < this->_bullets->size(); i++) {
+    (*this->_bullets)[i]->update();
+  }
   this->updateCollisions();
+  this->removeMarked();
 }
 
 void Level::draw() {
@@ -32,6 +45,10 @@ void Level::draw() {
     if (this->_walls[i] != nullptr) {
       this->_walls[i]->getDrawingComponent().draw();
     }
+  }
+
+  for (size_t i = 0; i < this->_bullets->size(); i++) {
+    (*this->_bullets)[i]->getDrawingComponent().draw();
   }
 }
 
@@ -58,22 +75,19 @@ void Level::updateCollisions() {
   std::shared_ptr<Wall> currentWall = nullptr;
   for (int i = 0; i < WALLS_COUNT; i++) {
     currentWall = this->_walls[i];
-    if (currentWall != nullptr && this->_player->collisionTest(*currentWall)) {
+    if (currentWall == nullptr) {
+      continue;
+    }
+    if (this->_player->collisionTest(*currentWall)) {
       std::cout << "Player collided with wall " << i << std::endl;
       this->_player->resolveCollision(*currentWall);
     }
+    for (size_t i = 0; i < this->_bullets->size(); i++) {
+      if ((*this->_bullets)[i]->collisionTest(*currentWall)) {
+        (*this->_bullets)[i]->resolveCollision(*currentWall);
+      }
+    }
   }
-}
-
-// std::vector<std::shared_ptr<Wall>>& Level::getWalls() { return *this->_walls; }
-
-void Level::LevelShootingProxy::shoot(const Direction& direction, const Vect2D& origin) const {
-  (void)direction;
-  (void)origin;
-
-  /*
-   * Creates bullet heading in direction with default bullet velocity.
-   */
 }
 
 void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
@@ -81,7 +95,7 @@ void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingPr
   // TODO: Ensure player isn't being drawn on top of robots
   (void)playerSpriteManager;
   (void)drawingProxy;
-  this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
+  this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
                                            playerSpriteManager);
 }
 
@@ -152,4 +166,16 @@ void Level::initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy
   // This function should probably be responsible for the random layout, but not "how to draw walls"
   this->initBorderWalls(levelSpriteManager, drawingProxy);
   this->initInternalWalls(levelSpriteManager, drawingProxy);
+}
+
+void Level::removeMarked() {
+  if (this->_player->getShouldRemove()) {
+    this->_player = nullptr;
+  }
+  for (size_t i = 0; i < this->_bullets->size(); i++) {
+    std::shared_ptr<Bullet> bullet = (*this->_bullets)[i];
+    if (bullet->getShouldRemove()) {
+      (*this->_bullets).erase((*this->_bullets).begin() + (long)i);
+    }
+  }
 }

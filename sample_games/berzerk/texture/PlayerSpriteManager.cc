@@ -4,7 +4,14 @@
 
 #include "Vect2D.hh"
 
-PlayerSpriteManager::PlayerSpriteManager(const std::string& spriteSheetPath) : SpriteManager(spriteSheetPath) {}
+constexpr int PLAYER_SPRITE_WIDTH_PX = 8;
+constexpr int PLAYER_SPRITE_HEIGHT_PX = 16;
+constexpr int PLAYER_SPRITE_BOUNDARY_WIDTH_PX = 1;
+const Vect2D TOP_LEFT = Vect2D::zero();
+
+PlayerSpriteManager::PlayerSpriteManager(const std::string& spriteSheetPath)
+    : SpriteManager(spriteSheetPath, TOP_LEFT, PLAYER_SPRITE_WIDTH_PX, PLAYER_SPRITE_HEIGHT_PX,
+                    PLAYER_SPRITE_BOUNDARY_WIDTH_PX) {}
 
 std::shared_ptr<Sprite> PlayerSpriteManager::movingE(const int frameNo) const {
   return this->getSprite(1 + frameNo, 0);
