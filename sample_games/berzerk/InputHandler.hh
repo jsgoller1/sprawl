@@ -15,7 +15,7 @@ class InputHandler {
   bool downArrowPressed() const;
   bool leftArrowPressed() const;
   bool rightArrowPressed() const;
-  bool lCtrlPressed() const;
+  bool ctrlPressed() const;
 
   bool movementKeysPressed() const;
   bool noHorizontalKeysPressed() const;
@@ -36,7 +36,7 @@ class InputHandler {
   bool _downArrowPressed = false;
   bool _leftArrowPressed = false;
   bool _rightArrowPressed = false;
-  bool _lCtrlPressed = false;
+  bool _ctrlPressed = false;
 
   void keyboardEventHandler(const Uint32 eventType, const SDL_Keycode keycode);
 };

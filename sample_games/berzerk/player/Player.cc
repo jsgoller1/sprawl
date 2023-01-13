@@ -53,7 +53,7 @@ PlayerState Player::getNewState(const PlayerState currentState, const InputHandl
   if (currentState == DYING) {
     return DYING;
   }
-  if (inputHandler.lCtrlPressed() && inputHandler.movementKeysPressed()) {
+  if (inputHandler.ctrlPressed() && inputHandler.movementKeysPressed()) {
     return SHOOTING;
   }
   if (inputHandler.movementKeysPressed()) {

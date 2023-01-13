@@ -8,7 +8,7 @@ bool InputHandler::upArrowPressed() const { return this->_upArrowPressed; }
 bool InputHandler::downArrowPressed() const { return this->_downArrowPressed; }
 bool InputHandler::leftArrowPressed() const { return this->_leftArrowPressed; }
 bool InputHandler::rightArrowPressed() const { return this->_rightArrowPressed; }
-bool InputHandler::lCtrlPressed() const { return this->_lCtrlPressed; }
+bool InputHandler::ctrlPressed() const { return this->_ctrlPressed; }
 bool InputHandler::noHorizontalKeysPressed() const { return !this->_leftArrowPressed && !this->_rightArrowPressed; }
 bool InputHandler::bothHorizontalKeysPressed() const { return this->_leftArrowPressed && this->_rightArrowPressed; }
 bool InputHandler::noVerticalKeysPressed() const { return !this->_upArrowPressed && !this->_downArrowPressed; }
@@ -75,8 +75,9 @@ void InputHandler::keyboardEventHandler(const Uint32 eventType, const SDL_Keycod
     case SDLK_RIGHT:
       this->_rightArrowPressed = setting;
       break;
+    case SDLK_RCTRL:
     case SDLK_LCTRL:
-      this->_lCtrlPressed = setting;
+      this->_ctrlPressed = setting;
       break;
     default:
       break;
