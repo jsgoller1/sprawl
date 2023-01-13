@@ -100,36 +100,35 @@ void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingPr
 }
 
 void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {
+  // TODO: to start off with, let's just draw robots
+
   (void)robotSpriteManager;
   (void)drawingProxy;
 }
 
 void Level::initBorderWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
-  // TODO: The below is super janky looking, though tecnically it works. All we actually want is a shared_ptr<Wall>,
-  // and we want to be able to get that from functions that hide some of the parameters to Wall (i.e.
-  // Wall::HorizontalBorderWall()). We end up calling one of these functions, passing it to a copy constructor, which is
-  // in turn used by new inside shared pointer construction, not at all straightforward. make_shared() has some issue
-  // with construct_at, don't know why. Would like to do something less confusing.
+  // TODO: The below is a bit janky looking, would prefer not to call the copy constructor for Wall, though I really
+  // like having parameters for creating Wall hidden via static methods (i.e. Wall::VerticalBorderWall())
 
   // Vertical borders
   for (int i = 0; i < VERTICAL_BORDER_WALLS_COUNT; i++) {
     int west = BORDER_WALLS_W[i];
-    this->_walls[west] = std::shared_ptr<Wall>(
-        new Wall(Wall::VerticalBorderWall(getWallPosition((unsigned)west), levelSpriteManager, drawingProxy)));
+    this->_walls[west] = std::make_shared<Wall>(
+        Wall::VerticalBorderWall(getWallPosition((unsigned)west), levelSpriteManager, drawingProxy));
     int east = BORDER_WALLS_E[i];
-    this->_walls[east] = std::shared_ptr<Wall>(
-        new Wall(Wall::VerticalBorderWall(getWallPosition((unsigned)east), levelSpriteManager, drawingProxy)));
+    this->_walls[east] = std::make_shared<Wall>(
+        Wall::VerticalBorderWall(getWallPosition((unsigned)east), levelSpriteManager, drawingProxy));
   }
 
   // Horizontal borders
   for (int i = 0; i < HORIZONTAL_BORDER_WALLS_COUNT; i++) {
     int north = BORDER_WALLS_N[i];
-    this->_walls[north] = std::shared_ptr<Wall>(
-        new Wall(Wall::HorizontalBorderWall(getWallPosition((unsigned)north), levelSpriteManager, drawingProxy)));
+    this->_walls[north] = std::make_shared<Wall>(
+        Wall::HorizontalBorderWall(getWallPosition((unsigned)north), levelSpriteManager, drawingProxy));
 
     int south = BORDER_WALLS_S[i];
-    this->_walls[south] = std::shared_ptr<Wall>(
-        new Wall(Wall::HorizontalBorderWall(getWallPosition((unsigned)south), levelSpriteManager, drawingProxy)));
+    this->_walls[south] = std::make_shared<Wall>(
+        Wall::HorizontalBorderWall(getWallPosition((unsigned)south), levelSpriteManager, drawingProxy));
   }
 }
 
