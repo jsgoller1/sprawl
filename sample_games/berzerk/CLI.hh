@@ -2,10 +2,11 @@
 
 #include <string>
 
-#define DEFAULT_LEVEL_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png"
-#define DEFAULT_CHARACTER_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png"
-#define DEFAULT_TEXT_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png"
-#define DEFAULT_BULLET_SPRITE_SHEET_PATH "/home/joshua/Code/sprawl/sample_games/berzerk/assets/bullet-sprites.png"
+#define DEFAULT_LEVEL_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png"
+#define DEFAULT_CHARACTER_SPRITE_SHEET_PATH \
+  "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png"
+#define DEFAULT_TEXT_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png"
+#define DEFAULT_BULLET_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/bullet-sprites.png"
 
 class CLI {
  public:
