@@ -4,7 +4,9 @@
 #include <vector>
 
 #include "LevelShootingProxy.hh"
+#include "Otto.hh"
 #include "Player.hh"
+#include "Robot.hh"
 #include "Time.hh"
 #include "Vect2D.hh"
 #include "Wall.hh"
@@ -18,6 +20,7 @@ class InputHandler;
 class LevelSpriteManager;
 class PlayerSpriteManager;
 class RobotSpriteManager;
+class OttoSpriteManager;
 
 /*
  * Berserk levels are always the same size
@@ -58,6 +61,7 @@ constexpr int VERTICAL_INTERNAL_WALLS_COUNT = 12;
 constexpr int VERTICAL_INTERNAL_WALLS[] = {21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
 constexpr int FIXED_LEVEL_LAYOUT_WALLS_COUNT = 6;
 constexpr int FIXED_LEVEL_LAYOUT_WALLS[] = {21, 27, 8, 9, 35, 34};
+constexpr int ROBOTS_COUNT = 1;
 const Vect2D NORTH_START_POSITION =
     Vect2D(getWallPosition(EXIT_N).x, getWallPosition(EXIT_N).y - VERTICAL_WALL_HEIGHT / 2);
 
@@ -65,30 +69,38 @@ class Level {
  public:
   Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
         const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
-        const BulletSpriteManager& bulletSpriteManager);
+        const BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager);
 
   bool playerAtExit() const;
   void update(const InputHandler& inputHandler, const time_ms delta_t);
   void draw();
 
  private:
-  // Owns walls, player, bullets from player, robots, and bullets from robots collection<Wall*> _walls;
-
   DrawingProxy& _drawingProxy;
-  const LevelSpriteManager& _levelSpriteManager;
-  const PlayerSpriteManager& _playerSpriteManager;
-  const RobotSpriteManager& _robotSpriteManager;
-  const BulletSpriteManager& _bulletSpriteManager;
-  std::shared_ptr<Player> _player;
-  std::unique_ptr<std::vector<std::shared_ptr<Bullet>>> _bullets;
-  std::shared_ptr<Wall> _walls[38];
   std::unique_ptr<LevelShootingProxy> _levelShootingProxy;
 
-  void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);
-  void initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy);
+  const LevelSpriteManager& _levelSpriteManager;
+  std::shared_ptr<Wall> _walls[WALLS_COUNT];
+
+  const PlayerSpriteManager& _playerSpriteManager;
+  std::shared_ptr<Player> _player;
+
+  // TODO: for now, let's just support a fixed number of robots per level
+  const RobotSpriteManager& _robotSpriteManager;
+  std::shared_ptr<Robot> _robots[ROBOTS_COUNT];
+
+  const OttoSpriteManager& _ottoSpriteManager;
+  std::shared_ptr<Otto> _otto;
+
+  const BulletSpriteManager& _bulletSpriteManager;
+  std::unique_ptr<std::vector<std::shared_ptr<Bullet>>> _bullets;
+
+  void initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
   void initInternalWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
   void initBorderWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
-  void initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy);
+  void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);
+  void initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy);
+  void initOtto(const OttoSpriteManager& ottoSpriteManager, DrawingProxy& drawingProxy);
 
   // Game loop functions
   void removeMarked();

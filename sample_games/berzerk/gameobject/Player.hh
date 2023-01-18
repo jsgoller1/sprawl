@@ -6,7 +6,7 @@
 #include "GameObject.hh"
 #include "IShooting.hh"
 #include "PlayerAnimationSet.hh"
-#include "PlayerState.hh"
+#include "State.hh"
 
 constexpr int PLAYER_MOVE_SPEED = 5;
 
@@ -28,12 +28,12 @@ class Player : public GameObject, public IShooting {
   void update(const InputHandler& inputHandler, const time_ms deltaT);
 
  private:
-  PlayerState _state;
+  CharacterState _state;
   time_ms _sinceLastShot;
-  std::unique_ptr<AnimatedDrawingComponent> _drawingComponent;
   std::unique_ptr<PlayerAnimationSet> _playerAnimationSet = nullptr;
+  std::unique_ptr<AnimatedDrawingComponent> _drawingComponent = nullptr;
 
-  PlayerState getNewState(const PlayerState currentState, const InputHandler& inputHandler) const;
-  Vect2D getNewVelocity(const PlayerState currentState, const InputHandler& inputHandler) const;
-  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const PlayerState state);
+  CharacterState getNewState(const CharacterState currentState, const InputHandler& inputHandler) const;
+  Vect2D getNewVelocity(const CharacterState currentState, const InputHandler& inputHandler) const;
+  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state);
 };

@@ -1,12 +1,15 @@
 #include "AnimationSequence.hh"
 
-AnimationSequence::AnimationSequence() { this->_sprites = std::vector<std::shared_ptr<Sprite>>(); }
+AnimationSequence::AnimationSequence(const std::string name) : _name(name) {
+  this->_sprites = std::vector<std::shared_ptr<Sprite>>();
+}
 
-AnimationSequence::AnimationSequence(const std::shared_ptr<Sprite> sprite) {
+AnimationSequence::AnimationSequence(const std::string name, const std::shared_ptr<Sprite> sprite) : _name(name) {
   this->_sprites = std::vector<std::shared_ptr<Sprite>>{sprite};
 }
-AnimationSequence::AnimationSequence(const std::vector<std::shared_ptr<Sprite>> sprites, const time_ms frameShowLength)
-    : _frameShowLength(frameShowLength), _sprites(sprites) {}
+AnimationSequence::AnimationSequence(const std::string name, const std::vector<std::shared_ptr<Sprite>> sprites,
+                                     const time_ms frameShowLength)
+    : _name(name), _frameShowLength(frameShowLength), _sprites(sprites) {}
 
 void AnimationSequence::addSprite(const std::shared_ptr<Sprite> sprite) { this->_sprites.push_back(sprite); }
 

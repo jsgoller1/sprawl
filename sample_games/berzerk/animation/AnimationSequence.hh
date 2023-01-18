@@ -12,9 +12,10 @@ class AnimationSequence {
    * used in an animation, along with logic/state for animating them.
    */
  public:
-  AnimationSequence();
-  AnimationSequence(const std::shared_ptr<Sprite> sprite);
-  AnimationSequence(const std::vector<std::shared_ptr<Sprite>> sprites, const time_ms frameShowLength);
+  AnimationSequence(const std::string name);
+  AnimationSequence(const std::string name, const std::shared_ptr<Sprite> sprite);
+  AnimationSequence(const std::string name, const std::vector<std::shared_ptr<Sprite>> sprites,
+                    const time_ms frameShowLength);
   void addSprite(const std::shared_ptr<Sprite> sprite);
 
   void setFrameShowLength(const time_ms frameShowLength);
@@ -25,6 +26,7 @@ class AnimationSequence {
   void reset();
 
  private:
+  std::string _name;
   time_ms _sinceLastUpdate = 0;
   time_ms _frameShowLength = 45;
   unsigned int _spriteIdx = 0;

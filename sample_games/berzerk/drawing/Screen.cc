@@ -54,6 +54,8 @@ void Screen::prepare(const Vect2D& center, const int height, const int width, st
   SDL_RendererFlip flip = SDL_FLIP_NONE;
   SDL_Point sdlCenter = SDL_Point{.x = drawPoint.x, .y = drawPoint.y};
   SDL_Texture* texture = SDL_CreateTextureFromSurface(this->_renderer, sprite->getSpriteSheet());
+  SDL_SetTextureColorMod(texture, sprite->getColorMask(ColorMaskChannel::RED),
+                         sprite->getColorMask(ColorMaskChannel::GREEN), sprite->getColorMask(ColorMaskChannel::BLUE));
   if (SDL_RenderCopyEx(this->_renderer, texture, clip, &renderQuad, angle, &sdlCenter, flip)) {
     std::cout << "Couldn't draw texture" << std::endl;
     this->printSDLError();

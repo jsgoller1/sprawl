@@ -2,7 +2,7 @@
 
 AnimatedDrawingComponent::AnimatedDrawingComponent(PositionComponent& positionComponent, const int height,
                                                    const int width, DrawingProxy& drawingProxy,
-                                                   const std::shared_ptr<AnimationSequence> animation)
+                                                   std::shared_ptr<AnimationSequence> animation)
     : DrawingComponent(positionComponent, height, width, drawingProxy),
       _positionComponent(positionComponent),
       _animationSequence(animation) {}
@@ -17,9 +17,8 @@ void AnimatedDrawingComponent::updateAnimationSequence(const time_ms deltaT) {
 
 // AnimationSequence& AnimatedDrawingComponent::getAnimationSequence() const { return *this->_animationSequence; }
 
-void AnimatedDrawingComponent::setAnimationSequence(const std::shared_ptr<AnimationSequence> animation) {
+void AnimatedDrawingComponent::setAnimationSequence(std::shared_ptr<AnimationSequence> animation) {
   this->_animationSequence = animation;
-  // this->_animationSequence->reset();
 }
 
 void AnimatedDrawingComponent::draw() {

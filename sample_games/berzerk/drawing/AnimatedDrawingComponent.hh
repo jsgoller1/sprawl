@@ -12,14 +12,14 @@ class PositionComponent;
 class AnimatedDrawingComponent : public DrawingComponent {
  public:
   AnimatedDrawingComponent(PositionComponent& _positionComponent, const int height, const int width,
-                           DrawingProxy& drawingProxy, const std::shared_ptr<AnimationSequence> animationSequence);
+                           DrawingProxy& drawingProxy, std::shared_ptr<AnimationSequence> animationSequence);
 
   // Get the current sprite by getting the next animation
   void draw() override;
   std::shared_ptr<Sprite> getCurrentSprite() const override;
 
   void updateAnimationSequence(const time_ms deltaT);
-  void setAnimationSequence(const std::shared_ptr<AnimationSequence> animation);
+  void setAnimationSequence(std::shared_ptr<AnimationSequence> animation);
   // AnimationSequence& getAnimationSequence() const;
 
  private:

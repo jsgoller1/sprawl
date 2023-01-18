@@ -6,25 +6,29 @@
 #include "BulletSpriteManager.hh"
 #include "Direction.hh"
 #include "InputHandler.hh"
+#include "LevelSpriteManager.hh"
+#include "OttoSpriteManager.hh"
 #include "PlayerSpriteManager.hh"
 
 Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
              const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
-             const BulletSpriteManager& bulletSpriteManager)
+             const BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager)
     : _drawingProxy(drawingProxy),
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
       _robotSpriteManager(robotSpriteManager),
-      _bulletSpriteManager(bulletSpriteManager),
-      _bullets(std::unique_ptr<std::vector<std::shared_ptr<Bullet>>>(new std::vector<std::shared_ptr<Bullet>>())),
-      _levelShootingProxy(std::unique_ptr<LevelShootingProxy>(
-          new LevelShootingProxy(*this->_bullets, this->_bulletSpriteManager, drawingProxy))) {
+      _ottoSpriteManager(ottoSpriteManager),
+      _bulletSpriteManager(bulletSpriteManager) {
   // TODO: Not sure if I like this constructor; feels shitty to initialize bullets and proxy like above, maybe
   // we want functions like we have below for player, robots, and walls? Although there are no bullets to start
   // with, and each below has initial state we need to set up.
+  this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
+  this->_bullets = std::unique_ptr<std::vector<std::shared_ptr<Bullet>>>(new std::vector<std::shared_ptr<Bullet>>());
+  this->_levelShootingProxy = std::unique_ptr<LevelShootingProxy>(
+      new LevelShootingProxy(*this->_bullets, this->_bulletSpriteManager, drawingProxy));
   this->initPlayer(this->_playerSpriteManager, this->_drawingProxy);
   this->initRobots(this->_robotSpriteManager, this->_drawingProxy);
-  this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
+  this->initOtto(this->_ottoSpriteManager, this->_drawingProxy);
 }
 
 void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
@@ -32,6 +36,10 @@ void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
   for (size_t i = 0; i < this->_bullets->size(); i++) {
     (*this->_bullets)[i]->update();
   }
+  for (size_t i = 0; i < ROBOTS_COUNT; i++) {
+    this->_robots[i]->update(deltaT);
+  }
+  this->_otto->update(deltaT);
   this->updateCollisions();
   this->removeMarked();
 }
@@ -49,6 +57,12 @@ void Level::draw() {
 
   for (size_t i = 0; i < this->_bullets->size(); i++) {
     (*this->_bullets)[i]->getDrawingComponent().draw();
+  }
+
+  for (int i = 0; i < ROBOTS_COUNT; i++) {
+    if (this->_robots[i] != nullptr) {
+      this->_robots[i]->getDrawingComponent().draw();
+    }
   }
 }
 
@@ -90,20 +104,11 @@ void Level::updateCollisions() {
   }
 }
 
-void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
-  // TODO: Randomize player position
-  // TODO: Ensure player isn't being drawn on top of robots
-  (void)playerSpriteManager;
-  (void)drawingProxy;
-  this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
-                                           playerSpriteManager);
-}
-
-void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {
-  // TODO: to start off with, let's just draw robots
-
-  (void)robotSpriteManager;
-  (void)drawingProxy;
+void Level::initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
+  //  TODO: Every level should always have border walls; for now though, we want to draw every wall.
+  // This function should probably be responsible for the random layout, but not "how to draw walls"
+  this->initBorderWalls(levelSpriteManager, drawingProxy);
+  this->initInternalWalls(levelSpriteManager, drawingProxy);
 }
 
 void Level::initBorderWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
@@ -160,11 +165,26 @@ void Level::initInternalWalls(const LevelSpriteManager& levelSpriteManager, Draw
   }
 }
 
-void Level::initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
-  //  TODO: Every level should always have border walls; for now though, we want to draw every wall.
-  // This function should probably be responsible for the random layout, but not "how to draw walls"
-  this->initBorderWalls(levelSpriteManager, drawingProxy);
-  this->initInternalWalls(levelSpriteManager, drawingProxy);
+void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
+  // TODO: Randomize player position
+  // TODO: Ensure player isn't being drawn on top of robots
+  (void)playerSpriteManager;
+  (void)drawingProxy;
+  this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
+                                           playerSpriteManager);
+}
+
+void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {
+  // TODO: to start off with, let's just draw robots
+  for (int i = 0; i < ROBOTS_COUNT; i++) {
+    this->_robots[0] = std::make_shared<Robot>(Vect2D(50, 50), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
+                                               robotSpriteManager);
+  }
+}
+
+void Level::initOtto(const OttoSpriteManager& ottoSpriteManager, DrawingProxy& drawingProxy) {
+  (void)ottoSpriteManager;
+  (void)drawingProxy;
 }
 
 void Level::removeMarked() {

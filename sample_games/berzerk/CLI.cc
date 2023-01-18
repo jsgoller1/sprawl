@@ -31,17 +31,21 @@ CLI::CLI(const int argc, const char* const argv[]) {
   //   this->_characterSpriteSheetPath = std::string(argv[2]);
   //   this->_textSpriteSheetPath = std::string(argv[3]);
   this->_levelSpriteSheetPath = std::string(DEFAULT_LEVEL_SPRITE_SHEET_PATH);
-  this->_characterSpriteSheetPath = std::string(DEFAULT_CHARACTER_SPRITE_SHEET_PATH);
-  this->_textSpriteSheetPath = std::string(DEFAULT_TEXT_SPRITE_SHEET_PATH);
+  this->_playerSpriteSheetPath = std::string(DEFAULT_PLAYER_SPRITE_SHEET_PATH);
+  this->_robotSpriteSheetPath = std::string(DEFAULT_ROBOT_SPRITE_SHEET_PATH);
+  this->_ottoSpriteSheetPath = std::string(DEFAULT_OTTO_SPRITE_SHEET_PATH);
   this->_bulletSpriteSheetPath = std::string(DEFAULT_BULLET_SPRITE_SHEET_PATH);
+  this->_textSpriteSheetPath = std::string(DEFAULT_TEXT_SPRITE_SHEET_PATH);
 }
 
 int CLI::getReturnCode() const { return this->_returnCode; }
 bool CLI::shouldQuit() const { return this->_quit; }
 const std::string& CLI::getLevelSpriteSheetPath() const { return this->_levelSpriteSheetPath; }
-const std::string& CLI::getCharacterSpriteSheetPath() const { return this->_characterSpriteSheetPath; }
-const std::string& CLI::getTextSpriteSheetPath() const { return this->_textSpriteSheetPath; }
+const std::string& CLI::getPlayerSpriteSheetPath() const { return this->_playerSpriteSheetPath; }
+const std::string& CLI::getRobotSpriteSheetPath() const { return this->_robotSpriteSheetPath; }
+const std::string& CLI::getOttoSpriteSheetPath() const { return this->_ottoSpriteSheetPath; }
 const std::string& CLI::getBulletSpriteSheetPath() const { return this->_bulletSpriteSheetPath; }
+const std::string& CLI::getTextSpriteSheetPath() const { return this->_textSpriteSheetPath; }
 
 // Private
 bool CLI::argsCountValid(const int argc) const {

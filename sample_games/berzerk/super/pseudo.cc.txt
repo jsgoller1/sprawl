@@ -80,8 +80,8 @@ class Robot : public GameObject, public IShooter {
   }
 
  private:
-  enum RobotState { IDLE, PATROLLING, ATTACKING };
-  RobotState state;
+  enum CharacterState { IDLE, PATROLLING, ATTACKING };
+  CharacterState state;
 
   areaDetect() {
     /*

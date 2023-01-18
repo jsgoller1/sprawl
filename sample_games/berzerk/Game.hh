@@ -4,6 +4,7 @@
 #include "BulletSpriteManager.hh"
 #include "Level.hh"
 #include "LevelSpriteManager.hh"
+#include "OttoSpriteManager.hh"
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
 #include "TextSpriteManager.hh"
@@ -32,8 +33,9 @@ class Game {
   std::unique_ptr<LevelSpriteManager> _levelSpriteManager;
   std::unique_ptr<PlayerSpriteManager> _playerSpriteManager;
   std::unique_ptr<RobotSpriteManager> _robotSpriteManager;
-  std::unique_ptr<TextSpriteManager> _textSpriteManager;
+  std::unique_ptr<OttoSpriteManager> _ottoSpriteManager;
   std::unique_ptr<BulletSpriteManager> _bulletSpriteManager;
+  std::unique_ptr<TextSpriteManager> _textSpriteManager;
 
   bool _shouldQuit = false;
   int playerLives = 3;

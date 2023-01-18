@@ -2,6 +2,33 @@
 
 #include "Direction.hh"
 
+#define ROBOT_DEFAULT_WIDTH 40
+#define ROBOT_DEFAULT_HEIGHT 55
+
+Robot::Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
+             DrawingProxy& drawingProxy, const RobotSpriteManager& robotSpriteManager)
+    : GameObject(position, velocity), IShooting(shootingProxy) {
+  this->_robotAnimationSet = std::unique_ptr<RobotAnimationSet>(new RobotAnimationSet(robotSpriteManager));
+  this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(
+      new AnimatedDrawingComponent(this->getPositionComponent(), ROBOT_DEFAULT_HEIGHT, ROBOT_DEFAULT_WIDTH,
+                                   drawingProxy, this->_robotAnimationSet->idle()));
+}
+
+AnimatedDrawingComponent& Robot::getDrawingComponent() const { return *this->_drawingComponent; }
+
+void Robot::resolveCollision(GameObject& target) {
+  (void)target;
+  // TODO: I'd prefer we didn't do either state or animation setting here; both already have
+  // respective update functions, and should be done there.
+  // TODO: Maybe we should have an event queue of some kind and state updates process events on that queue?
+  if (this->_state != CharacterState::DYING) {
+    this->_state = CharacterState::DYING;
+    // this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->getDyingSequence());
+  }
+}
+
+void Robot::update(const time_ms deltaT) { this->_drawingComponent->updateAnimationSequence(deltaT); }
+
 void Robot::aiBehavior(const Vect2D& playerPosition) {
   (void)playerPosition;
   //   // TODO: perhaps we should refactor this to functions that work on each state?
@@ -37,8 +64,4 @@ Direction Robot::lineScan(const GameObject& target) {
   */
 
   return Direction::None();
-}
-
-void Robot::move() {
-  // Sometimes check if wall is in front of us, then set velocity
 }

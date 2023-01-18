@@ -15,7 +15,7 @@ sprawl: $(SPRAWL_OBJ_FILES)
 	$(CCACHE) $(CXX) $(SPRAWL_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 
 BERZERK_DIR:=sample_games/berzerk
-BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/drawing $(BERZERK_DIR)/player $(BERZERK_DIR)/texture 
+BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/drawing $(BERZERK_DIR)/gameobject $(BERZERK_DIR)/texture 
 BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
@@ -57,7 +57,8 @@ clean-logs:
 	-rm bin/*.log
 
 clean-bin:
-	-rm $(ENGINE_BIN)
+	-rm -r $(BIN_DIR)
+	-mkdir $(BIN_DIR)
 
 clean-purge: clean-deps clean-logs clean-bin
 	-find $(BREAKOUT_MODULES) -name "*.o" | sort -u | xargs rm

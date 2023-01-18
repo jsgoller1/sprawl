@@ -7,6 +7,7 @@
 #include "DrawingProxy.hh"
 #include "InputHandler.hh"
 #include "LevelSpriteManager.hh"
+#include "OttoSpriteManager.hh"
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
 #include "Screen.hh"
@@ -16,16 +17,16 @@
 Game::Game(const CLI& args, DrawingProxy& drawingProxy)
     : _levelSpriteManager(std::unique_ptr<LevelSpriteManager>(new LevelSpriteManager(args.getLevelSpriteSheetPath()))),
       _playerSpriteManager(
-          std::unique_ptr<PlayerSpriteManager>(new PlayerSpriteManager(args.getCharacterSpriteSheetPath()))),
-      _robotSpriteManager(
-          std::unique_ptr<RobotSpriteManager>(new RobotSpriteManager(args.getCharacterSpriteSheetPath()))),
-      _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))),
+          std::unique_ptr<PlayerSpriteManager>(new PlayerSpriteManager(args.getPlayerSpriteSheetPath()))),
+      _robotSpriteManager(std::unique_ptr<RobotSpriteManager>(new RobotSpriteManager(args.getRobotSpriteSheetPath()))),
+      _ottoSpriteManager(std::unique_ptr<OttoSpriteManager>(new OttoSpriteManager(args.getOttoSpriteSheetPath()))),
       _bulletSpriteManager(
-          std::unique_ptr<BulletSpriteManager>(new BulletSpriteManager(args.getBulletSpriteSheetPath()))) {
+          std::unique_ptr<BulletSpriteManager>(new BulletSpriteManager(args.getBulletSpriteSheetPath()))),
+      _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))) {
   this->initUI(*this->_textSpriteManager, drawingProxy);
-  this->_currentLevel =
-      std::unique_ptr<Level>(new Level(drawingProxy, *this->_levelSpriteManager, *this->_playerSpriteManager,
-                                       *this->_robotSpriteManager, *this->_bulletSpriteManager));
+  this->_currentLevel = std::unique_ptr<Level>(new Level(drawingProxy, *this->_levelSpriteManager,
+                                                         *this->_playerSpriteManager, *this->_robotSpriteManager,
+                                                         *this->_bulletSpriteManager, *this->_ottoSpriteManager));
 }
 
 bool Game::getShouldQuit() const { return this->_shouldQuit; }
