@@ -2,12 +2,17 @@
 
 #include "Direction.hh"
 
-#define ROBOT_DEFAULT_WIDTH 40
-#define ROBOT_DEFAULT_HEIGHT 55
+// TODO: Robot should move, shoot, and animate
+// faster as fewer remain
+constexpr int ROBOT_MOVE_SPEED = 5;
+constexpr int ROBOT_DEFAULT_WIDTH = 40;
+constexpr int ROBOT_DEFAULT_HEIGHT = 55;
+constexpr int ROBOT_SHOOT_DELAY_MS = 750;
 
 Robot::Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
-             DrawingProxy& drawingProxy, const RobotSpriteManager& robotSpriteManager)
-    : GameObject(position, velocity), IShooting(shootingProxy) {
+             DrawingProxy& drawingProxy, const PlayerPositionProxy& playerPositionProxy,
+             const RobotSpriteManager& robotSpriteManager)
+    : GameObject(position, velocity), IShooting(shootingProxy), _playerPositionProxy(playerPositionProxy) {
   this->_robotAnimationSet = std::unique_ptr<RobotAnimationSet>(new RobotAnimationSet(robotSpriteManager));
   this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(
       new AnimatedDrawingComponent(this->getPositionComponent(), ROBOT_DEFAULT_HEIGHT, ROBOT_DEFAULT_WIDTH,
@@ -27,41 +32,53 @@ void Robot::resolveCollision(GameObject& target) {
   }
 }
 
-void Robot::update(const time_ms deltaT) { this->_drawingComponent->updateAnimationSequence(deltaT); }
-
-void Robot::aiBehavior(const Vect2D& playerPosition) {
-  (void)playerPosition;
-  //   // TODO: perhaps we should refactor this to functions that work on each state?
-  //   if (this->_state == DYING || this->_state == DEAD) {
-  //     // Nothing intelligent to do if we're dead.
-  //     return;
-  //   }
-
-  //   Direction validFiringDirection = this->lineScan(playerPosition);
-  //   if (validFiringDirection != Direction::None()) {
-  //     this->useStandingAnimationSet();
-  //     this->faceDirection(validFiringDirection);
-  //     this->shoot(validFiringDirection, this->getPosition());
-  //   } else {
-  //     this->useMovingAnimationSet();
-  //     this->faceDirection(this->getHeading(playerPosition));
-  //     this->move();
-  //   }
+void Robot::update(const time_ms deltaT) {
+  this->_state = this->getNewState(this->_state);
+  this->setVelocity(this->getNewVelocity(this->_state));
+  this->updateAnimation(deltaT, Direction(this->getVelocity()), this->_state);
+  this->shootingBehavior(deltaT);
+  this->move();
 }
 
-Direction Robot::lineScan(const GameObject& target) {
-  (void)target;
+CharacterState Robot::getNewState(const CharacterState currentState) const {
   /*
-    UDLR: do the following interval overlap tests
-      - our center's y vs target's y interval (aligned horizontally if overlapping)
-      - our center's x vs target's x-interval (aligned vertically if overlapping)
-    Diagonals:
-      - Draw a line from our center to target's center. If the absval of the slope = 1, it is a perfect diagonal.
-    Realistically, the slope can probably fall within a range (say 5/1 to 1/5) since we don't need to hit the target
-    at their midpoint.
+   * As soon as the player is within range, robots either start shooting or moving to a firing axis.
+   */
 
-    If we make contact with the target, return the direction they're in relative to us. Else return Direction::None().
-  */
-
-  return Direction::None();
+  if (currentState == CharacterState::DYING || currentState == CharacterState::DEAD) {
+    return currentState;
+  }
+  if (!this->withinRangeOfPlayer()) {
+    return CharacterState::IDLE;
+  }
+  if (this->getShootingDirection() != Direction::None()) {
+    return CharacterState::SHOOTING;
+  }
+  return CharacterState::MOVING;
 }
+
+Vect2D Robot::getNewVelocity(const CharacterState state) const {
+  if (state != CharacterState::MOVING) {
+    return Vect2D::zero();
+  }
+  // TODO: This is obviously wrong, we need some way to get a heading / facing direction
+  return Vect2D(ROBOT_MOVE_SPEED, ROBOT_MOVE_SPEED);
+}
+
+void Robot::updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state) {
+  (void)deltaT;
+  (void)movementDirection;
+  (void)state;
+}
+
+void Robot::shootingBehavior(const time_ms deltaT) {
+  this->_sinceLastShot += deltaT;
+  if (this->_state == CharacterState::SHOOTING && this->_sinceLastShot > ROBOT_SHOOT_DELAY_MS) {
+    Direction shootingDirection = this->getShootingDirection();
+    this->_sinceLastShot = 0;
+    this->shoot(shootingDirection, Vect2D::zero(), GREEN);
+  }
+}
+
+bool Robot::withinRangeOfPlayer() const { return true; }
+Direction Robot::getShootingDirection() const { return this->_playerPositionProxy.lineScan(this->getPosition()); }

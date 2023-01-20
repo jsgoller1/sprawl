@@ -18,9 +18,10 @@ class Direction;
 class DrawingProxy;
 class InputHandler;
 class LevelSpriteManager;
-class PlayerSpriteManager;
-class RobotSpriteManager;
 class OttoSpriteManager;
+class PlayerSpriteManager;
+class PlayerPositionProxy;
+class RobotSpriteManager;
 
 /*
  * Berserk levels are always the same size
@@ -84,6 +85,7 @@ class Level {
 
   const PlayerSpriteManager& _playerSpriteManager;
   std::shared_ptr<Player> _player;
+  std::unique_ptr<PlayerPositionProxy> _playerPositionProxy;
 
   // TODO: for now, let's just support a fixed number of robots per level
   const RobotSpriteManager& _robotSpriteManager;
@@ -101,8 +103,19 @@ class Level {
   void initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy);
   void initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy);
   void initOtto(const OttoSpriteManager& ottoSpriteManager, DrawingProxy& drawingProxy);
+  void removeMarked();
 
   // Game loop functions
-  void removeMarked();
-  void updateCollisions();
+  void handleCollisions();
+  // These are named by the collision source (e.g. handlePlayerCollisions() tests
+  // if the player collides with anything
+  void handlePlayerCollisions();
+  void handleRobotCollisions();
+  void handleBulletCollisions();
+
+  // These are named by the collision target (e.g. testCollisionWithRobots() tests
+  // if something collides with any robots
+  bool handleCollisionAgainstRobots(const std::shared_ptr<GameObject> source);
+  bool handleCollisionAgainstBullets(const std::shared_ptr<GameObject> source);
+  bool handleCollisionAgainstWalls(const std::shared_ptr<GameObject> source);
 };

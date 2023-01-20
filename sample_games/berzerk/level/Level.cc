@@ -8,6 +8,7 @@
 #include "InputHandler.hh"
 #include "LevelSpriteManager.hh"
 #include "OttoSpriteManager.hh"
+#include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
 
 Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
@@ -27,6 +28,7 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
   this->_levelShootingProxy = std::unique_ptr<LevelShootingProxy>(
       new LevelShootingProxy(*this->_bullets, this->_bulletSpriteManager, drawingProxy));
   this->initPlayer(this->_playerSpriteManager, this->_drawingProxy);
+  this->_playerPositionProxy = std::unique_ptr<PlayerPositionProxy>(new PlayerPositionProxy(*this->_player));
   this->initRobots(this->_robotSpriteManager, this->_drawingProxy);
   this->initOtto(this->_ottoSpriteManager, this->_drawingProxy);
 }
@@ -40,7 +42,7 @@ void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
     this->_robots[i]->update(deltaT);
   }
   this->_otto->update(deltaT);
-  this->updateCollisions();
+  this->handleCollisions();
   this->removeMarked();
 }
 
@@ -68,40 +70,107 @@ void Level::draw() {
 
 bool Level::playerAtExit() const { return false; }
 
-void Level::updateCollisions() {
-  // There are not going to be that many walls, robots, or projectiles; probably 10
-  // robots and a player, each of whom can fire a projectile (so 22 objects at most). We
-  // could try doing 22 x 22 collision tests, but then we have to test walls on top of
-  // that. Another option would be a kind of space partitioning; we maintain a
-  // list-of-lists of the contents of every room (walls, projectiles, and characters). A
-  // character or projectile would test (based on its corners) what room its in before
-  // moving and then after, then update the list-of-lists accordingly. We also don't need
-  // to test collisions on anything that didn't move.
+void Level::handleCollisions() {
+  /*
+  - Player dies if they collide with robots, bullets, otto, or walls
+  - Robots die if they collide with player, robotos, bullets, otto, or walls
+  - Bullets disappear if they collide with player, walls, robots, or otto
+  - Otto and walls never disappear; Otto can pass through everything
 
-  //   for (/* source: each bullet, robot, and the player */) {
-  //     for (/* target: each wall, bullet, robot, and the player **/) {
-  //       if (/* source collides with target */) {
-  //         source->resolveCollision(*target);
-  //         target->resolveCollision(*source);
-  //       }
-  //     }
-  //   }
+  So we can cover all the above by testing as follows:
+  - Player against robots, bullets, otto, and walls
+  - Robots against robots, bullets, otto, and walls
+  - Bullets against otto and walls
+
+  There are not going to be that many walls, robots, or projectiles; probably 10
+  robots and a player, each of whom can fire a projectile (so 22 objects at most). We
+  could try doing 22 x 22 collision tests, but then we have to test walls on top of
+  that. Another option would be a kind of space partitioning; we maintain a
+  list-of-lists of the contents of every room (walls, projectiles, and characters). A
+  character or projectile would test (based on its corners) what room its in before
+  moving and then after, then update the list-of-lists accordingly. We also don't need
+  to test collisions on anything that didn't move.
+  */
+  this->handlePlayerCollisions();
+  this->handleRobotCollisions();
+  this->handleBulletCollisions();
+}
+
+void Level::handlePlayerCollisions() {
+  if (this->handleCollisionAgainstRobots(this->_player)) {
+    return;
+  }
+  if (this->handleCollisionAgainstBullets(this->_player)) {
+    return;
+  }
+  if (this->handleCollisionAgainstWalls(this->_player)) {
+    return;
+  }
+}
+
+void Level::handleRobotCollisions() {
+  for (size_t i = 0; i < ROBOTS_COUNT; i++) {
+    if (this->handleCollisionAgainstRobots(this->_robots[i])) {
+      continue;
+    }
+    if (this->handleCollisionAgainstBullets(this->_robots[i])) {
+      continue;
+    }
+    if (this->handleCollisionAgainstWalls(this->_robots[i])) {
+      continue;
+    }
+  }
+}
+
+void Level::handleBulletCollisions() {
+  for (size_t i = 0; i < this->_bullets->size(); i++) {
+    if (this->handleCollisionAgainstWalls(this->_bullets->at(i))) {
+      continue;
+    }
+  }
+}
+
+bool Level::handleCollisionAgainstRobots(const std::shared_ptr<GameObject> source) {
+  for (size_t i = 0; i < ROBOTS_COUNT; i++) {
+    if (this->_robots[i] == source) {
+      continue;
+    }
+    if (source->collisionTest(*this->_robots[i])) {
+      source->resolveCollision(*this->_robots[i]);
+      this->_robots[i]->resolveCollision(*source);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Level::handleCollisionAgainstBullets(const std::shared_ptr<GameObject> source) {
+  for (size_t i = 0; i < this->_bullets->size(); i++) {
+    if (this->_bullets->at(i) == source) {
+      continue;
+    }
+    if (source->collisionTest(*this->_bullets->at(i))) {
+      source->resolveCollision(*this->_bullets->at(i));
+      this->_bullets->at(i)->resolveCollision(*source);
+      return true;
+    }
+  }
+  return false;
+}
+
+bool Level::handleCollisionAgainstWalls(const std::shared_ptr<GameObject> source) {
   std::shared_ptr<Wall> currentWall = nullptr;
-  for (int i = 0; i < WALLS_COUNT; i++) {
+  for (size_t i = 0; i < WALLS_COUNT; i++) {
     currentWall = this->_walls[i];
     if (currentWall == nullptr) {
       continue;
     }
-    if (this->_player->collisionTest(*currentWall)) {
-      std::cout << "Player collided with wall " << i << std::endl;
-      this->_player->resolveCollision(*currentWall);
-    }
-    for (size_t i = 0; i < this->_bullets->size(); i++) {
-      if ((*this->_bullets)[i]->collisionTest(*currentWall)) {
-        (*this->_bullets)[i]->resolveCollision(*currentWall);
-      }
+    if (source->collisionTest(*currentWall)) {
+      source->resolveCollision(*currentWall);
+      return true;
     }
   }
+  return false;
 }
 
 void Level::initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
@@ -168,8 +237,6 @@ void Level::initInternalWalls(const LevelSpriteManager& levelSpriteManager, Draw
 void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
   // TODO: Randomize player position
   // TODO: Ensure player isn't being drawn on top of robots
-  (void)playerSpriteManager;
-  (void)drawingProxy;
   this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
                                            playerSpriteManager);
 }
@@ -178,7 +245,7 @@ void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProx
   // TODO: to start off with, let's just draw robots
   for (int i = 0; i < ROBOTS_COUNT; i++) {
     this->_robots[0] = std::make_shared<Robot>(Vect2D(50, 50), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
-                                               robotSpriteManager);
+                                               *this->_playerPositionProxy, robotSpriteManager);
   }
 }
 
@@ -188,9 +255,6 @@ void Level::initOtto(const OttoSpriteManager& ottoSpriteManager, DrawingProxy& d
 }
 
 void Level::removeMarked() {
-  if (this->_player->getShouldRemove()) {
-    this->_player = nullptr;
-  }
   for (size_t i = 0; i < this->_bullets->size(); i++) {
     std::shared_ptr<Bullet> bullet = (*this->_bullets)[i];
     if (bullet->getShouldRemove()) {
