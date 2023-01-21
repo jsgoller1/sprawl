@@ -30,7 +30,7 @@ void Player::resolveCollision(GameObject& target) {
   // TODO: I'd prefer we didn't do either state or animation setting here; both already have
   // respective update functions, and should be done there.
   // TODO: Maybe we should have an event queue of some kind and state updates process events on that queue?
-  if (this->_state != CharacterState::DYING) {
+  if (!(this->_state == CharacterState::DYING || this->_state == CharacterState::DEAD)) {
     this->_state = CharacterState::DYING;
     this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->dying());
   }
@@ -51,8 +51,15 @@ void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
 }
 
 CharacterState Player::getNewState(const CharacterState currentState, const InputHandler& inputHandler) const {
+  if (currentState == CharacterState::DEAD) {
+    return currentState;
+  }
+
   if (currentState == CharacterState::DYING) {
-    return CharacterState::DYING;
+    if (this->getDrawingComponent().getAnimationSequence().isComplete()) {
+      return CharacterState::DEAD;
+    }
+    return currentState;
   }
   if (inputHandler.spacePressed() && inputHandler.movementKeysPressed()) {
     return CharacterState::SHOOTING;
@@ -87,9 +94,7 @@ void Player::updateAnimation(const time_ms deltaT, const Direction& movementDire
       this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->dying());
       break;
     case CharacterState::DEAD:
-      // TODO: Should we return a null pointer when there's no texture to draw? Is there a better way to signal no
-      // texture should be drawn? What if we just have a dead texture (black empty square)? Should we move it to prevent
-      // collisions?
+      this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->dead());
       break;
   }
   this->_drawingComponent->updateAnimationSequence(deltaT);

@@ -37,7 +37,8 @@ std::shared_ptr<Sprite> PlayerSpriteManager::dying(const int frameNo) const {
   std::cout << "Getting dying animation frame: " << frameNo << std::endl;
   // NOTE: Technically, the sprites for dying are 1px taller (height) than the character sprites. We ignore this though
   // and are fine with chopping off the bottom 1px (no one will notice/care since they transition so quickly).
-  return this->getSprite(frameNo, 4);
+  // NOTE: the first 4 frames are on line 4 of the sprite sheet, and the second 4 are on line 5
+  return this->getSprite(frameNo % 4, (frameNo < 3 ? 4 : 5));
 }
 
 std::shared_ptr<Sprite> PlayerSpriteManager::dead() const { return this->getSprite(0, 1); }

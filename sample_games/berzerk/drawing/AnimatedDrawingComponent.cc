@@ -15,7 +15,7 @@ void AnimatedDrawingComponent::updateAnimationSequence(const time_ms deltaT) {
   return this->_animationSequence->update(deltaT);
 }
 
-// AnimationSequence& AnimatedDrawingComponent::getAnimationSequence() const { return *this->_animationSequence; }
+AnimationSequence& AnimatedDrawingComponent::getAnimationSequence() const { return *this->_animationSequence; }
 
 void AnimatedDrawingComponent::setAnimationSequence(std::shared_ptr<AnimationSequence> animation) {
   this->_animationSequence = animation;

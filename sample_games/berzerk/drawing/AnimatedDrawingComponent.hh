@@ -20,7 +20,7 @@ class AnimatedDrawingComponent : public DrawingComponent {
 
   void updateAnimationSequence(const time_ms deltaT);
   void setAnimationSequence(std::shared_ptr<AnimationSequence> animation);
-  // AnimationSequence& getAnimationSequence() const;
+  AnimationSequence& getAnimationSequence() const;
 
  private:
   PositionComponent& _positionComponent;

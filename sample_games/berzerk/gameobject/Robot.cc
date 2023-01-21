@@ -44,8 +44,14 @@ CharacterState Robot::getNewState(const CharacterState currentState) const {
   /*
    * As soon as the player is within range, robots either start shooting or moving to a firing axis.
    */
+  if (currentState == CharacterState::DEAD) {
+    return currentState;
+  }
 
-  if (currentState == CharacterState::DYING || currentState == CharacterState::DEAD) {
+  if (currentState == CharacterState::DYING) {
+    if (this->getDrawingComponent().getAnimationSequence().isComplete()) {
+      return CharacterState::DEAD;
+    }
     return currentState;
   }
   if (!this->withinRangeOfPlayer()) {

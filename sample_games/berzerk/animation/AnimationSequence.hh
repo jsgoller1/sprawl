@@ -12,21 +12,25 @@ class AnimationSequence {
    * used in an animation, along with logic/state for animating them.
    */
  public:
-  AnimationSequence(const std::string name);
-  AnimationSequence(const std::string name, const std::shared_ptr<Sprite> sprite);
+  AnimationSequence(const std::string name, int loopLimit = -1);
+  AnimationSequence(const std::string name, const std::shared_ptr<Sprite> sprite, int loopLimit = -1);
   AnimationSequence(const std::string name, const std::vector<std::shared_ptr<Sprite>> sprites,
-                    const time_ms frameShowLength);
+                    const time_ms frameShowLength, int loopLimit = -1);
   void addSprite(const std::shared_ptr<Sprite> sprite);
 
   void setFrameShowLength(const time_ms frameShowLength);
   time_ms getFrameShowLength() const;
 
+  bool loopsIndefinitely();
+  bool isComplete();
   std::shared_ptr<Sprite> getCurrentSprite() const;
   void update(const time_ms deltaT);
   void reset();
 
  private:
   std::string _name;
+  int _loopLimit = -1;
+  int _loopCount = 0;
   time_ms _sinceLastUpdate = 0;
   time_ms _frameShowLength = 45;
   unsigned int _spriteIdx = 0;
