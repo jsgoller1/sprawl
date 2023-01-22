@@ -4,12 +4,12 @@
 
 // TODO: Currently, the CLI doesn't even use the given input and just uses these, but these will later be overridable
 // defaults
-#define DEFAULT_LEVEL_SPRITE_SHEET_PATH "/home/joshua/sprawl/sample_games/berzerk/assets/level-sprites.png"
-#define DEFAULT_PLAYER_SPRITE_SHEET_PATH "/home/joshua/sprawl/sample_games/berzerk/assets/player-sprites.png"
-#define DEFAULT_ROBOT_SPRITE_SHEET_PATH "/home/joshua/sprawl/sample_games/berzerk/assets/robot-sprites.png"
-#define DEFAULT_OTTO_SPRITE_SHEET_PATH "/home/joshua/sprawl/sample_games/berzerk/assets/otto-sprites.png"
-#define DEFAULT_BULLET_SPRITE_SHEET_PATH "/home/joshua/sprawl/sample_games/berzerk/assets/bullet-sprites.png"
-#define DEFAULT_TEXT_SPRITE_SHEET_PATH "/home/joshua/sprawl/sample_games/berzerk/assets/text-sprites.png"
+#define DEFAULT_LEVEL_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png"
+#define DEFAULT_PLAYER_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/player-sprites.png"
+#define DEFAULT_ROBOT_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/robot-sprites.png"
+#define DEFAULT_OTTO_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/otto-sprites.png"
+#define DEFAULT_BULLET_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/bullet-sprites.png"
+#define DEFAULT_TEXT_SPRITE_SHEET_PATH "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png"
 
 class CLI {
  public:

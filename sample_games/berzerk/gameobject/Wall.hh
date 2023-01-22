@@ -2,16 +2,11 @@
 
 #include <memory>
 
+#include "Configs.hh"
 #include "GameObject.hh"
 #include "LevelSpriteManager.hh"
 #include "Screen.hh"
 #include "StaticDrawingComponent.hh"
-
-constexpr int WALL_THICCNESS = 10;
-constexpr int VERTICAL_WALL_WIDTH = WALL_THICCNESS;
-constexpr int VERTICAL_WALL_HEIGHT = INTERNAL_PLAY_AREA_HEIGHT / 3;
-constexpr int HORIZONTAL_WALL_WIDTH = INTERNAL_PLAY_AREA_WIDTH / 5;
-constexpr int HORIZONTAL_WALL_HEIGHT = WALL_THICCNESS;
 
 Vect2D getWallPosition(unsigned wallIndex);
 

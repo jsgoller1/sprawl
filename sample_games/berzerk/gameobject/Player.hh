@@ -3,19 +3,16 @@
 #include <map>
 
 #include "AnimatedDrawingComponent.hh"
+#include "Configs.hh"
 #include "GameObject.hh"
 #include "IShooting.hh"
 #include "PlayerAnimationSet.hh"
 #include "State.hh"
 
-constexpr int PLAYER_MOVE_SPEED = 5;
-
 // Forward decls
 class AnimationSequence;
 class InputHandler;
 class PlayerSpriteManager;
-
-Vect2D getBulletPositionOffset(const Vect2D& shooterPosition);
 
 class Player : public GameObject, public IShooting {
  public:
@@ -36,4 +33,5 @@ class Player : public GameObject, public IShooting {
   CharacterState getNewState(const CharacterState currentState, const InputHandler& inputHandler) const;
   Vect2D getNewVelocity(const CharacterState currentState, const InputHandler& inputHandler) const;
   void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state);
+  void shootingBehavior(const InputHandler& inputHandler, const time_ms deltaT);
 };

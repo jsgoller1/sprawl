@@ -4,11 +4,10 @@
 #include <vector>
 
 #include "AnimationSequence.hh"
+#include "Configs.hh"
 #include "Direction.hh"
 #include "PlayerSpriteManager.hh"
 #include "Sprite.hh"
-
-constexpr int DYING_ANIMATION_LOOP_COUNT = 2;
 
 PlayerAnimationSet::PlayerAnimationSet(const PlayerSpriteManager& playerSpriteManager) {
   this->initIdle(playerSpriteManager);
@@ -85,7 +84,7 @@ void PlayerAnimationSet::initShooting(const PlayerSpriteManager& playerSpriteMan
 }
 
 void PlayerAnimationSet::initDeath(const PlayerSpriteManager& playerSpriteManager) {
-  this->_dying = std::make_shared<AnimationSequence>("dying", DYING_ANIMATION_LOOP_COUNT);
+  this->_dying = std::make_shared<AnimationSequence>("dying", PLAYER_DYING_ANIMATION_LOOP_COUNT);
   for (int i = 0; i < 8; i++) {
     this->_dying->addSprite(playerSpriteManager.dying(i));
   }

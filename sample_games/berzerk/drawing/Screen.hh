@@ -2,13 +2,9 @@
 
 #include <memory>
 
+#include "Configs.hh"
 #include "DrawingProxy.hh"
 #include "SDL2/SDL.h"
-
-constexpr int DEFAULT_SCREEN_WIDTH = 1400;
-constexpr int DEFAULT_SCREEN_HEIGHT = 900;
-constexpr int INTERNAL_PLAY_AREA_WIDTH = DEFAULT_SCREEN_WIDTH - 200;
-constexpr int INTERNAL_PLAY_AREA_HEIGHT = DEFAULT_SCREEN_HEIGHT - 200;
 
 // Forward decl
 class Vect2D;

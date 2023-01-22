@@ -1,6 +1,7 @@
 #pragma once
 
 #include "AnimatedDrawingComponent.hh"
+#include "Configs.hh"
 #include "GameObject.hh"
 #include "IShooting.hh"
 #include "PlayerPositionProxy.hh"
@@ -34,9 +35,10 @@ class Robot : public GameObject, public IShooting {
 
   CharacterState getNewState(const CharacterState currentState) const;
   Vect2D getNewVelocity(const CharacterState currentState) const;
-  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state);
+  void updateAnimation(const time_ms deltaT, const CharacterState state);
   void shootingBehavior(const time_ms deltaT);
 
   bool withinRangeOfPlayer() const;
+  Direction getHeadingDirection() const;
   Direction getShootingDirection() const;
 };

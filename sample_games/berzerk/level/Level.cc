@@ -244,8 +244,8 @@ void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingPr
 void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {
   // TODO: to start off with, let's just draw robots
   for (int i = 0; i < ROBOTS_COUNT; i++) {
-    this->_robots[0] = std::make_shared<Robot>(Vect2D(50, 50), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
-                                               *this->_playerPositionProxy, robotSpriteManager);
+    this->_robots[0] = std::make_shared<Robot>(Vect2D(250, 250), Vect2D::zero(), *this->_levelShootingProxy,
+                                               drawingProxy, *this->_playerPositionProxy, robotSpriteManager);
   }
 }
 

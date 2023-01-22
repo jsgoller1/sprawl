@@ -2,13 +2,6 @@
 
 #include "Direction.hh"
 
-// TODO: Robot should move, shoot, and animate
-// faster as fewer remain
-constexpr int ROBOT_MOVE_SPEED = 5;
-constexpr int ROBOT_DEFAULT_WIDTH = 40;
-constexpr int ROBOT_DEFAULT_HEIGHT = 55;
-constexpr int ROBOT_SHOOT_DELAY_MS = 750;
-
 Robot::Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
              DrawingProxy& drawingProxy, const PlayerPositionProxy& playerPositionProxy,
              const RobotSpriteManager& robotSpriteManager)
@@ -35,7 +28,7 @@ void Robot::resolveCollision(GameObject& target) {
 void Robot::update(const time_ms deltaT) {
   this->_state = this->getNewState(this->_state);
   this->setVelocity(this->getNewVelocity(this->_state));
-  this->updateAnimation(deltaT, Direction(this->getVelocity()), this->_state);
+  this->updateAnimation(deltaT, this->_state);
   this->shootingBehavior(deltaT);
   this->move();
 }
@@ -71,10 +64,26 @@ Vect2D Robot::getNewVelocity(const CharacterState state) const {
   return Vect2D(ROBOT_MOVE_SPEED, ROBOT_MOVE_SPEED);
 }
 
-void Robot::updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state) {
-  (void)deltaT;
-  (void)movementDirection;
-  (void)state;
+void Robot::updateAnimation(const time_ms deltaT, const CharacterState state) {
+  Direction facingDirection = this->_playerPositionProxy.getPursuitHeading(this->getPosition());
+  switch (state) {
+    case CharacterState::IDLE:
+      this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->idle());
+      break;
+    case CharacterState::MOVING:
+      this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->moving(facingDirection));
+      break;
+    case CharacterState::SHOOTING:
+      this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->shooting(facingDirection));
+      break;
+    case CharacterState::DYING:
+      this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->dying());
+      break;
+    case CharacterState::DEAD:
+      this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->dead());
+      break;
+  }
+  this->_drawingComponent->updateAnimationSequence(deltaT);
 }
 
 void Robot::shootingBehavior(const time_ms deltaT) {
@@ -86,5 +95,11 @@ void Robot::shootingBehavior(const time_ms deltaT) {
   }
 }
 
-bool Robot::withinRangeOfPlayer() const { return true; }
+bool Robot::withinRangeOfPlayer() const { return false; }
+
+Direction Robot::getHeadingDirection() const {
+  //
+  return Direction::None();
+}
+
 Direction Robot::getShootingDirection() const { return this->_playerPositionProxy.lineScan(this->getPosition()); }

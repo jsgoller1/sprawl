@@ -11,6 +11,7 @@ class PlayerPositionProxy {
   Vect2D getPlayerPosition() const;
   Direction lineScan(const Vect2D& currentPosition, const int errorMargin = 0) const;
   Direction getPursuitHeading(const Vect2D& currentPosition) const;
+  Vect2D distanceToPlayer(const Vect2D& currentPosition) const;
 
  private:
   const Player& _player;

@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "Configs.hh"
 #include "LevelShootingProxy.hh"
 #include "Otto.hh"
 #include "Player.hh"
@@ -43,28 +44,6 @@ class RobotSpriteManager;
  *  |     |     |     |     |     |
  *   ——15— ——16— ——17— ——18— ——19—
  */
-
-constexpr int WALLS_COUNT = 38;
-constexpr int HORIZONTAL_BORDER_WALLS_COUNT = 4;
-constexpr int BORDER_WALLS_N[] = {0, 1, 3, 4};
-constexpr int BORDER_WALLS_S[] = {15, 16, 18, 19};
-constexpr int VERTICAL_BORDER_WALLS_COUNT = 2;
-constexpr int BORDER_WALLS_W[] = {20, 32};
-constexpr int BORDER_WALLS_E[] = {25, 37};
-constexpr int EXIT_N = 2;
-constexpr int EXIT_S = 17;
-constexpr int EXIT_W = 26;
-constexpr int EXIT_E = 31;
-constexpr int EXIT_COUNT = 4;
-constexpr int HORIZONTAL_INTERNAL_WALLS_COUNT = 10;
-constexpr int HORIZONTAL_INTERNAL_WALLS[] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-constexpr int VERTICAL_INTERNAL_WALLS_COUNT = 12;
-constexpr int VERTICAL_INTERNAL_WALLS[] = {21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
-constexpr int FIXED_LEVEL_LAYOUT_WALLS_COUNT = 6;
-constexpr int FIXED_LEVEL_LAYOUT_WALLS[] = {21, 27, 8, 9, 35, 34};
-constexpr int ROBOTS_COUNT = 1;
-const Vect2D NORTH_START_POSITION =
-    Vect2D(getWallPosition(EXIT_N).x, getWallPosition(EXIT_N).y - VERTICAL_WALL_HEIGHT / 2);
 
 class Level {
  public:

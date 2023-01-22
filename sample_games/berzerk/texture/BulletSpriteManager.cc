@@ -1,11 +1,7 @@
 #include "BulletSpriteManager.hh"
 
+#include "Configs.hh"
 #include "Sprite.hh"
-
-constexpr int BULLET_SPRITE_WIDTH_PX = 7;
-constexpr int BULLET_SPRITE_HEIGHT_PX = 7;
-constexpr int BULLET_SPRITE_BOUNDARY_WIDTH_PX = 2;
-const Vect2D TOP_LEFT = Vect2D::zero();
 
 BulletSpriteManager::BulletSpriteManager(const std::string& spriteSheetPath)
     : SpriteManager(spriteSheetPath, TOP_LEFT, BULLET_SPRITE_WIDTH_PX, BULLET_SPRITE_HEIGHT_PX,

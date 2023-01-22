@@ -12,6 +12,7 @@ class RobotSpriteManager : public SpriteManager {
   std::shared_ptr<Sprite> movingE(const int frameNo) const;
   std::shared_ptr<Sprite> movingW(const int frameNo) const;
   std::shared_ptr<Sprite> dying(const int frameNo) const;
+  std::shared_ptr<Sprite> dead() const;
 
   std::shared_ptr<Sprite> shootingN() const;
   std::shared_ptr<Sprite> shootingE() const;
