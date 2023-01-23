@@ -10,6 +10,7 @@
                 "${workspaceFolder}/sample_games/berzerk/drawing/",
                 "${workspaceFolder}/sample_games/berzerk/gameobject/",
                 "${workspaceFolder}/sample_games/berzerk/level/",
+                "${workspaceFolder}/sample_games/berzerk/main/",
                 "${workspaceFolder}/sample_games/berzerk/texture/",
                 "${workspaceFolder}/sprawl/",
                 "${workspaceFolder}/sprawl/cli/",

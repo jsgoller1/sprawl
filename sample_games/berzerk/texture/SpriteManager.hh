@@ -20,6 +20,7 @@ class SpriteManager {
   std::shared_ptr<Sprite> getSprite(const int col, const int row) const;
   std::shared_ptr<Sprite> getSprite(const int col, const int row, const int spriteWidthPx, const int spriteHeightPx,
                                     const int spriteBorderSizePx) const;
+  std::shared_ptr<Sprite> getSprite(const Vect2D& topLeft, const int height, const int width) const;
 
   // private:
   SDL_Surface* _spriteSheet;

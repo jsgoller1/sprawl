@@ -26,6 +26,7 @@ class GameObject {
   GameObject(const Vect2D& position, const Vect2D& velocity);
   virtual ~GameObject();
   Vect2D getPosition() const;
+  void setPosition(const Vect2D& position);
   PositionComponent& getPositionComponent() const;
   virtual DrawingComponent& getDrawingComponent() const = 0;
 

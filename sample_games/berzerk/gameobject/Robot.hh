@@ -22,7 +22,6 @@ class Robot : public GameObject, public IShooting {
         const PlayerPositionProxy& playerPositionProxy, const RobotSpriteManager& robotSpriteManager);
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
-
   void resolveCollision(GameObject& target) override;
   void update(const time_ms deltaT);
 
@@ -33,12 +32,16 @@ class Robot : public GameObject, public IShooting {
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent;
   std::unique_ptr<RobotAnimationSet> _robotAnimationSet = nullptr;
 
+  // FSM
   CharacterState getNewState(const CharacterState currentState) const;
-  Vect2D getNewVelocity(const CharacterState currentState) const;
-  void updateAnimation(const time_ms deltaT, const CharacterState state);
-  void shootingBehavior(const time_ms deltaT);
+  void stateBehaviorDead();
+  void stateBehaviorDying();
+  void stateBehaviorIdle();
+  void stateBehaviorMoving();
+  void stateBehaviorShooting();
 
+  // Forwarding methods
   bool withinRangeOfPlayer() const;
-  Direction getHeadingDirection() const;
   Direction getShootingDirection() const;
+  Direction getMovingDirection() const;
 };

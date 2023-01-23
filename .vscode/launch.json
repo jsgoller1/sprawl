@@ -17,14 +17,15 @@
             "name": "Berzerk",
             "type": "cppdbg",
             "request": "launch",
-            "cwd": "/home/joshua/sprawl",
+            "cwd": "/Users/joshua/Code/sprawl",
             "program": "${cwd}/bin/berzerk",
             "environment": [],
             "MIMode": "gdb",
+            "miDebuggerPath": "/usr/local/bin/lldb-mi",
             "args": [
-                "/home/joshua/sprawl/sample_games/berzerk/assets/level-sprites.png",
-                "/home/joshua/sprawl/sample_games/berzerk/assets/character-sprites.png",
-                "/home/joshua/sprawl/sample_games/berzerk/assets/text-sprites.png"
+                "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png",
+                "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png",
+                "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png"
             ]
         },
         {

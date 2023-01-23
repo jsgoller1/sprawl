@@ -1,5 +1,7 @@
 #include "Vect2D.hh"
 
+#include <cmath>
+
 #include "Direction.hh"
 
 Vect2D::Vect2D(const int x, const int y) : x(x), y(y) {}
@@ -33,3 +35,9 @@ void Vect2D::operator-=(const Vect2D& vect) {
 bool Vect2D::operator==(const Vect2D& vect) const { return this->x == vect.x && this->y == vect.y; }
 
 Vect2D Vect2D::operator*(const int scalar) const { return Vect2D(this->x * scalar, this->y * scalar); }
+
+int Vect2D::distance(const Vect2D& other) {
+  int xDist = this->x - other.x;
+  int yDist = this->y - other.y;
+  return int(sqrt(double(xDist * xDist) + (yDist * yDist)));
+}

@@ -35,9 +35,12 @@ void Player::resolveCollision(GameObject& target) {
 
 void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
   this->_state = this->getNewState(this->_state, inputHandler);
+  if (this->_state == CharacterState::DEAD) {
+    this->setPosition(Vect2D(-2000, -2000));
+  }
   this->setVelocity(this->getNewVelocity(this->_state, inputHandler));
   this->updateAnimation(deltaT, inputHandler.getArrowKeyDirection(), this->_state);
-  this->shootingBehavior(inputHandler, deltaT);
+  this->shootingBehavior(deltaT, inputHandler.getArrowKeyDirection());
   this->move();
 }
 
@@ -91,14 +94,12 @@ void Player::updateAnimation(const time_ms deltaT, const Direction& movementDire
   this->_drawingComponent->updateAnimationSequence(deltaT);
 }
 
-void Player::shootingBehavior(const InputHandler& inputHandler, const time_ms deltaT) {
+void Player::shootingBehavior(const time_ms deltaT, const Direction& shootingDirection) {
   this->_sinceLastShot += deltaT;
   if (this->_state == CharacterState::SHOOTING && this->_sinceLastShot > PLAYER_SHOOT_DELAY_MS) {
     this->_sinceLastShot = 0;
-    Direction shootingDirection = inputHandler.getArrowKeyDirection();
     // TODO: Having this constant offset is probably brittle; should calculate it
     // so that if the screen / sprite sizes ever change, it won't break.
-    Vect2D bulletOffset = this->getPosition() + (Vect2D(shootingDirection) * 50);
-    this->shoot(shootingDirection, bulletOffset, GREEN);
+    this->shoot(shootingDirection, this->getPosition(), GREEN);
   }
 }

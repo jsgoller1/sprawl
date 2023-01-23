@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 // fwd decl
 class Vect2D;
 
@@ -24,6 +26,7 @@ class Direction {
   Direction(const Vect2D& vect);
   int getX() const;
   int getY() const;
+  std::string toString() const;
 
   Direction operator+(const Direction& other) const;
   bool operator==(const Direction& other) const;

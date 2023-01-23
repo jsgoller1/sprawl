@@ -13,6 +13,8 @@ GameObject::GameObject(const Vect2D& position, const Vect2D& velocity) : _veloci
 GameObject::~GameObject() = default;
 
 Vect2D GameObject::getPosition() const { return this->_positionComponent->getPosition(); }
+void GameObject::setPosition(const Vect2D& position) { this->_positionComponent->setPosition(position); }
+
 PositionComponent& GameObject::getPositionComponent() const { return *this->_positionComponent; }
 
 // IMovement

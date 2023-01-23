@@ -33,5 +33,5 @@ class Player : public GameObject, public IShooting {
   CharacterState getNewState(const CharacterState currentState, const InputHandler& inputHandler) const;
   Vect2D getNewVelocity(const CharacterState currentState, const InputHandler& inputHandler) const;
   void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state);
-  void shootingBehavior(const InputHandler& inputHandler, const time_ms deltaT);
+  void shootingBehavior(const time_ms deltaT, const Direction& shootingDirection);
 };

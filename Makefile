@@ -13,10 +13,13 @@ SPRAWL_OBJ_FILES:=$(patsubst %.cc, %.o, $(SPRAWL_SRC_FILES))
 SPRAWL_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
 sprawl: $(SPRAWL_OBJ_FILES)
 	$(CCACHE) $(CXX) $(SPRAWL_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN)
+sprawl-loc:
+	git ls-files | grep sprawl |  xargs cat | wc -l
+
 
 BERZERK_DIR:=sample_games/berzerk
-BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/drawing
-BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject $(BERZERK_DIR)/level $(BERZERK_DIR)/texture 
+BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/drawing  $(BERZERK_DIR)/gameobject
+BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/level $(BERZERK_DIR)/math $(BERZERK_DIR)/texture 
 BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
@@ -28,6 +31,9 @@ BERZERK_TEXT_SPRITES:=/Users/joshua/Code/sprawl/sample_games/berzerk/assets/text
 berzerk: $(BERZERK_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
 	./bin/berzerk $(BERZERK_LEVEL_SPRITES) $(BERZERK_CHARACTER_SPRITES) $(BERZERK_TEXT_SPRITES)
+berzerk-loc:
+	git ls-files | grep berzerk | grep -v "super" | xargs cat | wc -l
+
 
 BREAKOUT_MODULES:=sample_games/breakout 3rdparty
 BREAKOUT_INCLUDES:=$(patsubst %, -I %,$(BREAKOUT_MODULES))

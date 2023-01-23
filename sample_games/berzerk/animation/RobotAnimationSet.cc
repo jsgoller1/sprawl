@@ -76,7 +76,12 @@ void RobotAnimationSet::initMoving(const RobotSpriteManager& robotSpriteManager)
   }
 }
 
-void RobotAnimationSet::initShooting(const RobotSpriteManager& robotSpriteManager) { (void)robotSpriteManager; }
+void RobotAnimationSet::initShooting(const RobotSpriteManager& robotSpriteManager) {
+  this->_shootingN = std::make_shared<AnimationSequence>("shootingN", robotSpriteManager.shootingN());
+  this->_shootingE = std::make_shared<AnimationSequence>("shootingE", robotSpriteManager.shootingE());
+  this->_shootingS = std::make_shared<AnimationSequence>("shootingS", robotSpriteManager.shootingS());
+  this->_shootingW = std::make_shared<AnimationSequence>("shootingW", robotSpriteManager.shootingW());
+}
 
 void RobotAnimationSet::initDeath(const RobotSpriteManager& robotSpriteManager) {
   this->_dying = std::make_shared<AnimationSequence>("dying");
