@@ -9,6 +9,7 @@ constexpr int INTERNAL_PLAY_AREA_WIDTH = DEFAULT_SCREEN_WIDTH - 200;
 constexpr int INTERNAL_PLAY_AREA_HEIGHT = DEFAULT_SCREEN_HEIGHT - 200;
 
 // Player behavior
+const Vect2D PLAYER_START_POSITION = Vect2D::zero();
 constexpr int PLAYER_DYING_ANIMATION_LOOP_COUNT = 2;
 constexpr int PLAYER_SHOOT_DELAY_MS = 750;
 constexpr int PLAYER_MOVE_SPEED = 5;
@@ -27,7 +28,7 @@ constexpr int ROBOT_DYING_WIDTH = 80;
 constexpr int ROBOT_DYING_HEIGHT = 80;
 constexpr int ROBOT_SHOOT_DELAY_MS = 750;
 constexpr int ROBOT_PURSUIT_DISTANCE_PX = 900;
-constexpr int ROBOT_SHOOTING_ERROR_MARGIN_PX = 8;
+constexpr int ROBOT_SHOOTING_ERROR_MARGIN_PX = 15;
 
 // Robot sprite
 constexpr int ROBOT_SPRITE_WIDTH_PX = 8;

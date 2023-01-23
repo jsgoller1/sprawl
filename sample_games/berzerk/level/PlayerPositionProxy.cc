@@ -18,26 +18,30 @@ Direction PlayerPositionProxy::lineScan(const Vect2D& currentPosition, const int
   */
 
   Vect2D playerPosition = this->_player.getPosition();
+  int xDifference = currentPosition.x - playerPosition.x;
+  int yDifference = currentPosition.y - playerPosition.y;
+
   // N or S
-  if (absval(currentPosition.x - playerPosition.x) <= errorMargin) {
-    return (currentPosition.y > playerPosition.y) ? Direction::South() : Direction::North();
+  if (absval(xDifference) <= errorMargin) {
+    return (yDifference) ? Direction::South() : Direction::North();
   }
 
   // W or E
-  else if (absval(currentPosition.y - playerPosition.y) <= errorMargin) {
-    return (currentPosition.x > playerPosition.x) ? Direction::West() : Direction::East();
+  else if (absval(yDifference) <= errorMargin) {
+    return (xDifference) ? Direction::West() : Direction::East();
   }
 
-  // TODO: Diagonal shooting
   /*
-  // NE or SW
-  else if (false) {
+   * Diagonal shooting. Suppose we want strict diagonals only; then we'd mandate that the slope of the line drawn from
+   * them to us is either 1 or -1. To allow for a margin of error, we might instead allow for slopes between 5/1 to 1/5.
+   * This would include 2/3, 3/2, 4/1, 1/4, and 55/56, but not 6/1, 100/5, or 0/5. So if the absval of the difference of
+   * the xDifference and yDifference is within our margin of error, then we can successfully shoot diagonally.
+   */
+  else if (abs(abs(xDifference) - abs(yDifference)) <= errorMargin) {
+    Direction horizontal = (currentPosition.x < playerPosition.x) ? Direction::East() : Direction::West();
+    Direction vertical = (currentPosition.y < playerPosition.y) ? Direction::North() : Direction::South();
+    return horizontal + vertical;
   }
-
-  // NW or SE
-  else if (false) {
-  }
-  */
 
   // Otherwise, not on compass rose
   return Direction::None();

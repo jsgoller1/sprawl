@@ -245,8 +245,8 @@ void Level::initInternalWalls(const LevelSpriteManager& levelSpriteManager, Draw
 void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
   // TODO: Randomize player position
   // TODO: Ensure player isn't being drawn on top of robots
-  this->_player = std::make_shared<Player>(Vect2D(250, 50), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
-                                           playerSpriteManager);
+  this->_player = std::make_shared<Player>(PLAYER_START_POSITION, Vect2D::zero(), *this->_levelShootingProxy,
+                                           drawingProxy, playerSpriteManager);
 }
 
 void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {
