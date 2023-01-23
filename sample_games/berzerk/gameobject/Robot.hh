@@ -40,7 +40,7 @@ class Robot : public GameObject, public IShooting {
   void stateBehaviorMoving();
   void stateBehaviorShooting();
 
-  // Forwarding methods
+  // Forwarding and helper methods
   bool withinRangeOfPlayer() const;
   Direction getShootingDirection() const;
   Direction getMovingDirection() const;

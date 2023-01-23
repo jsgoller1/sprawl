@@ -23,6 +23,8 @@ constexpr int PLAYER_SPRITE_BOUNDARY_WIDTH_PX = 1;
 constexpr int ROBOT_MOVE_SPEED = 1;
 constexpr int ROBOT_DEFAULT_WIDTH = 40;
 constexpr int ROBOT_DEFAULT_HEIGHT = 55;
+constexpr int ROBOT_DYING_WIDTH = 80;
+constexpr int ROBOT_DYING_HEIGHT = 80;
 constexpr int ROBOT_SHOOT_DELAY_MS = 750;
 constexpr int ROBOT_PURSUIT_DISTANCE_PX = 900;
 constexpr int ROBOT_SHOOTING_ERROR_MARGIN_PX = 8;
@@ -31,6 +33,8 @@ constexpr int ROBOT_SHOOTING_ERROR_MARGIN_PX = 8;
 constexpr int ROBOT_SPRITE_WIDTH_PX = 8;
 constexpr int ROBOT_SPRITE_HEIGHT_PX = 12;
 constexpr int ROBOT_SPRITE_BOUNDARY_WIDTH_PX = 1;
+constexpr int ROBOT_DYING_SPRITE_HEIGHT_PX = 16;
+constexpr int ROBOT_DYING_SPRITE_WIDTH_PX = 16;
 
 // Bullet behavior
 constexpr int BULLET_DEFAULT_SPEED = 10;

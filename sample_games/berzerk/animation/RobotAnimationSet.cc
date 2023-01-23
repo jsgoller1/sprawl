@@ -84,8 +84,10 @@ void RobotAnimationSet::initShooting(const RobotSpriteManager& robotSpriteManage
 }
 
 void RobotAnimationSet::initDeath(const RobotSpriteManager& robotSpriteManager) {
-  this->_dying = std::make_shared<AnimationSequence>("dying");
-  this->_dying->addSprite(robotSpriteManager.dead());
+  this->_dying = std::make_shared<AnimationSequence>("dying", 1);
+  for (int i = 0; i < 4; i++) {
+    this->_dying->addSprite(robotSpriteManager.dying(i));
+  }
   this->_dead = std::make_shared<AnimationSequence>("dead");
   this->_dead->addSprite(robotSpriteManager.dead());
 }

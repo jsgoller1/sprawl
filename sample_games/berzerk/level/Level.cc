@@ -47,15 +47,9 @@ void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
 }
 
 void Level::draw() {
-  // TODO: For now, we're just going to draw every game object while knowing what type it is. Later on,
-  // maybe we will represent drawable GameObjects with a collection of IDrawables or something?
-  this->_player->getDrawingComponent().draw();
-
-  for (int i = 0; i < WALLS_COUNT; i++) {
-    if (this->_walls[i] != nullptr) {
-      this->_walls[i]->getDrawingComponent().draw();
-    }
-  }
+  // The drawing order here matters; we want to draw robots before walls, so their explosion animation is drawn under
+  // wall (otherwise it will block out part of the wall; might want to use color keying for this. Player's death
+  // animation should be drawn over the wall, so they are drawn last.
 
   for (size_t i = 0; i < this->_bullets->size(); i++) {
     (*this->_bullets)[i]->getDrawingComponent().draw();
@@ -66,6 +60,14 @@ void Level::draw() {
       this->_robots[i]->getDrawingComponent().draw();
     }
   }
+
+  for (int i = 0; i < WALLS_COUNT; i++) {
+    if (this->_walls[i] != nullptr) {
+      this->_walls[i]->getDrawingComponent().draw();
+    }
+  }
+
+  this->_player->getDrawingComponent().draw();
 }
 
 bool Level::playerAtExit() const { return false; }
@@ -91,9 +93,15 @@ void Level::handleCollisions() {
   moving and then after, then update the list-of-lists accordingly. We also don't need
   to test collisions on anything that didn't move.
   */
-  this->handlePlayerCollisions();
-  this->handleRobotCollisions();
+
+  // NOTE: Bullet collisions need to be handled before player; otherwise, if a bullet collides with a wall and a player,
+  // it will wind up killing the player. Same thing with robot collisions; there's an edge case where a player and robot
+  // are standing very close on either side of a wall. If the robot explodes, its sprite will expand but it should not
+  // cause the player to die (since there's a wall between them). Testing for robot/wall collisions before robot/player
+  // collisions ensures this won't happen.
   this->handleBulletCollisions();
+  this->handleRobotCollisions();
+  this->handlePlayerCollisions();
 }
 
 void Level::handlePlayerCollisions() {
@@ -237,7 +245,7 @@ void Level::initInternalWalls(const LevelSpriteManager& levelSpriteManager, Draw
 void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
   // TODO: Randomize player position
   // TODO: Ensure player isn't being drawn on top of robots
-  this->_player = std::make_shared<Player>(Vect2D::zero(), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
+  this->_player = std::make_shared<Player>(Vect2D(250, 50), Vect2D::zero(), *this->_levelShootingProxy, drawingProxy,
                                            playerSpriteManager);
 }
 

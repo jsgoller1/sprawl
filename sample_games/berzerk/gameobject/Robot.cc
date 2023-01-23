@@ -80,7 +80,11 @@ void Robot::stateBehaviorDead() {
   this->setPosition(Vect2D(-2000, -2000));
 }
 
-void Robot::stateBehaviorDying() { this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->dying()); }
+void Robot::stateBehaviorDying() {
+  this->getDrawingComponent().setHeight(ROBOT_DYING_HEIGHT);
+  this->getDrawingComponent().setWidth(ROBOT_DYING_WIDTH);
+  this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->dying());
+}
 
 void Robot::stateBehaviorIdle() { this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->idle()); }
 

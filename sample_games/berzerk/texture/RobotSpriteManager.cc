@@ -13,8 +13,19 @@ std::shared_ptr<Sprite> RobotSpriteManager::movingS(const int frameNo) const { r
 std::shared_ptr<Sprite> RobotSpriteManager::movingE(const int frameNo) const { return this->getSprite(frameNo, 1); }
 std::shared_ptr<Sprite> RobotSpriteManager::movingW(const int frameNo) const { return this->getSprite(2 + frameNo, 1); }
 std::shared_ptr<Sprite> RobotSpriteManager::dying(const int frameNo) const {
-  (void)frameNo;
-  return nullptr;
+  // The robot exploding sprites are slightly larger than the normal sprites, so
+  // we need to grab them explicitly with coords on the sprite sheet
+  Vect2D topLeft = Vect2D::zero();
+  if (frameNo == 0) {
+    topLeft = Vect2D(0, 40);
+  } else if (frameNo == 1) {
+    topLeft = Vect2D(16, 40);
+  } else if (frameNo == 2) {
+    topLeft = Vect2D(0, 56);
+  } else if (frameNo == 3) {
+    topLeft = Vect2D(16, 56);
+  }
+  return this->getSprite(topLeft, ROBOT_DYING_SPRITE_WIDTH_PX, ROBOT_DYING_SPRITE_HEIGHT_PX);
 }
 std::shared_ptr<Sprite> RobotSpriteManager::dead() const { return this->getSprite(4, 1); }
 
