@@ -31,7 +31,7 @@ void AnimationSequence::update(const time_ms deltaT) {
     this->_spriteIdx = (this->_spriteIdx + 1) % this->_sprites.size();
     this->_sinceLastUpdate = 0;
 
-    if (this->_spriteIdx == 0) {
+    if (this->_spriteIdx == this->_sprites.size() - 1) {
       this->_loopCount++;
     }
   }

@@ -92,7 +92,6 @@ void Robot::stateBehaviorMoving() {
   Direction facingDirection = this->getMovingDirection();
   this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->moving(facingDirection));
   this->setVelocity(Vect2D(facingDirection) * ROBOT_MOVE_SPEED);
-  std::cout << "Robot: moving " << facingDirection.toString() << std::endl;
   this->move();
 }
 
