@@ -23,6 +23,7 @@ class Player : public GameObject, public IShooting {
 
   void resolveCollision(GameObject& target) override;
   void update(const InputHandler& inputHandler, const time_ms deltaT);
+  void draw();
 
  private:
   CharacterState _state;

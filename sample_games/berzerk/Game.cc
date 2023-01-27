@@ -43,7 +43,6 @@ void Game::draw(Screen& screen) {
 }
 
 // Private
-
 void Game::initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy) {
   // The UI (lives remaining and score) should take up
   // the bottom 10% of the screen or less

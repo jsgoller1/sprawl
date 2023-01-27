@@ -39,3 +39,8 @@ std::shared_ptr<Sprite> LevelSpriteManager::verticalInternalWall() const {
   int wallHeight = 54;
   return std::make_shared<Sprite>(this->getSpriteSheet(), topLeftX, topLeftY, wallWidth, wallHeight);
 }
+
+// TODO: In the original game, the exit was the same color as the robots. This would create more work and virtually
+// no benefit, so I don't care that it's the same as all other walls for now.
+std::shared_ptr<Sprite> LevelSpriteManager::horizontalExitWall() const { return this->horizontalBorderWall(); }
+std::shared_ptr<Sprite> LevelSpriteManager::verticalExitWall() const { return this->verticalBorderWall(); }

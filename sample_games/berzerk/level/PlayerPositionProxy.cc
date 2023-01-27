@@ -23,12 +23,12 @@ Direction PlayerPositionProxy::lineScan(const Vect2D& currentPosition, const int
 
   // N or S
   if (absval(xDifference) <= errorMargin) {
-    return (yDifference) ? Direction::South() : Direction::North();
+    return (currentPosition.y < playerPosition.y) ? Direction::North() : Direction::South();
   }
 
   // W or E
   else if (absval(yDifference) <= errorMargin) {
-    return (xDifference) ? Direction::West() : Direction::East();
+    return (currentPosition.x < playerPosition.x) ? Direction::East() : Direction::West();
   }
 
   /*

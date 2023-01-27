@@ -1,4 +1,5 @@
 #pragma once
+#include <set>
 
 #include "Vect2D.hh"
 
@@ -9,7 +10,6 @@ constexpr int INTERNAL_PLAY_AREA_WIDTH = DEFAULT_SCREEN_WIDTH - 200;
 constexpr int INTERNAL_PLAY_AREA_HEIGHT = DEFAULT_SCREEN_HEIGHT - 200;
 
 // Player behavior
-const Vect2D PLAYER_START_POSITION = Vect2D::zero();
 constexpr int PLAYER_DYING_ANIMATION_LOOP_COUNT = 2;
 constexpr int PLAYER_SHOOT_DELAY_MS = 750;
 constexpr int PLAYER_MOVE_SPEED = 5;
@@ -59,28 +59,28 @@ constexpr int VERTICAL_WALL_HEIGHT = INTERNAL_PLAY_AREA_HEIGHT / 3;
 constexpr int HORIZONTAL_WALL_WIDTH = INTERNAL_PLAY_AREA_WIDTH / 5;
 constexpr int HORIZONTAL_WALL_HEIGHT = WALL_THICCNESS;
 
-// Level behavior
-constexpr int WALLS_COUNT = 38;
-constexpr int HORIZONTAL_BORDER_WALLS_COUNT = 4;
-constexpr int BORDER_WALLS_N[] = {0, 1, 3, 4};
-constexpr int BORDER_WALLS_S[] = {15, 16, 18, 19};
-constexpr int VERTICAL_BORDER_WALLS_COUNT = 2;
-constexpr int BORDER_WALLS_W[] = {20, 32};
-constexpr int BORDER_WALLS_E[] = {25, 37};
+// Level behavior, see Level.hh for explanation of what indexes represent
+constexpr int ROBOTS_COUNT = 1;
 constexpr int EXIT_N = 2;
 constexpr int EXIT_S = 17;
 constexpr int EXIT_W = 26;
 constexpr int EXIT_E = 31;
-constexpr int EXIT_COUNT = 4;
-constexpr int HORIZONTAL_INTERNAL_WALLS_COUNT = 10;
-constexpr int HORIZONTAL_INTERNAL_WALLS[] = {5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
-constexpr int VERTICAL_INTERNAL_WALLS_COUNT = 12;
-constexpr int VERTICAL_INTERNAL_WALLS[] = {21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
-constexpr int FIXED_LEVEL_LAYOUT_WALLS_COUNT = 6;
-constexpr int FIXED_LEVEL_LAYOUT_WALLS[] = {21, 27, 8, 9, 35, 34};
-constexpr int ROBOTS_COUNT = 1;
-const Vect2D TOP_LEFT = Vect2D::zero();
-constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 50;
+const std::set<int> HORIZONTAL_EXIT_WALLS{EXIT_N, EXIT_S};
+const std::set<int> VERTICAL_EXIT_WALLS{EXIT_W, EXIT_E};
+const std::set<int> HORIZONTAL_BORDER_WALLS{0, 1, 3, 4, 15, 16, 18, 19};
+const std::set<int> VERTICAL_BORDER_WALLS{20, 32, 25, 37};
+const std::set<int> HORIZONTAL_INTERNAL_WALLS{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
+const std::set<int> VERTICAL_INTERNAL_WALLS{21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
+
+const Vect2D CELL_0_CENTER = Vect2D(-HORIZONTAL_WALL_WIDTH * 2, VERTICAL_WALL_HEIGHT);
+const Vect2D NORTH_SPAWN = Vect2D(0, VERTICAL_WALL_HEIGHT);
+const Vect2D EAST_SPAWN = Vect2D(HORIZONTAL_WALL_WIDTH * 2, 0);
+const Vect2D SOUTH_SPAWN = Vect2D(0, -VERTICAL_WALL_HEIGHT);
+const Vect2D WEST_SPAWN = Vect2D(HORIZONTAL_WALL_WIDTH * -2, 0);
+// const Vect2D PLAYER_SPAWN_POINT = CELL_0_CENTER;
 
 // Misc
 constexpr int DEFAULT_ANIMATION_FRAME_SHOW_LENGTH_MS = 150;
+const Vect2D TOP_LEFT = Vect2D::zero();
+constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 50;
+constexpr int NO_COLLISION = -1;

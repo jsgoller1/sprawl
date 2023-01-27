@@ -4,12 +4,24 @@
 
 #include "Bullet.hh"
 #include "BulletSpriteManager.hh"
+#include "Configs.hh"
 #include "Direction.hh"
 #include "InputHandler.hh"
 #include "LevelSpriteManager.hh"
 #include "OttoSpriteManager.hh"
 #include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
+
+Vect2D getCellCenter(const int cellId) {
+  if (cellId < 0 || cellId > 14) {
+    return Vect2D::zero();
+  }
+
+  Vect2D center = CELL_0_CENTER;
+  center.x += (cellId % 5) * HORIZONTAL_WALL_WIDTH;
+  center.y -= (cellId / 5) * VERTICAL_WALL_HEIGHT;
+  return center;
+}
 
 Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
              const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
@@ -19,29 +31,22 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
       _playerSpriteManager(playerSpriteManager),
       _robotSpriteManager(robotSpriteManager),
       _ottoSpriteManager(ottoSpriteManager),
-      _bulletSpriteManager(bulletSpriteManager) {
-  // TODO: Not sure if I like this constructor; feels shitty to initialize bullets and proxy like above, maybe
-  // we want functions like we have below for player, robots, and walls? Although there are no bullets to start
-  // with, and each below has initial state we need to set up.
-  this->initWalls(this->_levelSpriteManager, this->_drawingProxy);
-  this->_bullets = std::unique_ptr<std::vector<std::shared_ptr<Bullet>>>(new std::vector<std::shared_ptr<Bullet>>());
-  this->_levelShootingProxy = std::unique_ptr<LevelShootingProxy>(
-      new LevelShootingProxy(*this->_bullets, this->_bulletSpriteManager, drawingProxy));
-  this->initPlayer(this->_playerSpriteManager, this->_drawingProxy);
-  this->_playerPositionProxy = std::unique_ptr<PlayerPositionProxy>(new PlayerPositionProxy(*this->_player));
-  this->initRobots(this->_robotSpriteManager, this->_drawingProxy);
-  this->initOtto(this->_ottoSpriteManager, this->_drawingProxy);
-}
+      _bulletSpriteManager(bulletSpriteManager),
+      _bullets(this->_bulletSpriteManager, drawingProxy),
+      _levelShootingProxy(LevelShootingProxy(this->_bullets)),
+      _walls(this->generateInternalWalls(), this->_levelSpriteManager, this->_drawingProxy),
+      _player(Player(getPlayerSpawnPoint(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
+                     this->_playerSpriteManager)),
+      _playerPositionProxy(PlayerPositionProxy(this->_player)),
+      _robots(this->generateRobotStartPositions(ROBOTS_COUNT), this->_levelShootingProxy, this->_drawingProxy,
+              this->_playerPositionProxy, this->_robotSpriteManager),
+      _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {}
 
 void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
-  this->_player->update(inputHandler, deltaT);
-  for (size_t i = 0; i < this->_bullets->size(); i++) {
-    (*this->_bullets)[i]->update();
-  }
-  for (size_t i = 0; i < ROBOTS_COUNT; i++) {
-    this->_robots[i]->update(deltaT);
-  }
-  this->_otto->update(deltaT);
+  this->_robots.update(deltaT);
+  this->_player.update(inputHandler, deltaT);
+  this->_bullets.update(deltaT);
+  // this->_otto->update(deltaT);
   this->handleCollisions();
   this->removeMarked();
 }
@@ -50,24 +55,10 @@ void Level::draw() {
   // The drawing order here matters; we want to draw robots before walls, so their explosion animation is drawn under
   // wall (otherwise it will block out part of the wall; might want to use color keying for this. Player's death
   // animation should be drawn over the wall, so they are drawn last.
-
-  for (size_t i = 0; i < this->_bullets->size(); i++) {
-    (*this->_bullets)[i]->getDrawingComponent().draw();
-  }
-
-  for (int i = 0; i < ROBOTS_COUNT; i++) {
-    if (this->_robots[i] != nullptr) {
-      this->_robots[i]->getDrawingComponent().draw();
-    }
-  }
-
-  for (int i = 0; i < WALLS_COUNT; i++) {
-    if (this->_walls[i] != nullptr) {
-      this->_walls[i]->getDrawingComponent().draw();
-    }
-  }
-
-  this->_player->getDrawingComponent().draw();
+  this->_robots.draw();
+  this->_player.draw();
+  this->_bullets.draw();
+  this->_walls.draw();
 }
 
 bool Level::playerAtExit() const { return false; }
@@ -99,174 +90,41 @@ void Level::handleCollisions() {
   // are standing very close on either side of a wall. If the robot explodes, its sprite will expand but it should not
   // cause the player to die (since there's a wall between them). Testing for robot/wall collisions before robot/player
   // collisions ensures this won't happen.
-  this->handleBulletCollisions();
-  this->handleRobotCollisions();
-  this->handlePlayerCollisions();
-}
 
-void Level::handlePlayerCollisions() {
-  if (this->handleCollisionAgainstRobots(this->_player)) {
-    return;
-  }
-  if (this->handleCollisionAgainstBullets(this->_player)) {
-    return;
-  }
-  if (this->handleCollisionAgainstWalls(this->_player)) {
-    return;
-  }
-}
+  this->_robots.collisionTestAndResolve(&this->_player);
+  this->_bullets.collisionTestAndResolve(&this->_player);
+  this->_walls.collisionTestAndResolve(&this->_player);
 
-void Level::handleRobotCollisions() {
-  for (size_t i = 0; i < ROBOTS_COUNT; i++) {
-    if (this->handleCollisionAgainstRobots(this->_robots[i])) {
-      continue;
-    }
-    if (this->handleCollisionAgainstBullets(this->_robots[i])) {
-      continue;
-    }
-    if (this->handleCollisionAgainstWalls(this->_robots[i])) {
-      continue;
-    }
-  }
-}
+  this->_robots.collisionTestAndResolve(&this->_robots);
+  this->_bullets.collisionTestAndResolve(&this->_robots);
+  this->_walls.collisionTestAndResolve(&this->_robots);
 
-void Level::handleBulletCollisions() {
-  for (size_t i = 0; i < this->_bullets->size(); i++) {
-    if (this->handleCollisionAgainstWalls(this->_bullets->at(i))) {
-      continue;
-    }
-  }
-}
-
-bool Level::handleCollisionAgainstRobots(const std::shared_ptr<GameObject> source) {
-  for (size_t i = 0; i < ROBOTS_COUNT; i++) {
-    if (this->_robots[i] == source) {
-      continue;
-    }
-    if (source->collisionTest(*this->_robots[i])) {
-      source->resolveCollision(*this->_robots[i]);
-      this->_robots[i]->resolveCollision(*source);
-      return true;
-    }
-  }
-  return false;
-}
-
-bool Level::handleCollisionAgainstBullets(const std::shared_ptr<GameObject> source) {
-  for (size_t i = 0; i < this->_bullets->size(); i++) {
-    if (this->_bullets->at(i) == source) {
-      continue;
-    }
-    if (source->collisionTest(*this->_bullets->at(i))) {
-      source->resolveCollision(*this->_bullets->at(i));
-      this->_bullets->at(i)->resolveCollision(*source);
-      return true;
-    }
-  }
-  return false;
-}
-
-bool Level::handleCollisionAgainstWalls(const std::shared_ptr<GameObject> source) {
-  std::shared_ptr<Wall> currentWall = nullptr;
-  for (size_t i = 0; i < WALLS_COUNT; i++) {
-    currentWall = this->_walls[i];
-    if (currentWall == nullptr) {
-      continue;
-    }
-    if (source->collisionTest(*currentWall)) {
-      source->resolveCollision(*currentWall);
-      return true;
-    }
-  }
-  return false;
-}
-
-void Level::initWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
-  //  TODO: Every level should always have border walls; for now though, we want to draw every wall.
-  // This function should probably be responsible for the random layout, but not "how to draw walls"
-  this->initBorderWalls(levelSpriteManager, drawingProxy);
-  this->initInternalWalls(levelSpriteManager, drawingProxy);
-}
-
-void Level::initBorderWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
-  // TODO: The below is a bit janky looking, would prefer not to call the copy constructor for Wall, though I really
-  // like having parameters for creating Wall hidden via static methods (i.e. Wall::VerticalBorderWall())
-
-  // Vertical borders
-  for (int i = 0; i < VERTICAL_BORDER_WALLS_COUNT; i++) {
-    int west = BORDER_WALLS_W[i];
-    this->_walls[west] = std::make_shared<Wall>(
-        Wall::VerticalBorderWall(getWallPosition((unsigned)west), levelSpriteManager, drawingProxy));
-    int east = BORDER_WALLS_E[i];
-    this->_walls[east] = std::make_shared<Wall>(
-        Wall::VerticalBorderWall(getWallPosition((unsigned)east), levelSpriteManager, drawingProxy));
-  }
-
-  // Horizontal borders
-  for (int i = 0; i < HORIZONTAL_BORDER_WALLS_COUNT; i++) {
-    int north = BORDER_WALLS_N[i];
-    this->_walls[north] = std::make_shared<Wall>(
-        Wall::HorizontalBorderWall(getWallPosition((unsigned)north), levelSpriteManager, drawingProxy));
-
-    int south = BORDER_WALLS_S[i];
-    this->_walls[south] = std::make_shared<Wall>(
-        Wall::HorizontalBorderWall(getWallPosition((unsigned)south), levelSpriteManager, drawingProxy));
-  }
-}
-
-static bool isFixedStateWall(const int idx) {
-  for (int i = 0; i < FIXED_LEVEL_LAYOUT_WALLS_COUNT; i++) {
-    if (idx == FIXED_LEVEL_LAYOUT_WALLS[i]) {
-      return true;
-    }
-  }
-  return false;
-}
-
-void Level::initInternalWalls(const LevelSpriteManager& levelSpriteManager, DrawingProxy& drawingProxy) {
-  for (int i = 0; i < VERTICAL_INTERNAL_WALLS_COUNT; i++) {
-    int idx = VERTICAL_INTERNAL_WALLS[i];
-    if (!isFixedStateWall(idx)) {
-      continue;
-    }
-    this->_walls[idx] = std::shared_ptr<Wall>(
-        new Wall(Wall::VerticalInternalWall(getWallPosition((unsigned)idx), levelSpriteManager, drawingProxy)));
-  }
-  for (int i = 0; i < HORIZONTAL_INTERNAL_WALLS_COUNT; i++) {
-    int idx = HORIZONTAL_INTERNAL_WALLS[i];
-    if (!isFixedStateWall(idx)) {
-      continue;
-    }
-    this->_walls[idx] = std::shared_ptr<Wall>(
-        new Wall(Wall::HorizontalInternalWall(getWallPosition((unsigned)idx), levelSpriteManager, drawingProxy)));
-  }
-}
-
-void Level::initPlayer(const PlayerSpriteManager& playerSpriteManager, DrawingProxy& drawingProxy) {
-  // TODO: Randomize player position
-  // TODO: Ensure player isn't being drawn on top of robots
-  this->_player = std::make_shared<Player>(PLAYER_START_POSITION, Vect2D::zero(), *this->_levelShootingProxy,
-                                           drawingProxy, playerSpriteManager);
-}
-
-void Level::initRobots(const RobotSpriteManager& robotSpriteManager, DrawingProxy& drawingProxy) {
-  // TODO: to start off with, let's just draw robots
-  for (int i = 0; i < ROBOTS_COUNT; i++) {
-    this->_robots[0] = std::make_shared<Robot>(Vect2D(250, 250), Vect2D::zero(), *this->_levelShootingProxy,
-                                               drawingProxy, *this->_playerPositionProxy, robotSpriteManager);
-  }
-}
-
-void Level::initOtto(const OttoSpriteManager& ottoSpriteManager, DrawingProxy& drawingProxy) {
-  (void)ottoSpriteManager;
-  (void)drawingProxy;
+  this->_bullets.collisionTestAndResolve(&this->_walls);
 }
 
 void Level::removeMarked() {
-  for (size_t i = 0; i < this->_bullets->size(); i++) {
-    std::shared_ptr<Bullet> bullet = (*this->_bullets)[i];
-    if (bullet->getShouldRemove()) {
-      (*this->_bullets).erase((*this->_bullets).begin() + (long)i);
-    }
-  }
+  this->_bullets.removeMarked();
+  this->_robots.removeMarked();
 }
+
+std::vector<Vect2D> Level::generateRobotStartPositions(const int robotsCount) {
+  // TODO: Robots need to be generated to they don't spawn on top of player or walls.
+
+  (void)robotsCount;
+  std::vector<Vect2D> startPositions = std::vector<Vect2D>{Vect2D{300, 300}};
+  return startPositions;
+}
+
+std::vector<int> Level::generateInternalWalls() {
+  std::vector<int> walls = std::vector<int>();
+
+  for (auto it = HORIZONTAL_BORDER_WALLS.begin(); it != HORIZONTAL_BORDER_WALLS.end(); it++) {
+    walls.push_back(*it);
+  }
+  for (auto it = VERTICAL_BORDER_WALLS.begin(); it != VERTICAL_BORDER_WALLS.end(); it++) {
+    walls.push_back(*it);
+  }
+  return walls;
+}
+
+Vect2D Level::getPlayerSpawnPoint() { return Vect2D::zero(); }

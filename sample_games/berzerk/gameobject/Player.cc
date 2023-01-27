@@ -44,6 +44,8 @@ void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
   this->move();
 }
 
+void Player::draw() { this->_drawingComponent->draw(); }
+
 CharacterState Player::getNewState(const CharacterState currentState, const InputHandler& inputHandler) const {
   if (currentState == CharacterState::DEAD) {
     return currentState;
