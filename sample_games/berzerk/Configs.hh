@@ -18,9 +18,12 @@ constexpr int PLAYER_MOVE_SPEED = 5;
 constexpr int PLAYER_SPRITE_WIDTH_PX = 8;
 constexpr int PLAYER_SPRITE_HEIGHT_PX = 16;
 constexpr int PLAYER_SPRITE_BOUNDARY_WIDTH_PX = 1;
+constexpr int PLAYER_DEFAULT_WIDTH = 35;
+constexpr int PLAYER_DEFAULT_HEIGHT = 70;
 
 // Robot behavior
 // TODO: Robot should move, shoot, and animate faster as fewer remain
+constexpr int ROBOT_COUNT = 3;
 constexpr int ROBOT_MOVE_SPEED = 1;
 constexpr int ROBOT_DEFAULT_WIDTH = 40;
 constexpr int ROBOT_DEFAULT_HEIGHT = 55;
@@ -60,7 +63,6 @@ constexpr int HORIZONTAL_WALL_WIDTH = INTERNAL_PLAY_AREA_WIDTH / 5;
 constexpr int HORIZONTAL_WALL_HEIGHT = WALL_THICCNESS;
 
 // Level behavior, see Level.hh for explanation of what indexes represent
-constexpr int ROBOTS_COUNT = 1;
 constexpr int EXIT_N = 2;
 constexpr int EXIT_S = 17;
 constexpr int EXIT_W = 26;
@@ -72,6 +74,7 @@ const std::set<int> VERTICAL_BORDER_WALLS{20, 32, 25, 37};
 const std::set<int> HORIZONTAL_INTERNAL_WALLS{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 const std::set<int> VERTICAL_INTERNAL_WALLS{21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
 constexpr int GENERATED_WALL_COUNT = 6;
+constexpr int ROOM_COUNT = 15;
 
 const Vect2D CELL_0_CENTER = Vect2D(-HORIZONTAL_WALL_WIDTH * 2, VERTICAL_WALL_HEIGHT);
 const Vect2D NORTH_SPAWN = Vect2D(0, VERTICAL_WALL_HEIGHT);

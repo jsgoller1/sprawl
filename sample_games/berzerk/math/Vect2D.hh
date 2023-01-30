@@ -21,6 +21,7 @@ class Vect2D {
   void operator-=(const Vect2D& vect);
   bool operator==(const Vect2D& vect) const;
   Vect2D operator*(const int scalar) const;
+  bool operator<(const Vect2D& vect) const;
 
   int distance(const Vect2D& other);
 };

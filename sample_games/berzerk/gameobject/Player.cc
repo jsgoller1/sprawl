@@ -5,9 +5,6 @@
 #include "InputHandler.hh"
 #include "PlayerSpriteManager.hh"
 
-#define PLAYER_DEFAULT_WIDTH 35
-#define PLAYER_DEFAULT_HEIGHT 70
-
 Player::Player(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
                DrawingProxy& drawingProxy, const PlayerSpriteManager& playerSpriteManager)
     : GameObject(position, velocity), IShooting(shootingProxy) {

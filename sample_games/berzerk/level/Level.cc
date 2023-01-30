@@ -39,7 +39,7 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
       _player(Player(getPlayerSpawnPoint(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
                      this->_playerSpriteManager)),
       _playerPositionProxy(PlayerPositionProxy(this->_player)),
-      _robots(this->generateRobotStartPositions(ROBOTS_COUNT), this->_levelShootingProxy, this->_drawingProxy,
+      _robots(this->generateRobotStartPositions(ROBOT_COUNT), this->_levelShootingProxy, this->_drawingProxy,
               this->_playerPositionProxy, this->_robotSpriteManager),
       _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {}
 
@@ -108,12 +108,37 @@ void Level::removeMarked() {
   this->_robots.removeMarked();
 }
 
-std::vector<Vect2D> Level::generateRobotStartPositions(const int robotsCount) {
-  // TODO: Robots need to be generated to they don't spawn on top of player or walls.
+static Vect2D getOffset(const int i) {
+  switch (i) {
+    case 0:
+      return Vect2D(Direction::South()) * int(ROBOT_DEFAULT_HEIGHT * 1.3);
+    case 1:
+      return Vect2D(Direction::North()) * int(ROBOT_DEFAULT_HEIGHT * 1.3);
+    case 2:
+      return Vect2D(Direction::East()) * ROBOT_DEFAULT_WIDTH * 2;
+    default:
+      return Vect2D(Direction::West()) * ROBOT_DEFAULT_WIDTH * 2;
+  }
+}
 
-  (void)robotsCount;
-  std::vector<Vect2D> startPositions = std::vector<Vect2D>{Vect2D{300, 300}};
-  return startPositions;
+std::vector<Vect2D> Level::generateRobotStartPositions(const int robotsCount) {
+  // TODO: Robots need to be generated to they don't spawn on top of player or walls. To do this,
+  // We pick the center of a random room, then pick whether the robot spawns at the center or slightly offset to
+  // N/S/E/W (but not close enough to hit the wall or the player), then use a set to ensure we don't put two in the same
+  // place.
+  // obtain a random number from hardware
+  std::random_device rd;
+  // seed the generator
+  std::mt19937 gen(rd());
+  // define the range
+  std::uniform_int_distribution<> directionDistr(0, 3);
+  std::uniform_int_distribution<> centerDistr(0, 14);
+  std::set<Vect2D> startPositionsSet{};
+  while ((int)startPositionsSet.size() < robotsCount) {
+    startPositionsSet.insert(getCellCenter(centerDistr(gen)) + getOffset(directionDistr(gen)));
+  }
+
+  return std::vector<Vect2D>(startPositionsSet.begin(), startPositionsSet.end());
 }
 
 std::vector<int> Level::randomizeInternalWalls() {
@@ -136,6 +161,7 @@ std::vector<int> Level::randomizeInternalWalls() {
 }
 
 std::vector<int> Level::generateWalls() {
+  //  std::vector<int> walls{7, 12, 28, 29};
   std::vector<int> walls = this->randomizeInternalWalls();
 
   for (auto it = HORIZONTAL_BORDER_WALLS.begin(); it != HORIZONTAL_BORDER_WALLS.end(); it++) {
@@ -144,8 +170,7 @@ std::vector<int> Level::generateWalls() {
   for (auto it = VERTICAL_BORDER_WALLS.begin(); it != VERTICAL_BORDER_WALLS.end(); it++) {
     walls.push_back(*it);
   }
-
   return walls;
 }
 
-Vect2D Level::getPlayerSpawnPoint() { return Vect2D::zero(); }
+Vect2D Level::getPlayerSpawnPoint() { return Vect2D(0, 0); }

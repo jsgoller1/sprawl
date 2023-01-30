@@ -36,6 +36,8 @@ bool Vect2D::operator==(const Vect2D& vect) const { return this->x == vect.x && 
 
 Vect2D Vect2D::operator*(const int scalar) const { return Vect2D(this->x * scalar, this->y * scalar); }
 
+bool Vect2D::operator<(const Vect2D& vect) const { return this->x < vect.x || this->y < vect.y; }
+
 int Vect2D::distance(const Vect2D& other) {
   int xDist = this->x - other.x;
   int yDist = this->y - other.y;
