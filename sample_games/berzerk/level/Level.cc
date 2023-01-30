@@ -1,6 +1,7 @@
 #include "Level.hh"
 
 #include <iostream>
+#include <random>
 
 #include "Bullet.hh"
 #include "BulletSpriteManager.hh"
@@ -34,7 +35,7 @@ Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteMa
       _bulletSpriteManager(bulletSpriteManager),
       _bullets(this->_bulletSpriteManager, drawingProxy),
       _levelShootingProxy(LevelShootingProxy(this->_bullets)),
-      _walls(this->generateInternalWalls(), this->_levelSpriteManager, this->_drawingProxy),
+      _walls(this->generateWalls(), this->_levelSpriteManager, this->_drawingProxy),
       _player(Player(getPlayerSpawnPoint(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
                      this->_playerSpriteManager)),
       _playerPositionProxy(PlayerPositionProxy(this->_player)),
@@ -115,8 +116,27 @@ std::vector<Vect2D> Level::generateRobotStartPositions(const int robotsCount) {
   return startPositions;
 }
 
-std::vector<int> Level::generateInternalWalls() {
-  std::vector<int> walls = std::vector<int>();
+std::vector<int> Level::randomizeInternalWalls() {
+  std::set<int> chosenWalls = std::set<int>();
+  std::set<int> allInternalWallsSet = HORIZONTAL_INTERNAL_WALLS;
+  allInternalWallsSet.insert(VERTICAL_INTERNAL_WALLS.begin(), VERTICAL_INTERNAL_WALLS.end());
+  std::vector<int> allInternalWalls = std::vector<int>(allInternalWallsSet.begin(), allInternalWallsSet.end());
+
+  // obtain a random number from hardware
+  std::random_device rd;
+  // seed the generator
+  std::mt19937 gen(rd());
+  // define the range
+  std::uniform_int_distribution<> distr(0, (int)allInternalWalls.size() - 1);
+
+  while (chosenWalls.size() < GENERATED_WALL_COUNT) {
+    chosenWalls.insert(allInternalWalls.at((size_t)distr(gen)));
+  }
+  return std::vector<int>(chosenWalls.begin(), chosenWalls.end());
+}
+
+std::vector<int> Level::generateWalls() {
+  std::vector<int> walls = this->randomizeInternalWalls();
 
   for (auto it = HORIZONTAL_BORDER_WALLS.begin(); it != HORIZONTAL_BORDER_WALLS.end(); it++) {
     walls.push_back(*it);
@@ -124,6 +144,7 @@ std::vector<int> Level::generateInternalWalls() {
   for (auto it = VERTICAL_BORDER_WALLS.begin(); it != VERTICAL_BORDER_WALLS.end(); it++) {
     walls.push_back(*it);
   }
+
   return walls;
 }
 

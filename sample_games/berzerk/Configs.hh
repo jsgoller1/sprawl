@@ -71,6 +71,7 @@ const std::set<int> HORIZONTAL_BORDER_WALLS{0, 1, 3, 4, 15, 16, 18, 19};
 const std::set<int> VERTICAL_BORDER_WALLS{20, 32, 25, 37};
 const std::set<int> HORIZONTAL_INTERNAL_WALLS{5, 6, 7, 8, 9, 10, 11, 12, 13, 14};
 const std::set<int> VERTICAL_INTERNAL_WALLS{21, 22, 23, 24, 27, 28, 29, 30, 33, 34, 35, 36};
+constexpr int GENERATED_WALL_COUNT = 6;
 
 const Vect2D CELL_0_CENTER = Vect2D(-HORIZONTAL_WALL_WIDTH * 2, VERTICAL_WALL_HEIGHT);
 const Vect2D NORTH_SPAWN = Vect2D(0, VERTICAL_WALL_HEIGHT);

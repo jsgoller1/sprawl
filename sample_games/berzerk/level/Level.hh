@@ -80,6 +80,7 @@ class Level {
   void handleCollisions();
   void removeMarked();
   std::vector<Vect2D> generateRobotStartPositions(const int robotsCount);
-  std::vector<int> generateInternalWalls();
+  std::vector<int> randomizeInternalWalls();
+  std::vector<int> generateWalls();
   Vect2D getPlayerSpawnPoint();
 };
