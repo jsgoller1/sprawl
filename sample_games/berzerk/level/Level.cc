@@ -8,42 +8,37 @@
 #include "Configs.hh"
 #include "Direction.hh"
 #include "InputHandler.hh"
+#include "LevelHelpers.hh"
 #include "LevelSpriteManager.hh"
 #include "OttoSpriteManager.hh"
 #include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
+#include "RobotSpriteManager.hh"
 
-Vect2D getCellCenter(const int cellId) {
-  if (cellId < 0 || cellId > 14) {
-    return Vect2D::zero();
-  }
-
-  Vect2D center = CELL_0_CENTER;
-  center.x += (cellId % 5) * HORIZONTAL_WALL_WIDTH;
-  center.y -= (cellId / 5) * VERTICAL_WALL_HEIGHT;
-  return center;
-}
-
-Level::Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
-             const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
-             const BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager)
+Level::Level(const int levelNo, DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
+             const PlayerSpriteManager& playerSpriteManager, RobotSpriteManager& robotSpriteManager,
+             BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager)
     : _drawingProxy(drawingProxy),
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
       _robotSpriteManager(robotSpriteManager),
       _ottoSpriteManager(ottoSpriteManager),
       _bulletSpriteManager(bulletSpriteManager),
-      _bullets(this->_bulletSpriteManager, drawingProxy),
+      _bullets(levelNo, this->_bulletSpriteManager, drawingProxy),
       _levelShootingProxy(LevelShootingProxy(this->_bullets)),
       _walls(this->generateWalls(), this->_levelSpriteManager, this->_drawingProxy),
       _player(Player(getPlayerSpawnPoint(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
                      this->_playerSpriteManager)),
       _playerPositionProxy(PlayerPositionProxy(this->_player)),
-      _robots(this->generateRobotStartPositions(ROBOT_COUNT), this->_levelShootingProxy, this->_drawingProxy,
+      _robots(levelNo, this->generateRobotStartPositions(ROBOT_COUNT), this->_levelShootingProxy, this->_drawingProxy,
               this->_playerPositionProxy, this->_robotSpriteManager),
-      _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {}
+      _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {
+  // Init Otto timer
+  // Init pause timer
+}
 
 void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
+  this->_levelTimer += deltaT;
   this->_robots.update(deltaT);
   this->_player.update(inputHandler, deltaT);
   this->_bullets.update(deltaT);
@@ -62,7 +57,26 @@ void Level::draw() {
   this->_walls.draw();
 }
 
-bool Level::playerAtExit() const { return false; }
+bool Level::isFinished() const { return this->playerAtExit() || this->_player.isDead(); }
+
+Direction Level::getPlayerExit() const {
+  // TODO: For now, these are hardcoded. Will this work if the screen is larger and the textures are scaled up?
+
+  Vect2D pos = this->_player.getPosition();
+  Direction exit = Direction::None();
+  if (pos.x <= PLAYER_MIN_X) {
+    exit = Direction::West();
+  } else if (PLAYER_MAX_X <= pos.x) {
+    exit = Direction::East();
+  } else if (pos.y <= PLAYER_MIN_Y) {
+    exit = Direction::South();
+  } else if (PLAYER_MAX_Y <= pos.y) {
+    exit = Direction::North();
+  }
+  return exit;
+}
+
+bool Level::playerAtExit() const { return this->getPlayerExit() != Direction::None(); }
 
 void Level::handleCollisions() {
   /*

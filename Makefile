@@ -19,7 +19,8 @@ sprawl-loc:
 
 BERZERK_DIR:=sample_games/berzerk
 BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/drawing  $(BERZERK_DIR)/gameobject
-BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/level $(BERZERK_DIR)/math $(BERZERK_DIR)/texture 
+BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject/gameobject $(BERZERK_DIR)/gameobject/bullet $(BERZERK_DIR)/gameobject/robot
+BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject/wall $(BERZERK_DIR)/level $(BERZERK_DIR)/math $(BERZERK_DIR)/texture 
 BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
 CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)

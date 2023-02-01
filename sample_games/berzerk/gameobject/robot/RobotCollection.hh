@@ -16,9 +16,9 @@ class RobotCollection : public GameObjectCollection {
   // no insert method (though we could). It exists solely so we can use it in Level's ctor() so RobotCollection can be
   // initialized, then replaced with a correctly constructed one.
   RobotCollection() = default;
-  RobotCollection(const std::vector<Vect2D>& startPositions, LevelShootingProxy& levelShootingProxy,
+  RobotCollection(const int levelNo, const std::vector<Vect2D>& startPositions, LevelShootingProxy& levelShootingProxy,
                   DrawingProxy& drawingProxy, PlayerPositionProxy& playerPositionProxy,
-                  const RobotSpriteManager& robotSpriteManager);
+                  RobotSpriteManager& robotSpriteManager);
   Robot* get(const size_t index) override;
   size_t size() override;
 

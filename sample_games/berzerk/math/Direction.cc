@@ -27,3 +27,4 @@ std::string Direction::toString() const {
 
 Direction Direction::operator+(const Direction& dir) const { return Direction(this->_x + dir._x, this->_y + dir._y); }
 bool Direction::operator==(const Direction& dir) const { return (this->_x == dir._x) && (this->_y == dir._y); }
+bool Direction::operator!=(const Direction& dir) const { return !(*this == dir); }

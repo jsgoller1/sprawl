@@ -30,6 +30,7 @@ class Direction {
 
   Direction operator+(const Direction& other) const;
   bool operator==(const Direction& other) const;
+  bool operator!=(const Direction& other) const;
 
  private:
   Direction(int x, int y) : _x(x), _y(y) {}

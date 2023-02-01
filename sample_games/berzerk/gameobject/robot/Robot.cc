@@ -99,7 +99,7 @@ void Robot::stateBehaviorShooting() {
   this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->shooting(this->getShootingDirection()));
   if (this->_sinceLastShot > ROBOT_SHOOT_DELAY_MS) {
     this->_sinceLastShot = 0;
-    this->shoot(this->getShootingDirection(), this->getPosition(), GREEN);
+    this->shoot(this->getShootingDirection(), this->getPosition());
   }
 }
 

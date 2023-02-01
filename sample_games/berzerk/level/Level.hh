@@ -47,16 +47,18 @@ class RobotSpriteManager;
  *   ————15——— ————16——— ————17——— ————18———— ————19————
  */
 
-Vect2D getCellCenter(const int cellId);
-
 class Level {
  public:
-  Level(DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
-        const PlayerSpriteManager& playerSpriteManager, const RobotSpriteManager& robotSpriteManager,
-        const BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager);
+  Level(const int levelNo, DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
+        const PlayerSpriteManager& playerSpriteManager, RobotSpriteManager& robotSpriteManager,
+        BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager);
 
   void update(const InputHandler& inputHandler, const time_ms delta_t);
   void draw();
+
+  bool isFinished() const;
+  bool playerAtExit() const;
+  Direction getPlayerExit() const;
 
  private:
   DrawingProxy& _drawingProxy;
@@ -64,9 +66,9 @@ class Level {
   // TODO: We probably don't need to store references here
   const LevelSpriteManager& _levelSpriteManager;
   const PlayerSpriteManager& _playerSpriteManager;
-  const RobotSpriteManager& _robotSpriteManager;
+  RobotSpriteManager& _robotSpriteManager;
   const OttoSpriteManager& _ottoSpriteManager;
-  const BulletSpriteManager& _bulletSpriteManager;
+  BulletSpriteManager& _bulletSpriteManager;
 
   BulletCollection _bullets;
   LevelShootingProxy _levelShootingProxy;
@@ -76,7 +78,8 @@ class Level {
   RobotCollection _robots;
   Otto _otto;
 
-  bool playerAtExit() const;
+  time_ms _levelTimer = 0;
+
   void handleCollisions();
   void removeMarked();
   std::vector<Vect2D> generateRobotStartPositions(const int robotsCount);

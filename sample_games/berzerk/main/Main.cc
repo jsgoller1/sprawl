@@ -11,14 +11,8 @@ int main(int argc, char* argv[]) {
   }
   InputHandler inputHandler = InputHandler();
   Screen screen = Screen(DEFAULT_SCREEN_WIDTH, DEFAULT_SCREEN_HEIGHT);
-  Screen::ScreenDrawingProxy screenDrawingProxy = screen.getScreenDrawingProxy();
   Timer timer = Timer();
 
-  Game game = Game(args, screenDrawingProxy);
-  while (!(game.getShouldQuit() || inputHandler.shouldQuit())) {
-    time_ms deltaT = timer.tick();
-    inputHandler.getKeyboardInput();
-    game.update(inputHandler, deltaT);
-    game.draw(screen);
-  }
+  Game game = Game(args, screen, inputHandler, timer);
+  game.run();
 }

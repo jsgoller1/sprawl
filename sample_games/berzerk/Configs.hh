@@ -10,6 +10,10 @@ constexpr int INTERNAL_PLAY_AREA_WIDTH = DEFAULT_SCREEN_WIDTH - 200;
 constexpr int INTERNAL_PLAY_AREA_HEIGHT = DEFAULT_SCREEN_HEIGHT - 200;
 
 // Player behavior
+constexpr int PLAYER_MAX_X = (INTERNAL_PLAY_AREA_WIDTH / 2);
+constexpr int PLAYER_MIN_X = -PLAYER_MAX_X;
+constexpr int PLAYER_MAX_Y = (INTERNAL_PLAY_AREA_HEIGHT / 2);
+constexpr int PLAYER_MIN_Y = -PLAYER_MAX_Y;
 constexpr int PLAYER_DYING_ANIMATION_LOOP_COUNT = 2;
 constexpr int PLAYER_SHOOT_DELAY_MS = 750;
 constexpr int PLAYER_MOVE_SPEED = 5;
@@ -23,7 +27,7 @@ constexpr int PLAYER_DEFAULT_HEIGHT = 70;
 
 // Robot behavior
 // TODO: Robot should move, shoot, and animate faster as fewer remain
-constexpr int ROBOT_COUNT = 3;
+constexpr int ROBOT_COUNT = 1;
 constexpr int ROBOT_MOVE_SPEED = 1;
 constexpr int ROBOT_DEFAULT_WIDTH = 40;
 constexpr int ROBOT_DEFAULT_HEIGHT = 55;
@@ -41,9 +45,9 @@ constexpr int ROBOT_DYING_SPRITE_HEIGHT_PX = 16;
 constexpr int ROBOT_DYING_SPRITE_WIDTH_PX = 16;
 
 // Bullet behavior
-constexpr int BULLET_DEFAULT_SPEED = 10;
-constexpr int BULLET_DEFAULT_HEIGHT = 35;
-constexpr int BULLET_DEFAULT_WIDTH = 35;
+constexpr int BULLET_DEFAULT_SPEED = 7;
+constexpr int BULLET_DEFAULT_HEIGHT = 25;
+constexpr int BULLET_DEFAULT_WIDTH = 25;
 
 // Bullet sprite
 constexpr int BULLET_SPRITE_WIDTH_PX = 7;

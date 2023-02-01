@@ -21,7 +21,8 @@ class Screen;
 
 class Game {
  public:
-  Game(const CLI& args, DrawingProxy& drawingProxy);
+  Game(const CLI& args, Screen& screen, InputHandler& inputHandler, Timer& timer);
+  void run();
 
   bool getShouldQuit() const;
   void update(const InputHandler& inputHandler, const time_ms delta_t);
@@ -36,10 +37,15 @@ class Game {
   std::unique_ptr<OttoSpriteManager> _ottoSpriteManager;
   std::unique_ptr<BulletSpriteManager> _bulletSpriteManager;
   std::unique_ptr<TextSpriteManager> _textSpriteManager;
+  InputHandler& _inputHandler;
+  Screen& _screen;
+  Timer& _timer;
 
-  bool _shouldQuit = false;
-  int playerLives = 3;
+  bool _isPaused = false;
+  int _playerLives = 1;
+  int _playerScore = 0;
+  int _levelNo = 0;
 
   void initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy);
-  void updateLoseConditions();
+  bool isLost();
 };

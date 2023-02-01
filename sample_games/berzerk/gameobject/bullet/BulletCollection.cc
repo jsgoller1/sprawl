@@ -1,9 +1,14 @@
 #include "BulletCollection.hh"
 
-BulletCollection::BulletCollection(const BulletSpriteManager& bulletSpriteManager, DrawingProxy& drawingProxy)
+#include "LevelHelpers.hh"
+
+BulletCollection::BulletCollection(const int levelNo, BulletSpriteManager& bulletSpriteManager,
+                                   DrawingProxy& drawingProxy)
     : _bullets(std::vector<std::unique_ptr<Bullet>>()),
       _drawingProxy(drawingProxy),
-      _bulletSpriteManager(bulletSpriteManager) {}
+      _bulletSpriteManager(bulletSpriteManager) {
+  this->_bulletSpriteManager.setColorMask(getLevelColor(levelNo));
+}
 
 Bullet* BulletCollection::get(const size_t index) {
   // NOTE: We intentionally do not do bounds checking here; rather than returning a nullptr when an invalid
@@ -13,9 +18,9 @@ Bullet* BulletCollection::get(const size_t index) {
 }
 size_t BulletCollection::size() { return this->_bullets.size(); }
 
-void BulletCollection::createAt(const Direction& direction, const Vect2D& origin, const BulletColor color) {
+void BulletCollection::createAt(const Direction& direction, const Vect2D& origin) {
   this->_bullets.push_back(
-      std::unique_ptr<Bullet>(new Bullet(origin, direction, this->_drawingProxy, this->_bulletSpriteManager, color)));
+      std::unique_ptr<Bullet>(new Bullet(origin, direction, this->_drawingProxy, this->_bulletSpriteManager)));
 }
 
 void BulletCollection::removeMarked() {

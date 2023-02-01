@@ -14,7 +14,7 @@
 #include "TextSpriteManager.hh"
 
 // Public
-Game::Game(const CLI& args, DrawingProxy& drawingProxy)
+Game::Game(const CLI& args, Screen& screen, InputHandler& inputHandler, Timer& timer)
     : _levelSpriteManager(std::unique_ptr<LevelSpriteManager>(new LevelSpriteManager(args.getLevelSpriteSheetPath()))),
       _playerSpriteManager(
           std::unique_ptr<PlayerSpriteManager>(new PlayerSpriteManager(args.getPlayerSpriteSheetPath()))),
@@ -22,17 +22,40 @@ Game::Game(const CLI& args, DrawingProxy& drawingProxy)
       _ottoSpriteManager(std::unique_ptr<OttoSpriteManager>(new OttoSpriteManager(args.getOttoSpriteSheetPath()))),
       _bulletSpriteManager(
           std::unique_ptr<BulletSpriteManager>(new BulletSpriteManager(args.getBulletSpriteSheetPath()))),
-      _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))) {
-  this->initUI(*this->_textSpriteManager, drawingProxy);
-  this->_currentLevel = std::unique_ptr<Level>(new Level(drawingProxy, *this->_levelSpriteManager,
-                                                         *this->_playerSpriteManager, *this->_robotSpriteManager,
-                                                         *this->_bulletSpriteManager, *this->_ottoSpriteManager));
+      _textSpriteManager(std::unique_ptr<TextSpriteManager>(new TextSpriteManager(args.getTextSpriteSheetPath()))),
+      _inputHandler(inputHandler),
+      _screen(screen),
+      _timer(timer) {
+  this->initUI(*this->_textSpriteManager, this->_screen.getScreenDrawingProxy());
+  this->_currentLevel = std::unique_ptr<Level>(new Level(
+      this->_levelNo, this->_screen.getScreenDrawingProxy(), *this->_levelSpriteManager, *this->_playerSpriteManager,
+      *this->_robotSpriteManager, *this->_bulletSpriteManager, *this->_ottoSpriteManager));
+  // Init player score
+  // Init lives total
+  //
 }
 
-bool Game::getShouldQuit() const { return this->_shouldQuit; }
+void Game::run() {
+  /*
+  Core game loop
+  */
+  while (!(this->isLost() || this->_inputHandler.shouldQuit())) {
+    time_ms deltaT = this->_timer.tick();
+    this->_inputHandler.getKeyboardInput();
+    this->update(this->_inputHandler, deltaT);
+    this->draw(this->_screen);
+  }
+}
 
 void Game::update(const InputHandler& inputHandler, const time_ms deltaT) {
-  this->updateLoseConditions();
+  if (this->_isPaused) {
+    return;
+  }
+  if (this->_currentLevel->isFinished()) {
+    if (!this->_currentLevel->playerAtExit())
+      // If player is dead, decrement life counter and create new level
+      this->_playerLives--;
+  }
   _currentLevel->update(inputHandler, deltaT);
 }
 
@@ -51,8 +74,4 @@ void Game::initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& draw
   (void)drawingProxy;
 }
 
-void Game::updateLoseConditions() {
-  if (this->playerLives <= 0) {
-    this->_shouldQuit = true;
-  }
-}
+bool Game::isLost() { return this->_playerLives <= 0; }

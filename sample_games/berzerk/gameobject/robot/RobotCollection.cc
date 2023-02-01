@@ -1,16 +1,43 @@
 #include "RobotCollection.hh"
 
+#include "Color.hh"
 #include "LevelShootingProxy.hh"
 #include "PlayerPositionProxy.hh"
 #include "RobotSpriteManager.hh"
 #include "Time.hh"
 
-// RobotCollection::RobotCollection() : _robots(std::vector<std::unique_ptr<Robot>>()) {}
+static Color getLevelColor(const int levelNo) {
+  switch (levelNo % 10) {
+    case 0:
+      return Color::Mustard();
+    case 1:
+      return Color::Red();
+    case 2:
+      return Color::Cobalt();
+    case 3:
+      return Color::Green();
+    case 4:
+      return Color::Magenta();
+    case 5:
+      return Color::Yellow();
+    case 6:
+      return Color::White();
+    case 7:
+      return Color::Pink();
+    case 8:
+      return Color::Gray();
+    case 9:
+      return Color::Teal();
+  }
+  return Color::Orange();
+}
 
-RobotCollection::RobotCollection(const std::vector<Vect2D>& startPositions, LevelShootingProxy& levelShootingProxy,
-                                 DrawingProxy& drawingProxy, PlayerPositionProxy& playerPositionProxy,
-                                 const RobotSpriteManager& robotSpriteManager)
+RobotCollection::RobotCollection(const int levelNo, const std::vector<Vect2D>& startPositions,
+                                 LevelShootingProxy& levelShootingProxy, DrawingProxy& drawingProxy,
+                                 PlayerPositionProxy& playerPositionProxy, RobotSpriteManager& robotSpriteManager)
     : _robots(std::vector<std::unique_ptr<Robot>>()) {
+  robotSpriteManager.setColorMask(getLevelColor(levelNo));
+
   for (size_t i = 0; i < startPositions.size(); i++) {
     this->_robots.push_back(std::unique_ptr<Robot>(new Robot(startPositions.at(i), Vect2D::zero(), levelShootingProxy,
                                                              drawingProxy, playerPositionProxy, robotSpriteManager)));
