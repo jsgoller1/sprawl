@@ -46,12 +46,15 @@ RobotCollection::RobotCollection(const int levelNo, const std::vector<Vect2D>& s
 Robot* RobotCollection::get(const size_t index) { return this->_robots.at(index).get(); }
 size_t RobotCollection::size() { return this->_robots.size(); }
 
-void RobotCollection::removeMarked() {
+int RobotCollection::removeMarked() {
+  int numberRemoved = 0;
   for (size_t i = 0; i < this->size(); i++) {
     if (this->_robots[i]->getShouldRemove()) {
       this->erase(i);
+      numberRemoved++;
     }
   }
+  return numberRemoved;
 }
 
 void RobotCollection::update(const time_ms deltaT) {

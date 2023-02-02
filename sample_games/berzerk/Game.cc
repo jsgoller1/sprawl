@@ -26,13 +26,12 @@ Game::Game(const CLI& args, Screen& screen, InputHandler& inputHandler, Timer& t
       _inputHandler(inputHandler),
       _screen(screen),
       _timer(timer) {
-  this->initUI(*this->_textSpriteManager, this->_screen.getScreenDrawingProxy());
-  this->_currentLevel = std::unique_ptr<Level>(new Level(
-      this->_levelNo, this->_screen.getScreenDrawingProxy(), *this->_levelSpriteManager, *this->_playerSpriteManager,
-      *this->_robotSpriteManager, *this->_bulletSpriteManager, *this->_ottoSpriteManager));
   // Init player score
   // Init lives total
-  //
+  this->initUI(*this->_textSpriteManager, this->_screen.getScreenDrawingProxy());
+  this->_currentLevel = std::make_unique<Level>(
+      this->_levelNo, this->_scoreProxy, this->_screen.getScreenDrawingProxy(), *this->_levelSpriteManager,
+      *this->_playerSpriteManager, *this->_robotSpriteManager, *this->_bulletSpriteManager, *this->_ottoSpriteManager);
 }
 
 void Game::run() {
@@ -52,9 +51,14 @@ void Game::update(const InputHandler& inputHandler, const time_ms deltaT) {
     return;
   }
   if (this->_currentLevel->isFinished()) {
-    if (!this->_currentLevel->playerAtExit())
+    if (!this->_currentLevel->playerAtExit()) {
       // If player is dead, decrement life counter and create new level
       this->_playerLives--;
+    }
+    this->_currentLevel =
+        std::make_unique<Level>(this->_levelNo, this->_scoreProxy, this->_screen.getScreenDrawingProxy(),
+                                *this->_levelSpriteManager, *this->_playerSpriteManager, *this->_robotSpriteManager,
+                                *this->_bulletSpriteManager, *this->_ottoSpriteManager);
   }
   _currentLevel->update(inputHandler, deltaT);
 }
@@ -66,6 +70,7 @@ void Game::draw(Screen& screen) {
 }
 
 // Private
+
 void Game::initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy) {
   // The UI (lives remaining and score) should take up
   // the bottom 10% of the screen or less

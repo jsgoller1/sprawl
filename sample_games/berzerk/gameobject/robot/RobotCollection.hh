@@ -23,7 +23,7 @@ class RobotCollection : public GameObjectCollection {
   size_t size() override;
 
   void update(const time_ms deltaT);
-  void removeMarked();
+  int removeMarked();
 
  private:
   std::vector<std::unique_ptr<Robot>> _robots;

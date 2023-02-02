@@ -7,6 +7,7 @@
 #include "OttoSpriteManager.hh"
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
+#include "ScoreProxy.hh"
 #include "TextSpriteManager.hh"
 #include "Time.hh"
 
@@ -30,7 +31,6 @@ class Game {
 
  private:
   std::unique_ptr<Level> _currentLevel;
-
   std::unique_ptr<LevelSpriteManager> _levelSpriteManager;
   std::unique_ptr<PlayerSpriteManager> _playerSpriteManager;
   std::unique_ptr<RobotSpriteManager> _robotSpriteManager;
@@ -45,6 +45,7 @@ class Game {
   int _playerLives = 1;
   int _playerScore = 0;
   int _levelNo = 0;
+  ScoreProxy _scoreProxy = ScoreProxy(&this->_playerScore);
 
   void initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy);
   bool isLost();

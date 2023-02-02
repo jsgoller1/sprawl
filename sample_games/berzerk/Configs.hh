@@ -92,3 +92,4 @@ constexpr int DEFAULT_ANIMATION_FRAME_SHOW_LENGTH_MS = 150;
 const Vect2D TOP_LEFT = Vect2D::zero();
 constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 50;
 constexpr int NO_COLLISION = -1;
+constexpr int ROBOT_KILLED_SCORE = 50;

@@ -14,11 +14,14 @@
 #include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
+#include "ScoreProxy.hh"
 
-Level::Level(const int levelNo, DrawingProxy& drawingProxy, const LevelSpriteManager& levelSpriteManager,
-             const PlayerSpriteManager& playerSpriteManager, RobotSpriteManager& robotSpriteManager,
-             BulletSpriteManager& bulletSpriteManager, const OttoSpriteManager& ottoSpriteManager)
+Level::Level(const int levelNo, ScoreProxy& scoreProxy, DrawingProxy& drawingProxy,
+             const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
+             RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
+             const OttoSpriteManager& ottoSpriteManager)
     : _drawingProxy(drawingProxy),
+      _scoreProxy(scoreProxy),
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
       _robotSpriteManager(robotSpriteManager),
@@ -119,7 +122,13 @@ void Level::handleCollisions() {
 
 void Level::removeMarked() {
   this->_bullets.removeMarked();
-  this->_robots.removeMarked();
+  int robotsKilled = this->_robots.removeMarked();
+  if (!this->_player.isDead()) {
+    // NOTE: In the original arcade, the player's score goes up any time a robot dies as long as the player isn't dead,
+    // even if it's from a wall collision or robot friendly fire. This encourages the player to attempt to outsmart the
+    // pathfinding system, and also incentivizes surviving longer.
+    this->_scoreProxy.addScore(ROBOT_KILLED_SCORE * robotsKilled);
+  }
 }
 
 static Vect2D getOffset(const int i) {
