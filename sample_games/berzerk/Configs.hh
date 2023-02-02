@@ -93,3 +93,5 @@ const Vect2D TOP_LEFT = Vect2D::zero();
 constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 50;
 constexpr int NO_COLLISION = -1;
 constexpr int ROBOT_KILLED_SCORE = 50;
+constexpr int SCORE_LEVEL_THRESHOLD = 500;
+constexpr int LEVEL_START_DELAY_MS = 2000;

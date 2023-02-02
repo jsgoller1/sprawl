@@ -22,7 +22,7 @@ class RobotCollection : public GameObjectCollection {
   Robot* get(const size_t index) override;
   size_t size() override;
 
-  void update(const time_ms deltaT);
+  void update(const time_ms deltaT, const bool forceIdle = false);
   int removeMarked();
 
  private:

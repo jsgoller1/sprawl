@@ -28,9 +28,9 @@ void Robot::resolveCollision(GameObject& target) {
   }
 }
 
-void Robot::update(const time_ms deltaT) {
+void Robot::update(const time_ms deltaT, const bool forceIdle) {
   this->_sinceLastShot += deltaT;
-  this->_state = this->getNewState(this->_state);
+  this->_state = (forceIdle ? CharacterState::IDLE : this->getNewState(this->_state));
   switch (this->_state) {
     case CharacterState::DEAD:
       this->stateBehaviorDead();

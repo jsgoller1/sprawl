@@ -23,7 +23,7 @@ class Robot : public GameObject, public IShooting {
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
   void resolveCollision(GameObject& target) override;
-  void update(const time_ms deltaT);
+  void update(const time_ms deltaT, const bool forceIdle = false);
 
  private:
   const PlayerPositionProxy& _playerPositionProxy;

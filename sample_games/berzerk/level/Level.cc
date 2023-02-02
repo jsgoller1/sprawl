@@ -42,7 +42,7 @@ Level::Level(const int levelNo, ScoreProxy& scoreProxy, DrawingProxy& drawingPro
 
 void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
   this->_levelTimer += deltaT;
-  this->_robots.update(deltaT);
+  this->_robots.update(deltaT, (this->_levelTimer <= LEVEL_START_DELAY_MS));
   this->_player.update(inputHandler, deltaT);
   this->_bullets.update(deltaT);
   // this->_otto->update(deltaT);

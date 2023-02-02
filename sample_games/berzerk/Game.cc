@@ -55,6 +55,7 @@ void Game::update(const InputHandler& inputHandler, const time_ms deltaT) {
       // If player is dead, decrement life counter and create new level
       this->_playerLives--;
     }
+    this->_levelNo = this->_playerScore % SCORE_LEVEL_THRESHOLD;
     this->_currentLevel =
         std::make_unique<Level>(this->_levelNo, this->_scoreProxy, this->_screen.getScreenDrawingProxy(),
                                 *this->_levelSpriteManager, *this->_playerSpriteManager, *this->_robotSpriteManager,
