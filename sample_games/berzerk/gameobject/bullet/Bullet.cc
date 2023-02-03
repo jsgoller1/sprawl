@@ -27,8 +27,6 @@ Bullet::Bullet(const Vect2D& position, const Direction& direction, DrawingProxy&
 
 void Bullet::resolveCollision(GameObject& target) {
   (void)target;
-  std::cout << "Bullet collided with something at " << this->getPosition().x << "," << this->getPosition().y
-            << std::endl;
   this->setShouldRemove(true);
 }
 StaticDrawingComponent& Bullet::getDrawingComponent() const { return *this->_drawingComponent; }

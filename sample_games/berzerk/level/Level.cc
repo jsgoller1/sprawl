@@ -110,6 +110,8 @@ void Level::handleCollisions() {
   // cause the player to die (since there's a wall between them). Testing for robot/wall collisions before robot/player
   // collisions ensures this won't happen.
 
+  this->_bullets.collisionTestAndResolve(&this->_walls);
+
   this->_robots.collisionTestAndResolve(&this->_player);
   this->_bullets.collisionTestAndResolve(&this->_player);
   this->_walls.collisionTestAndResolve(&this->_player);
@@ -117,8 +119,6 @@ void Level::handleCollisions() {
   this->_robots.collisionTestAndResolve(&this->_robots);
   this->_bullets.collisionTestAndResolve(&this->_robots);
   this->_walls.collisionTestAndResolve(&this->_robots);
-
-  this->_bullets.collisionTestAndResolve(&this->_walls);
 }
 
 void Level::removeMarked() {

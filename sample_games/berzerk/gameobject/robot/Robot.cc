@@ -77,13 +77,8 @@ CharacterState Robot::getNewState(const CharacterState currentState) const {
     return CharacterState::SHOOTING;
   }
 
-  std::cout << "Next move would kill robot? "
-            << this->_wallCollisionProxy.test(*this, Vect2D(this->getMovingDirection()) * ROBOT_MOVE_SPEED * 4)
-            << std::endl;
-  std::cout << "isAvoiding? " << this->_isAvoiding << std::endl;
-  bool nextMoveKillsRobot =
-      this->_wallCollisionProxy.test(*this, Vect2D(this->getMovingDirection()) * ROBOT_MOVE_SPEED * 4);
-
+  bool nextMoveKillsRobot = this->_wallCollisionProxy.test(
+      *this, Vect2D(this->getMovingDirection()) * ROBOT_MOVE_SPEED * ROBOT_COLLISION_TEST_MOVES_COUNT);
   if (playerInRange && !(this->_isAvoiding && nextMoveKillsRobot)) {
     return CharacterState::MOVING;
   }

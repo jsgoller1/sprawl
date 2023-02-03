@@ -91,8 +91,9 @@ const Vect2D WEST_SPAWN = Vect2D(HORIZONTAL_WALL_WIDTH * -2, 0);
 // Misc
 constexpr int DEFAULT_ANIMATION_FRAME_SHOW_LENGTH_MS = 150;
 const Vect2D TOP_LEFT = Vect2D::zero();
-constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 50;
+constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 30;
 constexpr int NO_COLLISION = -1;
 constexpr int ROBOT_KILLED_SCORE = 50;
 constexpr int SCORE_LEVEL_THRESHOLD = 500;
 constexpr int LEVEL_START_DELAY_MS = 2000;
+constexpr int ROBOT_COLLISION_TEST_MOVES_COUNT = 15;

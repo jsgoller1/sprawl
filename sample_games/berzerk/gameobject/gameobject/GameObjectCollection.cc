@@ -16,7 +16,7 @@ void GameObjectCollection::collisionTestAndResolve(GameObject* source) {
     if (object == source) {
       continue;
     }
-    if (source->collisionTest(*object)) {
+    if (!source->getShouldRemove() && !object->getShouldRemove() && source->collisionTest(*object)) {
       source->resolveCollision(*object);
       object->resolveCollision(*source);
     }
