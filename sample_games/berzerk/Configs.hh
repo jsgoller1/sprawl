@@ -14,6 +14,7 @@ constexpr int PLAYER_MAX_X = (INTERNAL_PLAY_AREA_WIDTH / 2);
 constexpr int PLAYER_MIN_X = -PLAYER_MAX_X;
 constexpr int PLAYER_MAX_Y = (INTERNAL_PLAY_AREA_HEIGHT / 2);
 constexpr int PLAYER_MIN_Y = -PLAYER_MAX_Y;
+constexpr int PLAYER_ANIMATION_FRAME_SHOW_LENGTH_MS = 30;
 constexpr int PLAYER_DYING_ANIMATION_LOOP_COUNT = 2;
 constexpr int PLAYER_SHOOT_DELAY_MS = 750;
 constexpr int PLAYER_MOVE_SPEED = 5;
@@ -39,6 +40,7 @@ constexpr int ROBOT_SHOOTING_ERROR_MARGIN_PX = 15;
 enum RobotWallAvoidancePolicy { ALWAYS, SOMETIMES, NEVER };
 
 // Robot sprite
+constexpr int ROBOT_ANIMATION_FRAME_SHOW_LENGTH_MS = 150;
 constexpr int ROBOT_SPRITE_WIDTH_PX = 8;
 constexpr int ROBOT_SPRITE_HEIGHT_PX = 12;
 constexpr int ROBOT_SPRITE_BOUNDARY_WIDTH_PX = 1;
@@ -91,7 +93,8 @@ const Vect2D WEST_SPAWN = Vect2D(HORIZONTAL_WALL_WIDTH * -2, 0);
 // Misc
 constexpr int DEFAULT_ANIMATION_FRAME_SHOW_LENGTH_MS = 150;
 const Vect2D TOP_LEFT = Vect2D::zero();
-constexpr int BULLET_SPAWN_OFFSET_DISTANCE_PX = 30;
+constexpr int BULLET_SPAWN_HORIZONTAL_OFFSET_DISTANCE_PX = 30;
+constexpr int BULLET_SPAWN_VERTICAL_OFFSET_DISTANCE_PX = 45;
 constexpr int NO_COLLISION = -1;
 constexpr int ROBOT_KILLED_SCORE = 50;
 constexpr int SCORE_LEVEL_THRESHOLD = 500;

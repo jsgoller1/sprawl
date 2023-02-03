@@ -57,7 +57,9 @@ void PlayerAnimationSet::initIdle(const PlayerSpriteManager& playerSpriteManager
 }
 void PlayerAnimationSet::initMoving(const PlayerSpriteManager& playerSpriteManager) {
   this->_movingE = std::make_shared<AnimationSequence>("movingE");
+  this->_movingE->setFrameShowLength(PLAYER_ANIMATION_FRAME_SHOW_LENGTH_MS);
   this->_movingW = std::make_shared<AnimationSequence>("movingW");
+  this->_movingW->setFrameShowLength(PLAYER_ANIMATION_FRAME_SHOW_LENGTH_MS);
   for (int i = 0; i < 3; i++) {
     this->_movingE->addSprite(playerSpriteManager.movingE(i));
     this->_movingW->addSprite(playerSpriteManager.movingW(i));
