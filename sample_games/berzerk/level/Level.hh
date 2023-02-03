@@ -90,4 +90,5 @@ class Level {
   std::vector<int> randomizeInternalWalls();
   std::vector<int> generateWalls();
   Vect2D getPlayerSpawnPoint();
+  RobotWallAvoidancePolicy getRobotWallAvoidancePolicy(const int levelNo) const;
 };

@@ -15,11 +15,14 @@ class DrawingProxy;
 class InputHandler;
 class LevelShootingProxy;
 class RobotSpriteManager;
+class WallCollisionProxy;
 
 class Robot : public GameObject, public IShooting {
  public:
   Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
-        const PlayerPositionProxy& playerPositionProxy, const RobotSpriteManager& robotSpriteManager);
+        const PlayerPositionProxy& playerPositionProxy, const RobotSpriteManager& robotSpriteManager,
+        const WallCollisionProxy& wallCollisionProxy,
+        const RobotWallAvoidancePolicy avoidancePolicy = RobotWallAvoidancePolicy::NEVER);
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
   void resolveCollision(GameObject& target) override;
@@ -27,6 +30,9 @@ class Robot : public GameObject, public IShooting {
 
  private:
   const PlayerPositionProxy& _playerPositionProxy;
+  const WallCollisionProxy& _wallCollisionProxy;
+  const RobotWallAvoidancePolicy _avoidancePolicy = RobotWallAvoidancePolicy::NEVER;
+  bool _isAvoiding = false;
   CharacterState _state = CharacterState::IDLE;
   time_ms _sinceLastShot = 0;
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent;
@@ -44,4 +50,5 @@ class Robot : public GameObject, public IShooting {
   bool withinRangeOfPlayer() const;
   Direction getShootingDirection() const;
   Direction getMovingDirection() const;
+  bool shouldAvoidWalls() const;
 };

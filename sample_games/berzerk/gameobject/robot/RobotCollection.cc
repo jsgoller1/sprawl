@@ -34,17 +34,19 @@ static Color getLevelColor(const int levelNo) {
 
 RobotCollection::RobotCollection(const int levelNo, const std::vector<Vect2D>& startPositions,
                                  LevelShootingProxy& levelShootingProxy, DrawingProxy& drawingProxy,
-                                 PlayerPositionProxy& playerPositionProxy, RobotSpriteManager& robotSpriteManager)
+                                 PlayerPositionProxy& playerPositionProxy, RobotSpriteManager& robotSpriteManager,
+                                 const WallCollisionProxy& collisionProxy, const RobotWallAvoidancePolicy avoidWalls)
     : _robots(std::vector<std::unique_ptr<Robot>>()) {
   robotSpriteManager.setColorMask(getLevelColor(levelNo));
 
   for (size_t i = 0; i < startPositions.size(); i++) {
-    this->_robots.push_back(std::unique_ptr<Robot>(new Robot(startPositions.at(i), Vect2D::zero(), levelShootingProxy,
-                                                             drawingProxy, playerPositionProxy, robotSpriteManager)));
+    this->_robots.push_back(
+        std::unique_ptr<Robot>(new Robot(startPositions.at(i), Vect2D::zero(), levelShootingProxy, drawingProxy,
+                                         playerPositionProxy, robotSpriteManager, collisionProxy, avoidWalls)));
   }
 }
-Robot* RobotCollection::get(const size_t index) { return this->_robots.at(index).get(); }
-size_t RobotCollection::size() { return this->_robots.size(); }
+Robot* RobotCollection::get(const size_t index) const { return this->_robots.at(index).get(); }
+size_t RobotCollection::size() const { return this->_robots.size(); }
 
 int RobotCollection::removeMarked() {
   int numberRemoved = 0;

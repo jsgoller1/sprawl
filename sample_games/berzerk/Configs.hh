@@ -36,6 +36,7 @@ constexpr int ROBOT_DYING_HEIGHT = 80;
 constexpr int ROBOT_SHOOT_DELAY_MS = 750;
 constexpr int ROBOT_PURSUIT_DISTANCE_PX = 900;
 constexpr int ROBOT_SHOOTING_ERROR_MARGIN_PX = 15;
+enum RobotWallAvoidancePolicy { ALWAYS, SOMETIMES, NEVER };
 
 // Robot sprite
 constexpr int ROBOT_SPRITE_WIDTH_PX = 8;

@@ -1,7 +1,6 @@
 #include "Level.hh"
 
 #include <iostream>
-#include <random>
 
 #include "Bullet.hh"
 #include "BulletSpriteManager.hh"
@@ -10,6 +9,7 @@
 #include "InputHandler.hh"
 #include "LevelHelpers.hh"
 #include "LevelSpriteManager.hh"
+#include "Math.hh"
 #include "OttoSpriteManager.hh"
 #include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
@@ -30,11 +30,12 @@ Level::Level(const int levelNo, ScoreProxy& scoreProxy, DrawingProxy& drawingPro
       _bullets(levelNo, this->_bulletSpriteManager, drawingProxy),
       _levelShootingProxy(LevelShootingProxy(this->_bullets)),
       _walls(this->generateWalls(), this->_levelSpriteManager, this->_drawingProxy),
-      _player(Player(getPlayerSpawnPoint(), Vect2D::zero(), this->_levelShootingProxy, drawingProxy,
+      _player(Player(getPlayerSpawnPoint(), Vect2D(0, 0), this->_levelShootingProxy, drawingProxy,
                      this->_playerSpriteManager)),
       _playerPositionProxy(PlayerPositionProxy(this->_player)),
       _robots(levelNo, this->generateRobotStartPositions(ROBOT_COUNT), this->_levelShootingProxy, this->_drawingProxy,
-              this->_playerPositionProxy, this->_robotSpriteManager),
+              this->_playerPositionProxy, this->_robotSpriteManager, this->_walls.getWallCollisionProxy(),
+              this->getRobotWallAvoidancePolicy(levelNo)),
       _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {
   // Init Otto timer
   // Init pause timer
@@ -149,16 +150,10 @@ std::vector<Vect2D> Level::generateRobotStartPositions(const int robotsCount) {
   // We pick the center of a random room, then pick whether the robot spawns at the center or slightly offset to
   // N/S/E/W (but not close enough to hit the wall or the player), then use a set to ensure we don't put two in the same
   // place.
-  // obtain a random number from hardware
-  std::random_device rd;
-  // seed the generator
-  std::mt19937 gen(rd());
-  // define the range
-  std::uniform_int_distribution<> directionDistr(0, 3);
-  std::uniform_int_distribution<> centerDistr(0, 14);
   std::set<Vect2D> startPositionsSet{};
+
   while ((int)startPositionsSet.size() < robotsCount) {
-    startPositionsSet.insert(getCellCenter(centerDistr(gen)) + getOffset(directionDistr(gen)));
+    startPositionsSet.insert(getCellCenter(randInt(0, 14)) + getOffset(randInt(0, 3)));
   }
 
   return std::vector<Vect2D>(startPositionsSet.begin(), startPositionsSet.end());
@@ -169,22 +164,13 @@ std::vector<int> Level::randomizeInternalWalls() {
   std::set<int> allInternalWallsSet = HORIZONTAL_INTERNAL_WALLS;
   allInternalWallsSet.insert(VERTICAL_INTERNAL_WALLS.begin(), VERTICAL_INTERNAL_WALLS.end());
   std::vector<int> allInternalWalls = std::vector<int>(allInternalWallsSet.begin(), allInternalWallsSet.end());
-
-  // obtain a random number from hardware
-  std::random_device rd;
-  // seed the generator
-  std::mt19937 gen(rd());
-  // define the range
-  std::uniform_int_distribution<> distr(0, (int)allInternalWalls.size() - 1);
-
   while (chosenWalls.size() < GENERATED_WALL_COUNT) {
-    chosenWalls.insert(allInternalWalls.at((size_t)distr(gen)));
+    chosenWalls.insert(allInternalWalls.at((size_t)randInt(0, (int)allInternalWalls.size() - 1)));
   }
   return std::vector<int>(chosenWalls.begin(), chosenWalls.end());
 }
 
 std::vector<int> Level::generateWalls() {
-  //  std::vector<int> walls{7, 12, 28, 29};
   std::vector<int> walls = this->randomizeInternalWalls();
 
   for (auto it = HORIZONTAL_BORDER_WALLS.begin(); it != HORIZONTAL_BORDER_WALLS.end(); it++) {
@@ -193,7 +179,18 @@ std::vector<int> Level::generateWalls() {
   for (auto it = VERTICAL_BORDER_WALLS.begin(); it != VERTICAL_BORDER_WALLS.end(); it++) {
     walls.push_back(*it);
   }
+
   return walls;
 }
 
 Vect2D Level::getPlayerSpawnPoint() { return Vect2D(0, 0); }
+
+RobotWallAvoidancePolicy Level::getRobotWallAvoidancePolicy(const int levelNo) const {
+  if (levelNo == 0) {
+    return RobotWallAvoidancePolicy::ALWAYS;
+  } else if (levelNo < 3) {
+    return RobotWallAvoidancePolicy::SOMETIMES;
+  } else {
+    return RobotWallAvoidancePolicy::ALWAYS;
+  }
+}

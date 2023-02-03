@@ -10,13 +10,13 @@ BulletCollection::BulletCollection(const int levelNo, BulletSpriteManager& bulle
   this->_bulletSpriteManager.setColorMask(getLevelColor(levelNo));
 }
 
-Bullet* BulletCollection::get(const size_t index) {
+Bullet* BulletCollection::get(const size_t index) const {
   // NOTE: We intentionally do not do bounds checking here; rather than returning a nullptr when an invalid
   // index is passed to this function (then having to trace that nullptr back to this function), I'd rather
   // just loudly get a std::out_of_range here.
   return this->_bullets.at(index).get();
 }
-size_t BulletCollection::size() { return this->_bullets.size(); }
+size_t BulletCollection::size() const { return this->_bullets.size(); }
 
 void BulletCollection::createAt(const Direction& direction, const Vect2D& origin) {
   this->_bullets.push_back(

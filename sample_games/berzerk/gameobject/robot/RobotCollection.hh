@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Configs.hh"
 #include "GameObjectCollection.hh"
 #include "Robot.hh"
 
@@ -18,9 +19,10 @@ class RobotCollection : public GameObjectCollection {
   RobotCollection() = default;
   RobotCollection(const int levelNo, const std::vector<Vect2D>& startPositions, LevelShootingProxy& levelShootingProxy,
                   DrawingProxy& drawingProxy, PlayerPositionProxy& playerPositionProxy,
-                  RobotSpriteManager& robotSpriteManager);
-  Robot* get(const size_t index) override;
-  size_t size() override;
+                  RobotSpriteManager& robotSpriteManager, const WallCollisionProxy& collisionProxy,
+                  const RobotWallAvoidancePolicy avoidWalls = RobotWallAvoidancePolicy::NEVER);
+  Robot* get(const size_t index) const override;
+  size_t size() const override;
 
   void update(const time_ms deltaT, const bool forceIdle = false);
   int removeMarked();

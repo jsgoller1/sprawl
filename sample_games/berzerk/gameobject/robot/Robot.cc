@@ -4,11 +4,18 @@
 
 #include "Direction.hh"
 #include "Math.hh"
+#include "WallCollisionProxy.hh"
 
 Robot::Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
              DrawingProxy& drawingProxy, const PlayerPositionProxy& playerPositionProxy,
-             const RobotSpriteManager& robotSpriteManager)
-    : GameObject(position, velocity), IShooting(shootingProxy), _playerPositionProxy(playerPositionProxy) {
+             const RobotSpriteManager& robotSpriteManager, const WallCollisionProxy& wallCollisionProxy,
+             const RobotWallAvoidancePolicy avoidancePolicy)
+    : GameObject(position, velocity),
+      IShooting(shootingProxy),
+      _playerPositionProxy(playerPositionProxy),
+      _wallCollisionProxy(wallCollisionProxy),
+      _avoidancePolicy(avoidancePolicy),
+      _isAvoiding(this->shouldAvoidWalls()) {
   this->_robotAnimationSet = std::unique_ptr<RobotAnimationSet>(new RobotAnimationSet(robotSpriteManager));
   this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(
       new AnimatedDrawingComponent(this->getPositionComponent(), ROBOT_DEFAULT_HEIGHT, ROBOT_DEFAULT_WIDTH,
@@ -42,6 +49,7 @@ void Robot::update(const time_ms deltaT, const bool forceIdle) {
       this->stateBehaviorIdle();
       break;
     case CharacterState::MOVING:
+      this->_isAvoiding = this->shouldAvoidWalls();
       this->stateBehaviorMoving();
       break;
     case CharacterState::SHOOTING:
@@ -68,7 +76,15 @@ CharacterState Robot::getNewState(const CharacterState currentState) const {
   if (playerInRange && playerShootable) {
     return CharacterState::SHOOTING;
   }
-  if (playerInRange) {
+
+  std::cout << "Next move would kill robot? "
+            << this->_wallCollisionProxy.test(*this, Vect2D(this->getMovingDirection()) * ROBOT_MOVE_SPEED * 4)
+            << std::endl;
+  std::cout << "isAvoiding? " << this->_isAvoiding << std::endl;
+  bool nextMoveKillsRobot =
+      this->_wallCollisionProxy.test(*this, Vect2D(this->getMovingDirection()) * ROBOT_MOVE_SPEED * 4);
+
+  if (playerInRange && !(this->_isAvoiding && nextMoveKillsRobot)) {
     return CharacterState::MOVING;
   }
 
@@ -131,5 +147,16 @@ Direction Robot::getMovingDirection() const {
     return horizontal;
   } else {  // xDistance < yDistance
     return vertical;
+  }
+}
+
+bool Robot::shouldAvoidWalls() const {
+  switch (this->_avoidancePolicy) {
+    case RobotWallAvoidancePolicy::ALWAYS:
+      return true;
+    case RobotWallAvoidancePolicy::SOMETIMES:
+      return randInt(0, 1) == 1;
+    case RobotWallAvoidancePolicy::NEVER:
+      return false;
   }
 }

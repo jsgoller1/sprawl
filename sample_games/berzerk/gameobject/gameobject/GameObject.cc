@@ -1,5 +1,7 @@
 #include "GameObject.hh"
 
+#include <iostream>
+
 #include "DrawingComponent.hh"
 #include "DrawingProxy.hh"
 #include "LevelShootingProxy.hh"
@@ -36,14 +38,19 @@ static Vect2D toScreenCoordinates(const Vect2D& vect) {
 }
 
 // ICollision
-bool GameObject::collisionTest(const GameObject& target) const {
-  Vect2D usTopLeft = toScreenCoordinates(this->getDrawingComponent().getTopLeft());
+bool GameObject::collisionTest(const GameObject& target, const Vect2D usOffset, const Vect2D themOffset) const {
+  // std::cout << "usOffset: " << usOffset.x << "," << usOffset.y << std::endl;
+  // std::cout << "themOffset: " << themOffset.x << "," << themOffset.y << std::endl;
+
+  Vect2D usOffsetTopLeft = this->getDrawingComponent().getTopLeft() + usOffset;
+  Vect2D usTopLeft = toScreenCoordinates(usOffsetTopLeft);
   SDL_Rect us{.x = usTopLeft.x,
               .y = usTopLeft.y,
               .w = this->getDrawingComponent().getWidth(),
               .h = this->getDrawingComponent().getHeight()};
 
-  Vect2D themTopLeft = toScreenCoordinates(target.getDrawingComponent().getTopLeft());
+  Vect2D themOffsetTopLeft = target.getDrawingComponent().getTopLeft() + themOffset;
+  Vect2D themTopLeft = toScreenCoordinates(themOffsetTopLeft);
   SDL_Rect them{.x = themTopLeft.x,
                 .y = themTopLeft.y,
                 .w = target.getDrawingComponent().getWidth(),

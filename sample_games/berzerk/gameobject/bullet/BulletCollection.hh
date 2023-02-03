@@ -9,8 +9,8 @@
 class BulletCollection : public GameObjectCollection {
  public:
   BulletCollection(const int levelNo, BulletSpriteManager& bulletSpriteManager, DrawingProxy& drawingProxy);
-  Bullet* get(const size_t index) override;
-  size_t size() override;
+  Bullet* get(const size_t index) const override;
+  size_t size() const override;
 
   void createAt(const Direction& direction, const Vect2D& origin);
   void removeMarked();
