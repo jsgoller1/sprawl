@@ -37,7 +37,7 @@ void Robot::resolveCollision(GameObject& target) {
 
 void Robot::update(const time_ms deltaT, const bool forceIdle) {
   this->_sinceLastShot += deltaT;
-  this->_state = (forceIdle ? CharacterState::IDLE : this->getNewState(this->_state));
+  this->_state = this->getNewState(this->_state, forceIdle);
   switch (this->_state) {
     case CharacterState::DEAD:
       this->stateBehaviorDead();
@@ -59,9 +59,10 @@ void Robot::update(const time_ms deltaT, const bool forceIdle) {
   this->_drawingComponent->updateAnimationSequence(deltaT);
 }
 
-CharacterState Robot::getNewState(const CharacterState currentState) const {
+CharacterState Robot::getNewState(const CharacterState currentState, const bool forceIdle) const {
   /*
    * As soon as the player is within range, robots either start shooting or moving to a firing axis.
+   * Robots may be forced to be idle (i.e. not shooting or moving), but they can still be killed
    */
   bool playerInRange = this->withinRangeOfPlayer();
   bool playerShootable = this->getShootingDirection() != Direction::None();
@@ -73,13 +74,13 @@ CharacterState Robot::getNewState(const CharacterState currentState) const {
     return (this->getDrawingComponent().getAnimationSequence().isComplete()) ? CharacterState::DEAD
                                                                              : CharacterState::DYING;
   }
-  if (playerInRange && playerShootable) {
+  if (!forceIdle && playerInRange && playerShootable) {
     return CharacterState::SHOOTING;
   }
 
   bool nextMoveKillsRobot = this->_wallCollisionProxy.test(
       *this, Vect2D(this->getMovingDirection()) * ROBOT_MOVE_SPEED * ROBOT_COLLISION_TEST_MOVES_COUNT);
-  if (playerInRange && !(this->_isAvoiding && nextMoveKillsRobot)) {
+  if (!forceIdle && playerInRange && !(this->_isAvoiding && nextMoveKillsRobot)) {
     return CharacterState::MOVING;
   }
 

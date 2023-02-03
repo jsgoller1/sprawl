@@ -39,7 +39,7 @@ class Robot : public GameObject, public IShooting {
   std::unique_ptr<RobotAnimationSet> _robotAnimationSet = nullptr;
 
   // FSM
-  CharacterState getNewState(const CharacterState currentState) const;
+  CharacterState getNewState(const CharacterState currentState, const bool forceIdle = false) const;
   void stateBehaviorDead();
   void stateBehaviorDying();
   void stateBehaviorIdle();
