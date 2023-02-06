@@ -90,6 +90,7 @@ CharacterState Robot::getNewState(const CharacterState currentState, const bool 
 void Robot::stateBehaviorDead() {
   this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->dead());
   this->setPosition(Vect2D(-2000, -2000));
+  this->setShouldRemove(true);
 }
 
 void Robot::stateBehaviorDying() {

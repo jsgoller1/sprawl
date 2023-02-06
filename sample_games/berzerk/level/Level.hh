@@ -26,7 +26,7 @@ class OttoSpriteManager;
 class PlayerSpriteManager;
 class PlayerPositionProxy;
 class RobotSpriteManager;
-class ScoreProxy;
+class LevelDataProxy;
 
 /*
  * Berserk levels are always the same size and are always constructed the same way,
@@ -50,7 +50,7 @@ class ScoreProxy;
 
 class Level {
  public:
-  Level(const int levelNo, ScoreProxy& scoreProxy, DrawingProxy& drawingProxy,
+  Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& drawingProxy,
         const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
         RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
         const OttoSpriteManager& ottoSpriteManager);
@@ -65,7 +65,7 @@ class Level {
 
  private:
   DrawingProxy& _drawingProxy;
-  ScoreProxy& _scoreProxy;
+  LevelDataProxy& _LevelDataProxy;
 
   // TODO: We probably don't need to store references here
   const LevelSpriteManager& _levelSpriteManager;

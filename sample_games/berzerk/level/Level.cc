@@ -7,6 +7,7 @@
 #include "Configs.hh"
 #include "Direction.hh"
 #include "InputHandler.hh"
+#include "LevelDataProxy.hh"
 #include "LevelHelpers.hh"
 #include "LevelSpriteManager.hh"
 #include "Math.hh"
@@ -14,14 +15,13 @@
 #include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
-#include "ScoreProxy.hh"
 
-Level::Level(const int levelNo, ScoreProxy& scoreProxy, DrawingProxy& drawingProxy,
+Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& drawingProxy,
              const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
              RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
              const OttoSpriteManager& ottoSpriteManager)
     : _drawingProxy(drawingProxy),
-      _scoreProxy(scoreProxy),
+      _LevelDataProxy(LevelDataProxy),
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
       _robotSpriteManager(robotSpriteManager),
@@ -128,7 +128,7 @@ void Level::removeMarked() {
     // NOTE: In the original arcade, the player's score goes up any time a robot dies as long as the player isn't dead,
     // even if it's from a wall collision or robot friendly fire. This encourages the player to attempt to outsmart the
     // pathfinding system, and also incentivizes surviving longer.
-    this->_scoreProxy.addScore(ROBOT_KILLED_SCORE * robotsKilled);
+    this->_LevelDataProxy.addScore(ROBOT_KILLED_SCORE * robotsKilled);
   }
 }
 

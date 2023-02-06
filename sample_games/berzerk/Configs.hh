@@ -28,7 +28,7 @@ constexpr int PLAYER_DEFAULT_HEIGHT = 70;
 
 // Robot behavior
 // TODO: Robot should move, shoot, and animate faster as fewer remain
-constexpr int ROBOT_COUNT = 1;
+constexpr int ROBOT_COUNT = 3;
 constexpr int ROBOT_MOVE_SPEED = 1;
 constexpr int ROBOT_DEFAULT_WIDTH = 40;
 constexpr int ROBOT_DEFAULT_HEIGHT = 55;
@@ -88,7 +88,19 @@ const Vect2D NORTH_SPAWN = Vect2D(0, VERTICAL_WALL_HEIGHT);
 const Vect2D EAST_SPAWN = Vect2D(HORIZONTAL_WALL_WIDTH * 2, 0);
 const Vect2D SOUTH_SPAWN = Vect2D(0, -VERTICAL_WALL_HEIGHT);
 const Vect2D WEST_SPAWN = Vect2D(HORIZONTAL_WALL_WIDTH * -2, 0);
-// const Vect2D PLAYER_SPAWN_POINT = CELL_0_CENTER;
+
+// UI Behavior
+constexpr int LEVEL_UI_MARGIN_VERTICAL_WIDTH = 40;
+constexpr int UI_SCOREBOARD_DIGIT_PLACES = 5;
+constexpr int TEXT_SPRITE_WIDTH_PX = 8;
+constexpr int TEXT_SPRITE_HEIGHT_PX = 9;
+constexpr int TEXT_SPRITE_BOUNDARY_WIDTH_PX = 1;
+constexpr int TEXT_WIDTH_PX = 20;
+constexpr int TEXT_HEIGHT_PX = 30;
+constexpr int TEXT_BOUNDARY_WIDTH_PX = 5;
+const Vect2D UI_TOP_LEFT =
+    Vect2D((-INTERNAL_PLAY_AREA_WIDTH / 2) + 20, (-INTERNAL_PLAY_AREA_HEIGHT / 2) - LEVEL_UI_MARGIN_VERTICAL_WIDTH);
+// const Vect2D UI_TOP_LEFT = Vect2D(0, 0);
 
 // Misc
 constexpr int DEFAULT_ANIMATION_FRAME_SHOW_LENGTH_MS = 150;
@@ -97,6 +109,6 @@ constexpr int BULLET_SPAWN_HORIZONTAL_OFFSET_DISTANCE_PX = 30;
 constexpr int BULLET_SPAWN_VERTICAL_OFFSET_DISTANCE_PX = 45;
 constexpr int NO_COLLISION = -1;
 constexpr int ROBOT_KILLED_SCORE = 50;
-constexpr int SCORE_LEVEL_THRESHOLD = 500;
+constexpr int SCORE_LEVEL_THRESHOLD = 200;
 constexpr int LEVEL_START_DELAY_MS = 2000;
 constexpr int ROBOT_COLLISION_TEST_MOVES_COUNT = 15;

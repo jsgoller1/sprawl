@@ -3,13 +3,14 @@
 
 #include "BulletSpriteManager.hh"
 #include "Level.hh"
+#include "LevelDataProxy.hh"
 #include "LevelSpriteManager.hh"
 #include "OttoSpriteManager.hh"
 #include "PlayerSpriteManager.hh"
 #include "RobotSpriteManager.hh"
-#include "ScoreProxy.hh"
 #include "TextSpriteManager.hh"
 #include "Time.hh"
+#include "UI.hh"
 
 #define SCREEN_WIDTH 1200
 #define SCREEN_HEIGHT 800
@@ -30,6 +31,7 @@ class Game {
   void draw(Screen& screen);
 
  private:
+  std::unique_ptr<UI> _ui;
   std::unique_ptr<Level> _currentLevel;
   std::unique_ptr<LevelSpriteManager> _levelSpriteManager;
   std::unique_ptr<PlayerSpriteManager> _playerSpriteManager;
@@ -42,10 +44,10 @@ class Game {
   Timer& _timer;
 
   bool _isPaused = false;
-  int _playerLives = 1;
+  int _playerLives = 3;
   int _playerScore = 0;
   int _levelNo = 0;
-  ScoreProxy _scoreProxy = ScoreProxy(&this->_playerScore);
+  LevelDataProxy _LevelDataProxy = LevelDataProxy(&this->_playerScore, &this->_playerLives);
 
   void initUI(const TextSpriteManager& textSpriteManager, DrawingProxy& drawingProxy);
   bool isLost();
