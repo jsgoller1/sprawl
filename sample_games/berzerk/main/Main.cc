@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "CLI.hh"
 #include "Game.hh"
 #include "InputHandler.hh"

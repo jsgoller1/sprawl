@@ -42,8 +42,6 @@ class Screen {
   SDL_Renderer* _renderer;
   std::unique_ptr<ScreenDrawingProxy> _screenDrawingProxy;
 
-  void initSDL();
-
   void prepare(const Vect2D& center, const int height, const int width, std::shared_ptr<Sprite> texture);
 
   Vect2D getDrawPoint(const Vect2D& center, const int height, const int width) const;

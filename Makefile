@@ -18,7 +18,7 @@ sprawl-loc:
 
 
 BERZERK_DIR:=sample_games/berzerk
-BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/drawing  $(BERZERK_DIR)/gameobject
+BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/audio $(BERZERK_DIR)/drawing  $(BERZERK_DIR)/gameobject
 BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject/gameobject $(BERZERK_DIR)/gameobject/bullet $(BERZERK_DIR)/gameobject/robot
 BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject/wall $(BERZERK_DIR)/level $(BERZERK_DIR)/math $(BERZERK_DIR)/texture 
 BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
@@ -26,12 +26,10 @@ CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
 BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
 BERZERK_OBJ_FILES:=$(patsubst %.cc, %.o, $(BERZERK_SRC_FILES))
 BERZERK_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
-BERZERK_LEVEL_SPRITES:=/Users/joshua/Code/sprawl/sample_games/berzerk/assets/level-sprites.png
-BERZERK_CHARACTER_SPRITES:=/Users/joshua/Code/sprawl/sample_games/berzerk/assets/character-sprites.png
-BERZERK_TEXT_SPRITES:=/Users/joshua/Code/sprawl/sample_games/berzerk/assets/text-sprites.png
+BERZERK_ASSETS_DIR_PATH:=/Users/joshua/Code/sprawl/
 berzerk: $(BERZERK_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
-	./bin/berzerk $(BERZERK_LEVEL_SPRITES) $(BERZERK_CHARACTER_SPRITES) $(BERZERK_TEXT_SPRITES)
+	./bin/berzerk $(BERZERK_ASSETS_DIR_PATH)
 berzerk-loc:
 	git ls-files | grep berzerk | grep -v "super" | xargs cat | wc -l
 

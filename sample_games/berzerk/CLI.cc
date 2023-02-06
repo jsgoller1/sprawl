@@ -2,10 +2,11 @@
 
 #include <iostream>
 
+#include "Configs.hh"
 #include "SDL2/SDL.h"
 
 CLI::CLI(const int argc, const char* const argv[]) {
-  if (!argsCountValid(argc)) {
+  if (argc != 2) {
     this->suggestHelp();
     this->_returnCode = -1;
     this->_quit = true;
@@ -17,25 +18,22 @@ CLI::CLI(const int argc, const char* const argv[]) {
     this->_quit = true;
     return;
   }
-  bool allFilesExist = true;
-  for (int i = 0; i < argc; i++) {
-    allFilesExist = confirmFileExists(argv[0]);
-  }
-  if (not allFilesExist) {
+
+  this->_assetsDirPath = std::string(argv[1]);
+  if (not confirmFileExists(argv[1])) {
+    std::cout << "Error, quitting! Could not find assets directory at " << this->_assetsDirPath << std::endl;
     this->_returnCode = -1;
     this->_quit = true;
   }
 
-  // TODO: just a hack for now
-  //   this->_levelSpriteSheetPath = std::string(argv[1]);
-  //   this->_characterSpriteSheetPath = std::string(argv[2]);
-  //   this->_textSpriteSheetPath = std::string(argv[3]);
-  this->_levelSpriteSheetPath = std::string(DEFAULT_LEVEL_SPRITE_SHEET_PATH);
-  this->_playerSpriteSheetPath = std::string(DEFAULT_PLAYER_SPRITE_SHEET_PATH);
-  this->_robotSpriteSheetPath = std::string(DEFAULT_ROBOT_SPRITE_SHEET_PATH);
-  this->_ottoSpriteSheetPath = std::string(DEFAULT_OTTO_SPRITE_SHEET_PATH);
-  this->_bulletSpriteSheetPath = std::string(DEFAULT_BULLET_SPRITE_SHEET_PATH);
-  this->_textSpriteSheetPath = std::string(DEFAULT_TEXT_SPRITE_SHEET_PATH);
+  // NOTE: Not going to bother checking if these exist; going to assume if the directory exists, it hasn't been
+  // modified and the sprite sheets exists.
+  this->_levelSpriteSheetPath = this->_assetsDirPath + std::string(DEFAULT_LEVEL_SPRITE_SHEET_PATH);
+  this->_playerSpriteSheetPath = this->_assetsDirPath + std::string(DEFAULT_PLAYER_SPRITE_SHEET_PATH);
+  this->_robotSpriteSheetPath = this->_assetsDirPath + std::string(DEFAULT_ROBOT_SPRITE_SHEET_PATH);
+  this->_ottoSpriteSheetPath = this->_assetsDirPath + std::string(DEFAULT_OTTO_SPRITE_SHEET_PATH);
+  this->_bulletSpriteSheetPath = this->_assetsDirPath + std::string(DEFAULT_BULLET_SPRITE_SHEET_PATH);
+  this->_textSpriteSheetPath = this->_assetsDirPath + std::string(DEFAULT_TEXT_SPRITE_SHEET_PATH);
 }
 
 int CLI::getReturnCode() const { return this->_returnCode; }
@@ -46,19 +44,6 @@ const std::string& CLI::getRobotSpriteSheetPath() const { return this->_robotSpr
 const std::string& CLI::getOttoSpriteSheetPath() const { return this->_ottoSpriteSheetPath; }
 const std::string& CLI::getBulletSpriteSheetPath() const { return this->_bulletSpriteSheetPath; }
 const std::string& CLI::getTextSpriteSheetPath() const { return this->_textSpriteSheetPath; }
-
-// Private
-bool CLI::argsCountValid(const int argc) const {
-  if (argc > 5) {
-    std::cout << "berzerk: Too many args provided." << std::endl;
-    return false;
-  }
-  if (argc < 4) {
-    std::cout << "berzerk: Too few args provided." << std::endl;
-    return false;
-  }
-  return true;
-}
 
 bool CLI::confirmFileExists(const char* const path) {
   // TODO: Is there any other way to do a platform-independent stat? SDL doesn't seem to have one.
@@ -86,7 +71,7 @@ bool CLI::shouldShowHelp(const int argc, const char* const argv[]) const {
 }
 
 void CLI::showHelp() const {
-  std::cout << "Usage: berzerk spritefile1 spritefile2 spritefile3 " << std::endl;
+  std::cout << "Usage: berzerk <path to assets directory> " << std::endl;
   std::cout << "      --help     display this help and exit" << std::endl;
 }
 

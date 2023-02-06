@@ -3,40 +3,59 @@
 #include <iostream>
 #include <memory>
 
+#include "SDL2/SDL_image.h"
+#include "SDL2/SDL_mixer.h"
 #include "Sprite.hh"
 #include "Vect2D.hh"
 
 Screen::Screen(const int width, const int height) : _width(width), _height(height) {
   this->_screenDrawingProxy = std::unique_ptr<ScreenDrawingProxy>(new ScreenDrawingProxy(*this));
-  this->initSDL();
-}
 
-Screen::~Screen() {
-  SDL_DestroyWindow(this->_window);
-  SDL_Quit();
-}
+  // TODO: Some of the SDL initialization we do here involves sound, so it doesn't really belong with Screen. Fine for
+  // now.
 
-Screen::ScreenDrawingProxy::ScreenDrawingProxy(Screen& screen) : _screen(screen) {}
-
-void Screen::initSDL() {
-  // Init SDL, create SDL window, create SDL renderer
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  // Initialize SDL and window
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
     throw;
   }
-
   this->_window = SDL_CreateWindow("Berzerk", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, this->_width,
                                    this->_height, SDL_WINDOW_SHOWN);
   if (this->_window == nullptr) {
     throw;
   }
 
+  // Initialize renderer
   Uint32 flags = SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC;
   int windowDriverIndex = -1;
   this->_renderer = (SDL_CreateRenderer(this->_window, windowDriverIndex, flags));
   if (this->_renderer == nullptr) {
     throw;
   }
+
+  // Initialize PNG loading
+  if (!(IMG_Init(IMG_INIT_PNG))) {
+    printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+    throw;
+  }
+
+  // Initialize SDL_mixer
+  int frequency = 44100;
+  int stereoChannelsCount = 2;
+  int sampleSize = 2048;
+  if (Mix_OpenAudio(frequency, MIX_DEFAULT_FORMAT, stereoChannelsCount, sampleSize) < 0) {
+    printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+    throw;
+  }
 }
+
+Screen::~Screen() {
+  SDL_DestroyWindow(this->_window);
+  Mix_Quit();
+  IMG_Quit();
+  SDL_Quit();
+}
+
+Screen::ScreenDrawingProxy::ScreenDrawingProxy(Screen& screen) : _screen(screen) {}
 
 void Screen::ScreenDrawingProxy::draw(const Vect2D& center, const int width, const int height,
                                       std::shared_ptr<Sprite> pixelData) {

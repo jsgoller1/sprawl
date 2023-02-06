@@ -20,7 +20,8 @@ Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& dr
              const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
              RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
              const OttoSpriteManager& ottoSpriteManager)
-    : _drawingProxy(drawingProxy),
+    : _levelAudioComponent(LevelAudioComponent()),
+      _drawingProxy(drawingProxy),
       _LevelDataProxy(LevelDataProxy),
       _levelSpriteManager(levelSpriteManager),
       _playerSpriteManager(playerSpriteManager),
@@ -37,6 +38,7 @@ Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& dr
               this->_playerPositionProxy, this->_robotSpriteManager, this->_walls.getWallCollisionProxy(),
               this->getRobotWallAvoidancePolicy(levelNo)),
       _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {
+  (void)this->_levelAudioComponent;
   // Init Otto timer
   // Init pause timer
 }

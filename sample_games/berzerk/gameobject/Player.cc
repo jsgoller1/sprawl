@@ -100,5 +100,6 @@ void Player::shootingBehavior(const time_ms deltaT, const Direction& shootingDir
     // TODO: Having this constant offset is probably brittle; should calculate it
     // so that if the screen / sprite sizes ever change, it won't break.
     this->shoot(shootingDirection, this->getPosition());
+    this->_playerAudioComponent.playShooting();
   }
 }

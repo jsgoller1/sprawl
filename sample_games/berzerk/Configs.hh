@@ -3,6 +3,16 @@
 
 #include "Vect2D.hh"
 
+// CLI
+#define DEFAULT_LEVEL_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/level-sprites.png"
+#define DEFAULT_PLAYER_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/player-sprites.png"
+#define DEFAULT_ROBOT_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/robot-sprites.png"
+#define DEFAULT_OTTO_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/otto-sprites.png"
+#define DEFAULT_BULLET_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/bullet-sprites.png"
+#define DEFAULT_TEXT_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/text-sprites.png"
+#define DEFAULT_PLAYER_SHOOTING_SOUND_PATH \
+  "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/audio/player/player-shooting.wav"
+
 // Screen
 constexpr int DEFAULT_SCREEN_WIDTH = 1400;
 constexpr int DEFAULT_SCREEN_HEIGHT = 900;

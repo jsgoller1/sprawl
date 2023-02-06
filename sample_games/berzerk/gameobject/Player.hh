@@ -7,6 +7,7 @@
 #include "GameObject.hh"
 #include "IShooting.hh"
 #include "PlayerAnimationSet.hh"
+#include "PlayerAudioComponent.hh"
 #include "State.hh"
 
 // Forward decls
@@ -29,6 +30,7 @@ class Player : public GameObject, public IShooting {
  private:
   CharacterState _state;
   time_ms _sinceLastShot;
+  PlayerAudioComponent _playerAudioComponent = PlayerAudioComponent();
   std::unique_ptr<PlayerAnimationSet> _playerAnimationSet = nullptr;
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent = nullptr;
 

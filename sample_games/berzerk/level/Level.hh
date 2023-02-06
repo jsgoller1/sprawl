@@ -5,6 +5,7 @@
 
 #include "BulletCollection.hh"
 #include "Configs.hh"
+#include "LevelAudioComponent.hh"
 #include "LevelShootingProxy.hh"
 #include "Otto.hh"
 #include "Player.hh"
@@ -61,9 +62,9 @@ class Level {
   bool isFinished() const;
   bool playerAtExit() const;
   Direction getPlayerExit() const;
-  bool allRobotsCleared();
 
  private:
+  LevelAudioComponent _levelAudioComponent;
   DrawingProxy& _drawingProxy;
   LevelDataProxy& _LevelDataProxy;
 
