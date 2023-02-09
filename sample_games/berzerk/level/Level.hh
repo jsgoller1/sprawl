@@ -56,7 +56,7 @@ class Level {
         RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
         const OttoSpriteManager& ottoSpriteManager);
 
-  void update(const InputHandler& inputHandler, const time_ms delta_t);
+  void update(const InputHandler& inputHandler, const TimerProxy& timerProxy);
   void draw();
 
   bool isFinished() const;
@@ -82,8 +82,6 @@ class Level {
   PlayerPositionProxy _playerPositionProxy;
   RobotCollection _robots;
   Otto _otto;
-
-  time_ms _levelTimer = 0;
 
   void handleCollisions();
   void removeMarked();

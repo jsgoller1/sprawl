@@ -26,8 +26,7 @@ class Game {
   Game(const CLI& args, Screen& screen, InputHandler& inputHandler, Timer& timer);
   void run();
 
-  bool getShouldQuit() const;
-  void update(const InputHandler& inputHandler, const time_ms delta_t);
+  void update(const InputHandler& inputHandler, const TimerProxy& timerProxy);
   void draw(Screen& screen);
 
  private:

@@ -28,8 +28,8 @@ bool AnimationSequence::loopsIndefinitely() { return this->_loopLimit == -1; }
 
 bool AnimationSequence::isComplete() { return !this->loopsIndefinitely() && this->_loopCount >= this->_loopLimit; }
 
-void AnimationSequence::update(const time_ms deltaT) {
-  this->_sinceLastUpdate += deltaT;
+void AnimationSequence::update(const TimerProxy& timerProxy) {
+  this->_sinceLastUpdate += timerProxy.getTimeDelta();
   if (_sinceLastUpdate > _frameShowLength && !this->isComplete()) {
     this->_spriteIdx = (this->_spriteIdx + 1) % this->_sprites.size();
     this->_sinceLastUpdate = 0;

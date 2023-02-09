@@ -11,8 +11,8 @@ std::shared_ptr<Sprite> AnimatedDrawingComponent::getCurrentSprite() const {
   return this->_animationSequence->getCurrentSprite();
 }
 
-void AnimatedDrawingComponent::updateAnimationSequence(const time_ms deltaT) {
-  return this->_animationSequence->update(deltaT);
+void AnimatedDrawingComponent::updateAnimationSequence(const TimerProxy& timerProxy) {
+  return this->_animationSequence->update(timerProxy);
 }
 
 AnimationSequence& AnimatedDrawingComponent::getAnimationSequence() const { return *this->_animationSequence; }

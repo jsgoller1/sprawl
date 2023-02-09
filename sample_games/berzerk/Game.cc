@@ -39,14 +39,14 @@ void Game::run() {
   Core game loop
   */
   while (!(this->isLost() || this->_inputHandler.shouldQuit())) {
-    time_ms deltaT = this->_timer.tick();
+    this->_timer.tick();
     this->_inputHandler.getKeyboardInput();
-    this->update(this->_inputHandler, deltaT);
+    this->update(this->_inputHandler, this->_timer.getProxy());
     this->draw(this->_screen);
   }
 }
 
-void Game::update(const InputHandler& inputHandler, const time_ms deltaT) {
+void Game::update(const InputHandler& inputHandler, const TimerProxy& timerProxy) {
   if (this->_isPaused) {
     return;
   }
@@ -62,7 +62,7 @@ void Game::update(const InputHandler& inputHandler, const time_ms deltaT) {
                                 *this->_bulletSpriteManager, *this->_ottoSpriteManager);
   }
   this->_ui->update();
-  this->_currentLevel->update(inputHandler, deltaT);
+  this->_currentLevel->update(inputHandler, timerProxy);
 }
 
 void Game::draw(Screen& screen) {

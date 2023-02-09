@@ -39,16 +39,16 @@ Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& dr
               this->getRobotWallAvoidancePolicy(levelNo)),
       _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {
   (void)this->_levelAudioComponent;
-  // Init Otto timer
+
   // Init pause timer
 }
 
-void Level::update(const InputHandler& inputHandler, const time_ms deltaT) {
-  this->_levelTimer += deltaT;
-  this->_robots.update(deltaT, (this->_levelTimer <= LEVEL_START_DELAY_MS));
-  this->_player.update(inputHandler, deltaT);
-  this->_bullets.update(deltaT);
-  // this->_otto->update(deltaT);
+void Level::update(const InputHandler& inputHandler, const TimerProxy& timerProxy) {
+  this->_robots.update(timerProxy);
+  this->_player.update(inputHandler, timerProxy);
+  this->_bullets.update(timerProxy);
+  this->_otto.update(timerProxy);
+
   this->handleCollisions();
   this->removeMarked();
 }
@@ -189,7 +189,7 @@ Vect2D Level::getPlayerSpawnPoint() { return Vect2D(0, 0); }
 
 RobotWallAvoidancePolicy Level::getRobotWallAvoidancePolicy(const int levelNo) const {
   if (levelNo == 0) {
-    return RobotWallAvoidancePolicy::ALWAYS;
+    return RobotWallAvoidancePolicy::SOMETIMES;
   } else if (levelNo < 3) {
     return RobotWallAvoidancePolicy::SOMETIMES;
   } else {

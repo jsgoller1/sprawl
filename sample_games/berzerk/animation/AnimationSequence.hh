@@ -26,7 +26,7 @@ class AnimationSequence {
   bool loopsIndefinitely();
   bool isComplete();
   std::shared_ptr<Sprite> getCurrentSprite() const;
-  void update(const time_ms deltaT);
+  void update(const TimerProxy& timerProxy);
   void reset();
 
  private:

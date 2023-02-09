@@ -35,9 +35,9 @@ void Robot::resolveCollision(GameObject& target) {
   }
 }
 
-void Robot::update(const time_ms deltaT, const bool forceIdle) {
-  this->_sinceLastShot += deltaT;
-  this->_state = this->getNewState(this->_state, forceIdle);
+void Robot::update(const TimerProxy& timerProxy) {
+  this->_sinceLastShot += timerProxy.getTimeDelta();
+  this->_state = this->getNewState(this->_state, timerProxy);
   switch (this->_state) {
     case CharacterState::DEAD:
       this->stateBehaviorDead();
@@ -49,17 +49,16 @@ void Robot::update(const time_ms deltaT, const bool forceIdle) {
       this->stateBehaviorIdle();
       break;
     case CharacterState::MOVING:
-      this->_isAvoiding = this->shouldAvoidWalls();
       this->stateBehaviorMoving();
       break;
     case CharacterState::SHOOTING:
       this->stateBehaviorShooting();
       break;
   }
-  this->_drawingComponent->updateAnimationSequence(deltaT);
+  this->_drawingComponent->updateAnimationSequence(timerProxy);
 }
 
-CharacterState Robot::getNewState(const CharacterState currentState, const bool forceIdle) const {
+CharacterState Robot::getNewState(const CharacterState currentState, const TimerProxy& timerProxy) const {
   /*
    * As soon as the player is within range, robots either start shooting or moving to a firing axis.
    * Robots may be forced to be idle (i.e. not shooting or moving), but they can still be killed
@@ -74,6 +73,7 @@ CharacterState Robot::getNewState(const CharacterState currentState, const bool 
     return (this->getDrawingComponent().getAnimationSequence().isComplete()) ? CharacterState::DEAD
                                                                              : CharacterState::DYING;
   }
+  bool forceIdle = timerProxy.getCurrentTime() < LEVEL_START_DELAY_MS;
   if (!forceIdle && playerInRange && playerShootable) {
     return CharacterState::SHOOTING;
   }
@@ -102,6 +102,11 @@ void Robot::stateBehaviorDying() {
 void Robot::stateBehaviorIdle() { this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->idle()); }
 
 void Robot::stateBehaviorMoving() {
+  // TODO: Moving behavior occurs every frame, so updating isAvoiding here or at the time of state update will
+  // occur repeatedly until at close enough range to the wall we get a "should", after which the robot transitions to
+  // Idle. In essence, the robot will always eventually choose not to walk into a wall for the SOMETIMES policy. We need
+  // to update the isAvoiding only when the robot first changes into the Moving state.
+  this->_isAvoiding = this->shouldAvoidWalls();
   Direction facingDirection = this->getMovingDirection();
   this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->moving(facingDirection));
   this->setVelocity(Vect2D(facingDirection) * ROBOT_MOVE_SPEED);

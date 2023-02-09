@@ -31,11 +31,11 @@ void Player::resolveCollision(GameObject& target) {
   }
 }
 
-void Player::update(const InputHandler& inputHandler, const time_ms deltaT) {
+void Player::update(const InputHandler& inputHandler, const TimerProxy& timerProxy) {
   this->_state = this->getNewState(this->_state, inputHandler);
   this->setVelocity(this->getNewVelocity(this->_state, inputHandler));
-  this->updateAnimation(deltaT, inputHandler.getArrowKeyDirection(), this->_state);
-  this->shootingBehavior(deltaT, inputHandler.getArrowKeyDirection());
+  this->updateAnimation(timerProxy, inputHandler.getArrowKeyDirection(), this->_state);
+  this->shootingBehavior(timerProxy, inputHandler.getArrowKeyDirection());
   this->move();
 }
 
@@ -70,7 +70,8 @@ Vect2D Player::getNewVelocity(const CharacterState state, const InputHandler& in
   return Vect2D(inputHandler.getArrowKeyDirection()) * PLAYER_MOVE_SPEED;
 }
 
-void Player::updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state) {
+void Player::updateAnimation(const TimerProxy& timerProxy, const Direction& movementDirection,
+                             const CharacterState state) {
   switch (state) {
     case CharacterState::IDLE:
       this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->idle());
@@ -90,11 +91,11 @@ void Player::updateAnimation(const time_ms deltaT, const Direction& movementDire
       this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->dead());
       break;
   }
-  this->_drawingComponent->updateAnimationSequence(deltaT);
+  this->_drawingComponent->updateAnimationSequence(timerProxy);
 }
 
-void Player::shootingBehavior(const time_ms deltaT, const Direction& shootingDirection) {
-  this->_sinceLastShot += deltaT;
+void Player::shootingBehavior(const TimerProxy& timerProxy, const Direction& shootingDirection) {
+  this->_sinceLastShot += timerProxy.getTimeDelta();
   if (this->_state == CharacterState::SHOOTING && this->_sinceLastShot > PLAYER_SHOOT_DELAY_MS) {
     this->_sinceLastShot = 0;
     // TODO: Having this constant offset is probably brittle; should calculate it

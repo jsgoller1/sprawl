@@ -23,7 +23,7 @@ class Player : public GameObject, public IShooting {
   AnimatedDrawingComponent& getDrawingComponent() const override;
 
   void resolveCollision(GameObject& target) override;
-  void update(const InputHandler& inputHandler, const time_ms deltaT);
+  void update(const InputHandler& inputHandler, const TimerProxy& timerProxy);
   void draw();
   bool isDead() const;
 
@@ -36,6 +36,6 @@ class Player : public GameObject, public IShooting {
 
   CharacterState getNewState(const CharacterState currentState, const InputHandler& inputHandler) const;
   Vect2D getNewVelocity(const CharacterState currentState, const InputHandler& inputHandler) const;
-  void updateAnimation(const time_ms deltaT, const Direction& movementDirection, const CharacterState state);
-  void shootingBehavior(const time_ms deltaT, const Direction& shootingDirection);
+  void updateAnimation(const TimerProxy& timerProxy, const Direction& movementDirection, const CharacterState state);
+  void shootingBehavior(const TimerProxy& timerProxy, const Direction& shootingDirection);
 };

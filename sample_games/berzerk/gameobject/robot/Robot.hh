@@ -26,7 +26,7 @@ class Robot : public GameObject, public IShooting {
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
   void resolveCollision(GameObject& target) override;
-  void update(const time_ms deltaT, const bool forceIdle = false);
+  void update(const TimerProxy& timerProxy);
 
  private:
   const PlayerPositionProxy& _playerPositionProxy;
@@ -39,7 +39,7 @@ class Robot : public GameObject, public IShooting {
   std::unique_ptr<RobotAnimationSet> _robotAnimationSet = nullptr;
 
   // FSM
-  CharacterState getNewState(const CharacterState currentState, const bool forceIdle = false) const;
+  CharacterState getNewState(const CharacterState currentState, const TimerProxy& timerProxy) const;
   void stateBehaviorDead();
   void stateBehaviorDying();
   void stateBehaviorIdle();

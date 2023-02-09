@@ -59,9 +59,9 @@ int RobotCollection::removeMarked() {
   return numberRemoved;
 }
 
-void RobotCollection::update(const time_ms deltaT, const bool forceIdle) {
+void RobotCollection::update(const TimerProxy& timerProxy) {
   for (size_t i = 0; i < this->size(); i++) {
-    this->_robots[i]->update(deltaT, forceIdle);
+    this->_robots[i]->update(timerProxy);
   }
 }
 

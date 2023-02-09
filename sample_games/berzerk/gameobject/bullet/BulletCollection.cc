@@ -31,7 +31,7 @@ void BulletCollection::removeMarked() {
   }
 }
 
-void BulletCollection::update(const time_ms deltaT) {
+void BulletCollection::update(const TimerProxy& deltaT) {
   // NOTE: A little smelly, but bullets don't need the time
   // since it's a static animation
   (void)deltaT;

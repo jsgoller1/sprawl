@@ -14,7 +14,7 @@ class BulletCollection : public GameObjectCollection {
 
   void createAt(const Direction& direction, const Vect2D& origin);
   void removeMarked();
-  void update(const time_ms deltaT);
+  void update(const TimerProxy& timerProxy);
 
  private:
   std::vector<std::unique_ptr<Bullet>> _bullets;

@@ -5,6 +5,7 @@
 #include "Configs.hh"
 #include "GameObjectCollection.hh"
 #include "Robot.hh"
+#include "Time.hh"
 
 // fwd decl
 class LevelShootingProxy;
@@ -24,8 +25,8 @@ class RobotCollection : public GameObjectCollection {
   Robot* get(const size_t index) const override;
   size_t size() const override;
 
-  void update(const time_ms deltaT, const bool forceIdle = false);
   int removeMarked();
+  void update(const TimerProxy& timerProxy);
 
  private:
   std::vector<std::unique_ptr<Robot>> _robots;

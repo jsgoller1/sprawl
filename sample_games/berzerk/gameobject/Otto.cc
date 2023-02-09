@@ -13,8 +13,9 @@ Otto::Otto(const Vect2D& position, DrawingProxy& drawingProxy, PlayerPositionPro
                                    drawingProxy, this->_ottoAnimationSet->spawning()));
 }
 
-void Otto::update(const time_ms deltaT) {
-  (void)deltaT;
+void Otto::update(const TimerProxy& timerProxy) {
+  (void)timerProxy;
+  (void)this->_state;
   (void)this->_playerPositionProxy;
 }
 

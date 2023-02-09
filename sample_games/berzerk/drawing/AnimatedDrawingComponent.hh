@@ -18,7 +18,7 @@ class AnimatedDrawingComponent : public DrawingComponent {
   void draw() override;
   std::shared_ptr<Sprite> getCurrentSprite() const override;
 
-  void updateAnimationSequence(const time_ms deltaT);
+  void updateAnimationSequence(const TimerProxy& timerProxy);
   void setAnimationSequence(std::shared_ptr<AnimationSequence> animation);
   AnimationSequence& getAnimationSequence() const;
 
