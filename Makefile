@@ -14,7 +14,7 @@ SPRAWL_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so"
 sprawl: $(SPRAWL_OBJ_FILES)
 	$(CCACHE) $(CXX) $(SPRAWL_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN)
 sprawl-loc:
-	git ls-files | grep sprawl |  xargs cat | wc -l
+	git ls-files | grep sprawl | grep -E "(\.cc|\.hh)$$" | uniq | xargs cat | wc -l
 
 
 BERZERK_DIR:=sample_games/berzerk
@@ -31,7 +31,7 @@ berzerk: $(BERZERK_OBJ_FILES)
 	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
 	./bin/berzerk $(BERZERK_ASSETS_DIR_PATH)
 berzerk-loc:
-	git ls-files | grep berzerk | grep -v "super" | xargs cat | wc -l
+	git ls-files | grep berzerk | grep -E "(\.cc|\.hh)$$" | uniq | xargs cat | wc -l
 
 
 BREAKOUT_MODULES:=sample_games/breakout 3rdparty
