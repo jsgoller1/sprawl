@@ -70,6 +70,8 @@ constexpr int BULLET_SPRITE_BOUNDARY_WIDTH_PX = 2;
 // Otto sprite
 constexpr int OTTO_SPRITE_WIDTH_PX = 8;
 constexpr int OTTO_SPRITE_HEIGHT_PX = 16;
+constexpr int OTTO_CHARACTER_WIDTH_PX = 50;
+constexpr int OTTO_CHARACTER_HEIGHT_PX = 50;
 constexpr int OTTO_SPRITE_BOUNDARY_WIDTH_PX = 1;
 
 // Wall behavior
@@ -122,4 +124,7 @@ constexpr int ROBOT_KILLED_SCORE = 50;
 constexpr int SCORE_LEVEL_THRESHOLD = 200;
 constexpr int LEVEL_START_DELAY_MS = 2000;
 constexpr int ROBOT_COLLISION_TEST_MOVES_COUNT = 15;
-constexpr int OTTO_ENTRANCE_TIME_THRESHOLD_MS = 10000;
+constexpr int OTTO_ENTRANCE_TIME_THRESHOLD_MS = 15000;  // 15 seconds
+constexpr int OTTO_JUMP_VERTICAL_MOVEMENT_DELAY_MS = 200;
+const Vect2D OTTO_FIRST_JUMP_OFFSET_PX = Vect2D(0, 25);
+const Vect2D OTTO_STANDARD_JUMP_OFFSET_PX = Vect2D(0, 10);

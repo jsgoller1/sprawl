@@ -10,18 +10,27 @@
 
 class Otto : public GameObject {
  public:
-  Otto(const Vect2D& position, DrawingProxy& drawingProxy, PlayerPositionProxy& playerPositionProxy,
-       const OttoSpriteManager& ottoSpriteManager);
+  Otto(const int levelNo, const Vect2D& position, DrawingProxy& drawingProxy, PlayerPositionProxy& playerPositionProxy,
+       OttoSpriteManager& ottoSpriteManager);
   void update(const TimerProxy& timerProxy);
+  void draw();
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
   void resolveCollision(GameObject& target) override;
 
  private:
-  OttoState _state;
+  int _currentJumpVerticalOffsetCount = 0;
+  time_ms _timeSinceLastVerticalMovement = 0;
+  OttoState _state = OttoState::OUT_OF_PLAY;
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent = nullptr;
   PlayerPositionProxy& _playerPositionProxy;
 
-  const OttoSpriteManager& _ottoSpriteManager;
+  OttoSpriteManager& _ottoSpriteManager;
   std::unique_ptr<OttoAnimationSet> _ottoAnimationSet = nullptr;
+
+  OttoState getNewState(const OttoState currentState, const TimerProxy& timerProxy);
+  void stateBehaviorSpawning();
+  void stateBehaviorChasing(const TimerProxy& timerProxy);
+  void updateJumpDisplacement(const TimerProxy& timerProxy);
+  void moveChasingPlayer();
 };

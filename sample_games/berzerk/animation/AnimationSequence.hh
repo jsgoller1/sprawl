@@ -22,6 +22,7 @@ class AnimationSequence {
 
   void setFrameShowLength(const time_ms frameShowLength);
   time_ms getFrameShowLength() const;
+  time_ms getSinceLastUpdate() const;
 
   bool loopsIndefinitely();
   bool isComplete();

@@ -60,6 +60,7 @@ void Game::update(const InputHandler& inputHandler, const TimerProxy& timerProxy
         std::make_unique<Level>(this->_levelNo, this->_LevelDataProxy, this->_screen.getScreenDrawingProxy(),
                                 *this->_levelSpriteManager, *this->_playerSpriteManager, *this->_robotSpriteManager,
                                 *this->_bulletSpriteManager, *this->_ottoSpriteManager);
+    this->_timer.reset();
   }
   this->_ui->update();
   this->_currentLevel->update(inputHandler, timerProxy);

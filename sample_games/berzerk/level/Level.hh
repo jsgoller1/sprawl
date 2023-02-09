@@ -54,7 +54,7 @@ class Level {
   Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& drawingProxy,
         const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
         RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
-        const OttoSpriteManager& ottoSpriteManager);
+        OttoSpriteManager& ottoSpriteManager);
 
   void update(const InputHandler& inputHandler, const TimerProxy& timerProxy);
   void draw();
@@ -72,7 +72,7 @@ class Level {
   const LevelSpriteManager& _levelSpriteManager;
   const PlayerSpriteManager& _playerSpriteManager;
   RobotSpriteManager& _robotSpriteManager;
-  const OttoSpriteManager& _ottoSpriteManager;
+  OttoSpriteManager& _ottoSpriteManager;
   BulletSpriteManager& _bulletSpriteManager;
 
   BulletCollection _bullets;

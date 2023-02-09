@@ -6,25 +6,32 @@
 
 typedef Uint64 time_ms;
 
+// Fwd decl
+class Timer;
+
 class TimerProxy {
  public:
-  TimerProxy(const time_ms* const currentTick, const time_ms* const previousTick);
+  TimerProxy(const Timer& SDL_TimerID);
   time_ms getCurrentTime() const;
   time_ms getTimeDelta() const;
 
  private:
-  const time_ms* const _currentTick;
-  const time_ms* const _previousTick;
+  const Timer& _timer;
 };
 
 class Timer {
  public:
   Timer();
   void tick();
+  void reset();
+  time_ms getCurrentTime() const;
+  time_ms getTimeDelta() const;
+
   TimerProxy& getProxy();
 
  private:
+  time_ms _startTime;
   time_ms _currentTick;
   time_ms _previousTick;
-  TimerProxy _proxy = TimerProxy(&this->_currentTick, &this->_previousTick);
+  TimerProxy _proxy = TimerProxy(*this);
 };

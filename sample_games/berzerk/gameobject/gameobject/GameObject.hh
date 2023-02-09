@@ -38,6 +38,7 @@ class GameObject {
 
   // ICollision
   // virtual ~ICollision();
+
   bool collisionTest(const GameObject& target, const Vect2D usOffset = Vect2D::zero(),
                      const Vect2D themOffset = Vect2D::zero()) const;
   virtual void resolveCollision(GameObject& target) = 0;

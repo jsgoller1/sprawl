@@ -5,7 +5,7 @@
 #include "Vect2D.hh"
 
 Color getLevelColor(const int levelNo) {
-  switch (levelNo % 10) {
+  switch (levelNo) {
     case 0:
       return Color::Mustard();
     case 1:

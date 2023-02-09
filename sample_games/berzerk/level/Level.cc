@@ -19,7 +19,7 @@
 Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& drawingProxy,
              const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
              RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
-             const OttoSpriteManager& ottoSpriteManager)
+             OttoSpriteManager& ottoSpriteManager)
     : _levelAudioComponent(LevelAudioComponent()),
       _drawingProxy(drawingProxy),
       _LevelDataProxy(LevelDataProxy),
@@ -37,7 +37,8 @@ Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& dr
       _robots(levelNo, this->generateRobotStartPositions(ROBOT_COUNT), this->_levelShootingProxy, this->_drawingProxy,
               this->_playerPositionProxy, this->_robotSpriteManager, this->_walls.getWallCollisionProxy(),
               this->getRobotWallAvoidancePolicy(levelNo)),
-      _otto(Otto(Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, this->_ottoSpriteManager)) {
+      _otto(Otto(levelNo, Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy,
+                 this->_ottoSpriteManager)) {
   (void)this->_levelAudioComponent;
 
   // Init pause timer
@@ -61,6 +62,7 @@ void Level::draw() {
   this->_player.draw();
   this->_bullets.draw();
   this->_walls.draw();
+  this->_otto.draw();
 }
 
 bool Level::isFinished() const { return this->playerAtExit() || this->_player.isDead(); }
@@ -112,15 +114,21 @@ void Level::handleCollisions() {
   // cause the player to die (since there's a wall between them). Testing for robot/wall collisions before robot/player
   // collisions ensures this won't happen.
 
+  this->_bullets.collisionTestAndResolve(&this->_otto);
   this->_bullets.collisionTestAndResolve(&this->_walls);
 
   this->_robots.collisionTestAndResolve(&this->_player);
   this->_bullets.collisionTestAndResolve(&this->_player);
   this->_walls.collisionTestAndResolve(&this->_player);
+  if (this->_otto.collisionTest(this->_player)) {
+    this->_player.resolveCollision(this->_otto);
+    this->_otto.resolveCollision(this->_player);
+  }
 
   this->_robots.collisionTestAndResolve(&this->_robots);
   this->_bullets.collisionTestAndResolve(&this->_robots);
   this->_walls.collisionTestAndResolve(&this->_robots);
+  this->_robots.collisionTestAndResolve(&this->_otto);
 }
 
 void Level::removeMarked() {
@@ -185,7 +193,7 @@ std::vector<int> Level::generateWalls() {
   return walls;
 }
 
-Vect2D Level::getPlayerSpawnPoint() { return Vect2D(0, 0); }
+Vect2D Level::getPlayerSpawnPoint() { return Vect2D(0, 250); }
 
 RobotWallAvoidancePolicy Level::getRobotWallAvoidancePolicy(const int levelNo) const {
   if (levelNo == 0) {

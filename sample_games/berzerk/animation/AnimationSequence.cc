@@ -17,6 +17,8 @@ void AnimationSequence::addSprite(const std::shared_ptr<Sprite> sprite) { this->
 void AnimationSequence::setFrameShowLength(const time_ms frameShowLength) { this->_frameShowLength = frameShowLength; }
 time_ms AnimationSequence::getFrameShowLength() const { return this->_frameShowLength; }
 
+time_ms AnimationSequence::getSinceLastUpdate() const { return this->_sinceLastUpdate; }
+
 std::shared_ptr<Sprite> AnimationSequence::getCurrentSprite() const {
   if (not(this->_spriteIdx <= this->_sprites.size() - 1)) {
     return nullptr;
