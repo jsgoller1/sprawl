@@ -5,8 +5,8 @@
 #include "Configs.hh"
 #include "Vect2D.hh"
 
-PlayerSpriteManager::PlayerSpriteManager(const std::string& spriteSheetPath)
-    : SpriteManager(spriteSheetPath, TOP_LEFT, PLAYER_SPRITE_WIDTH_PX, PLAYER_SPRITE_HEIGHT_PX,
+PlayerSpriteManager::PlayerSpriteManager(const std::string& assetsDirPath)
+    : SpriteManager(assetsDirPath + PLAYER_SPRITE_SHEET_PATH, TOP_LEFT, PLAYER_SPRITE_WIDTH_PX, PLAYER_SPRITE_HEIGHT_PX,
                     PLAYER_SPRITE_BOUNDARY_WIDTH_PX) {}
 
 std::shared_ptr<Sprite> PlayerSpriteManager::idle() const { return this->getSprite(0, 0); }

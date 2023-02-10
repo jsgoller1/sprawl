@@ -2,8 +2,8 @@
 
 #include "Configs.hh"
 
-OttoSpriteManager::OttoSpriteManager(const std::string& spriteSheetPath)
-    : SpriteManager(spriteSheetPath, TOP_LEFT, OTTO_SPRITE_WIDTH_PX, OTTO_SPRITE_HEIGHT_PX,
+OttoSpriteManager::OttoSpriteManager(const std::string& assetsDirPath)
+    : SpriteManager(assetsDirPath + OTTO_SPRITE_SHEET_PATH, TOP_LEFT, OTTO_SPRITE_WIDTH_PX, OTTO_SPRITE_HEIGHT_PX,
                     OTTO_SPRITE_BOUNDARY_WIDTH_PX) {}
 
 std::shared_ptr<Sprite> OttoSpriteManager::spawning(const int frameNo) const { return this->getSprite(0, frameNo); }

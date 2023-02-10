@@ -51,36 +51,42 @@ class LevelDataProxy;
 
 class Level {
  public:
-  Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& drawingProxy,
-        const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
-        RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
-        OttoSpriteManager& ottoSpriteManager);
+  Level(const int levelNo, LevelDataProxy& levelDataProxy, DrawingProxy& drawingProxy,
+        const LevelSpriteManager& levelSpriteManager, const LevelAudioComponent& levelAudioComponent,
+        const PlayerSpriteManager& playerSpriteManager, const PlayerAudioComponent& playerAudioComponent,
+        RobotSpriteManager& robotSpriteManager, const RobotAudioComponent& robotAudioComponent,
+        OttoSpriteManager& ottoSpriteManager, const OttoAudioComponent& ottoAudioComponent,
+        BulletSpriteManager& bulletSpriteManager);
 
   void update(const InputHandler& inputHandler, const TimerProxy& timerProxy);
   void draw();
 
   bool isFinished() const;
+  bool isCleared() const;
   bool playerAtExit() const;
   Direction getPlayerExit() const;
 
  private:
+  // Level
   LevelAudioComponent _levelAudioComponent;
   DrawingProxy& _drawingProxy;
-  LevelDataProxy& _LevelDataProxy;
+  LevelDataProxy& _levelDataProxy;
 
-  // TODO: We probably don't need to store references here
-  const LevelSpriteManager& _levelSpriteManager;
-  const PlayerSpriteManager& _playerSpriteManager;
-  RobotSpriteManager& _robotSpriteManager;
-  OttoSpriteManager& _ottoSpriteManager;
-  BulletSpriteManager& _bulletSpriteManager;
-
-  BulletCollection _bullets;
-  LevelShootingProxy _levelShootingProxy;
+  // Walls
   WallCollection _walls;
+
+  // Player
   Player _player;
   PlayerPositionProxy _playerPositionProxy;
+
+  // Robots
   RobotCollection _robots;
+
+  // Bullets
+  BulletCollection _bullets;
+  LevelShootingProxy _levelShootingProxy;
+
+  // Otto
   Otto _otto;
 
   void handleCollisions();
@@ -90,4 +96,6 @@ class Level {
   std::vector<int> generateWalls();
   Vect2D getPlayerSpawnPoint();
   RobotWallAvoidancePolicy getRobotWallAvoidancePolicy(const int levelNo) const;
+  void handleTauntingSounds(const TimerProxy& timerProxy);
+  time_ms _sinceLastTaunt = 0;
 };

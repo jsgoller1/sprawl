@@ -2,8 +2,8 @@
 
 #include "Configs.hh"
 
-TextSpriteManager::TextSpriteManager(const std::string& spriteSheetPath)
-    : SpriteManager(spriteSheetPath, TOP_LEFT, TEXT_SPRITE_WIDTH_PX, TEXT_SPRITE_HEIGHT_PX,
+TextSpriteManager::TextSpriteManager(const std::string& assetsDirPath)
+    : SpriteManager(assetsDirPath + TEXT_SPRITE_SHEET_PATH, TOP_LEFT, TEXT_SPRITE_WIDTH_PX, TEXT_SPRITE_HEIGHT_PX,
                     TEXT_SPRITE_BOUNDARY_WIDTH_PX, Color::Green()) {}
 
 std::shared_ptr<Sprite> TextSpriteManager::digit(const int digit) const {

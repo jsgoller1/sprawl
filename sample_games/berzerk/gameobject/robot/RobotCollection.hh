@@ -11,6 +11,7 @@
 class LevelShootingProxy;
 class PlayerPositionProxy;
 class RobotSpriteManager;
+class RobotAudioComponent;
 
 class RobotCollection : public GameObjectCollection {
  public:
@@ -20,7 +21,8 @@ class RobotCollection : public GameObjectCollection {
   RobotCollection() = default;
   RobotCollection(const int levelNo, const std::vector<Vect2D>& startPositions, LevelShootingProxy& levelShootingProxy,
                   DrawingProxy& drawingProxy, PlayerPositionProxy& playerPositionProxy,
-                  RobotSpriteManager& robotSpriteManager, const WallCollisionProxy& collisionProxy,
+                  RobotSpriteManager& robotSpriteManager, const RobotAudioComponent& robotAudioComponent,
+                  const WallCollisionProxy& collisionProxy,
                   const RobotWallAvoidancePolicy avoidWalls = RobotWallAvoidancePolicy::NEVER);
   Robot* get(const size_t index) const override;
   size_t size() const override;

@@ -4,15 +4,17 @@
 
 #include "Direction.hh"
 #include "Math.hh"
+#include "RobotAudioComponent.hh"
 #include "WallCollisionProxy.hh"
 
 Robot::Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
              DrawingProxy& drawingProxy, const PlayerPositionProxy& playerPositionProxy,
-             const RobotSpriteManager& robotSpriteManager, const WallCollisionProxy& wallCollisionProxy,
-             const RobotWallAvoidancePolicy avoidancePolicy)
+             const RobotSpriteManager& robotSpriteManager, const RobotAudioComponent& robotAudioComponent,
+             const WallCollisionProxy& wallCollisionProxy, const RobotWallAvoidancePolicy avoidancePolicy)
     : GameObject(position, velocity),
       IShooting(shootingProxy),
       _playerPositionProxy(playerPositionProxy),
+      _robotAudioComponent(robotAudioComponent),
       _wallCollisionProxy(wallCollisionProxy),
       _avoidancePolicy(avoidancePolicy),
       _isAvoiding(this->shouldAvoidWalls()) {
@@ -31,6 +33,7 @@ void Robot::resolveCollision(GameObject& target) {
   // TODO: Maybe we should have an event queue of some kind and state updates process events on that queue?
   if (this->_state != CharacterState::DYING) {
     this->_state = CharacterState::DYING;
+    this->_robotAudioComponent.playDeath();
     this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->dying());
   }
 }
@@ -116,6 +119,7 @@ void Robot::stateBehaviorMoving() {
 void Robot::stateBehaviorShooting() {
   this->_drawingComponent->setAnimationSequence(this->_robotAnimationSet->shooting(this->getShootingDirection()));
   if (this->_sinceLastShot > ROBOT_SHOOT_DELAY_MS) {
+    this->_robotAudioComponent.playShooting();
     this->_sinceLastShot = 0;
     this->shoot(this->getShootingDirection(), this->getPosition());
   }

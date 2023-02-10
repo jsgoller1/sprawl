@@ -1,17 +1,38 @@
 #pragma once
 #include <set>
+#include <string>
 
 #include "Vect2D.hh"
 
-// CLI
-#define DEFAULT_LEVEL_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/level-sprites.png"
-#define DEFAULT_PLAYER_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/player-sprites.png"
-#define DEFAULT_ROBOT_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/robot-sprites.png"
-#define DEFAULT_OTTO_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/otto-sprites.png"
-#define DEFAULT_BULLET_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/bullet-sprites.png"
-#define DEFAULT_TEXT_SPRITE_SHEET_PATH "sample_games/berzerk/assets/textures/text-sprites.png"
-#define DEFAULT_PLAYER_SHOOTING_SOUND_PATH \
-  "/Users/joshua/Code/sprawl/sample_games/berzerk/assets/audio/player/player-shooting.wav"
+const std::string ASSETS_DIR_PATH = std::string{"sample_games/berzerk/assets/"};
+
+// Sprite sheet paths
+const std::string LEVEL_SPRITE_SHEET_PATH = ASSETS_DIR_PATH + std::string{"textures/level-sprites.png"};
+const std::string PLAYER_SPRITE_SHEET_PATH = ASSETS_DIR_PATH + std::string{"textures/player-sprites.png"};
+const std::string ROBOT_SPRITE_SHEET_PATH = ASSETS_DIR_PATH + std::string{"textures/robot-sprites.png"};
+const std::string OTTO_SPRITE_SHEET_PATH = ASSETS_DIR_PATH + std::string{"textures/otto-sprites.png"};
+const std::string BULLET_SPRITE_SHEET_PATH = ASSETS_DIR_PATH + std::string{"textures/bullet-sprites.png"};
+const std::string TEXT_SPRITE_SHEET_PATH = ASSETS_DIR_PATH + std::string{"textures/text-sprites.png"};
+
+// Audio paths
+const std::string LEVEL_EXIT_CLEAR_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/level/level-exit-clear.mp3"};
+const std::string LEVEL_EXIT_COWARDLY_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/level/level-exit-cowardly.mp3"};
+const std::string TAUNT_ATTACK_IT_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/level/taunt-attack-it.mp3"};
+const std::string TAUNT_ATTACK_THE_INTRUDER_SOUND_PATH =
+    ASSETS_DIR_PATH + std::string{"audio/level/taunt-attack-the-intruder.mp3"};
+const std::string TAUNT_DESTROY_THE_INTRUDER_SOUND_PATH =
+    ASSETS_DIR_PATH + std::string{"audio/level/taunt-destroy-the-intruder.mp3"};
+const std::string TAUNT_GET_IT_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/level/taunt-get-it.mp3"};
+const std::string TAUNT_GET_THE_HUMANOID_SOUND_PATH =
+    ASSETS_DIR_PATH + std::string{"audio/level/taunt-get-the-humanoid.mp3"};
+const std::string TAUNT_KILL_THE_INTRUDER_SOUND_PATH =
+    ASSETS_DIR_PATH + std::string{"audio/level/taunt-kill-the-intruder.mp3"};
+const std::string OTTO_INTRUDER_ALERT_SOUND_PATH =
+    ASSETS_DIR_PATH + std::string{"audio/otto/otto-entry-intruder-alert.mp3"};
+const std::string PLAYER_DEATH_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/player/player-death.mp3"};
+const std::string PLAYER_SHOOTING_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/player/player-shooting.wav"};
+const std::string ROBOT_DEATH_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/robot/robot-death.mp3"};
+const std::string ROBOT_SHOOTING_SOUND_PATH = ASSETS_DIR_PATH + std::string{"audio/robot/robot-shoot.mp3"};
 
 // Screen
 constexpr int DEFAULT_SCREEN_WIDTH = 1400;
@@ -128,3 +149,4 @@ constexpr int OTTO_ENTRANCE_TIME_THRESHOLD_MS = 15000;  // 15 seconds
 constexpr int OTTO_JUMP_VERTICAL_MOVEMENT_DELAY_MS = 200;
 const Vect2D OTTO_FIRST_JUMP_OFFSET_PX = Vect2D(0, 25);
 const Vect2D OTTO_STANDARD_JUMP_OFFSET_PX = Vect2D(0, 10);
+constexpr int LEVEL_TAUNT_FREQUENCY_MS = 4000;

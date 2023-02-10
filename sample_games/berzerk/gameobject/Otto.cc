@@ -6,12 +6,15 @@
 #include "Configs.hh"
 #include "Direction.hh"
 #include "LevelHelpers.hh"
+#include "OttoAudioComponent.hh"
 
 Otto::Otto(const int levelNo, const Vect2D& position, DrawingProxy& drawingProxy,
-           PlayerPositionProxy& playerPositionProxy, OttoSpriteManager& ottoSpriteManager)
+           PlayerPositionProxy& playerPositionProxy, OttoSpriteManager& ottoSpriteManager,
+           const OttoAudioComponent& ottoAudioComponent)
     : GameObject(position, Vect2D::zero()),
       _playerPositionProxy(playerPositionProxy),
-      _ottoSpriteManager(ottoSpriteManager) {
+      _ottoSpriteManager(ottoSpriteManager),
+      _ottoAudioComponent(ottoAudioComponent) {
   this->_ottoSpriteManager.setColorMask(getLevelColor(levelNo));
   this->_ottoAnimationSet = std::unique_ptr<OttoAnimationSet>(new OttoAnimationSet(this->_ottoSpriteManager));
   this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(
@@ -59,6 +62,10 @@ OttoState Otto::getNewState(const OttoState currentState, const TimerProxy& time
   }
 }
 void Otto::stateBehaviorSpawning() {
+  if (!this->_playedEntrySound) {
+    this->_playedEntrySound = true;
+    this->_ottoAudioComponent.playIntruderAlert();
+  }
   this->_drawingComponent->setAnimationSequence(this->_ottoAnimationSet->spawning());
   this->setPosition(Vect2D::zero());
 }

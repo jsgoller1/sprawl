@@ -2,6 +2,10 @@
 
 #include "Configs.hh"
 
-PlayerAudioComponent::PlayerAudioComponent() : _playerShooting(Mix_LoadWAV(DEFAULT_PLAYER_SHOOTING_SOUND_PATH)) {}
+PlayerAudioComponent::PlayerAudioComponent(const std::string& assetsDirPath)
+    : AudioComponent(assetsDirPath),
+      _shooting(this->createMix_Chunk(PLAYER_SHOOTING_SOUND_PATH)),
+      _death(this->createMix_Chunk(PLAYER_DEATH_SOUND_PATH)) {}
 
-void PlayerAudioComponent::playShooting() { this->playSound(this->_playerShooting); }
+void PlayerAudioComponent::playShooting() const { this->playSound(this->_shooting); }
+void PlayerAudioComponent::playDeath() const { this->playSound(this->_death); }

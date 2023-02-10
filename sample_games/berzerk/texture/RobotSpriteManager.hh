@@ -4,7 +4,7 @@
 
 class RobotSpriteManager : public SpriteManager {
  public:
-  RobotSpriteManager(const std::string& spriteSheetPath);
+  RobotSpriteManager(const std::string& assetsDirPath);
 
   std::shared_ptr<Sprite> idle(const int frameNo) const;
   std::shared_ptr<Sprite> movingN(const int frameNo) const;

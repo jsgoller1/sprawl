@@ -4,11 +4,13 @@
 #include "Configs.hh"
 #include "Direction.hh"
 #include "InputHandler.hh"
+#include "PlayerAudioComponent.hh"
 #include "PlayerSpriteManager.hh"
 
 Player::Player(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy,
-               DrawingProxy& drawingProxy, const PlayerSpriteManager& playerSpriteManager)
-    : GameObject(position, velocity), IShooting(shootingProxy) {
+               DrawingProxy& drawingProxy, const PlayerSpriteManager& playerSpriteManager,
+               const PlayerAudioComponent& playerAudioComponent)
+    : GameObject(position, velocity), IShooting(shootingProxy), _playerAudioComponent(playerAudioComponent) {
   this->_playerAnimationSet = std::unique_ptr<PlayerAnimationSet>(new PlayerAnimationSet(playerSpriteManager));
   this->_drawingComponent = std::unique_ptr<AnimatedDrawingComponent>(
       new AnimatedDrawingComponent(this->getPositionComponent(), PLAYER_DEFAULT_HEIGHT, PLAYER_DEFAULT_WIDTH,
@@ -26,6 +28,7 @@ void Player::resolveCollision(GameObject& target) {
   // respective update functions, and should be done there.
   // TODO: Maybe we should have an event queue of some kind and state updates process events on that queue?
   if (!(this->_state == CharacterState::DYING || this->_state == CharacterState::DEAD)) {
+    this->_playerAudioComponent.playDeath();
     this->_state = CharacterState::DYING;
     this->_drawingComponent->setAnimationSequence(this->_playerAnimationSet->dying());
   }

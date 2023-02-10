@@ -8,7 +8,7 @@ class Sprite;
 
 class BulletSpriteManager : public SpriteManager {
  public:
-  BulletSpriteManager(const std::string& spriteSheetPath);
+  BulletSpriteManager(const std::string& assetsDirPath);
 
   std::shared_ptr<Sprite> bulletVertical() const;
   std::shared_ptr<Sprite> bulletHorizontal() const;

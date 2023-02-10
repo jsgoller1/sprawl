@@ -1,12 +1,13 @@
 #include "LevelSpriteManager.hh"
 
+#include "Configs.hh"
 #include "Sprite.hh"
 
 // TODO: Since the level sprite sheet is not a grid like the others, we implement this differently and
 // directly give the coordinates on the spritesheet for the sections we want to pull (rather than using getSprite)
 // TODO: Let's just modify the sprite sheets so we can use a consistent interface
-LevelSpriteManager::LevelSpriteManager(const std::string& spriteSheetPath)
-    : SpriteManager(spriteSheetPath, Vect2D::zero(), 0, 0, 0) {}
+LevelSpriteManager::LevelSpriteManager(const std::string& assetsDirPath)
+    : SpriteManager(assetsDirPath + LEVEL_SPRITE_SHEET_PATH, Vect2D::zero(), 0, 0, 0) {}
 std::shared_ptr<Sprite> LevelSpriteManager::horizontalBorderWall() const {
   // 19,8 is the top left corner
   int topLeftX = 19;

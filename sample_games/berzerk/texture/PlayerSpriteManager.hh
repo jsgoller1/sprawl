@@ -4,7 +4,7 @@
 
 class PlayerSpriteManager : public SpriteManager {
  public:
-  PlayerSpriteManager(const std::string& spriteSheetPath);
+  PlayerSpriteManager(const std::string& assetsDirPath);
 
   std::shared_ptr<Sprite> idle() const;
   // NOTE: Player uses west-facing movement animation for all movemement except east-movement

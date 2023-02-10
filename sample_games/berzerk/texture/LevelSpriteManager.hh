@@ -7,7 +7,7 @@ class Sprite;
 
 class LevelSpriteManager : public SpriteManager {
  public:
-  LevelSpriteManager(const std::string& spriteSheetPath);
+  LevelSpriteManager(const std::string& assetsDirPath);
   std::shared_ptr<Sprite> horizontalBorderWall() const;
   std::shared_ptr<Sprite> verticalBorderWall() const;
   std::shared_ptr<Sprite> horizontalInternalWall() const;

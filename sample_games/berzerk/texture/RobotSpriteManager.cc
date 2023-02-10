@@ -2,8 +2,8 @@
 
 #include "Configs.hh"
 
-RobotSpriteManager::RobotSpriteManager(const std::string& spriteSheetPath)
-    : SpriteManager(spriteSheetPath, TOP_LEFT, ROBOT_SPRITE_WIDTH_PX, ROBOT_SPRITE_HEIGHT_PX,
+RobotSpriteManager::RobotSpriteManager(const std::string& assetsDirPath)
+    : SpriteManager(assetsDirPath + ROBOT_SPRITE_SHEET_PATH, TOP_LEFT, ROBOT_SPRITE_WIDTH_PX, ROBOT_SPRITE_HEIGHT_PX,
                     ROBOT_SPRITE_BOUNDARY_WIDTH_PX) {}
 
 std::shared_ptr<Sprite> RobotSpriteManager::idle(const int frameNo) const { return this->getSprite(0, frameNo); }

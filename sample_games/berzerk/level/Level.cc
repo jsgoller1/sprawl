@@ -7,48 +7,45 @@
 #include "Configs.hh"
 #include "Direction.hh"
 #include "InputHandler.hh"
+#include "LevelAudioComponent.hh"
 #include "LevelDataProxy.hh"
 #include "LevelHelpers.hh"
 #include "LevelSpriteManager.hh"
 #include "Math.hh"
+#include "OttoAudioComponent.hh"
 #include "OttoSpriteManager.hh"
 #include "PlayerPositionProxy.hh"
 #include "PlayerSpriteManager.hh"
+#include "RobotAudioComponent.hh"
 #include "RobotSpriteManager.hh"
 
-Level::Level(const int levelNo, LevelDataProxy& LevelDataProxy, DrawingProxy& drawingProxy,
-             const LevelSpriteManager& levelSpriteManager, const PlayerSpriteManager& playerSpriteManager,
-             RobotSpriteManager& robotSpriteManager, BulletSpriteManager& bulletSpriteManager,
-             OttoSpriteManager& ottoSpriteManager)
-    : _levelAudioComponent(LevelAudioComponent()),
+Level::Level(const int levelNo, LevelDataProxy& levelDataProxy, DrawingProxy& drawingProxy,
+             const LevelSpriteManager& levelSpriteManager, const LevelAudioComponent& levelAudioComponent,
+             const PlayerSpriteManager& playerSpriteManager, const PlayerAudioComponent& playerAudioComponent,
+             RobotSpriteManager& robotSpriteManager, const RobotAudioComponent& robotAudioComponent,
+             OttoSpriteManager& ottoSpriteManager, const OttoAudioComponent& ottoAudioComponent,
+             BulletSpriteManager& bulletSpriteManager)
+    : _levelAudioComponent(levelAudioComponent),
       _drawingProxy(drawingProxy),
-      _LevelDataProxy(LevelDataProxy),
-      _levelSpriteManager(levelSpriteManager),
-      _playerSpriteManager(playerSpriteManager),
-      _robotSpriteManager(robotSpriteManager),
-      _ottoSpriteManager(ottoSpriteManager),
-      _bulletSpriteManager(bulletSpriteManager),
-      _bullets(levelNo, this->_bulletSpriteManager, drawingProxy),
-      _levelShootingProxy(LevelShootingProxy(this->_bullets)),
-      _walls(this->generateWalls(), this->_levelSpriteManager, this->_drawingProxy),
-      _player(Player(getPlayerSpawnPoint(), Vect2D(0, 0), this->_levelShootingProxy, drawingProxy,
-                     this->_playerSpriteManager)),
+      _levelDataProxy(levelDataProxy),
+      _walls(this->generateWalls(), levelSpriteManager, this->_drawingProxy),
+      _player(Player(getPlayerSpawnPoint(), Vect2D(0, 0), this->_levelShootingProxy, drawingProxy, playerSpriteManager,
+                     playerAudioComponent)),
       _playerPositionProxy(PlayerPositionProxy(this->_player)),
       _robots(levelNo, this->generateRobotStartPositions(ROBOT_COUNT), this->_levelShootingProxy, this->_drawingProxy,
-              this->_playerPositionProxy, this->_robotSpriteManager, this->_walls.getWallCollisionProxy(),
+              this->_playerPositionProxy, robotSpriteManager, robotAudioComponent, this->_walls.getWallCollisionProxy(),
               this->getRobotWallAvoidancePolicy(levelNo)),
-      _otto(Otto(levelNo, Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy,
-                 this->_ottoSpriteManager)) {
-  (void)this->_levelAudioComponent;
-
-  // Init pause timer
-}
+      _bullets(levelNo, bulletSpriteManager, drawingProxy),
+      _levelShootingProxy(LevelShootingProxy(this->_bullets)),
+      _otto(Otto(levelNo, Vect2D(-2000, -2000), this->_drawingProxy, this->_playerPositionProxy, ottoSpriteManager,
+                 ottoAudioComponent)) {}
 
 void Level::update(const InputHandler& inputHandler, const TimerProxy& timerProxy) {
   this->_robots.update(timerProxy);
   this->_player.update(inputHandler, timerProxy);
   this->_bullets.update(timerProxy);
   this->_otto.update(timerProxy);
+  this->handleTauntingSounds(timerProxy);
 
   this->handleCollisions();
   this->removeMarked();
@@ -66,6 +63,8 @@ void Level::draw() {
 }
 
 bool Level::isFinished() const { return this->playerAtExit() || this->_player.isDead(); }
+
+bool Level::isCleared() const { return this->_robots.size() == 0; }
 
 Direction Level::getPlayerExit() const {
   // TODO: For now, these are hardcoded. Will this work if the screen is larger and the textures are scaled up?
@@ -138,7 +137,7 @@ void Level::removeMarked() {
     // NOTE: In the original arcade, the player's score goes up any time a robot dies as long as the player isn't dead,
     // even if it's from a wall collision or robot friendly fire. This encourages the player to attempt to outsmart the
     // pathfinding system, and also incentivizes surviving longer.
-    this->_LevelDataProxy.addScore(ROBOT_KILLED_SCORE * robotsKilled);
+    this->_levelDataProxy.addScore(ROBOT_KILLED_SCORE * robotsKilled);
   }
 }
 
@@ -202,5 +201,13 @@ RobotWallAvoidancePolicy Level::getRobotWallAvoidancePolicy(const int levelNo) c
     return RobotWallAvoidancePolicy::SOMETIMES;
   } else {
     return RobotWallAvoidancePolicy::ALWAYS;
+  }
+}
+
+void Level::handleTauntingSounds(const TimerProxy& timerProxy) {
+  this->_sinceLastTaunt += timerProxy.getTimeDelta();
+  if (this->_sinceLastTaunt >= LEVEL_TAUNT_FREQUENCY_MS) {
+    this->_sinceLastTaunt = 0;
+    this->_levelAudioComponent.playRandomizedTaunt();
   }
 }

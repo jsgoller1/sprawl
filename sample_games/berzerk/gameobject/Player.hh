@@ -7,18 +7,18 @@
 #include "GameObject.hh"
 #include "IShooting.hh"
 #include "PlayerAnimationSet.hh"
-#include "PlayerAudioComponent.hh"
 #include "State.hh"
 
 // Forward decls
 class AnimationSequence;
 class InputHandler;
+class PlayerAudioComponent;
 class PlayerSpriteManager;
 
 class Player : public GameObject, public IShooting {
  public:
   Player(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
-         const PlayerSpriteManager& playerSpriteManager);
+         const PlayerSpriteManager& playerSpriteManager, const PlayerAudioComponent& playerAudioComponent);
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
 
@@ -30,7 +30,7 @@ class Player : public GameObject, public IShooting {
  private:
   CharacterState _state;
   time_ms _sinceLastShot;
-  PlayerAudioComponent _playerAudioComponent = PlayerAudioComponent();
+  const PlayerAudioComponent& _playerAudioComponent;
   std::unique_ptr<PlayerAnimationSet> _playerAnimationSet = nullptr;
   std::unique_ptr<AnimatedDrawingComponent> _drawingComponent = nullptr;
 

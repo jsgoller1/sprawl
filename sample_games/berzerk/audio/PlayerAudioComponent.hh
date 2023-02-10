@@ -4,9 +4,11 @@
 
 class PlayerAudioComponent : public AudioComponent {
  public:
-  PlayerAudioComponent();
-  void playShooting();
+  PlayerAudioComponent(const std::string& assetsDirPath);
+  void playShooting() const;
+  void playDeath() const;
 
  private:
-  Mix_Chunk* _playerShooting;
+  Mix_Chunk* _shooting;
+  Mix_Chunk* _death;
 };

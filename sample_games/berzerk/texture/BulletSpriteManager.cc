@@ -3,8 +3,8 @@
 #include "Configs.hh"
 #include "Sprite.hh"
 
-BulletSpriteManager::BulletSpriteManager(const std::string& spriteSheetPath)
-    : SpriteManager(spriteSheetPath, TOP_LEFT, BULLET_SPRITE_WIDTH_PX, BULLET_SPRITE_HEIGHT_PX,
+BulletSpriteManager::BulletSpriteManager(const std::string& assetsDirPath)
+    : SpriteManager(assetsDirPath + BULLET_SPRITE_SHEET_PATH, TOP_LEFT, BULLET_SPRITE_WIDTH_PX, BULLET_SPRITE_HEIGHT_PX,
                     BULLET_SPRITE_BOUNDARY_WIDTH_PX) {}
 
 std::shared_ptr<Sprite> BulletSpriteManager::bulletHorizontal() const { return this->getSprite(0, 0); }

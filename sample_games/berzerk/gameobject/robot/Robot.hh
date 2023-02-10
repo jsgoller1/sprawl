@@ -14,6 +14,7 @@ class Direction;
 class DrawingProxy;
 class InputHandler;
 class LevelShootingProxy;
+class RobotAudioComponent;
 class RobotSpriteManager;
 class WallCollisionProxy;
 
@@ -21,7 +22,7 @@ class Robot : public GameObject, public IShooting {
  public:
   Robot(const Vect2D& position, const Vect2D& velocity, LevelShootingProxy& shootingProxy, DrawingProxy& drawingProxy,
         const PlayerPositionProxy& playerPositionProxy, const RobotSpriteManager& robotSpriteManager,
-        const WallCollisionProxy& wallCollisionProxy,
+        const RobotAudioComponent& robotAudioComponent, const WallCollisionProxy& wallCollisionProxy,
         const RobotWallAvoidancePolicy avoidancePolicy = RobotWallAvoidancePolicy::NEVER);
 
   AnimatedDrawingComponent& getDrawingComponent() const override;
@@ -30,6 +31,7 @@ class Robot : public GameObject, public IShooting {
 
  private:
   const PlayerPositionProxy& _playerPositionProxy;
+  const RobotAudioComponent& _robotAudioComponent;
   const WallCollisionProxy& _wallCollisionProxy;
   const RobotWallAvoidancePolicy _avoidancePolicy = RobotWallAvoidancePolicy::NEVER;
   bool _isAvoiding = false;
