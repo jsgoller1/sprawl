@@ -1,72 +1,50 @@
-# Adapted from https://stackoverflow.com/a/28663974/1320882, and
-# "Recursive Make Considered Harmful" by Peter Miller
+# This is the top-level Makefile for the Sprawl project. Execute these targets from the root directory of the project. 
+# See makefiles/README.md for more information.
 
-include makefiles/ops.mk
-include makefiles/settings.mk
+.PHONY: sprawl sprawl-physics-test berzerk breakout 
 
-SPRAWL_MODULES:=sprawl sprawl/cli sprawl/collision sprawl/components sprawl/drawing sprawl/ecs \
-sprawl/input sprawl/input/event sprawl/logging sprawl/math sprawl/physics sprawl/wads 3rdparty
-SPRAWL_INCLUDES:=$(patsubst %, -I %,$(SPRAWL_MODULES))
-SPRAWL_CXXFLAGS:=$(CXXFLAGS) $(SPRAWL_INCLUDES)
-SPRAWL_SRC_FILES:=$(shell find $(SPRAWL_MODULES) -name "*.cc" | sort -u)
-SPRAWL_OBJ_FILES:=$(patsubst %.cc, %.o, $(SPRAWL_SRC_FILES))
-SPRAWL_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
-sprawl: $(SPRAWL_OBJ_FILES)
-	$(CCACHE) $(CXX) $(SPRAWL_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN)
-sprawl-loc:
-	git ls-files | grep sprawl | grep -E "(\.cc|\.hh)$$" | uniq | xargs cat | wc -l
+MAKEFILE_DIR:=makefiles
+include $(MAKEFILE_DIR)/settings_misc.mk
 
+all: sprawl berzerk breakout 
 
-BERZERK_DIR:=sample_games/berzerk
-BERZERK_MODULES:=3rdparty $(BERZERK_DIR) $(BERZERK_DIR)/animation $(BERZERK_DIR)/audio $(BERZERK_DIR)/drawing  $(BERZERK_DIR)/gameobject
-BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject/gameobject $(BERZERK_DIR)/gameobject/bullet $(BERZERK_DIR)/gameobject/robot
-BERZERK_MODULES:=$(BERZERK_MODULES) $(BERZERK_DIR)/gameobject/wall $(BERZERK_DIR)/level $(BERZERK_DIR)/math $(BERZERK_DIR)/texture 
-BERZERK_INCLUDES:=$(patsubst %, -I %,$(BERZERK_MODULES))
-CXXFLAGS:=$(CXXFLAGS) $(BERZERK_INCLUDES)
-BERZERK_SRC_FILES:=$(shell find $(BERZERK_MODULES) -name "*.cc" | sort -u)
-BERZERK_OBJ_FILES:=$(patsubst %.cc, %.o, $(BERZERK_SRC_FILES))
-BERZERK_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
-BERZERK_ASSETS_DIR_PATH:=/Users/joshua/Code/sprawl/
-berzerk: $(BERZERK_OBJ_FILES)
-	$(CCACHE) $(CXX) $(BERZERK_CXXFLAGS) $(BERZERK_OBJ_FILES) $(BERZERK_SHARED_OBJ_FILES) -o ./bin/$@
-	./bin/berzerk $(BERZERK_ASSETS_DIR_PATH)
-berzerk-loc:
-	git ls-files | grep berzerk | grep -E "(\.cc|\.hh)$$" | uniq | xargs cat | wc -l
+# Builds main .dylib file for sprawl-based games to link against
+sprawl:  
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk deps 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk build 
 
+# Runs physics tests 
+sprawl-physics-test: sprawl 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk physics-test 
 
-BREAKOUT_MODULES:=sample_games/breakout 3rdparty
-BREAKOUT_INCLUDES:=$(patsubst %, -I %,$(BREAKOUT_MODULES))
-BREAKOUT_CXXFLAGS:=$(CXXFLAGS) $(BREAKOUT_INCLUDES)
-BREAKOUT_SRC_FILES:=$(shell find $(BREAKOUT_MODULES) -name "*.cc" | sort -u)
-BREAKOUT_OBJ_FILES:=$(patsubst %.cc, %.o, $(BREAKOUT_SRC_FILES))
-BREAKOUT_SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
-breakout: $(BREAKOUT_OBJ_FILES)
-	$(CCACHE) $(CXX) $(BREAKOUT_CXXFLAGS) $(BREAKOUT_OBJ_FILES) $(BREAKOUT_SHARED_OBJ_FILES) -o ./bin/$@
-	./bin/breakout
+# Builds and runs breakout sample game
+breakout:
+	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk deps 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk build 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk run  
 
-# Utilizes Clang preprocessor to automatically generate dependency 
-# makefile targets; this target be evaluated every time the Makefile
-# is read, so dependencies will be recalculated regularly. Inclusion
-# will cause to make to restart with the new targets available
-.depend: $(BERZERK_SRC_FILES) # $(BREAKOUT_SRC_FILES) $(SPRAWL_SRC_FILES)
-	rm -f ./$@
-	$(CXX) $(CXXFLAGS) -MM $^>>./$@;
-include .depend
+# Builds and runs berzerk sample game
+berzerk:
+	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk deps 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk build 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk run
 
-clean-obj:
-	-rm -f $(OBJ_FILES)
-
-clean-deps:
-	-rm .depend
-
-clean-logs:
-	-rm bin/*.log
+clean-all: clean-bin clean-deps clean-logs clean-obj
 
 clean-bin:
 	-rm -r $(BIN_DIR)
 	-mkdir $(BIN_DIR)
 
-clean-purge: clean-deps clean-logs clean-bin
-	-find $(BREAKOUT_MODULES) -name "*.o" | sort -u | xargs rm
-	-find $(BERZERK_MODULES) -name "*.o" | sort -u | xargs rm
-	-find $(SPRAWL_MODULES) -name "*.o" | sort -u | xargs rm
+clean-deps:
+	-find . -name "*.d" | sort -u | xargs rm
+
+clean-logs:
+	-rm -r $(LOG_DIR)
+	-mkdir $(LOG_DIR)
+
+clean-obj:
+	-find . -name "*.o" | sort -u | xargs rm
+
+# NOTE: This is a Linux-specific tool for screen recording. For MacOS, use Quicktime. 
+record-screen:
+	byzanz-record -d 5 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif

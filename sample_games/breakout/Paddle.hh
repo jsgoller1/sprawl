@@ -4,7 +4,7 @@
 
 #define PADDLE_WIDTH 150
 #define PADDLE_HEIGHT 40
-#define PADDLE_TEXTURE_PATH "/home/joshua/Code/sprawl/sample_games/breakout/textures/paddle.png"
+#define PADDLE_TEXTURE_PATH "/Users/joshua/Code/sprawl/sample_games/breakout/textures/paddle.png"
 
 class Paddle : public Drawable {
  public:

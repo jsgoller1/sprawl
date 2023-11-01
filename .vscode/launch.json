@@ -91,6 +91,16 @@
             "cwd": "/home/joshua/Code/sprawl",
             "environment": [],
             "MIMode": "gdb",
-        }
+        },
+        {
+            "name": "Breakout (MacOS)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${cwd}/bin/breakout",
+            "cwd": "${workspaceFolder}",
+            "args": [],
+            "stopAtEntry": false,
+            "miDebuggerPath": "/usr/local/bin/lldb-mi"
+        },
     ]
 }

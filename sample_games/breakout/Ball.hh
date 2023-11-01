@@ -6,7 +6,7 @@
 #include "Vect2D.hh"
 
 #define BALL_RADIUS 45
-#define BALL_TEXTURE_PATH "/home/joshua/Code/sprawl/sample_games/breakout/textures/ball.png"
+#define BALL_TEXTURE_PATH "/Users/joshua/Code/sprawl/sample_games/breakout/textures/ball.png"
 
 class Ball : public Drawable {
  public:

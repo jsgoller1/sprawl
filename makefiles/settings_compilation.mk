@@ -1,11 +1,3 @@
-### General vars
-SHELL:=/bin/bash
-DIR:=$(shell pwd)
-BIN_DIR:=$(DIR)/bin
-PLATFORM:=$(shell uname)
-PROJECT_NAME:=sprawl
-ENGINE_BIN:=$(BIN_DIR)/$(PROJECT_NAME)
-
 ### Uncomment this to run Clang's static analyzer while building; this makes the build slower.
 #ANALYZER:=scan-build --status-bugs
 
