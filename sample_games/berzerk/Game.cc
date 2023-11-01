@@ -55,6 +55,9 @@ void Game::run() {
 }
 
 void Game::update(const InputHandler& inputHandler, const TimerProxy& timerProxy) {
+  if (inputHandler.pausePressed()) {
+    this->_isPaused = !this->_isPaused;
+  }
   if (this->_isPaused) {
     return;
   }

@@ -9,6 +9,7 @@ class Direction;
 
 class InputHandler {
  public:
+  bool pausePressed() const;
   bool gotSDLQuit() const;
   bool escapePressed() const;
   bool upArrowPressed() const;
@@ -30,6 +31,7 @@ class InputHandler {
   void getKeyboardInput();
 
  private:
+  bool _pausePressed = false;
   bool _gotSDLQuit = false;
   bool _escapePressed = false;
   bool _upArrowPressed = false;

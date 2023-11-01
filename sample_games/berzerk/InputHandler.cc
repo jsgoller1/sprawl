@@ -2,6 +2,7 @@
 
 #include "Direction.hh"
 
+bool InputHandler::pausePressed() const { return this->_pausePressed; }
 bool InputHandler::gotSDLQuit() const { return this->_gotSDLQuit; }
 bool InputHandler::escapePressed() const { return this->_escapePressed; }
 bool InputHandler::upArrowPressed() const { return this->_upArrowPressed; }
@@ -78,6 +79,8 @@ void InputHandler::keyboardEventHandler(const Uint32 eventType, const SDL_Keycod
     case SDLK_SPACE:
       this->_spacePressed = setting;
       break;
+    case SDLK_p:
+      this->_pausePressed = setting;
     default:
       break;
   }
