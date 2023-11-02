@@ -14,6 +14,16 @@
             "MIMode": "gdb",
         },
         {
+            "name": "Berzerk",
+            "type": "lldb",
+            "request": "launch",
+            "cwd": "/Users/joshua/Code/sprawl",
+            "program": "${cwd}/bin/berzerk",
+            "args": [
+                "/Users/joshua/Code/sprawl/"
+            ]
+        },
+        {
             "name": "MVP",
             "type": "cppdbg",
             "request": "launch",
@@ -81,6 +91,16 @@
             "cwd": "/home/joshua/Code/sprawl",
             "environment": [],
             "MIMode": "gdb",
-        }
+        },
+        {
+            "name": "Breakout (MacOS)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${cwd}/bin/breakout",
+            "cwd": "${workspaceFolder}",
+            "args": [],
+            "stopAtEntry": false,
+            "miDebuggerPath": "/usr/local/bin/lldb-mi"
+        },
     ]
 }

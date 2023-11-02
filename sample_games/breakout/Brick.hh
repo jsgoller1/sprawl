@@ -10,17 +10,17 @@
 #define BRICK_HEIGHT 50
 
 constexpr std::string_view RED_BRICK_TEXTURE_PATH =
-    "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-red.png";
+    "/Users/joshua/Code/sprawl/sample_games/breakout/textures/brick-red.png";
 constexpr std::string_view ORANGE_BRICK_TEXTURE_PATH =
-    "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-orange.png";
+    "/Users/joshua/Code/sprawl/sample_games/breakout/textures/brick-orange.png";
 constexpr std::string_view YELLOW_BRICK_TEXTURE_PATH =
-    "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-yellow.png";
+    "/Users/joshua/Code/sprawl/sample_games/breakout/textures/brick-yellow.png";
 constexpr std::string_view GREEN_BRICK_TEXTURE_PATH =
-    "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-green.png";
+    "/Users/joshua/Code/sprawl/sample_games/breakout/textures/brick-green.png";
 constexpr std::string_view BLUE_BRICK_TEXTURE_PATH =
-    "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-blue.png";
+    "/Users/joshua/Code/sprawl/sample_games/breakout/textures/brick-blue.png";
 constexpr std::string_view PURPLE_BRICK_TEXTURE_PATH =
-    "/home/joshua/Code/sprawl/sample_games/breakout/textures/brick-purple.png";
+    "/Users/joshua/Code/sprawl/sample_games/breakout/textures/brick-purple.png";
 
 static const std::vector<std::string_view> brickColors = {RED_BRICK_TEXTURE_PATH,    ORANGE_BRICK_TEXTURE_PATH,
                                                           YELLOW_BRICK_TEXTURE_PATH, GREEN_BRICK_TEXTURE_PATH,

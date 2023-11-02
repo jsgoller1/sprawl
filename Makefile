@@ -1,52 +1,50 @@
-# Adapted from https://stackoverflow.com/a/28663974/1320882, and
-# "Recursive Make Considered Harmful" by Peter Miller
+# This is the top-level Makefile for the Sprawl project. Execute these targets from the root directory of the project. 
+# See makefiles/README.md for more information.
 
-include makefiles/settings.mk
+.PHONY: sprawl sprawl-physics-test berzerk breakout 
 
-MODULES:=sample_games/breakout 3rdparty
-#MODULES:=$(MODULES) sprawl sprawl/cli sprawl/collision sprawl/components sprawl/drawing sprawl/ecs \
-sprawl/input sprawl/input/event sprawl/logging sprawl/math sprawl/physics sprawl/wads 3rdparty
-INCLUDES:=$(patsubst %, -I %,$(MODULES))
-CXXFLAGS:=$(CXXFLAGS) $(INCLUDES)
+MAKEFILE_DIR:=makefiles
+include $(MAKEFILE_DIR)/settings_misc.mk
 
-SRC_FILES:=$(shell find $(MODULES) -name "*.cc" | sort -u)
-OBJ_FILES:=$(patsubst %.cc, %.o, $(SRC_FILES))
-SHARED_OBJ_FILES:=$(shell find 3rdparty/ -name "*.dylib" -or -name "*.so")
+all: sprawl berzerk breakout 
 
-all: breakout
+# Builds main .dylib file for sprawl-based games to link against
+sprawl:  
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk deps 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk build 
 
-sprawl: $(OBJ_FILES)
-	$(CCACHE) $(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o $(ENGINE_BIN)
+# Runs physics tests 
+sprawl-physics-test: sprawl 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk physics-test 
 
-breakout: $(OBJ_FILES)
-	$(CCACHE) $(CXX) $(CXXFLAGS) $(OBJ_FILES) $(SHARED_OBJ_FILES) -o ./bin/breakout
-	./bin/breakout
+# Builds and runs breakout sample game
+breakout:
+	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk deps 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk build 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk run  
 
+# Builds and runs berzerk sample game
+berzerk:
+	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk deps 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk build 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk run
 
-# Utilizes Clang preprocessor to automatically generate dependency 
-# makefile targets; this target be evaluated every time the Makefile
-# is read, so dependencies will be recalculated regularly. Inclusion
-# will cause to make to restart with the new targets available
-.depend: $(SRC_FILES)
-	rm -f ./$@
-	$(CXX) $(CXXFLAGS) -MM $^>>./$@;
-include .depend
-
-clean-obj:
-	-rm -f $(OBJ_FILES)
-
-clean-deps:
-	-rm .depend
-
-clean-logs:
-	-rm bin/*.log
+clean-all: clean-bin clean-deps clean-logs clean-obj
 
 clean-bin:
-	-rm $(ENGINE_BIN)
+	-rm -r $(BIN_DIR)
+	-mkdir $(BIN_DIR)
 
-clean-purge: clean-deps clean-logs clean-bin
-	find $(MODULES) -name "*.o" | sort -u | xargs rm
+clean-deps:
+	-find . -name "*.d" | sort -u | xargs rm
 
-# Ops-related makefiles; these involve automation
-# and no compilation. 
-include makefiles/ops.mk
+clean-logs:
+	-rm -r $(LOG_DIR)
+	-mkdir $(LOG_DIR)
+
+clean-obj:
+	-find . -name "*.o" | sort -u | xargs rm
+
+# NOTE: This is a Linux-specific tool for screen recording. For MacOS, use Quicktime. 
+record-screen:
+	byzanz-record -d 5 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
