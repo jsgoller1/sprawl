@@ -1,43 +1,6 @@
 {
     "configurations": [
         {
-            "name": "Linux",
-            "includePath": [
-                "${workspaceFolder}",
-                "${workspaceFolder}/3rdparty/",
-                "${workspaceFolder}/sample_games/berzerk/",
-                "${workspaceFolder}/sample_games/berzerk/animation/",
-                "${workspaceFolder}/sample_games/berzerk/audio/",
-                "${workspaceFolder}/sample_games/berzerk/drawing/",
-                "${workspaceFolder}/sample_games/berzerk/gameobject/",
-                "${workspaceFolder}/sample_games/berzerk/gameobject/bullet",
-                "${workspaceFolder}/sample_games/berzerk/gameobject/gameobject",
-                "${workspaceFolder}/sample_games/berzerk/gameobject/robot",
-                "${workspaceFolder}/sample_games/berzerk/gameobject/wall",
-                "${workspaceFolder}/sample_games/berzerk/level/",
-                "${workspaceFolder}/sample_games/berzerk/main/",
-                "${workspaceFolder}/sample_games/berzerk/math/",
-                "${workspaceFolder}/sample_games/berzerk/texture/",
-                "${workspaceFolder}/sprawl/",
-                "${workspaceFolder}/sprawl/cli/",
-                "${workspaceFolder}/sprawl/collision/",
-                "${workspaceFolder}/sprawl/components/",
-                "${workspaceFolder}/sprawl/drawing/",
-                "${workspaceFolder}/sprawl/ecs/",
-                "${workspaceFolder}/sprawl/input/",
-                "${workspaceFolder}/sprawl/input/event/",
-                "${workspaceFolder}/sprawl/logging/",
-                "${workspaceFolder}/sprawl/math/",
-                "${workspaceFolder}/sprawl/physics/",
-                "${workspaceFolder}/sprawl/wads/",
-                "${workspaceFolder}/test/"
-            ],
-            "defines": [],
-            "compilerPath": "/usr/bin/clang",
-            "intelliSenseMode": "linux-clang-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
-        },
-        {
             "name": "Mac",
             "includePath": [
                 "${workspaceFolder}",
@@ -57,10 +20,9 @@
                 "${workspaceFolder}/test/"
             ],
             "defines": [],
-            "compilerPath": "/usr/local/bin/clang-format",
+            "compilerPath": "/usr/bin/clang++",
             "intelliSenseMode": "macos-clang-x64",
-            "configurationProvider": "ms-vscode.makefile-tools"
-        }
+        },
     ],
     "version": 4
 }
