@@ -44,15 +44,13 @@ class World {
    */
  public:
   World(const GraphicsSettings& screenParameters);
-  virtual ~World();
-  std::shared_ptr<Background> getBackground();
-  void setBackground(const std::shared_ptr<Background> background);
+  ~World();
   PhysicsManager& getPhysicsManager();
   void setPhysicsManager(const PhysicsManager& physicsManager);
   std::vector<std::shared_ptr<GameObject>>& getGameObjects();
   void addGameObject(const std::shared_ptr<GameObject> gameObject);
 
-  void gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration);
+  void gameLoopUpdate(const time_ms duration);
 
  private:
   // We only need to care about physics and AI going on in currentWorld,
@@ -69,8 +67,5 @@ class World {
   // TODO: Since GameObjects have a unique ID, we should be able to insert them into
   // a set. Furthermore, we might not even need a distinct GameObject collection if we make
   // just forward to the EntityManager. We need to resolve "who owns game objects?"
-  std::shared_ptr<Background> background;
   std::vector<std::shared_ptr<GameObject>> gameObjects;
-
-  virtual void handleInput(const std::shared_ptr<GameLoopInputEvents> inputEvents) = 0;
 };
