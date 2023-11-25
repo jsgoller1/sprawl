@@ -18,24 +18,12 @@ World::World(const GraphicsSettings& graphicsSettings)
       drawingManager(DrawingManager(graphicsSettings)),
       gameObjects(std::vector<std::shared_ptr<GameObject>>()) {}
 
-std::shared_ptr<Background> World::getBackground() { return this->background; }
-void World::setBackground(const std::shared_ptr<Background> background) {
-  this->background = background;
-
-  // TODO: This is not good; if we update the background, we need a way to remove the previous one.
-  this->drawingManager.manage(background->getIdentity().shared_from_this(),
-                              getSharedPointer<PositionComponent>(background->getPositionComponent()),
-                              getSharedPointer<DrawingComponent>(background->getDrawingComponent()));
-  this->gameObjects.push_back(background);
-}
-
 PhysicsManager& World::getPhysicsManager() { return this->physicsManager; }
 void World::setPhysicsManager(const PhysicsManager& physicsManager) {
   this->physicsManager = PhysicsManager(physicsManager);
 }
 
-void World::gameLoopUpdate(const std::shared_ptr<GameLoopInputEvents> inputEvents, const time_ms duration) {
-  this->handleInput(inputEvents);
+void World::gameLoopUpdate(const time_ms duration) {
   this->physicsManager.gameLoopUpdate(duration);
   this->drawingManager.gameLoopUpdate(duration);
 }

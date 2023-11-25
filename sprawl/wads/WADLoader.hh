@@ -43,14 +43,14 @@ class WADLoader {
   std::shared_ptr<CollisionComponent> loadCollisionComponent(
       const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
 
- protected:
+  std::shared_ptr<World> loadWorld() const;
+  void loadGameObject(World& world, const nlohmann::json& jsonBody) const;
+
+ private:
   bool objectEnabled(const nlohmann::json& jsonBody) const;
   DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
   nlohmann::json getJsonBody() const;
 
-  virtual void loadBackground(World& world, const nlohmann::json& jsonBody) const;
-
- private:
   FilePath _wadDir;
   nlohmann::json _jsonBody;
 };
