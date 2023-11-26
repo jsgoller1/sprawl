@@ -1,13 +1,17 @@
 #pragma once
 #include "Component.hh"
-#include "Identity.hh"
 #include "Math.hh"
 #include "Types.hh"
 
+// fwd decls
+class Actor;
+
 class PositionComponent : public Component {
  public:
-  PositionComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const Vect2D& center = Vect2D::zero(),
+  PositionComponent(const std::weak_ptr<Actor> owner, const Vect2D& center = Vect2D::zero(),
                     const PositionUnit height = 1.0, const PositionUnit width = 1.0);
+
+  std::string toString() const override;
 
   // Getters / setters
   // Forwarding

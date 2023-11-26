@@ -1,12 +1,14 @@
 #include "RealisticPhysicsComponent.hh"
 
+#include "Actor.hh"
+
 // ctors / dtors
-RealisticPhysicsComponent::RealisticPhysicsComponent(const std::shared_ptr<Identity> ownerIdentity,
+RealisticPhysicsComponent::RealisticPhysicsComponent(const std::weak_ptr<Actor> owner,
                                                      const bool forceResponsiveSetting, const bool gravitySetting,
                                                      const PositionUnit maxSpeed, const PositionUnit minSpeed,
                                                      const DragType dragType, const real dragCoefficient,
                                                      Vect2D velocity)
-    : PhysicsComponent(ownerIdentity, maxSpeed, minSpeed, velocity),
+    : PhysicsComponent(owner, maxSpeed, minSpeed, velocity),
       _forceResponsive(forceResponsiveSetting),
       _gravityEnabled(gravitySetting),
       _dragCoefficient(dragCoefficient),
@@ -14,8 +16,8 @@ RealisticPhysicsComponent::RealisticPhysicsComponent(const std::shared_ptr<Ident
 
 RealisticPhysicsComponent::~RealisticPhysicsComponent() = default;
 
-std::shared_ptr<RealisticPhysicsComponent> RealisticPhysicsComponent::getptr() {
-  return std::static_pointer_cast<RealisticPhysicsComponent, Component>(this->shared_from_this());
+std::string RealisticPhysicsComponent::toString() const {
+  return fmt::format("RealisticPhysicsComponent({})", this->getOwner()->toString());
 }
 
 // Unique attribute accessors
@@ -74,12 +76,10 @@ Vect2D RealisticPhysicsComponent::integrate(const time_ms duration) {
     // }
 
     this->updateVelocityFromNetForce(duration);
-    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Integrating");
-    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "netForce: {}", this->_netForce.to_string());
-    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Acceleration: {}",
-                      this->_acceleration.to_string());
-    LOG_DEBUG_SYS_ENT(PHYSICS, this->getOwnerIdentity()->getEntityID(), "Final Velocity: {}",
-                      this->getVelocity().to_string());
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->toString(), "Integrating");
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->toString(), "netForce: {}", this->_netForce.to_string());
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->toString(), "Acceleration: {}", this->_acceleration.to_string());
+    LOG_DEBUG_SYS_ENT(PHYSICS, this->toString(), "Final Velocity: {}", this->getVelocity().to_string());
     movement = this->getVelocity() * duration;
   }
   this->_netForce = Vect2D::zero();

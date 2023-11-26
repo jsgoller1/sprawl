@@ -3,8 +3,10 @@
 #include <map>
 #include <memory>
 
+#include "ComponentManager.hh"
 #include "Math.hh"
 #include "SDL2/SDL.h"
+#include "Singleton.hh"
 #include "Types.hh"
 
 // Forward decls
@@ -14,7 +16,7 @@ class Identity;
 class Texture;
 struct GraphicsSettings;
 
-class DrawingManager {
+class DrawingManager : public ComponentManager, public Singleton<DrawingManager> {
   // DrawingManager manages actually drawing stuff on the screen; for now, it handles
   // any SDL functionality related to drawing the window and actually putting
   // things in it. All entities in the World _can_ be drawn, and DrawingManager knows
@@ -26,23 +28,16 @@ class DrawingManager {
   // draw, but all of it will take precedence over World items.
 
  public:
-  DrawingManager(const GraphicsSettings& graphicsSettings);
-  ~DrawingManager();
-  void manage(const std::shared_ptr<Identity> identity, const std::shared_ptr<PositionComponent> positionComponent,
-              const std::shared_ptr<DrawingComponent> drawingComponent);
-  void unmanage(const std::shared_ptr<Identity> identity);
-  void gameLoopUpdate(const time_ms duration);
+  void initialize(const GraphicsSettings& graphicsSettings);
+  ~DrawingManager() override;
+  void gameLoopUpdate(const time_ms duration) override;
   Vect2D toScreenCoordinates(const Vect2D& vect) const;
 
  private:
-  typedef struct ManagementEntry {
-    const std::shared_ptr<PositionComponent> positionComponent;
-    const std::shared_ptr<DrawingComponent> drawingComponent;
-    ManagementEntry(const std::shared_ptr<PositionComponent> positionComponent,
-                    const std::shared_ptr<DrawingComponent> drawingComponent);
-  } ManagementEntry;
-  std::map<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>> managementEntries =
-      std::map<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>>();
+  friend Singleton<DrawingManager>;
+  DrawingManager() = default;
+  DrawingManager(const DrawingManager&) = delete;
+  DrawingManager& operator=(const DrawingManager&) = delete;
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;

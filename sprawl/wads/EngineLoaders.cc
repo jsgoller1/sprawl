@@ -4,7 +4,6 @@
 #include "GraphicsSettings.hh"
 #include "InputHandler.hh"
 #include "WADLoader.hh"
-#include "World.hh"
 
 void WADLoader::loadLogging() const {
   if (!this->_jsonBody.contains("logging")) {

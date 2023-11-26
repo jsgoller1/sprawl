@@ -1,15 +1,17 @@
 #include "DrawingManager.hh"
 
+#include "Actor.hh"
 #include "DrawingComponent.hh"
 #include "GraphicsSettings.hh"
 #include "Logging.hh"
 #include "Texture.hh"
 
-DrawingManager::DrawingManager(const GraphicsSettings& graphicsSettings)
-    : _screenWidth(graphicsSettings.screenWidth),
-      _screenHeight(graphicsSettings.screenHeight),
-      _useHardwareAcceleration(graphicsSettings.useHardwareAcceleration),
-      _useVSync(graphicsSettings.useVSync) {
+void DrawingManager::initialize(const GraphicsSettings& graphicsSettings) {
+  this->_screenWidth = graphicsSettings.screenWidth;
+  this->_screenHeight = graphicsSettings.screenHeight;
+  this->_useHardwareAcceleration = graphicsSettings.useHardwareAcceleration;
+  this->_useVSync = graphicsSettings.useVSync;
+
   // Init SDL, create SDL window, create SDL renderer
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     LOG_FATAL_SYS(SDL, "Could not init SDL; {0}", Logging::getSDLError());
@@ -37,30 +39,6 @@ DrawingManager::~DrawingManager() {
   SDL_Quit();
 }
 
-DrawingManager::ManagementEntry::ManagementEntry(const std::shared_ptr<PositionComponent> positionComponent,
-                                                 const std::shared_ptr<DrawingComponent> drawingComponent)
-    : positionComponent(positionComponent), drawingComponent(drawingComponent) {}
-
-void DrawingManager::manage(const std::shared_ptr<Identity> identity,
-                            const std::shared_ptr<PositionComponent> positionComponent,
-                            const std::shared_ptr<DrawingComponent> drawingComponent) {
-  if (this->managementEntries.find(identity) != this->managementEntries.end()) {
-    // TODO: Log a warning
-    return;
-  }
-  std::shared_ptr<ManagementEntry> entry =
-      std::shared_ptr<ManagementEntry>(new ManagementEntry(positionComponent, drawingComponent));
-  this->managementEntries.insert(
-      std::pair<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>>(identity, entry));
-}
-
-void DrawingManager::unmanage(const std::shared_ptr<Identity> identity) {
-  if (this->managementEntries.find(identity) == this->managementEntries.end()) {
-    // TODO: Log a warning
-    return;
-  }
-  this->managementEntries.erase(identity);
-}
 void DrawingManager::gameLoopUpdate(const time_ms duration) {
   // TODO: Duration parameter exists for the sake of API consistency
   // even though we don't need it yet; we will use it for animation (probably)
@@ -70,10 +48,9 @@ void DrawingManager::gameLoopUpdate(const time_ms duration) {
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
-  for (std::pair<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>> mapping : this->managementEntries) {
-    identity = mapping.first;
-    positionComponent = mapping.second->positionComponent;
-    drawingComponent = mapping.second->drawingComponent;
+  for (std::shared_ptr<Actor> actor : this->managedActors) {
+    positionComponent = actor->getComponent<PositionComponent>();
+    drawingComponent = actor->getComponent<DrawingComponent>();
     this->prepare(*positionComponent, *drawingComponent);
   }
   SDL_RenderPresent(this->_renderer);

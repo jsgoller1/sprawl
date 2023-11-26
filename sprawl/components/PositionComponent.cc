@@ -1,9 +1,13 @@
 
 #include "PositionComponent.hh"
 
-PositionComponent::PositionComponent(const std::shared_ptr<Identity> ownerIdentity, const Vect2D& center,
-                                     const PositionUnit height, const PositionUnit width)
-    : Component(ownerIdentity), _area(Rectangle(center, height, width)) {}
+#include "Actor.hh"
+
+PositionComponent::PositionComponent(const std::weak_ptr<Actor> owner, const Vect2D& center, const PositionUnit height,
+                                     const PositionUnit width)
+    : Component(owner), _area(Rectangle(center, height, width)) {}
+
+std::string PositionComponent::toString() const { return "PositionComponent " + this->getUUID(); }
 
 PositionUnit PositionComponent::x() const { return this->_area.getCenter().x(); }
 void PositionComponent::x(const PositionUnit x) { this->_area.getCenter().x(x); }

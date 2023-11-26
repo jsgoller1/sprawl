@@ -1,8 +1,10 @@
 #pragma once
 
-#include "Identity.hh"
 #include "Math.hh"
 #include "PhysicsTypes.hh"
+
+// Fwd decls
+class Actor;
 
 class Collision {
   /*
@@ -13,19 +15,19 @@ class Collision {
    * position, and attempted move), but results in simpler code.
    */
  public:
-  Collision(const std::shared_ptr<Identity> source, std::shared_ptr<Identity> target, const Vect2D& originalPosition,
+  Collision(const std::weak_ptr<Actor> source, std::weak_ptr<Actor> target, const Vect2D& originalPosition,
             const Vect2D& attemptedMove, const Vect2D& finalPosition, const CollisionAxis collisionAxis);
 
-  std::shared_ptr<Identity> source() const;
-  std::shared_ptr<Identity> target() const;
+  std::weak_ptr<Actor> source() const;
+  std::weak_ptr<Actor> target() const;
   Vect2D originalPosition() const;
   Vect2D attemptedMove() const;
   Vect2D finalPosition() const;
   CollisionAxis collisionAxis() const;
 
  private:
-  std::shared_ptr<Identity> _source;
-  std::shared_ptr<Identity> _target;
+  std::weak_ptr<Actor> _source;
+  std::weak_ptr<Actor> _target;
   Vect2D _originalPosition;
   Vect2D _attemptedMove;
   Vect2D _finalPosition;

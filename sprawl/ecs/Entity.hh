@@ -3,27 +3,19 @@
 #include "Logging.hh"
 #include "Types.hh"
 
-// Forward decl
-class PhysicsComponent;
-class Identity;
-
-class Entity : public std::enable_shared_from_this<Entity> {
+class Entity {
   /*
-   * An Entity is anything that exists in the game world and makes use of
-   * components. Every Entity must have a unique Identity. Entities may also
-   * have names, but are not required to.
+   * An Entity is anything that needs a unique identifier - presently, Actors and Components.
    */
 
  public:
-  Identity& getIdentity() const;
-  EntityName getName() const;
-  void setName(const EntityName name);
+  UUID getUUID() const;
+  virtual std::string toString() const = 0;
 
  protected:
-  Entity(const EntityName name);
-  ~Entity();
+  Entity();
+  virtual ~Entity();
 
  private:
-  std::shared_ptr<Identity> _identity = nullptr;
-  EntityName _name = "";
+  UUID uuid;
 };

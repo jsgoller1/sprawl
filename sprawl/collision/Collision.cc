@@ -1,6 +1,6 @@
 #include "Collision.hh"
 
-Collision::Collision(const std::shared_ptr<Identity> source, const std::shared_ptr<Identity> target,
+Collision::Collision(const std::weak_ptr<Actor> source, const std::weak_ptr<Actor> target,
                      const Vect2D& originalPosition, const Vect2D& attemptedMove, const Vect2D& finalPosition,
                      const CollisionAxis collisionAxis)
     : _source(source),
@@ -10,8 +10,8 @@ Collision::Collision(const std::shared_ptr<Identity> source, const std::shared_p
       _finalPosition(finalPosition),
       _collisionAxis(collisionAxis){};
 
-std::shared_ptr<Identity> Collision::source() const { return this->_source; }
-std::shared_ptr<Identity> Collision::target() const { return this->_target; }
+std::weak_ptr<Actor> Collision::source() const { return this->_source; }
+std::weak_ptr<Actor> Collision::target() const { return this->_target; }
 Vect2D Collision::originalPosition() const { return this->_originalPosition; }
 Vect2D Collision::attemptedMove() const { return this->_attemptedMove; }
 Vect2D Collision::finalPosition() const { return this->_finalPosition; }

@@ -9,6 +9,7 @@
 time_ms to_miliseconds(const time_s time);
 time_s to_seconds(const time_ms time);
 
+// TODO: split this out to Timer.hh/cc
 class Timer {
  public:
   Timer();

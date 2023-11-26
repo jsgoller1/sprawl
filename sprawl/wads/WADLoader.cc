@@ -2,9 +2,15 @@
 
 #include <fstream>
 
-#include "GameObject.hh"
+#include "Actor.hh"
+#include "ActorManager.hh"
+#include "CollisionManager.hh"
+#include "Component.hh"
+#include "DrawingManager.hh"
+#include "GraphicsSettings.hh"
 #include "Logging.hh"
-#include "World.hh"
+#include "PhysicsManager.hh"
+#include "PositionComponent.hh"
 
 WADLoader::~WADLoader() = default;
 
@@ -18,46 +24,47 @@ WADLoader::WADLoader(const FilePath& wadDir) {
   this->_jsonBody = nlohmann::json::parse(wadFile);
 }
 
-void WADLoader::loadGameObject(World& world, const nlohmann::json& jsonBody) const {
-  if (!this->objectEnabled(jsonBody)) {
-    return;
-  }
-  std::shared_ptr<PositionComponent> positionComponent = this->loadPositionComponent(jsonBody["position"]);
-  // std::shared_ptr<PhysicsComponent> physicsComponent = this->loadRealisticPhysicsComponent(jsonBody["physics"]);
-  std::shared_ptr<DrawingComponent> drawingComponent = this->loadDrawingComponent(jsonBody["drawing"]);
-  std::shared_ptr<CollisionComponent> collisionComponent =
-      this->loadCollisionComponent(jsonBody["collisions"], positionComponent);
-
-  std::shared_ptr<GameObject> object = std::make_shared<GameObject>(
-      EntityName(jsonBody.value("name", "")), positionComponent, collisionComponent, nullptr, drawingComponent);
-  world.addGameObject(object);
-}
-
 bool WADLoader::objectEnabled(const nlohmann::json& jsonBody) const { return jsonBody.value("enabled", false); }
 
 nlohmann::json WADLoader::getJsonBody() const { return this->_jsonBody; }
 
-std::shared_ptr<World> WADLoader::loadWorld() const {
-  // TODO: Add error checking with helpful messages. Pretending for now that
-  // IntegrationWADLoader files are always correctly structured json
+void WADLoader::loadSettings(ActorManager& actorManager, CollisionManager& collisionManager,
+                             DrawingManager& drawingManager, PhysicsManager& physicsManager) const {
+  (void)actorManager;
+  (void)collisionManager;
 
   nlohmann::json jsonData = this->getJsonBody();
-  std::shared_ptr<World> world = std::make_shared<World>(this->loadGraphicsSettings(jsonData["graphics"]));
-
+  drawingManager.initialize(this->loadGraphicsSettings(jsonData["graphics"]));
   if (jsonData.contains("gravityConstant")) {
-    world->getPhysicsManager().setGravityConstant(jsonData["gravityConstant"]);
+    physicsManager.setGravityConstant(jsonData["gravityConstant"]);
   }
+}
+
+void WADLoader::loadActors(ActorManager& actorManager) const {
+  // TODO: Add error checking with helpful messages. Pretending for now that
+  // IntegrationWADLoader files are always correctly structured json
+  nlohmann::json jsonData = this->getJsonBody();
 
   if (jsonData.contains("gameObjects")) {
-    std::shared_ptr<GameObject> object;
-    for (auto gameObjectJSON : jsonData["gameObjects"]) {
-      if (gameObjectJSON["enabled"] == false) {
+    std::shared_ptr<Actor> actor;
+    for (auto actorJSON : jsonData["actors"]) {
+      if (actorJSON["enabled"] == false) {
         continue;
       }
-      LOG_DEBUG_SYS(WADLOADER, "Loading GameObject: {0}", nlohmann::to_string(gameObjectJSON));
-      this->loadGameObject(*world, gameObjectJSON);
+      LOG_DEBUG_SYS(WADLOADER, "Loading Actor: {0}", nlohmann::to_string(actorJSON));
+      this->loadActor(actorManager, actorJSON);
     }
   }
+}
 
-  return world;
+void WADLoader::loadActor(ActorManager& actorManager, const nlohmann::json& jsonBody) const {
+  if (!this->objectEnabled(jsonBody)) {
+    return;
+  }
+
+  std::shared_ptr<Actor> actor = actorManager.createActor(jsonBody["name"], jsonBody["scenes"]);
+  this->loadPositionComponent(actor, jsonBody["position"]);
+  this->loadDrawingComponent(actor, jsonBody["drawing"]);
+  this->loadCollisionComponent(actor, jsonBody["collisions"]);
+  this->loadRealisticPhysicsComponent(actor, jsonBody["physics"]);
 }

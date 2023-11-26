@@ -6,16 +6,18 @@
 #include "json/json.hpp"
 
 // Forward decls;
+class Actor;
+class ActorManager;
 class CollisionComponent;
+class CollisionManager;
 class DrawingComponent;
+class DrawingManager;
 struct GraphicsSettings;
 class InputHandler;
-class Identity;
 class PositionComponent;
+class PhysicsManager;
 class RealisticPhysicsComponent;
 class SimplePhysicsComponent;
-class World;
-class Zone;
 
 template <typename KeyType>
 KeyType loadKey(const nlohmann::json& jsonBody, const std::string& key, const KeyType& defaultVal,
@@ -36,17 +38,18 @@ class WADLoader {
 
   std::shared_ptr<InputHandler> loadInputHandler() const;
   GraphicsSettings loadGraphicsSettings(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<PositionComponent> loadPositionComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<RealisticPhysicsComponent> loadRealisticPhysicsComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<SimplePhysicsComponent> loadSimplePhysicsComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<DrawingComponent> loadDrawingComponent(const nlohmann::json& jsonBody) const;
-  std::shared_ptr<CollisionComponent> loadCollisionComponent(
-      const nlohmann::json& jsonBody, const std::shared_ptr<PositionComponent> positionComponent = nullptr) const;
 
-  std::shared_ptr<World> loadWorld() const;
-  void loadGameObject(World& world, const nlohmann::json& jsonBody) const;
+  void loadSettings(ActorManager& actorManager, CollisionManager& collisionManager, DrawingManager& drawingManager,
+                    PhysicsManager& physicsManager) const;
+  void loadActors(ActorManager& actorManager) const;
 
  private:
+  void loadActor(ActorManager& actorManager, const nlohmann::json& jsonBody) const;
+  void loadPositionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadRealisticPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+
   bool objectEnabled(const nlohmann::json& jsonBody) const;
   DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
   nlohmann::json getJsonBody() const;

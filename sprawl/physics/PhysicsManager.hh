@@ -1,19 +1,19 @@
 #pragma once
 
 #include <memory>
+#include <unordered_set>
 
+#include "Actor.hh"
 #include "CollisionComponent.hh"
+#include "ComponentManager.hh"
 #include "Entity.hh"
-#include "EntityManager.hh"
-#include "GameObject.hh"
-#include "PhysicsComponent.hh"
+#include "Singleton.hh"
 #include "Time.hh"
 #include "Types.hh"
 
 // Forward decls
-class PhysicsComponent;  // see PhysicsComponent.hh
 
-class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
+class PhysicsManager : public ComponentManager, public Singleton<PhysicsManager> {
   /*
    * The PhysicsManager class handles interactions between PhysicsComponent
    * objects. Like a real-life manager, it doesn't know how to do anything
@@ -31,32 +31,21 @@ class PhysicsManager : public std::enable_shared_from_this<PhysicsManager> {
   // Generic manager behaviors
   // TODO: We can probably factor out of this a variadic template Manager
   // class, but we don't need it until we have at least 3-4 manager systems.
-  PhysicsManager();
-  void gameLoopUpdate(const time_ms duration);
-
-  void manage(const std::shared_ptr<Identity> identity, const std::shared_ptr<PhysicsComponent> physicsComponent,
-              const std::shared_ptr<PositionComponent> positionComponent,
-              const std::shared_ptr<CollisionComponent> collisionComponent);
-  void unmanage(const std::shared_ptr<Identity> identity);
+  void gameLoopUpdate(const time_ms duration) override;
 
   real getGravityConstant() const;
   void setGravityConstant(const real gravityConstant);
 
+  ~PhysicsManager() override;
+
  private:
-  typedef struct ManagementEntry {
-    const std::shared_ptr<PhysicsComponent> physicsComponent;
-    const std::shared_ptr<PositionComponent> positionComponent;
-    const std::shared_ptr<CollisionComponent> collisionComponent;
-    ManagementEntry(const std::shared_ptr<PhysicsComponent> physicsComponent,
-                    const std::shared_ptr<PositionComponent> positionComponent,
-                    const std::shared_ptr<CollisionComponent> collisionComponent);
-  } ManagementEntry;
-  std::shared_ptr<std::map<std::shared_ptr<Identity>, std::shared_ptr<ManagementEntry>>> managementEntries;
+  friend Singleton<PhysicsManager>;
+
+  PhysicsManager();
+  PhysicsManager(const PhysicsManager&) = delete;
+  PhysicsManager& operator=(const PhysicsManager&) = delete;
 
   real gravityConstant = 0.005;
-
-  std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> getCollisionCandidates(
-      const std::shared_ptr<CollisionComponent> source) const;
 
   bool diagnosticNoOverlaps() const;
 };

@@ -1,10 +1,12 @@
 #include "Component.hh"
 
-Component::Component(const std::shared_ptr<Identity> ownerIdentity, const bool enabled)
-    : ownerIdentity(ownerIdentity), _enabled(enabled) {}
+#include "UUIDGenerator.hh"
 
-const std::shared_ptr<Identity> Component::getOwnerIdentity() const { return this->ownerIdentity; }
-void Component::setOwnerIdentity(const std::shared_ptr<Identity> identity) { this->ownerIdentity = identity; }
+std::string Component::toString() const { return ""; }
 
-bool Component::isEnabled() const { return this->_enabled; }
-void Component::setEnabled(const bool setting) { this->_enabled = setting; }
+Component::Component(const std::weak_ptr<Actor> owner, const bool enabled) : owner(owner), enabled(enabled) {}
+
+std::shared_ptr<Actor> Component::getOwner() const { return this->owner; }
+
+bool Component::isEnabled() const { return this->enabled; }
+void Component::setEnabled(const bool setting) { this->enabled = setting; }

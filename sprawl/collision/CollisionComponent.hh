@@ -2,6 +2,7 @@
 #pragma once
 
 #include <set>
+#include <unordered_set>
 #include <vector>
 
 #include "BoundingBox.hh"
@@ -10,7 +11,8 @@
 #include "Math.hh"
 
 // Forward decl
-class CollisionDetectionManager;
+class Actor;
+class CollisionManager;
 struct SortFnObject;
 
 class CollisionComponent : public Component {
@@ -29,12 +31,10 @@ class CollisionComponent : public Component {
    *    tests, triggers, etc.
    */
  public:
-  CollisionComponent(const std::shared_ptr<Identity> ownerIdentity,
-                     const std::shared_ptr<PositionComponent> positionComponent, const PositionUnit height = 0.0,
+  CollisionComponent(const std::shared_ptr<Actor> owner, const PositionUnit height = 0.0,
                      const PositionUnit width = 0.0, const bool collisionsEnabled = false);
 
-  std::shared_ptr<PositionComponent> positionComponent() const;
-  void positionComponent(const std::shared_ptr<PositionComponent> positionComponent);
+  std::string toString() const override;
 
   bool collisionsEnabled() const;
   void collisionsEnabled(const bool setting);
@@ -44,20 +44,13 @@ class CollisionComponent : public Component {
   void width(const PositionUnit val);
 
   BoundingBox boundingBox(const Vect2D& offset = Vect2D::zero()) const;
-  std::shared_ptr<std::vector<Collision>> predictMovementCollisions(
-      Vect2D positionDelta,
-      const std::shared_ptr<std::set<std::shared_ptr<CollisionComponent>>> collisionComponents) const;
+
+ private:
+  friend CollisionManager;
   bool isColliding(const Vect2D& target, const Vect2D& sourceOffset) const;
   bool isColliding(const Line& target, const Vect2D& sourceOffset) const;
   bool isColliding(const CollisionComponent& target, const Vect2D& sourceOffset) const;
 
-  CollisionAxis determineCollisionAxis(const Vect2D& sourceMovement, const CollisionComponent& target) const;
-
-  Vect2D determineFinalPosition(const Vect2D& sourcePosition, const Vect2D& positionDelta,
-                                const CollisionComponent& target, const CollisionAxis collisionAxis) const;
-
- private:
-  std::shared_ptr<PositionComponent> _positionComponent;
   PositionUnit _height;
   PositionUnit _width;
   bool _collisionsEnabled;

@@ -11,9 +11,9 @@ class PhysicsManager;
 
 class PhysicsComponent : public Component {
  public:
-  PhysicsComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr, const PositionUnit maxSpeed = 0.0,
+  PhysicsComponent(const std::weak_ptr<Actor> owner, const PositionUnit maxSpeed = 0.0,
                    const PositionUnit minSpeed = 0.0, const Vect2D velocity = Vect2D::zero());
-  virtual ~PhysicsComponent();
+  virtual ~PhysicsComponent() override;
 
   virtual PositionUnit getMaxSpeed() const;
   virtual void setMaxSpeed(const PositionUnit maxSpeed);

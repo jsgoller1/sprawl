@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Entity.hh"
 #include "Math.hh"
 #include "PositionComponent.hh"
 #include "SDL2/SDL.h"
@@ -10,10 +9,14 @@
 typedef double Angle;
 typedef int DrawingLayer;
 
+class Actor;
+
 class DrawingComponent : public Component {
  public:
-  DrawingComponent(const std::shared_ptr<Identity> ownerIdentity = nullptr,
-                   const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+  DrawingComponent(const std::weak_ptr<Actor> owner, const std::shared_ptr<Texture> texture = nullptr,
+                   const SDL_RendererFlip flip = SDL_FLIP_NONE);
+
+  std::string toString() const override;
 
   // Accessors for components
   std::shared_ptr<Texture> getTexture() const;

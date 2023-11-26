@@ -1,12 +1,18 @@
 #include "DrawingComponent.hh"
 
-DrawingComponent::DrawingComponent(const std::shared_ptr<Identity> ownerIdentity,
-                                   const std::shared_ptr<Texture> texture, const SDL_RendererFlip flip)
-    : Component(ownerIdentity) {
+#include "Actor.hh"
+
+DrawingComponent::DrawingComponent(const std::weak_ptr<Actor> owner, const std::shared_ptr<Texture> texture,
+                                   const SDL_RendererFlip flip)
+    : Component(owner) {
   this->texture = texture;
   this->flip = flip;
   this->clippingRectangle = nullptr;
   this->angle = 0.0;
+}
+
+std::string DrawingComponent::toString() const {
+  return fmt::format("DrawingComponent({})", this->getOwner()->toString());
 }
 
 std::shared_ptr<Texture> DrawingComponent::getTexture() const { return this->texture; }
