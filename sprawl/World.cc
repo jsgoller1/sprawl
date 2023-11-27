@@ -1,6 +1,5 @@
 #include "World.hh"
 
-#include "Background.hh"
 #include "DrawingComponent.hh"
 #include "DrawingManager.hh"
 #include "GameAction.hh"

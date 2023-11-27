@@ -3,7 +3,6 @@
 #include <memory>
 #include <vector>
 
-#include "Background.hh"
 #include "DrawingManager.hh"
 #include "GraphicsSettings.hh"
 #include "Math.hh"
@@ -11,7 +10,6 @@
 #include "Types.hh"
 
 // Forward declaration
-class Background;
 class DrawingManager;
 class GameObject;
 class GameLoopInputEvents;

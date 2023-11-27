@@ -2,7 +2,6 @@
 
 #include <fstream>
 
-#include "Background.hh"
 #include "GameObject.hh"
 #include "Logging.hh"
 #include "World.hh"
