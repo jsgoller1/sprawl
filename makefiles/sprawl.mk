@@ -22,7 +22,6 @@ deps: $(SPRAWL_DEP_FILES)
 build: $(SPRAWL_OBJ_FILES)
 	$(CCACHE) $(CXX) $(SPRAWL_LINK_CXXFLAGS) $(SPRAWL_OBJ_FILES) $(SPRAWL_SHARED_OBJ_FILES) -o $(ENGINE_BIN).lib
 
-count-loc:
-	git ls-files | grep sprawl | grep -E "(\.cc|\.hh)$$" | uniq | xargs cat | wc -l
+
 
 

@@ -48,3 +48,7 @@ clean-obj:
 # NOTE: This is a Linux-specific tool for screen recording. For MacOS, use Quicktime. 
 record-screen:
 	byzanz-record -d 5 --x=760 --y=200 --width=1920 --height=1080 bin/recorded_screen.gif
+
+# NOTE: if you copy/paste this into the terminal, change the double-dollar sign to a single dollar sign.
+count-sprawl-loc:
+	git ls-files | grep sprawl | grep -E "(\.cc|\.hh)$$" | uniq | xargs cat | wc -l
