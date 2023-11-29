@@ -31,6 +31,8 @@
  * the PhysicsManager.
  */
 
+static constexpr char PHYSICS_COMPONENT_NAME[] = "PhysicsComponent";
+
 // Forward decls
 class PhysicsManager;
 

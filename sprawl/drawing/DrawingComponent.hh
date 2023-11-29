@@ -6,6 +6,8 @@
 #include "Texture.hh"
 #include "Types.hh"
 
+static constexpr char DRAWING_COMPONENT_NAME[] = "DrawingComponent";
+
 typedef double Angle;
 typedef int DrawingLayer;
 

@@ -3,6 +3,8 @@
 #include "Math.hh"
 #include "Types.hh"
 
+static constexpr char POSITION_COMPONENT_NAME[] = "PositionComponent";
+
 // fwd decls
 class Actor;
 

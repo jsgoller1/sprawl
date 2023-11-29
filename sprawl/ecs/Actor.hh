@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -27,7 +28,7 @@ class Actor final : public Entity {
   EntityName getName() const;
   void setName(const EntityName name);
 
-  void addComponent(const std::shared_ptr<Component> component);
+  void addComponent(const std::string componentTypeName, const std::shared_ptr<Component> component);
   void removeComponent(const UUID uuid);
   void removeComponent(const std::shared_ptr<Component> component);
 

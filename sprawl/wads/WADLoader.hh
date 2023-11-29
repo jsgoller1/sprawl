@@ -8,6 +8,7 @@
 // Forward decls;
 class Actor;
 class ActorManager;
+class BehaviorManager;
 class CollisionComponent;
 class CollisionManager;
 class DrawingComponent;
@@ -39,16 +40,17 @@ class WADLoader {
   std::shared_ptr<InputHandler> loadInputHandler() const;
   GraphicsSettings loadGraphicsSettings(const nlohmann::json& jsonBody) const;
 
-  void loadSettings(ActorManager& actorManager, CollisionManager& collisionManager, DrawingManager& drawingManager,
-                    PhysicsManager& physicsManager) const;
+  void loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager, CollisionManager& collisionManager,
+                    DrawingManager& drawingManager, PhysicsManager& physicsManager) const;
   void loadActors(ActorManager& actorManager) const;
 
  private:
   void loadActor(ActorManager& actorManager, const nlohmann::json& jsonBody) const;
+  void loadBehaviorComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadPositionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadRealisticPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
-  void loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
-  void loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
 
   bool objectEnabled(const nlohmann::json& jsonBody) const;
   DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;

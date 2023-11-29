@@ -10,6 +10,8 @@
 #include "Component.hh"
 #include "Math.hh"
 
+static constexpr char COLLISION_COMPONENT_NAME[] = "CollisionComponent";
+
 // Forward decl
 class Actor;
 class CollisionManager;

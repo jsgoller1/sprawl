@@ -1,4 +1,5 @@
 #include "ActorManager.hh"
+#include "BehaviorManager.hh"
 #include "CLI.hh"
 #include "CollisionManager.hh"
 #include "DrawingManager.hh"
@@ -17,12 +18,13 @@ int main(int argc, char* argv[]) {
   }
 
   ActorManager& actorManager = ActorManager::instance();
+  BehaviorManager& behaviorManager = BehaviorManager::instance();
   CollisionManager& collisionManager = CollisionManager::instance();
   DrawingManager& drawingManager = DrawingManager::instance();
   PhysicsManager& physicsManager = PhysicsManager::instance();
 
   WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
-  wadLoader.loadSettings(actorManager, collisionManager, drawingManager, physicsManager);
+  wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, drawingManager, physicsManager);
   wadLoader.loadActors(actorManager);
   wadLoader.loadLogging();
 

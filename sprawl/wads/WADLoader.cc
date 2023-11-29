@@ -28,9 +28,11 @@ bool WADLoader::objectEnabled(const nlohmann::json& jsonBody) const { return jso
 
 nlohmann::json WADLoader::getJsonBody() const { return this->_jsonBody; }
 
-void WADLoader::loadSettings(ActorManager& actorManager, CollisionManager& collisionManager,
-                             DrawingManager& drawingManager, PhysicsManager& physicsManager) const {
+void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager,
+                             CollisionManager& collisionManager, DrawingManager& drawingManager,
+                             PhysicsManager& physicsManager) const {
   (void)actorManager;
+  (void)behaviorManager;
   (void)collisionManager;
 
   nlohmann::json jsonData = this->getJsonBody();
