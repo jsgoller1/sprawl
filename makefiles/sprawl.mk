@@ -1,10 +1,7 @@
 include makefiles/settings_misc.mk
 include makefiles/settings_compilation.mk
 
-SPRAWL_MODULES:=3rdparty sprawl sprawl/cli sprawl/collision sprawl/components sprawl/drawing sprawl/ecs
-SPRAWL_MODULES:=$(SPRAWL_MODULES) sprawl/input sprawl/input/event sprawl/logging sprawl/main sprawl/math
-SPRAWL_MODULES:=$(SPRAWL_MODULES) sprawl/physics sprawl/templates sprawl/uuid sprawl/wads
-
+SPRAWL_MODULES:=3rdparty $(shell find sprawl/ -type d)
 SPRAWL_INCLUDES:=$(patsubst %, -I %,$(SPRAWL_MODULES))
 SPRAWL_COMPILE_CXXFLAGS:=$(CXXFLAGS) -fPIC -c $(SPRAWL_INCLUDES)
 SPRAWL_LINK_CXXFLAGS:=$(CXXFLAGS) $(SPRAWL_INCLUDES)
