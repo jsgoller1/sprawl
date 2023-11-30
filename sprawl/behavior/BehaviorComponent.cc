@@ -1,6 +1,15 @@
 #include "BehaviorComponent.hh"
 
 #include "Actor.hh"
+#include "BehaviorManager.hh"
+
+BehaviorComponent::BehaviorComponent(const std::shared_ptr<Actor> owner, const BehaviorComponentConfig& config)
+    : Component(owner) {
+  this->initializeBindables(config);
+  BehaviorManager::instance().manage(this->getOwner());
+}
+
+BehaviorComponent::~BehaviorComponent() { BehaviorManager::instance().unmanage(this->getOwner()); }
 
 std::string BehaviorComponent::toString() const {
   return fmt::format("BehaviorComponent({})", this->getOwner()->toString());

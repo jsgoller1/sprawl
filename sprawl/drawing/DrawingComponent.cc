@@ -1,15 +1,19 @@
 #include "DrawingComponent.hh"
 
 #include "Actor.hh"
+#include "DrawingManager.hh"
 
 DrawingComponent::DrawingComponent(const std::weak_ptr<Actor> owner, const std::shared_ptr<Texture> texture,
                                    const SDL_RendererFlip flip)
     : Component(owner) {
+  DrawingManager::instance().manage(this->getOwner());
   this->texture = texture;
   this->flip = flip;
   this->clippingRectangle = nullptr;
   this->angle = 0.0;
 }
+
+DrawingComponent::~DrawingComponent() { DrawingManager::instance().unmanage(this->getOwner()); }
 
 std::string DrawingComponent::toString() const {
   return fmt::format("DrawingComponent({})", this->getOwner()->toString());

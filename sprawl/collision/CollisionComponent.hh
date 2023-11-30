@@ -35,6 +35,7 @@ class CollisionComponent : public Component {
  public:
   CollisionComponent(const std::shared_ptr<Actor> owner, const PositionUnit height = 0.0,
                      const PositionUnit width = 0.0, const bool collisionsEnabled = false);
+  ~CollisionComponent() override;
 
   std::string toString() const override;
 

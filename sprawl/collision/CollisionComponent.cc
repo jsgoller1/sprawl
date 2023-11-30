@@ -8,6 +8,8 @@ CollisionComponent::CollisionComponent(const std::shared_ptr<Actor> owner, const
                                        const PositionUnit width, const bool collisionsEnabled)
     : Component(owner), _height(height), _width(width), _collisionsEnabled(collisionsEnabled) {}
 
+CollisionComponent::~CollisionComponent() {}
+
 std::string CollisionComponent::toString() const {
   return fmt::format("CollisionComponent({})", this->getOwner()->toString());
 }

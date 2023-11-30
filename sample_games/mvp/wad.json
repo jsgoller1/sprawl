@@ -1,0 +1,77 @@
+{
+    "graphics": {
+        "screenWidth": 1920,
+        "screenHeight": 1080
+    },
+    "logging": {
+        "defaultLogLevel": "WARN",
+        "overrides": [
+            {
+                "system": "INPUT",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "WADLOADER",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "COLLISIONS",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "PHYSICS",
+                "logLevel": "WARN"
+            },
+            {
+                "system": "MATH",
+                "logLevel": "WARN"
+            }
+        ]
+    },
+    "physics": {
+        "gravityConstant": 0.01
+    },
+    "scenes": [
+        {
+            "name": "main",
+            "enabled": true,
+            "actors": [
+                {
+                    "enabled": true,
+                    "name": "Player",
+                    "components": [
+                        {
+                            "type": "PositionComponent",
+                            "enabled": true,
+                            "x": 0,
+                            "y": 200
+                        },
+                        {
+                            "type": "DrawingComponent",
+                            "enabled": true,
+                            "texturePath": "/textures/smiley.png"
+                        },
+                        {
+                            "type": "PhysicsComponent",
+                            "enabled": true,
+                            "maxSpeed": 0.0015,
+                            "minSpeed": 0.00005,
+                            "forceEnabled": true,
+                            "gravityEnabled": true,
+                            "dragEnabled": true,
+                            "dragType": "timeExponential",
+                            "dragCoefficient": 0.995
+                        },
+                        {
+                            "type": "CollisionComponent",
+                            "enabled": true,
+                            "bbox": {
+                                "fromTexture": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

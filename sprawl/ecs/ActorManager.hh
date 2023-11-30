@@ -22,8 +22,8 @@ class ActorManager : public Singleton<ActorManager> {
    */
 
  public:
-  std::shared_ptr<Actor> createActor(const EntityName name, const std::vector<SceneID>& sceneID);
-  void destroyActor(std::weak_ptr<Actor> actor);
+  std::shared_ptr<Actor> createActor(const EntityName name, const SceneID sceneID);
+  void destroyActor(std::shared_ptr<Actor> actor);
   void destroyActor(UUID uuid);
 
   void activateScene(const SceneID sceneID);

@@ -6,27 +6,36 @@
 MAKEFILE_DIR:=makefiles
 include $(MAKEFILE_DIR)/settings_misc.mk
 
-all: sprawl berzerk breakout 
+all: sprawl berzerk breakout mvp
 
 # Builds main .dylib file for sprawl-based games to link against
 sprawl:  
 	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk deps 
 	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk build 
 
-# Runs physics tests 
-sprawl-physics-test: sprawl 
-	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk physics-test 
+# Runs sprawl MVP demonstrating basic functionality
+mvp: sprawl 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk deps
+	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk build
+
+run-mvp:
+	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk run
+
 
 # Builds and runs breakout sample game
 breakout:
 	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk deps 
 	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk build 
+
+run-breakout:
 	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk run  
 
 # Builds and runs berzerk sample game
 berzerk:
 	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk deps 
 	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk build 
+
+run-berzerk:
 	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk run
 
 clean-all: clean-bin clean-deps clean-logs clean-obj

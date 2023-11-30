@@ -4,6 +4,8 @@
 
 #include "Actor.hh"
 #include "ActorManager.hh"
+#include "BehaviorComponent.hh"
+#include "BehaviorComponentFactory.hh"
 #include "CollisionManager.hh"
 #include "Component.hh"
 #include "DrawingManager.hh"
@@ -24,8 +26,6 @@ WADLoader::WADLoader(const FilePath& wadDir) {
   this->_jsonBody = nlohmann::json::parse(wadFile);
 }
 
-bool WADLoader::objectEnabled(const nlohmann::json& jsonBody) const { return jsonBody.value("enabled", false); }
-
 nlohmann::json WADLoader::getJsonBody() const { return this->_jsonBody; }
 
 void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager,
@@ -37,8 +37,8 @@ void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behavi
 
   nlohmann::json jsonData = this->getJsonBody();
   drawingManager.initialize(this->loadGraphicsSettings(jsonData["graphics"]));
-  if (jsonData.contains("gravityConstant")) {
-    physicsManager.setGravityConstant(jsonData["gravityConstant"]);
+  if (jsonData.contains("physics")) {
+    physicsManager.setGravityConstant(jsonData["physics"]["gravityConstant"]);
   }
 }
 
@@ -47,26 +47,54 @@ void WADLoader::loadActors(ActorManager& actorManager) const {
   // IntegrationWADLoader files are always correctly structured json
   nlohmann::json jsonData = this->getJsonBody();
 
-  if (jsonData.contains("gameObjects")) {
-    std::shared_ptr<Actor> actor;
-    for (auto actorJSON : jsonData["actors"]) {
-      if (actorJSON["enabled"] == false) {
+  if (jsonData.contains("scenes")) {
+    for (auto sceneJSON : jsonData["scenes"]) {
+      if (sceneJSON["enabled"] == false || !sceneJSON.contains("name")) {
         continue;
       }
-      LOG_DEBUG_SYS(WADLOADER, "Loading Actor: {0}", nlohmann::to_string(actorJSON));
-      this->loadActor(actorManager, actorJSON);
+      if (sceneJSON.contains("actors")) {
+        for (auto actorJSON : sceneJSON["actors"]) {
+          if (!(actorJSON.contains("name"))) {
+            continue;
+          }
+          LOG_DEBUG_SYS(WADLOADER, "Loading Actor: {0}", nlohmann::to_string(actorJSON));
+          this->loadActor(actorManager, sceneJSON["name"], actorJSON);
+        }
+      }
     }
   }
 }
 
-void WADLoader::loadActor(ActorManager& actorManager, const nlohmann::json& jsonBody) const {
-  if (!this->objectEnabled(jsonBody)) {
+void WADLoader::loadActor(ActorManager& actorManager, const std::string sceneID, const nlohmann::json& jsonBody) const {
+  if (!JSON_OBJ_ENABLED(jsonBody)) {
     return;
   }
 
-  std::shared_ptr<Actor> actor = actorManager.createActor(jsonBody["name"], jsonBody["scenes"]);
-  this->loadPositionComponent(actor, jsonBody["position"]);
-  this->loadDrawingComponent(actor, jsonBody["drawing"]);
-  this->loadCollisionComponent(actor, jsonBody["collisions"]);
-  this->loadRealisticPhysicsComponent(actor, jsonBody["physics"]);
+  std::shared_ptr<Actor> actor = actorManager.createActor(jsonBody["name"], sceneID);
+  for (auto componentJSON : jsonBody["components"]) {
+    if (componentJSON["enabled"] == false) {
+      continue;
+    }
+    std::string typeName = componentJSON.value("type", "");
+    if (typeName == "") {
+      LOG_ERROR("No type specified for component.");
+      continue;
+    }
+    if (typeName == "PositionComponent") {
+      this->loadPositionComponent(actor, componentJSON);
+    } else if (typeName == "CollisionComponent") {
+      this->loadCollisionComponent(actor, componentJSON);
+    } else if (typeName == "DrawingComponent") {
+      this->loadDrawingComponent(actor, componentJSON);
+    } else if (typeName == "PhysicsComponent") {
+      this->loadRealisticPhysicsComponent(actor, componentJSON);
+    } else {
+      std::shared_ptr<BehaviorComponent> behaviorComponent = BehaviorComponentFactory::CreateComponent(typeName);
+      if (behaviorComponent) {
+        actor->addComponent(typeName, behaviorComponent);
+      } else {
+        LOG_ERROR("Unknown component type: {0}", typeName);
+      }
+    }
+  }
 }

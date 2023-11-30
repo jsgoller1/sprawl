@@ -11,6 +11,9 @@
 
 class BehaviorComponent : public Component {
  public:
+  BehaviorComponent(const std::shared_ptr<Actor> owner, const BehaviorComponentConfig& config);
+  virtual ~BehaviorComponent() override;
+
   std::string toString() const override;
 
  private:

@@ -30,9 +30,6 @@ class Component : public Entity {
   Component(const std::weak_ptr<Actor> owner, const bool enabled = COMPONENT_ENABLED);
 
  private:
-  virtual void registerManager() {}
-  virtual void deregisterManager() {}
-
   std::shared_ptr<Actor> owner;
   bool enabled;
 };

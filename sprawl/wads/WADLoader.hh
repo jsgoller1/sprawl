@@ -20,6 +20,8 @@ class PhysicsManager;
 class RealisticPhysicsComponent;
 class SimplePhysicsComponent;
 
+#define JSON_OBJ_ENABLED(jsonBody) jsonBody.value("enabled", false)
+
 template <typename KeyType>
 KeyType loadKey(const nlohmann::json& jsonBody, const std::string& key, const KeyType& defaultVal,
                 const LogLevel level = DEBUG) {
@@ -45,14 +47,13 @@ class WADLoader {
   void loadActors(ActorManager& actorManager) const;
 
  private:
-  void loadActor(ActorManager& actorManager, const nlohmann::json& jsonBody) const;
+  void loadActor(ActorManager& actorManager, const std::string sceneID, const nlohmann::json& jsonBody) const;
   void loadBehaviorComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadPositionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadRealisticPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
 
-  bool objectEnabled(const nlohmann::json& jsonBody) const;
   DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
   nlohmann::json getJsonBody() const;
 
