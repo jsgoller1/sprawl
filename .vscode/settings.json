@@ -100,6 +100,7 @@
         "format": "cpp",
         "queue": "cpp",
         "span": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "typeindex": "cpp"
     },
 }

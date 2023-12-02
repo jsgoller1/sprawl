@@ -5,102 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Breakout",
-            "type": "cppdbg",
-            "request": "launch",
-            "cwd": "/home/joshua/Code/sprawl",
-            "program": "${cwd}/bin/breakout",
-            "environment": [],
-            "MIMode": "gdb",
-        },
-        {
-            "name": "Berzerk",
-            "type": "lldb",
-            "request": "launch",
-            "cwd": "/Users/joshua/Code/sprawl",
-            "program": "${cwd}/bin/berzerk",
-            "args": [
-                "/Users/joshua/Code/sprawl/"
-            ]
-        },
-        {
-            "name": "MVP",
-            "type": "cppdbg",
-            "request": "launch",
-            "cwd": "/home/joshua/Code/sprawl",
-            "program": "${cwd}/bin/sprawl",
-            "args": [
-                "${cwd}/test/integration/mvp"
-            ],
-            "environment": [],
-            "MIMode": "gdb",
-        },
-        {
             "name": "MVP (MacOS)",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${cwd}/bin/sprawl",
+            "program": "${cwd}/bin/sprawl.lib",
             "cwd": "${workspaceFolder}",
             "args": [
-                "${cwd}/test/integration/mvp"
+                "${cwd}/sample_games/mvp"
             ],
             "stopAtEntry": false,
-            "miDebuggerPath": "/usr/local/bin/lldb-mi"
-        },
-        {
-            "name": "Gravity test",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${cwd}/bin/neon-rain",
-            "cwd": "/home/joshua/Code/sprawl",
-            "args": [
-                "./assets/playtests/wads/physics-tests/gravity.json"
-            ],
-            "environment": [],
-            "MIMode": "gdb",
-        },
-        {
-            "name": "Inelastic collision test",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${cwd}/bin/neon-rain",
-            "cwd": "/home/joshua/Code/sprawl",
-            "args": [
-                "./assets/playtests/wads/physics-tests/inelastic-collision.json"
-            ],
-            "environment": [],
-            "MIMode": "gdb",
-        },
-        {
-            "name": "Elastic collision test",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${cwd}/bin/neon-rain",
-            "cwd": "/home/joshua/Code/sprawl",
-            "args": [
-                "./assets/playtests/wads/physics-tests/elastic-collision.json"
-            ],
-            "environment": [],
-            "MIMode": "gdb",
-        },
-        {
-            "name": "Logging demo",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${cwd}/bin/loggingDemo",
-            "cwd": "/home/joshua/Code/sprawl",
-            "environment": [],
-            "MIMode": "gdb",
-        },
-        {
-            "name": "Breakout (MacOS)",
-            "type": "cppdbg",
-            "request": "launch",
-            "program": "${cwd}/bin/breakout",
-            "cwd": "${workspaceFolder}",
-            "args": [],
-            "stopAtEntry": false,
-            "miDebuggerPath": "/usr/local/bin/lldb-mi"
+            "miDebuggerPath": "/Users/joshua/.vscode/extensions/ms-vscode.cpptools-1.18.5-darwin-x64/debugAdapters/lldb-mi/bin/lldb-mi"
         },
     ]
 }
