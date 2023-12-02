@@ -17,7 +17,7 @@ struct GraphicsSettings;
 class InputHandler;
 class PositionComponent;
 class PhysicsManager;
-class RealisticPhysicsComponent;
+class PhysicsComponent;
 class SimplePhysicsComponent;
 
 #define JSON_OBJ_ENABLED(jsonBody) jsonBody.value("enabled", false)
@@ -52,7 +52,7 @@ class WADLoader {
   void loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadPositionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
-  void loadRealisticPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
 
   DuplicationBehavior handleDuplication(const nlohmann::json& jsonBody) const;
   nlohmann::json getJsonBody() const;

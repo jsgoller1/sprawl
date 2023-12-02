@@ -29,7 +29,7 @@
         ]
     },
     "physics": {
-        "gravityConstant": 0.01
+        "gravityConstant": 0.001
     },
     "scenes": [
         {

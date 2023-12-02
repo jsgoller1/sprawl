@@ -7,8 +7,8 @@
 #include "CollisionComponent.hh"
 #include "DrawingComponent.hh"
 #include "Logging.hh"
+#include "PhysicsComponent.hh"
 #include "PositionComponent.hh"
-#include "RealisticPhysicsComponent.hh"
 #include "Texture.hh"
 #include "WADLoader.hh"
 
@@ -53,9 +53,8 @@ void WADLoader::loadPositionComponent(std::shared_ptr<Actor> owner, const nlohma
   owner->addComponent(POSITION_COMPONENT_NAME, std::make_shared<PositionComponent>(owner, Vect2D(x, y), height, width));
 }
 
-void WADLoader::loadRealisticPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
-  std::shared_ptr<RealisticPhysicsComponent> physicsComponent =
-      std::shared_ptr<RealisticPhysicsComponent>(new RealisticPhysicsComponent(owner));
+void WADLoader::loadPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
+  std::shared_ptr<PhysicsComponent> physicsComponent = std::shared_ptr<PhysicsComponent>(new PhysicsComponent(owner));
 
   physicsComponent->dragCoefficient(jsonBody.value("dragCoefficient", 0.0));
   physicsComponent->dragType((jsonBody.value("dragType", "linear") == "linear") ? DragType::LINEAR

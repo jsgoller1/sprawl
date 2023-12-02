@@ -87,7 +87,7 @@ void WADLoader::loadActor(ActorManager& actorManager, const std::string sceneID,
     } else if (typeName == "DrawingComponent") {
       this->loadDrawingComponent(actor, componentJSON);
     } else if (typeName == "PhysicsComponent") {
-      this->loadRealisticPhysicsComponent(actor, componentJSON);
+      this->loadPhysicsComponent(actor, componentJSON);
     } else {
       std::shared_ptr<BehaviorComponent> behaviorComponent = BehaviorComponentFactory::CreateComponent(typeName);
       if (behaviorComponent) {

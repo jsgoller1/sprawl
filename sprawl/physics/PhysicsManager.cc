@@ -16,8 +16,20 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
     std::shared_ptr<PositionComponent> positionComponent = actor->getComponent<PositionComponent>();
     std::shared_ptr<PhysicsComponent> physicsComponent = actor->getComponent<PhysicsComponent>();
     std::shared_ptr<CollisionComponent> collisionComponent = actor->getComponent<CollisionComponent>();
+    if (!positionComponent || !physicsComponent || !collisionComponent) {
+      LOG_DEBUG_SYS(PHYSICS, "Skipping actor without position, physics, or collision component: {}", actorString);
+      continue;
+    }
+
     LOG_DEBUG_SYS(PHYSICS, "Physics update beginning: {}", actorString);
     LOG_DEBUG_SYS(PHYSICS, "Position: {}", positionComponent->getCenter().to_string());
+
+    if (!(physicsComponent->gravityEnabled())) {
+      LOG_DEBUG_SYS(PHYSICS, "Skipping gravity: {}", actorString);
+      continue;
+    }
+    physicsComponent->applyGravity(this->gravityConstant);
+    LOG_DEBUG_SYS(PHYSICS, "Applying gravity: {}", actorString);
 
     Vect2D positionDelta = physicsComponent->integrate(duration);
     if (positionDelta == Vect2D::zero()) {
