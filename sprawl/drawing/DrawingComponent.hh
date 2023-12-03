@@ -19,6 +19,8 @@ class DrawingComponent : public Component {
   ~DrawingComponent() override;
 
   std::string toString() const override;
+  void managerRegister() override;
+  void managerUnregister() override;
 
   // Accessors for components
   std::shared_ptr<Texture> getTexture() const;

@@ -26,21 +26,19 @@ void PhysicsManager::gameLoopUpdate(const time_ms duration) {
 
     if (!(physicsComponent->gravityEnabled())) {
       LOG_DEBUG_SYS(PHYSICS, "Skipping gravity: {}", actorString);
-      continue;
+    } else {
+      physicsComponent->applyGravity(this->gravityConstant);
+      LOG_DEBUG_SYS(PHYSICS, "Applying gravity: {}", actorString);
     }
-    physicsComponent->applyGravity(this->gravityConstant);
-    LOG_DEBUG_SYS(PHYSICS, "Applying gravity: {}", actorString);
-
     Vect2D positionDelta = physicsComponent->integrate(duration);
     if (positionDelta == Vect2D::zero()) {
       LOG_DEBUG_SYS(PHYSICS, "No movement, collisions skipped: {}", actorString);
-      continue;
+    } else {
+      LOG_DEBUG_SYS(PHYSICS, "{} attempting movement {}", actorString, positionDelta.to_string());
+
+      Vect2D finalPosition = positionComponent->getCenter() + positionDelta;
+      positionComponent->setCenter(finalPosition);
     }
-    LOG_DEBUG_SYS(PHYSICS, "{} attempting movement {}", actorString, positionDelta.to_string());
-
-    Vect2D finalPosition = positionComponent->getCenter() + positionDelta;
-    positionComponent->setCenter(finalPosition);
-
     LOG_DEBUG_SYS(PHYSICS, "Physics update completed: {}", actorString);
   }
 }

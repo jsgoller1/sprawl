@@ -38,6 +38,8 @@ class CollisionComponent : public Component {
   ~CollisionComponent() override;
 
   std::string toString() const override;
+  void managerRegister() override;
+  void managerUnregister() override;
 
   bool collisionsEnabled() const;
   void collisionsEnabled(const bool setting);

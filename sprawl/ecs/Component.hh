@@ -26,6 +26,9 @@ class Component : public Entity {
   bool isEnabled() const;
   void setEnabled(const bool setting);
 
+  virtual void managerRegister() = 0;
+  virtual void managerUnregister() = 0;
+
   virtual ~Component() override = default;
 
  protected:

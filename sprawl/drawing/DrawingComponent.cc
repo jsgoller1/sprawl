@@ -4,18 +4,20 @@
 #include "DrawingManager.hh"
 
 DrawingComponent::DrawingComponent(const std::shared_ptr<Texture> texture, const SDL_RendererFlip flip) : Component() {
-  DrawingManager::instance().manage(this->getOwner());
   this->texture = texture;
   this->flip = flip;
   this->clippingRectangle = nullptr;
   this->angle = 0.0;
 }
 
-DrawingComponent::~DrawingComponent() { DrawingManager::instance().unmanage(this->getOwner()); }
+DrawingComponent::~DrawingComponent() { this->managerUnregister(); }
 
 std::string DrawingComponent::toString() const {
   return fmt::format("DrawingComponent({})", this->getOwner()->toString());
 }
+
+void DrawingComponent::managerRegister() { DrawingManager::instance().manage(this->getOwner()); }
+void DrawingComponent::managerUnregister() { DrawingManager::instance().unmanage(this->getOwner()); }
 
 std::shared_ptr<Texture> DrawingComponent::getTexture() const { return this->texture; }
 void DrawingComponent::setTexture(const std::shared_ptr<Texture> texture) { this->texture = texture; }

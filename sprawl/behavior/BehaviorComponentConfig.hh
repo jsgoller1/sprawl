@@ -21,8 +21,8 @@ class BehaviorComponentConfig {
     return jsonConfig.value(key, 0);  // Default value as 0
   }
 
-  float getFloat(const std::string& key) const {
-    return jsonConfig.value(key, 0.0f);  // Default value as 0.0
+  double getDouble(const std::string& key) const {
+    return jsonConfig.value(key, double(0.0f));  // Default value as 0.0
   }
 
   std::string getString(const std::string& key) const {

@@ -20,6 +20,8 @@ class PhysicsComponent : public Component {
   virtual ~PhysicsComponent() override;
 
   std::string toString() const override;
+  void managerRegister() override;
+  void managerUnregister() override;
 
   virtual PositionUnit getMaxSpeed() const;
   virtual void setMaxSpeed(const PositionUnit maxSpeed);

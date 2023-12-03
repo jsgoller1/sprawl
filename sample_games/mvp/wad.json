@@ -7,24 +7,8 @@
         "defaultLogLevel": "WARN",
         "overrides": [
             {
-                "system": "INPUT",
-                "logLevel": "WARN"
-            },
-            {
                 "system": "WADLOADER",
-                "logLevel": "WARN"
-            },
-            {
-                "system": "COLLISIONS",
-                "logLevel": "WARN"
-            },
-            {
-                "system": "PHYSICS",
-                "logLevel": "WARN"
-            },
-            {
-                "system": "MATH",
-                "logLevel": "WARN"
+                "logLevel": "DEBUG"
             }
         ]
     },
@@ -72,7 +56,7 @@
                         {
                             "type": "MVPComponent",
                             "enabled": true,
-                            "forceAdded": 0.1
+                            "forceAdded": 0.001
                         }
                     ]
                 }

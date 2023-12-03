@@ -17,16 +17,18 @@ class BehaviorComponentFactory {
    */
  public:
   template <typename T>
-  static bool Register(const std::string& typeName) {
-    factories[typeName] = []() -> std::shared_ptr<T> { return std::make_shared<T>(); };
+  static bool Register(const std::string typeName) {
+    auto& factory = factories();
+    factory[typeName] = []() -> std::shared_ptr<T> { return std::make_shared<T>(); };
     return true;
   }
 
-  static std::shared_ptr<IBehaviorComponent> CreateComponent(const std::string& typeName) {
-    auto it = factories.find(typeName);
-    return it != factories.end() ? it->second() : nullptr;
+  static std::shared_ptr<IBehaviorComponent> CreateComponent(const std::string typeName) {
+    auto& factory = factories();
+    auto it = factory.find(typeName);
+    return it != factory.end() ? it->second() : nullptr;
   }
 
  private:
-  static std::unordered_map<std::string, std::function<std::shared_ptr<IBehaviorComponent>()>> factories;
+  static std::unordered_map<std::string, std::function<std::shared_ptr<IBehaviorComponent>()>>& factories();
 };

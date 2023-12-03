@@ -4,6 +4,8 @@
 
 #include "SDL2/SDL.h"
 
+// TODO: We can probably use
+
 CLI::CLI(const int argc, const char* const argv[]) {
   if (argc > 2) {
     std::cout << "sprawl: Too many args provided." << std::endl;
