@@ -5,10 +5,10 @@
 #include "PhysicsManager.hh"
 
 // ctors / dtors
-PhysicsComponent::PhysicsComponent(const std::shared_ptr<Actor> owner, const bool forceResponsiveSetting,
-                                   const bool gravitySetting, const PositionUnit maxSpeed, const PositionUnit minSpeed,
-                                   const DragType dragType, const real dragCoefficient, real mass)
-    : Component(owner),
+PhysicsComponent::PhysicsComponent(const bool forceResponsiveSetting, const bool gravitySetting,
+                                   const PositionUnit maxSpeed, const PositionUnit minSpeed, const DragType dragType,
+                                   const real dragCoefficient, real mass)
+    : Component(),
       _forceResponsive(forceResponsiveSetting),
       _gravityEnabled(gravitySetting),
       _maxSpeed(maxSpeed),

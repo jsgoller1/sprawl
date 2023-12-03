@@ -1,7 +1,7 @@
 include makefiles/settings_misc.mk
 include makefiles/settings_compilation.mk
 
-SPRAWL_MODULES:=3rdparty $(shell find sprawl -type d)
+SPRAWL_MODULES:=3rdparty sample_games/mvp $(shell find sprawl -type d)
 SPRAWL_INCLUDES:=$(patsubst %, -I %,$(SPRAWL_MODULES))
 SPRAWL_COMPILE_CXXFLAGS:=$(CXXFLAGS) -fPIC -c $(SPRAWL_INCLUDES)
 SPRAWL_LINK_CXXFLAGS:=$(CXXFLAGS) $(SPRAWL_INCLUDES)

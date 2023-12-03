@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 // fwd decl
-class BehaviorComponent;
+class IBehaviorComponent;
 
 class BehaviorComponentFactory {
   /*
@@ -22,11 +22,11 @@ class BehaviorComponentFactory {
     return true;
   }
 
-  static std::shared_ptr<BehaviorComponent> CreateComponent(const std::string& typeName) {
+  static std::shared_ptr<IBehaviorComponent> CreateComponent(const std::string& typeName) {
     auto it = factories.find(typeName);
     return it != factories.end() ? it->second() : nullptr;
   }
 
  private:
-  static std::unordered_map<std::string, std::function<std::shared_ptr<BehaviorComponent>()>> factories;
+  static std::unordered_map<std::string, std::function<std::shared_ptr<IBehaviorComponent>()>> factories;
 };

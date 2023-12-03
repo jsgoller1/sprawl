@@ -57,7 +57,7 @@
                             "maxSpeed": 0.0015,
                             "minSpeed": 0.00005,
                             "forceEnabled": true,
-                            "gravityEnabled": true,
+                            "gravityEnabled": false,
                             "dragEnabled": true,
                             "dragType": "timeExponential",
                             "dragCoefficient": 0.995
@@ -68,6 +68,11 @@
                             "bbox": {
                                 "fromTexture": true
                             }
+                        },
+                        {
+                            "type": "MVPComponent",
+                            "enabled": true,
+                            "forceAdded": 0.1
                         }
                     ]
                 }

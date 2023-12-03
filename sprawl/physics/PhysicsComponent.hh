@@ -13,10 +13,10 @@ class PhysicsManager;
 
 class PhysicsComponent : public Component {
  public:
-  PhysicsComponent(const std::shared_ptr<Actor> owner, const bool forceResponsiveSetting = false,
-                   const bool gravitySetting = false, const PositionUnit maxSpeed = 0.0,
-                   const PositionUnit minSpeed = 0.0, const DragType dragType = DragType::TIME_EXPONENTIAL,
-                   const real dragCoefficient = 0.0, real mass = 1.0);
+  PhysicsComponent(const bool forceResponsiveSetting = false, const bool gravitySetting = false,
+                   const PositionUnit maxSpeed = 0.0, const PositionUnit minSpeed = 0.0,
+                   const DragType dragType = DragType::TIME_EXPONENTIAL, const real dragCoefficient = 0.0,
+                   real mass = 1.0);
   virtual ~PhysicsComponent() override;
 
   std::string toString() const override;

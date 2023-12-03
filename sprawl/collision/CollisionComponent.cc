@@ -4,9 +4,9 @@
 #include "Assumption.hh"
 #include "PhysicsHelpers.hh"
 
-CollisionComponent::CollisionComponent(const std::shared_ptr<Actor> owner, const PositionUnit height,
-                                       const PositionUnit width, const bool collisionsEnabled)
-    : Component(owner), _height(height), _width(width), _collisionsEnabled(collisionsEnabled) {}
+CollisionComponent::CollisionComponent(const PositionUnit height, const PositionUnit width,
+                                       const bool collisionsEnabled)
+    : Component(), _height(height), _width(width), _collisionsEnabled(collisionsEnabled) {}
 
 CollisionComponent::~CollisionComponent() {}
 

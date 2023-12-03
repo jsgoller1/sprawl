@@ -3,9 +3,8 @@
 
 #include "Actor.hh"
 
-PositionComponent::PositionComponent(const std::weak_ptr<Actor> owner, const Vect2D& center, const PositionUnit height,
-                                     const PositionUnit width)
-    : Component(owner), _area(Rectangle(center, height, width)) {}
+PositionComponent::PositionComponent(const Vect2D& center, const PositionUnit height, const PositionUnit width)
+    : Component(), _area(Rectangle(center, height, width)) {}
 
 std::string PositionComponent::toString() const { return "PositionComponent " + this->getUUID(); }
 

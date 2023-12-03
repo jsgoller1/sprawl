@@ -10,8 +10,8 @@ class Actor;
 
 class PositionComponent : public Component {
  public:
-  PositionComponent(const std::weak_ptr<Actor> owner, const Vect2D& center = Vect2D::zero(),
-                    const PositionUnit height = 1.0, const PositionUnit width = 1.0);
+  PositionComponent(const Vect2D& center = Vect2D::zero(), const PositionUnit height = 1.0,
+                    const PositionUnit width = 1.0);
 
   std::string toString() const override;
 

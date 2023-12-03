@@ -3,9 +3,7 @@
 #include "Actor.hh"
 #include "DrawingManager.hh"
 
-DrawingComponent::DrawingComponent(const std::weak_ptr<Actor> owner, const std::shared_ptr<Texture> texture,
-                                   const SDL_RendererFlip flip)
-    : Component(owner) {
+DrawingComponent::DrawingComponent(const std::shared_ptr<Texture> texture, const SDL_RendererFlip flip) : Component() {
   DrawingManager::instance().manage(this->getOwner());
   this->texture = texture;
   this->flip = flip;

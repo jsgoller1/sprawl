@@ -4,12 +4,12 @@
 
 #include "Actor.hh"
 #include "ActorManager.hh"
-#include "BehaviorComponent.hh"
 #include "BehaviorComponentFactory.hh"
 #include "CollisionManager.hh"
 #include "Component.hh"
 #include "DrawingManager.hh"
 #include "GraphicsSettings.hh"
+#include "IBehaviorComponent.hh"
 #include "Logging.hh"
 #include "PhysicsManager.hh"
 #include "PositionComponent.hh"
@@ -89,7 +89,7 @@ void WADLoader::loadActor(ActorManager& actorManager, const std::string sceneID,
     } else if (typeName == "PhysicsComponent") {
       this->loadPhysicsComponent(actor, componentJSON);
     } else {
-      std::shared_ptr<BehaviorComponent> behaviorComponent = BehaviorComponentFactory::CreateComponent(typeName);
+      std::shared_ptr<IBehaviorComponent> behaviorComponent = BehaviorComponentFactory::CreateComponent(typeName);
       if (behaviorComponent) {
         actor->addComponent(typeName, behaviorComponent);
       } else {

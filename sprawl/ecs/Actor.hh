@@ -43,6 +43,19 @@ class Actor final : public Entity {
     return nullptr;
   }
 
+  template <typename T>
+  std::shared_ptr<std::vector<std::shared_ptr<T>>> getComponents() {
+    std::shared_ptr<std::vector<std::shared_ptr<T>>> returned_components =
+        std::make_shared<std::vector<std::shared_ptr<T>>>();
+    for (auto& component_pair : this->components) {
+      std::shared_ptr<T> cast_component = std::dynamic_pointer_cast<T, Component>(component_pair.second);
+      if (cast_component) {
+        returned_components->push_back(cast_component);
+      }
+    }
+    return returned_components;
+  }
+
   ~Actor() override = default;
 
  private:

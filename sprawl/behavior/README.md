@@ -23,10 +23,10 @@ what that might look like:
 #include "BehaviorComponent.hh"
 
 // Developers will name their own components like this one
-class SwordBehavior : public BehaviorComponent {
+class SwordBehavior : public BehaviorComponent<SwordBehavior> {
  public:
-  BINDABLE(int, durability);
-  BINDABLE(int, damagePerSecond);
+  BIND(int, durability);
+  BIND(int, damagePerSecond);
 
   // These event handlers are implemented as nonpure virtual functions in
   // BehaviorComponent. Developers can override any of them they need. 

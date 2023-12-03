@@ -2,10 +2,10 @@
 #include <string>
 
 #include "Actor.hh"
-#include "BehaviorComponent.hh"
 #include "BehaviorComponentFactory.hh"
 #include "CollisionComponent.hh"
 #include "DrawingComponent.hh"
+#include "IBehaviorComponent.hh"
 #include "Logging.hh"
 #include "PhysicsComponent.hh"
 #include "PositionComponent.hh"
@@ -14,10 +14,12 @@
 
 void WADLoader::loadBehaviorComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
   std::string typeName = jsonBody.value("type", "");
-  std::shared_ptr<BehaviorComponent> component = BehaviorComponentFactory::CreateComponent(typeName);
+  std::shared_ptr<IBehaviorComponent> component = BehaviorComponentFactory::CreateComponent(typeName);
   if (component) {
+    component->setOwner(owner);
     owner->addComponent(typeName, component);
   }
+  component->initializeBindables(BehaviorComponentConfig(jsonBody));
 }
 
 void WADLoader::loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
@@ -28,7 +30,7 @@ void WADLoader::loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohm
     collisionsEnabled = jsonBody.value("enabled", "false") == "true";
   }
   */
-  owner->addComponent(COLLISION_COMPONENT_NAME, std::make_shared<CollisionComponent>(owner));
+  owner->addComponent(COLLISION_COMPONENT_NAME, std::make_shared<CollisionComponent>());
 }
 
 void WADLoader::loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
@@ -40,7 +42,9 @@ void WADLoader::loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohman
     texture = nullptr;
     LOG_ERROR("No texture loaded.");
   }
-  owner->addComponent(DRAWING_COMPONENT_NAME, std::make_shared<DrawingComponent>(owner, texture));
+  std::shared_ptr<DrawingComponent> component = std::shared_ptr<DrawingComponent>(new DrawingComponent(texture));
+  component->setOwner(owner);
+  owner->addComponent(DRAWING_COMPONENT_NAME, component);
 }
 
 void WADLoader::loadPositionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
@@ -50,11 +54,15 @@ void WADLoader::loadPositionComponent(std::shared_ptr<Actor> owner, const nlohma
   PositionUnit width = jsonBody.value("width", 1.0);
   LOG_DEBUG_SYS(WADLOADER, "Setting PositionComponent(center=Vect2D({1},{2}),height={3},width={4})", x, y, height,
                 width);
-  owner->addComponent(POSITION_COMPONENT_NAME, std::make_shared<PositionComponent>(owner, Vect2D(x, y), height, width));
+
+  std::shared_ptr<PositionComponent> component = std::make_shared<PositionComponent>(Vect2D(x, y), height, width);
+  component->setOwner(owner);
+  owner->addComponent(POSITION_COMPONENT_NAME, component);
 }
 
 void WADLoader::loadPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
-  std::shared_ptr<PhysicsComponent> physicsComponent = std::shared_ptr<PhysicsComponent>(new PhysicsComponent(owner));
+  std::shared_ptr<PhysicsComponent> physicsComponent = std::make_shared<PhysicsComponent>();
+  physicsComponent->setOwner(owner);
 
   physicsComponent->dragCoefficient(jsonBody.value("dragCoefficient", 0.0));
   physicsComponent->dragType((jsonBody.value("dragType", "linear") == "linear") ? DragType::LINEAR
