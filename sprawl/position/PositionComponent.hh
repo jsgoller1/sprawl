@@ -10,8 +10,14 @@ class Actor;
 
 class PositionComponent : public Component {
  public:
-  PositionComponent(const std::weak_ptr<Actor> owner, const Vect2D& center = Vect2D::zero(),
-                    const PositionUnit height = 1.0, const PositionUnit width = 1.0);
+  PositionComponent(const Vect2D& center = Vect2D::zero(), const PositionUnit height = 1.0,
+                    const PositionUnit width = 1.0);
+
+  // TODO: These shouldn't be here because PositionComponent
+  // shouldn't even be a component. We will refactor it to
+  // be a Transform, similar to Unity.
+  void managerRegister() override {}
+  void managerUnregister() override {}
 
   std::string toString() const override;
 

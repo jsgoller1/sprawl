@@ -21,13 +21,18 @@ class Component : public Entity {
   virtual std::string toString() const override;
 
   std::shared_ptr<Actor> getOwner() const;
+  void setOwner(const std::shared_ptr<Actor> owner);
+
   bool isEnabled() const;
   void setEnabled(const bool setting);
+
+  virtual void managerRegister() = 0;
+  virtual void managerUnregister() = 0;
 
   virtual ~Component() override = default;
 
  protected:
-  Component(const std::weak_ptr<Actor> owner, const bool enabled = COMPONENT_ENABLED);
+  Component(const bool enabled = COMPONENT_ENABLED);
 
  private:
   std::shared_ptr<Actor> owner;

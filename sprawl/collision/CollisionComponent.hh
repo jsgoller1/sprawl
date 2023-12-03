@@ -33,11 +33,13 @@ class CollisionComponent : public Component {
    *    tests, triggers, etc.
    */
  public:
-  CollisionComponent(const std::shared_ptr<Actor> owner, const PositionUnit height = 0.0,
-                     const PositionUnit width = 0.0, const bool collisionsEnabled = false);
+  CollisionComponent(const PositionUnit height = 0.0, const PositionUnit width = 0.0,
+                     const bool collisionsEnabled = false);
   ~CollisionComponent() override;
 
   std::string toString() const override;
+  void managerRegister() override;
+  void managerUnregister() override;
 
   bool collisionsEnabled() const;
   void collisionsEnabled(const bool setting);

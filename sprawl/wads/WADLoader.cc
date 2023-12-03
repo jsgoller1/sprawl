@@ -4,12 +4,12 @@
 
 #include "Actor.hh"
 #include "ActorManager.hh"
-#include "BehaviorComponent.hh"
 #include "BehaviorComponentFactory.hh"
 #include "CollisionManager.hh"
 #include "Component.hh"
 #include "DrawingManager.hh"
 #include "GraphicsSettings.hh"
+#include "IBehaviorComponent.hh"
 #include "Logging.hh"
 #include "PhysicsManager.hh"
 #include "PositionComponent.hh"
@@ -24,6 +24,10 @@ WADLoader::WADLoader(const FilePath& wadDir) {
   }
   this->_wadDir = wadDir;
   this->_jsonBody = nlohmann::json::parse(wadFile);
+
+  // NOTE: Leave this here. Forgetting to use it or putting it in the wrong place
+  // will cause issues with logging not being initialized before logging calls are made.
+  this->loadLogging();
 }
 
 nlohmann::json WADLoader::getJsonBody() const { return this->_jsonBody; }
@@ -89,12 +93,7 @@ void WADLoader::loadActor(ActorManager& actorManager, const std::string sceneID,
     } else if (typeName == "PhysicsComponent") {
       this->loadPhysicsComponent(actor, componentJSON);
     } else {
-      std::shared_ptr<BehaviorComponent> behaviorComponent = BehaviorComponentFactory::CreateComponent(typeName);
-      if (behaviorComponent) {
-        actor->addComponent(typeName, behaviorComponent);
-      } else {
-        LOG_ERROR("Unknown component type: {0}", typeName);
-      }
+      this->loadBehaviorComponent(actor, componentJSON);
     }
   }
 }

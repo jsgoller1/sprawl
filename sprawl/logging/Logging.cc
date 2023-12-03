@@ -33,6 +33,8 @@ void Logging::impl_Log(const std::string& fileName, const int lineNo, const std:
     return;
   }
 
+  // TODO: For each of the formatted fields below, use something like
+  // "<none>" if they're empty.
   std::string outputHeader = std::string("");
   if (getShowTime()) {
     outputHeader += getLoggingTime();

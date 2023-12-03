@@ -14,11 +14,7 @@ sprawl:
 	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk build 
 
 # Runs sprawl MVP demonstrating basic functionality
-mvp: sprawl 
-	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk deps
-	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk build
-
-run-mvp:
+mvp: sprawl
 	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk run
 
 

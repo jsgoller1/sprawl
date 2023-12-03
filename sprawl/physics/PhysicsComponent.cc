@@ -5,21 +5,25 @@
 #include "PhysicsManager.hh"
 
 // ctors / dtors
-PhysicsComponent::PhysicsComponent(const std::shared_ptr<Actor> owner, const bool forceResponsiveSetting,
-                                   const bool gravitySetting, const PositionUnit maxSpeed, const PositionUnit minSpeed,
-                                   const DragType dragType, const real dragCoefficient, real mass)
-    : Component(owner),
+PhysicsComponent::PhysicsComponent(const bool forceResponsiveSetting, const bool gravitySetting,
+                                   const PositionUnit maxSpeed, const PositionUnit minSpeed, const DragType dragType,
+                                   const real dragCoefficient, real mass)
+    : Component(),
       _forceResponsive(forceResponsiveSetting),
       _gravityEnabled(gravitySetting),
       _maxSpeed(maxSpeed),
       _minSpeed(minSpeed),
       _dragCoefficient(dragCoefficient),
       _dragType(dragType),
-      _mass(mass) {
-  PhysicsManager::instance().manage(this->getOwner());
-}
+      _mass(mass) {}
 
-PhysicsComponent::~PhysicsComponent() { PhysicsManager::instance().unmanage(this->getOwner()); }
+std::string PhysicsComponent::toString() const {
+  return fmt::format("PhysicsComponent({})", this->getOwner()->toString());
+}
+void PhysicsComponent::managerRegister() { PhysicsManager::instance().manage(this->getOwner()); }
+void PhysicsComponent::managerUnregister() { PhysicsManager::instance().unmanage(this->getOwner()); }
+
+PhysicsComponent::~PhysicsComponent() { this->managerUnregister(); }
 
 PositionUnit PhysicsComponent::getMaxSpeed() const { return this->_maxSpeed; }
 void PhysicsComponent::setMaxSpeed(const PositionUnit maxSpeed) { this->_maxSpeed = maxSpeed; }
@@ -27,10 +31,6 @@ PositionUnit PhysicsComponent::getMinSpeed() { return this->_minSpeed; }
 void PhysicsComponent::setMinSpeed(const PositionUnit minSpeed) { this->_minSpeed = minSpeed; }
 Vect2D PhysicsComponent::getVelocity() const { return this->_velocity; }
 void PhysicsComponent::setVelocity(const Vect2D& velocity) { this->_velocity = velocity; }
-
-std::string PhysicsComponent::toString() const {
-  return fmt::format("PhysicsComponent({})", this->getOwner()->toString());
-}
 
 // Unique attribute accessors
 bool PhysicsComponent::forceEnabled() const { return this->_forceResponsive; }

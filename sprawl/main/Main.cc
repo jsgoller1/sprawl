@@ -26,7 +26,6 @@ int main(int argc, char* argv[]) {
   WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
   wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, drawingManager, physicsManager);
   wadLoader.loadActors(actorManager);
-  wadLoader.loadLogging();
 
   Timer timer = Timer();
   bool should_quit = false;
@@ -43,6 +42,7 @@ int main(int argc, char* argv[]) {
     collisionManager.gameLoopUpdate(duration);
     physicsManager.gameLoopUpdate(duration);
     drawingManager.gameLoopUpdate(duration);
+    behaviorManager.gameLoopUpdate(duration);
   }
   return 0;
 }

@@ -15,11 +15,12 @@ class Actor;
 
 class DrawingComponent : public Component {
  public:
-  DrawingComponent(const std::weak_ptr<Actor> owner, const std::shared_ptr<Texture> texture = nullptr,
-                   const SDL_RendererFlip flip = SDL_FLIP_NONE);
+  DrawingComponent(const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
   ~DrawingComponent() override;
 
   std::string toString() const override;
+  void managerRegister() override;
+  void managerUnregister() override;
 
   // Accessors for components
   std::shared_ptr<Texture> getTexture() const;
