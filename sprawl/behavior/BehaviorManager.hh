@@ -3,6 +3,9 @@
 #include "ComponentManager.hh"
 #include "Singleton.hh"
 
+class EventBus;
+class EventBusPublisher;
+
 class BehaviorManager : public ComponentManager, public Singleton<BehaviorManager> {
  public:
   void gameLoopUpdate(time_ms duration) override;
@@ -12,4 +15,7 @@ class BehaviorManager : public ComponentManager, public Singleton<BehaviorManage
   BehaviorManager();
   BehaviorManager(const BehaviorManager&) = delete;
   BehaviorManager& operator=(const BehaviorManager&) = delete;
+
+  friend EventBusPublisher;
+  std::shared_ptr<EventBus> eventBus;
 };

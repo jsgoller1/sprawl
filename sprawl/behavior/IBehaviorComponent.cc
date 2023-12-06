@@ -2,6 +2,7 @@
 
 #include "Actor.hh"
 #include "BehaviorManager.hh"
+#include "EventMessage.hh"
 
 IBehaviorComponent::~IBehaviorComponent() { BehaviorManager::instance().unmanage(this->getOwner()); }
 
@@ -11,3 +12,5 @@ std::string IBehaviorComponent::toString() const {
 
 void IBehaviorComponent::managerRegister() { BehaviorManager::instance().manage(this->getOwner()); }
 void IBehaviorComponent::managerUnregister() { BehaviorManager::instance().unmanage(this->getOwner()); }
+
+void IBehaviorComponent::receiveEvent(const EventMessage& message) { message.accept(*this); }

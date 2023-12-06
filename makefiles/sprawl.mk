@@ -15,7 +15,7 @@ SPRAWL_DEP_FILES := $(SPRAWL_SRC_FILES:.cc=.d)
 deps: $(SPRAWL_DEP_FILES)
 
 %.d: %.cc
-	$(CCACHE) $(CXX) $(SPRAWL_COMPILE_CXXFLAGS) -MMD -MF $@ -c $<
+	$(CCACHE) $(CXX) $(SPRAWL_COMPILE_CXXFLAGS) -MMD -MP -MF $@ -E $< > /dev/null
 
 %.o: %.cc
 	$(CCACHE) $(CXX) $(SPRAWL_COMPILE_CXXFLAGS) -c -o $@ $<

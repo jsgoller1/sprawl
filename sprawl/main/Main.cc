@@ -3,6 +3,8 @@
 #include "CLI.hh"
 #include "CollisionManager.hh"
 #include "DrawingManager.hh"
+#include "EventBusPublisher.hh"
+#include "EventMessage.hh"
 #include "InputEvent.hh"
 #include "InputHandler.hh"
 #include "Logging.hh"
@@ -22,6 +24,7 @@ int main(int argc, char* argv[]) {
   CollisionManager& collisionManager = CollisionManager::instance();
   DrawingManager& drawingManager = DrawingManager::instance();
   PhysicsManager& physicsManager = PhysicsManager::instance();
+  EventBusPublisher& eventBusPublisher = EventBusPublisher::instance();
 
   WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
   wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, drawingManager, physicsManager);
@@ -42,7 +45,7 @@ int main(int argc, char* argv[]) {
     collisionManager.gameLoopUpdate(duration);
     physicsManager.gameLoopUpdate(duration);
     drawingManager.gameLoopUpdate(duration);
-    behaviorManager.gameLoopUpdate(duration);
+    eventBusPublisher.sendMessage(OnLoopMessage());
   }
   return 0;
 }

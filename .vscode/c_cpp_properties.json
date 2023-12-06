@@ -11,6 +11,7 @@
                 "${workspaceFolder}/sprawl/collision/",
                 "${workspaceFolder}/sprawl/drawing/",
                 "${workspaceFolder}/sprawl/ecs/",
+                "${workspaceFolder}/sprawl/events/",
                 "${workspaceFolder}/sprawl/input/",
                 "${workspaceFolder}/sprawl/input/event/",
                 "${workspaceFolder}/sprawl/logging/",
