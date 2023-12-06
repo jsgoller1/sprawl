@@ -19,5 +19,7 @@ class ComponentManager {
   ComponentManager();
   virtual ~ComponentManager();
 
+  // TODO: probably better to have an Actor collection here rather than a concrete collection
+  // type like this
   std::unordered_set<std::shared_ptr<Actor>> managedActors = {};
 };
