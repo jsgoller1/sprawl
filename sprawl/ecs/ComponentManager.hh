@@ -1,9 +1,10 @@
 #pragma once
 
 #include <memory>
-#include <unordered_set>
+#include <unordered_map>
 
 #include "Time.hh"
+#include "Types.hh"
 
 // forward decls
 class Actor;
@@ -15,9 +16,11 @@ class ComponentManager {
   void manage(const std::shared_ptr<Actor> actor);
   void unmanage(const std::shared_ptr<Actor> actor);
 
+  std::shared_ptr<Actor> getActor(const UUID& uuid) const;
+
  protected:
   ComponentManager();
   virtual ~ComponentManager();
 
-  std::unordered_set<std::shared_ptr<Actor>> managedActors = {};
+  std::unordered_map<UUID, std::shared_ptr<Actor>> managedActors = {};
 };

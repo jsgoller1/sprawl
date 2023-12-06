@@ -48,7 +48,8 @@ void DrawingManager::gameLoopUpdate(const time_ms duration) {
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
   std::shared_ptr<DrawingComponent> drawingComponent;
-  for (std::shared_ptr<Actor> actor : this->managedActors) {
+  for (auto& pair : this->managedActors) {
+    std::shared_ptr<Actor> actor = pair.second;
     positionComponent = actor->getComponent<PositionComponent>();
     drawingComponent = actor->getComponent<DrawingComponent>();
     this->prepare(*positionComponent, *drawingComponent);

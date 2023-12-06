@@ -11,7 +11,8 @@ void PhysicsManager::setGravityConstant(const real gravityConstant) { this->grav
 
 void PhysicsManager::gameLoopUpdate(const time_ms duration) {
   std::unordered_set<std::shared_ptr<Actor>> collisionCandidates;
-  for (std::shared_ptr<Actor> actor : this->managedActors) {
+  for (auto& pair : this->managedActors) {
+    std::shared_ptr<Actor> actor = pair.second;
     std::string actorString = actor->toString();
     std::shared_ptr<PositionComponent> positionComponent = actor->getComponent<PositionComponent>();
     std::shared_ptr<PhysicsComponent> physicsComponent = actor->getComponent<PhysicsComponent>();
