@@ -1,8 +1,28 @@
 #include "SDLInputInterface.hh"
 
+#include "EventBusPublisher.hh"
+#include "EventMessage.hh"
+
 using std::map;
 using std::queue;
 using std::shared_ptr;
+
+char getCharFromKeyPress(SDL_Event& rawEvent) {
+  if (rawEvent.type == SDL_KEYDOWN) {
+    SDL_Keycode key = rawEvent.key.keysym.sym;
+
+    // Check if the key is an alphabetical key
+    if (key >= SDLK_a && key <= SDLK_z) {
+      // Convert to lowercase if shift is not pressed
+      if (!(SDL_GetModState() & KMOD_SHIFT)) {
+        return char(tolower(key));
+      } else {
+        return char(key);
+      }
+    }
+  }
+  return '\0';  // Return null character if not an alphabetical key
+}
 
 SDLInputInterface::SDLInputInterface() {
   this->_recievedQuitEvent = false;
@@ -33,6 +53,7 @@ shared_ptr<queue<shared_ptr<SDL_Event>>> SDLInputInterface::getMouseButtonDownEv
 shared_ptr<queue<shared_ptr<SDL_Event>>> SDLInputInterface::getMouseMotionEvents() { return this->_mouseMotionEvents; }
 
 void SDLInputInterface::detectInput() {
+  EventBusPublisher& eventBusPublisher = EventBusPublisher::instance();
   SDL_Event rawEvent;
   while (SDL_PollEvent(&rawEvent) != 0) {
     shared_ptr<SDL_Event> event = shared_ptr<SDL_Event>(new SDL_Event(rawEvent));
@@ -42,9 +63,11 @@ void SDLInputInterface::detectInput() {
         break;
       case SDL_KEYDOWN:
         this->handler_SDL_KEYDOWN(event);
+        eventBusPublisher.sendMessage(OnKeyDownMessage(getCharFromKeyPress(*event)));
         break;
       case SDL_KEYUP:
         this->handler_SDL_KEYUP(event);
+        eventBusPublisher.sendMessage(OnKeyUpMessage(getCharFromKeyPress(*event)));
         break;
       case SDL_MOUSEBUTTONDOWN:
         this->handler_SDL_MOUSEBUTTONDOWN(event);

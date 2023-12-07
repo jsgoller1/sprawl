@@ -6,9 +6,10 @@ class MVPComponent : public LoadableBehaviorComponent<MVPComponent> {
   MVPComponent() : LoadableBehaviorComponent<MVPComponent>() {}
   ~MVPComponent() override = default;
 
-  BIND(real, forceAdded, MVPComponent)
+  BIND(real, xForceAdded, MVPComponent)
+  // BIND(real, yForceAdded, MVPComponent)
 
   // We'll add the force in this function
-  void onLoop() override;
+  void onKeyDown(char key) override;
 };
 REGISTER_COMPONENT(MVPComponent);

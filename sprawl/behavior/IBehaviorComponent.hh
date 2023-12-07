@@ -32,6 +32,8 @@ class IBehaviorComponent : public Component {
   virtual void onActorCreation() {}
   virtual void onActorDestruction() {}
   virtual void onCollision() {}
+  virtual void onKeyUp(char key) { (void)key; }
+  virtual void onKeyDown(char key) { (void)key; }
 
  private:
   // Only EventBus should be able to call receiveEvent(); IBehaviorComponent is (at present)

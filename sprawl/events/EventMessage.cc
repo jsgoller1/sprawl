@@ -22,3 +22,6 @@ void OnActorDestructionMessage::accept(IBehaviorComponent& component) const { co
 
 OnCollisionMessage::OnCollisionMessage(UUID senderId, UUID receiverId) : EventMessage(senderId, receiverId){};
 void OnCollisionMessage::accept(IBehaviorComponent& component) const { component.onCollision(); };
+
+void OnKeyDownMessage::accept(IBehaviorComponent& component) const { component.onKeyDown(this->key); };
+void OnKeyUpMessage::accept(IBehaviorComponent& component) const { component.onKeyUp(this->key); };

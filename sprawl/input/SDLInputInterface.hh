@@ -42,3 +42,5 @@ class SDLInputInterface {
   std::shared_ptr<std::map<Uint8, std::shared_ptr<SDL_Event>>> _pressedMouseButtons;
   std::shared_ptr<std::queue<std::shared_ptr<SDL_Event>>> _mouseMotionEvents;
 };
+
+char getCharFromKeyPress(SDL_Event& rawEvent);

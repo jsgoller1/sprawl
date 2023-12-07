@@ -47,3 +47,17 @@ typedef struct OnCollisionMessage : public EventMessage {
   OnCollisionMessage(UUID senderId, UUID receiverId);
   void accept(IBehaviorComponent& component) const override;
 } OnCollisionMessage;
+
+typedef struct OnKeyDownMessage : public EventMessage {
+ public:
+  OnKeyDownMessage(char key) : key(key) {}
+  char key;
+  void accept(IBehaviorComponent& component) const override;
+} OnKeyDown;
+
+typedef struct OnKeyUpMessage : public EventMessage {
+ public:
+  OnKeyUpMessage(char key) : key(key) {}
+  char key;
+  void accept(IBehaviorComponent& component) const override;
+} OnKeyUp;
