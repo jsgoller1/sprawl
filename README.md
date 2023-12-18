@@ -11,7 +11,7 @@ All documentation (including setup instructions) can be found at our public, rea
 - Eric Barone (ConcernedApe), John Carmack, Matt Dabrowski, Terry A. Davis, Paul Erdős, and Richard Feynman for their inspiring examples
 
 ## Licensing 
-Sprawl is presently proprietary / closed source, and may not be bought, sold, reproduced, etc in any capacity without the author's permission. Sprawl uses C and C++ standard libraries provided by Clang. It also uses or modifies the following:
+Sprawl is presently released under GPLv3. Sprawl uses C and C++ standard libraries provided by Clang. It also uses or modifies the following:
 - `SDL`, released under the [zlib License](https://raw.githubusercontent.com/libsdl-org/SDL/main/LICENSE.txt).
 - `cyclone-physics`, released under the [MIT License](https://raw.githubusercontent.com/idmillington/cyclone-physics/master/LICENSE).
 - `nlohmann/json`, released under the [MIT License](https://raw.githubusercontent.com/nlohmann/json/develop/LICENSE.MIT).
