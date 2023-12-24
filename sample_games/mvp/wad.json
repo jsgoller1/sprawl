@@ -56,7 +56,7 @@
                         {
                             "type": "MVPComponent",
                             "enabled": true,
-                            "forceAdded": 0.001
+                            "forceAdded": 0.01
                         }
                     ]
                 }

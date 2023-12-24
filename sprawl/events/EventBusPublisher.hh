@@ -5,8 +5,8 @@
 #include "Singleton.hh"
 
 // fwd decls
-struct EventMessage;
 class EventBus;
+struct EventMessage;
 
 class EventBusPublisher : public Singleton<EventBusPublisher> {
   /*

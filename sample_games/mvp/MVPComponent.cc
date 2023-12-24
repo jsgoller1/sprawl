@@ -1,12 +1,28 @@
 #include "MVPComponent.hh"
 
 #include "Actor.hh"
+#include "Input.hh"
 #include "Math.hh"
 #include "PhysicsComponent.hh"
+#include "SystemProxy.hh"
 
-void MVPComponent::onLoop() {
+void MVPComponent::moveLeft(PhysicsComponent& physicsComponent) {
+  physicsComponent.applyForce(Vect2D(-this->forceAdded, real(0)));
+}
+
+void MVPComponent::moveRight(PhysicsComponent& physicsComponent) {
+  physicsComponent.applyForce(Vect2D(this->forceAdded, real(0)));
+}
+
+void MVPComponent::onGameLoop() {
+  Input input = Input();
   // Get the physics component
   std::shared_ptr<PhysicsComponent> physicsComponent = this->getOwner()->getComponent<PhysicsComponent>();
-  // Add the force
-  physicsComponent->applyForce(Vect2D(real(0), forceAdded));
+  if (input.getKey(SDLK_LEFT)) {
+    this->moveLeft(*physicsComponent);
+  } else if (input.getKey(SDLK_RIGHT)) {
+    this->moveRight(*physicsComponent);
+  } else if (input.getKey(SDLK_ESCAPE)) {
+    SystemProxy::instance().quit();
+  }
 }

@@ -101,6 +101,7 @@
         "queue": "cpp",
         "span": "cpp",
         "stack": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "filesystem": "cpp"
     },
 }

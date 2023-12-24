@@ -14,7 +14,6 @@ class CollisionManager;
 class DrawingComponent;
 class DrawingManager;
 struct GraphicsSettings;
-class InputHandler;
 class PositionComponent;
 class PhysicsManager;
 class PhysicsComponent;
@@ -39,7 +38,6 @@ class WADLoader {
   virtual ~WADLoader();
   void loadLogging() const;
 
-  std::shared_ptr<InputHandler> loadInputHandler() const;
   GraphicsSettings loadGraphicsSettings(const nlohmann::json& jsonBody) const;
 
   void loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager, CollisionManager& collisionManager,

@@ -24,26 +24,38 @@ typedef struct EventMessage {
   UUID receiverId;
 } EventMessage;
 
-typedef struct OnLoopMessage : public EventMessage {
+/*
+ * Message broadcast to all Actors on every game loop.
+ */
+typedef struct GameLoopMessage : public EventMessage {
  public:
-  OnLoopMessage();
+  GameLoopMessage();
   void accept(IBehaviorComponent& component) const override;
-} OnLoopMessage;
+} GameLoopMessage;
 
-typedef struct OnActorCreationMessage : public EventMessage {
+/*
+ * Message sent to an actor when it is created.
+ */
+typedef struct ActorCreationMessage : public EventMessage {
  public:
-  OnActorCreationMessage(UUID receiverId);
+  ActorCreationMessage(UUID receiverId);
   void accept(IBehaviorComponent& component) const override;
-} OnActorCreationMessage;
+} ActorCreationMessage;
 
-typedef struct OnActorDestructionMessage : public EventMessage {
+/*
+ * Message sent to an actor when it is destroyed.
+ */
+typedef struct ActorDestructionMessage : public EventMessage {
  public:
-  OnActorDestructionMessage(UUID receiverId);
+  ActorDestructionMessage(UUID receiverId);
   void accept(IBehaviorComponent& component) const override;
-} OnActorDestructionMessage;
+} ActorDestructionMessage;
 
-typedef struct OnCollisionMessage : public EventMessage {
+/*
+ * Message sent to an actor when it collides with another actor.
+ */
+typedef struct CollisionMessage : public EventMessage {
  public:
-  OnCollisionMessage(UUID senderId, UUID receiverId);
+  CollisionMessage(UUID senderId, UUID receiverId);
   void accept(IBehaviorComponent& component) const override;
-} OnCollisionMessage;
+} CollisionMessage;
