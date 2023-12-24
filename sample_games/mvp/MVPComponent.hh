@@ -1,5 +1,10 @@
+#pragma once
+
 #include "LoadableBehaviorComponent.hh"
 #include "Math.hh"
+
+// fwd decls
+class PhysicsComponent;
 
 class MVPComponent : public LoadableBehaviorComponent<MVPComponent> {
  public:
@@ -9,6 +14,10 @@ class MVPComponent : public LoadableBehaviorComponent<MVPComponent> {
   BIND(real, forceAdded, MVPComponent)
 
   // We'll add the force in this function
-  void onLoop() override;
+  void onGameLoop() override;
+
+ private:
+  void moveLeft(PhysicsComponent& physicsComponent);
+  void moveRight(PhysicsComponent& physicsComponent);
 };
 REGISTER_COMPONENT(MVPComponent);

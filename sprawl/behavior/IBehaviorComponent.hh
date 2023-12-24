@@ -28,10 +28,17 @@ class IBehaviorComponent : public Component {
   // subclasses should be able to call accept(), but we can't use friend relationships here because friendships
   // are not inheirited. It would be better if this were private (they're public in Unity though), but it's too complex
   // for now.
-  virtual void onLoop() {}
+  virtual void onGameLoop() {}
   virtual void onActorCreation() {}
   virtual void onActorDestruction() {}
   virtual void onCollision() {}
+  virtual void onKeyDown() {}
+  virtual void onKey() {}
+  virtual void onKeyUp() {}
+  virtual void onMouseButtonDown() {}
+  virtual void onMouseButton() {}
+  virtual void onMouseButtonUp() {}
+  virtual void onMouseMotion() {}
 
  private:
   // Only EventBus should be able to call receiveEvent(); IBehaviorComponent is (at present)

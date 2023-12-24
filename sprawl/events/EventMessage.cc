@@ -11,14 +11,14 @@
 EventMessage::EventMessage(UUID senderId, UUID receiverId) : senderId(senderId), receiverId(receiverId){};
 EventMessage::~EventMessage() = default;
 
-OnLoopMessage::OnLoopMessage() : EventMessage("", ""){};
-void OnLoopMessage::accept(IBehaviorComponent& component) const { component.onLoop(); };
+GameLoopMessage::GameLoopMessage() : EventMessage("", ""){};
+void GameLoopMessage::accept(IBehaviorComponent& component) const { component.onGameLoop(); };
 
-OnActorCreationMessage::OnActorCreationMessage(UUID receiverId) : EventMessage("", receiverId){};
-void OnActorCreationMessage::accept(IBehaviorComponent& component) const { component.onActorCreation(); };
+ActorCreationMessage::ActorCreationMessage(UUID receiverId) : EventMessage("", receiverId){};
+void ActorCreationMessage::accept(IBehaviorComponent& component) const { component.onActorCreation(); };
 
-OnActorDestructionMessage::OnActorDestructionMessage(UUID receiverId) : EventMessage("", receiverId){};
-void OnActorDestructionMessage::accept(IBehaviorComponent& component) const { component.onActorDestruction(); };
+ActorDestructionMessage::ActorDestructionMessage(UUID receiverId) : EventMessage("", receiverId){};
+void ActorDestructionMessage::accept(IBehaviorComponent& component) const { component.onActorDestruction(); };
 
-OnCollisionMessage::OnCollisionMessage(UUID senderId, UUID receiverId) : EventMessage(senderId, receiverId){};
-void OnCollisionMessage::accept(IBehaviorComponent& component) const { component.onCollision(); };
+CollisionMessage::CollisionMessage(UUID senderId, UUID receiverId) : EventMessage(senderId, receiverId){};
+void CollisionMessage::accept(IBehaviorComponent& component) const { component.onCollision(); };

@@ -2,7 +2,6 @@
 #include <string>
 
 #include "GraphicsSettings.hh"
-#include "InputHandler.hh"
 #include "WADLoader.hh"
 
 void WADLoader::loadLogging() const {
@@ -37,8 +36,4 @@ GraphicsSettings WADLoader::loadGraphicsSettings(const nlohmann::json& jsonBody)
                           .screenHeight = height,
                           .useHardwareAcceleration = useHardwareAcceleration,
                           .useVSync = useVSync};
-}
-
-std::shared_ptr<InputHandler> WADLoader::loadInputHandler() const {
-  return std::shared_ptr<InputHandler>(new InputHandler());
 }

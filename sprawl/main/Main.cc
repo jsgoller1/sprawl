@@ -5,10 +5,10 @@
 #include "DrawingManager.hh"
 #include "EventBusPublisher.hh"
 #include "EventMessage.hh"
-#include "InputEvent.hh"
-#include "InputHandler.hh"
+#include "InputManager.hh"
 #include "Logging.hh"
 #include "PhysicsManager.hh"
+#include "SystemProxy.hh"
 #include "Time.hh"
 #include "Types.hh"
 #include "WADLoader.hh"
@@ -25,6 +25,8 @@ int main(int argc, char* argv[]) {
   DrawingManager& drawingManager = DrawingManager::instance();
   PhysicsManager& physicsManager = PhysicsManager::instance();
   EventBusPublisher& eventBusPublisher = EventBusPublisher::instance();
+  InputManager& inputManager = InputManager::instance();
+  SystemProxy& systemProxy = SystemProxy::instance();
 
   WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
   wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, drawingManager, physicsManager);
@@ -32,20 +34,24 @@ int main(int argc, char* argv[]) {
 
   Timer timer = Timer();
   bool should_quit = false;
-  std::shared_ptr<InputHandler> inputHandler = wadLoader.loadInputHandler();
 
   while (!should_quit) {
     time_ms duration = timer.tick();
-    std::shared_ptr<GameLoopInputEvents> inputEvents = inputHandler->getGameLoopInputEvents();
-    should_quit = inputEvents->getShouldQuit();
 
-    // Order is important here: we need to test for collisions (which gives
+    // TODO: Does order matter here? I would think we we need to test for collisions (which gives
     // game code the opportunity to respond to them), then update physics for position changes,
-    // then finally draw. This is because we want to draw the game state after the update.
+    // then finally draw (we want to draw the game state after the update). But it may not matter,
+    // because any behavior that needs to occur will just occur on the next loop.
+
+    inputManager.gameLoopUpdate();
+    eventBusPublisher.sendMessage(GameLoopMessage());
     collisionManager.gameLoopUpdate(duration);
     physicsManager.gameLoopUpdate(duration);
     drawingManager.gameLoopUpdate(duration);
-    eventBusPublisher.sendMessage(OnLoopMessage());
+
+    // We quit because the programmer's code directed us to, or because it was triggered by SDL (usually
+    // due to pressing the X button on the window)
+    should_quit = systemProxy.getQuit() || inputManager.getQuit();
   }
   return 0;
 }
