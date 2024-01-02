@@ -3,11 +3,11 @@
 MouseStateManager::MouseStateManager() = default;
 
 void MouseStateManager::processEvent(SDL_Event event) {
-  if (event.type == SDL_MOUSEBUTTONDOWN) {
+  if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
     this->pressedMouseButtons[event.button.button] = InputPressState::PRESSED;
-  } else if (event.type == SDL_MOUSEBUTTONUP) {
+  } else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP) {
     this->pressedMouseButtons[event.button.button] = InputPressState::RELEASED;
-  } else if (event.type == SDL_MOUSEMOTION) {
+  } else if (event.type == SDL_EVENT_MOUSE_MOTION) {
     this->mousePosition = Vect2D(XCoord(event.motion.x), YCoord(event.motion.y));
   }
 }

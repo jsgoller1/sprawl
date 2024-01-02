@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "Configs.hh"
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 
 CLI::CLI(const int argc, const char* const argv[]) {
   if (argc != 2) {

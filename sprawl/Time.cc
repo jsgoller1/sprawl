@@ -1,6 +1,6 @@
 #include "Time.hh"
 
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 
 // Not sure if conversion from float to int / back will
 // be dangerous, but in case it is would rather have
@@ -12,11 +12,11 @@ time_s to_seconds(const time_ms time) { return time / 1000.0; }
 Timer::Timer() {
   // TODO: When we figure out units, do we really want to be casting this
   // UInt64 to a double?
-  this->lastTick = real(SDL_GetTicks64());
+  this->lastTick = real(SDL_GetTicks());
 }
 
 time_ms Timer::tick() {
-  time_ms current = real(SDL_GetTicks64());
+  time_ms current = real(SDL_GetTicks());
   time_ms delta = current - this->lastTick;
   this->lastTick = current;
   return delta;

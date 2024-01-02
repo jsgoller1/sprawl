@@ -1,8 +1,29 @@
 # Sprawl game engine
 A 2D game engine built to implement __Neon Rain__. 
 
-## Documentation
-All documentation (including setup instructions) can be found at our public, read-only [Roam Research graph](https://roamresearch.com/#/app/sprawl-engine/page/BP_0F1_2z).
+## Setup
+Sprawl requires SDL3 and SDL3_image to run. Instructions for compiling them from source via CMake follow. 
+
+### SDL setup
+1. `git clone git@github.com:libsdl-org/SDL.git`
+1. `mkdir SDL/build`
+1. `cd SDL/build`
+1. `cmake path/to/SDL`
+1. `make all`
+1. `sudo make install`
+
+### SDL_image setup
+1. `git clone git@github.com:libsdl-org/SDL_image.git`
+1. `mkdir SDL_image/build`
+1. `cd SDL_image/build`
+1. `cmake path/to/SDL_image`
+1. `make all`
+1. `sudo make install`
+
+After installing both, you may need to update your shared library cache:
+```
+sudo ldconfig
+```
 
 ## Credits, Resources, References
 - [LazyFoo's C++ SDL tutorials](https://lazyfoo.net/tutorials/SDL/) were extremely helpful for getting this project off the ground.

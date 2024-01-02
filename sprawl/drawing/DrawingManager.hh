@@ -5,7 +5,7 @@
 
 #include "ComponentManager.hh"
 #include "Math.hh"
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 #include "Singleton.hh"
 #include "Types.hh"
 

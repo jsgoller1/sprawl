@@ -29,17 +29,18 @@ void InputManager::detectNewInputs() {
   SDL_Event event;
   while (SDL_PollEvent(&event) != 0) {
     switch (event.type) {
-      case SDL_QUIT:
+      case SDL_EVENT_QUIT:
         this->_quit = true;
         break;
-      case SDL_KEYDOWN:
-      case SDL_KEYUP:
+      case SDL_EVENT_KEY_DOWN:
+      case SDL_EVENT_KEY_UP:
         this->keyboardStateManager->processEvent(event);
         break;
-      case SDL_MOUSEMOTION:
-      case SDL_MOUSEBUTTONDOWN:
-      case SDL_MOUSEBUTTONUP:
+      case SDL_EVENT_MOUSE_MOTION:
+      case SDL_EVENT_MOUSE_BUTTON_DOWN:
+      case SDL_EVENT_MOUSE_BUTTON_UP:
         this->mouseStateManager->processEvent(event);
+        break;
       default:
         break;
     }

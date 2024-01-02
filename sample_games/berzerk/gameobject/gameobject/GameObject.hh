@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "PositionComponent.hh"
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 #include "Vect2D.hh"
 
 // Forward decls

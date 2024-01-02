@@ -1,6 +1,6 @@
 #include "Texture.hh"
 
-#include <SDL2/SDL_image.h>
+#include <SDL3_image/SDL_image.h>
 
 Texture::Texture(const std::shared_ptr<FilePath> path) : Texture(*path) {}
 
@@ -15,7 +15,7 @@ Texture::Texture(const FilePath& path) {
   this->width = this->pixelData->w;
 };
 
-Texture::~Texture() { SDL_FreeSurface(this->pixelData); }
+Texture::~Texture() { SDL_DestroySurface(this->pixelData); }
 
 SDL_Surface* Texture::getPixelData() const { return this->pixelData; }
 PositionUnit Texture::getHeight() const { return this->height; }

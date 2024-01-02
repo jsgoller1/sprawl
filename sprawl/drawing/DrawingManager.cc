@@ -17,8 +17,7 @@ void DrawingManager::initialize(const GraphicsSettings& graphicsSettings) {
     LOG_FATAL_SYS(SDL, "Could not init SDL; {0}", Logging::getSDLError());
     throw;
   }
-  this->_window = SDL_CreateWindow("Sprawl Engine", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                   int(this->_screenWidth), int(this->_screenHeight), SDL_WINDOW_SHOWN);
+  this->_window = SDL_CreateWindow("Sprawl Engine", int(this->_screenWidth), int(this->_screenHeight), 0);
   if (this->_window == nullptr) {
     LOG_FATAL_SYS(SDL, "Window could not be created! {0}", Logging::getSDLError());
     throw;
@@ -27,8 +26,7 @@ void DrawingManager::initialize(const GraphicsSettings& graphicsSettings) {
   Uint32 flags = 0;
   flags |= (this->_useHardwareAcceleration ? SDL_RENDERER_ACCELERATED : 0);
   flags |= (this->_useVSync ? SDL_RENDERER_PRESENTVSYNC : 0);
-  int windowDriverIndex = -1;
-  this->_renderer = (SDL_CreateRenderer(this->_window, windowDriverIndex, flags));
+  this->_renderer = (SDL_CreateRenderer(this->_window, nullptr, flags));
   if (this->_renderer == nullptr) {
     LOG_FATAL_SYS(SDL, "Could not create SDL Renderer. {0}", Logging::getSDLError());
   }
@@ -61,15 +59,16 @@ void DrawingManager::prepare(const PositionComponent& positionComponent, const D
   /* Takes a DrawingComponent and prepares it off-screen for rendering.*/
   Vect2D drawPoint = this->toScreenCoordinates(this->getDrawPoint(positionComponent));
 
-  SDL_Rect renderQuad = {// TODO: Do we really just want to cast to int?
-                         int(drawPoint.x()), int(drawPoint.y()), int(drawable.getWidth()), int(drawable.getHeight())};
+  SDL_FRect renderQuad = {
+      // TODO: Do we really just want to cast to int?
+      float(drawPoint.x()), float(drawPoint.y()), float(drawable.getWidth()), float(drawable.getHeight())};
   SDL_Texture* textureData = (drawable.getTexture()) ? this->prepareTexture(*drawable.getTexture()) : nullptr;
-  SDL_Rect* clip = nullptr;
+  SDL_FRect* clip = nullptr;
   Angle angle = drawable.getAngle();
   SDL_RendererFlip flip = drawable.getFlip();
-  SDL_Point center = SDL_Point{.x = int(positionComponent.x()), .y = int(positionComponent.y())};
+  SDL_FPoint center = SDL_FPoint{.x = float(positionComponent.x()), .y = float(positionComponent.y())};
 
-  if (SDL_RenderCopyEx(this->_renderer, textureData, clip, &renderQuad, angle, &center, flip)) {
+  if (SDL_RenderTextureRotated(this->_renderer, textureData, clip, &renderQuad, angle, &center, flip)) {
     LOG_ERROR_SYS(SDL,
                   "Could not prepare texture: (derive DrawingComponent from  Component to "
                   "get ID) {0}",
@@ -89,7 +88,7 @@ SDL_Texture* DrawingManager::prepareTexture(const Texture& texture) const {
   SDL_Surface* pixelData = texture.getPixelData();
   // TODO: Color key is static for now, might want to se it
   // in drawingComponentonent
-  SDL_SetColorKey(pixelData, SDL_FALSE, SDL_MapRGB(pixelData->format, 0, 0xFF, 0xFF));
+  SDL_SetSurfaceColorKey(pixelData, SDL_FALSE, SDL_MapRGB(pixelData->format, 0, 0xFF, 0xFF));
   SDL_Texture* sdlTexture = SDL_CreateTextureFromSurface(this->_renderer, pixelData);
   return sdlTexture;
 }

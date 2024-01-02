@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include "SDL2/SDL_image.h"
+#include "SDL3/SDL_image.h"
 #include "Sprite.hh"
 
 SpriteManager::SpriteManager(const std::string& spriteSheetPath, const Vect2D& topLeft, const int spriteWidthPx,

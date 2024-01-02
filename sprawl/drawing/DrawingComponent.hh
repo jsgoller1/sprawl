@@ -2,7 +2,7 @@
 
 #include "Math.hh"
 #include "PositionComponent.hh"
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 #include "Texture.hh"
 #include "Types.hh"
 

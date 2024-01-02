@@ -2,7 +2,7 @@
 
 #include <map>
 
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 
 /*
  * Manages button / key state (just pressed, held, released, not pressed)

@@ -4,7 +4,7 @@
 
 #include "Configs.hh"
 #include "DrawingProxy.hh"
-#include "SDL2/SDL.h"
+#include "SDL3/SDL.h"
 
 // Forward decl
 class Vect2D;

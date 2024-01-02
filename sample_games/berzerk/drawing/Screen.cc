@@ -3,8 +3,8 @@
 #include <iostream>
 #include <memory>
 
-#include "SDL2/SDL_image.h"
-#include "SDL2/SDL_mixer.h"
+#include "SDL3/SDL_image.h"
+#include "SDL3/SDL_mixer.h"
 #include "Sprite.hh"
 #include "Vect2D.hh"
 

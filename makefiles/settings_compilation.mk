@@ -40,3 +40,5 @@ CXXFLAGS:=$(CXXFLAGS) -Wno-deprecated
 CXXFLAGS:=$(CXXFLAGS) -Wno-poison-system-directories
 # I don't personally use C-style casting or double underscore identifiers but SDL does.
 CXXFLAGS:=$(CXXFLAGS) -Wno-old-style-cast -Wno-reserved-identifier -Wno-reserved-macro-identifier
+# Introduced via SDL3 documentation, don't care about this
+CXXFLAGS:=$(CXXFLAGS) -Wno-documentation-unknown-command

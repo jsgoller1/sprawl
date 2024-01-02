@@ -5,7 +5,7 @@
 #include "DrawingComponent.hh"
 #include "DrawingProxy.hh"
 #include "LevelShootingProxy.hh"
-#include "SDL2/SDL_image.h"
+#include "SDL3/SDL_image.h"
 #include "SpriteManager.hh"
 
 GameObject::GameObject(const Vect2D& position, const Vect2D& velocity) : _velocity(velocity) {

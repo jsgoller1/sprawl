@@ -4,13 +4,13 @@
 
 void KeyboardStateManager::processEvent(SDL_Event event) {
   switch (event.type) {
-    case SDL_KEYDOWN:
+    case SDL_EVENT_KEY_DOWN:
       if (this->pressedKeys.find(event.key.keysym.sym) == this->pressedKeys.end() ||
           this->pressedKeys.at(event.key.keysym.sym) == InputPressState::NOT_PRESSED) {
         this->pressedKeys[event.key.keysym.sym] = InputPressState::PRESSED;
       }
       break;
-    case SDL_KEYUP:
+    case SDL_EVENT_KEY_UP:
       this->pressedKeys[event.key.keysym.sym] = InputPressState::RELEASED;
       break;
     default:

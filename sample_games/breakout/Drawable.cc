@@ -1,6 +1,6 @@
 #include "Drawable.hh"
 
-#include <SDL2/SDL_image.h>
+#include <SDL3/SDL_image.h>
 
 Drawable::Drawable(const Vect2D& center, const int width, const int height, const std::string& texturePath)
     : _center(center), _height(height), _width(width) {
