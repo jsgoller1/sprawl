@@ -1,12 +1,12 @@
 # This is the top-level Makefile for the Sprawl project. Execute these targets from the root directory of the project. 
 # See makefiles/README.md for more information.
 
-.PHONY: sprawl sprawl-physics-test berzerk breakout 
+.PHONY: sprawl mvp
 
 MAKEFILE_DIR:=makefiles
 include $(MAKEFILE_DIR)/settings_misc.mk
 
-all: sprawl berzerk breakout mvp
+all: sprawl mvp
 
 # Builds main .dylib file for sprawl-based games to link against
 sprawl:  
@@ -18,21 +18,13 @@ mvp: sprawl
 	$(MAKE) -j -f $(MAKEFILE_DIR)/mvp.mk run
 
 
-# Builds and runs breakout sample game
-breakout:
-	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk deps 
-	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk build 
+# TODO: Remove breakout; this doesn't use sprawl or build correctly right now
+#breakout:
+#	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk deps 
+#	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk build 
 
-run-breakout:
-	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk run  
-
-# Builds and runs berzerk sample game
-berzerk:
-	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk deps 
-	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk build 
-
-run-berzerk:
-	$(MAKE) -j -f $(MAKEFILE_DIR)/berzerk.mk run
+#run-breakout:
+#	$(MAKE) -j -f $(MAKEFILE_DIR)/breakout.mk run  
 
 clean-all: clean-bin clean-deps clean-logs clean-obj
 
