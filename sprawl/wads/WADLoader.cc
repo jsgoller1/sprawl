@@ -8,6 +8,7 @@
 #include "CollisionManager.hh"
 #include "Component.hh"
 #include "GraphicsManager2D.hh"
+#include "GraphicsManager3D.hh"
 #include "GraphicsSettings.hh"
 #include "IBehaviorComponent.hh"
 #include "Logging.hh"
@@ -31,6 +32,16 @@ WADLoader::WADLoader(const FilePath& wadDir) {
 }
 
 nlohmann::json WADLoader::getJsonBody() const { return this->_jsonBody; }
+
+void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager,
+                             CollisionManager& collisionManager, GraphicsManager3D& graphicsManager3D,
+                             PhysicsManager& physicsManager) const {
+  (void)actorManager;
+  (void)behaviorManager;
+  (void)collisionManager;
+  (void)graphicsManager3D;
+  (void)physicsManager;
+}
 
 void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager,
                              CollisionManager& collisionManager, GraphicsManager2D& graphicsManager2D,

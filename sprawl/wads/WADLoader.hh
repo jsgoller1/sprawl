@@ -13,6 +13,8 @@ class CollisionComponent;
 class CollisionManager;
 class GraphicsComponent2D;
 class GraphicsManager2D;
+class GraphicsComponent3D;
+class GraphicsManager3D;
 struct GraphicsSettings;
 class PositionComponent;
 class PhysicsManager;
@@ -42,6 +44,8 @@ class WADLoader {
 
   void loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager, CollisionManager& collisionManager,
                     GraphicsManager2D& graphicsManager2D, PhysicsManager& physicsManager) const;
+  void loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager, CollisionManager& collisionManager,
+                    GraphicsManager3D& graphicsManager3D, PhysicsManager& physicsManager) const;
   void loadActors(ActorManager& actorManager) const;
 
  private:

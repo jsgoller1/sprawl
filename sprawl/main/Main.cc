@@ -4,7 +4,8 @@
 #include "CollisionManager.hh"
 #include "EventBusPublisher.hh"
 #include "EventMessage.hh"
-#include "GraphicsManager2D.hh"
+// #include "GraphicsManager2D.hh"
+#include "GraphicsManager3D.hh"
 #include "InputManager.hh"
 #include "Logging.hh"
 #include "PhysicsManager.hh"
@@ -22,14 +23,15 @@ int main(int argc, char* argv[]) {
   ActorManager& actorManager = ActorManager::instance();
   BehaviorManager& behaviorManager = BehaviorManager::instance();
   CollisionManager& collisionManager = CollisionManager::instance();
-  GraphicsManager2D& graphicsManager2D = GraphicsManager2D::instance();
+  // GraphicsManager2D& graphicsManager2D = GraphicsManager2D::instance();
+  GraphicsManager3D& graphicsManager3D = GraphicsManager3D::instance();
   PhysicsManager& physicsManager = PhysicsManager::instance();
   EventBusPublisher& eventBusPublisher = EventBusPublisher::instance();
   InputManager& inputManager = InputManager::instance();
   SystemProxy& systemProxy = SystemProxy::instance();
 
   WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
-  wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, graphicsManager2D, physicsManager);
+  wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, graphicsManager3D, physicsManager);
   wadLoader.loadActors(actorManager);
 
   Timer timer = Timer();
@@ -47,7 +49,8 @@ int main(int argc, char* argv[]) {
     eventBusPublisher.sendMessage(GameLoopMessage());
     collisionManager.gameLoopUpdate(duration);
     physicsManager.gameLoopUpdate(duration);
-    graphicsManager2D.gameLoopUpdate(duration);
+    // graphicsManager2D.gameLoopUpdate(duration);
+    graphicsManager3D.gameLoopUpdate(duration);
 
     // We quit because the programmer's code directed us to, or because it was triggered by SDL (usually
     // due to pressing the X button on the window)
