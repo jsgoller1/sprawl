@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "ComponentManager.hh"
+#include "SDL3/SDL.h"
 #include "Singleton.hh"
 
 // Forward decls
@@ -20,4 +21,8 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   GraphicsManager3D() = default;
   GraphicsManager3D(const GraphicsManager3D&) = delete;
   GraphicsManager3D& operator=(const GraphicsManager3D&) = delete;
+
+  ScreenWidth _screenWidth;
+  ScreenHeight _screenHeight;
+  SDL_Window* _window;
 };

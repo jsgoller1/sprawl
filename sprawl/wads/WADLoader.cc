@@ -39,8 +39,10 @@ void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behavi
   (void)actorManager;
   (void)behaviorManager;
   (void)collisionManager;
-  (void)graphicsManager3D;
   (void)physicsManager;
+
+  nlohmann::json jsonData = this->getJsonBody();
+  graphicsManager3D.initialize(this->loadGraphicsSettings(jsonData["graphics"]));
 }
 
 void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager,
