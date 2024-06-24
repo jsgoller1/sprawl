@@ -31,7 +31,7 @@
                             "y": 200
                         },
                         {
-                            "type": "DrawingComponent",
+                            "type": "GraphicsComponent2D",
                             "enabled": true,
                             "texturePath": "/textures/smiley.png"
                         },

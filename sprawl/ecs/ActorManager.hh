@@ -10,7 +10,7 @@
 
 // Forward declaration
 class Actor;
-class DrawingManager;
+class GraphicsManager2D;
 class GameLoopInputEvents;
 class WADLoader;
 

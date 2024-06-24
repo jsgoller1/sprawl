@@ -6,17 +6,17 @@
 #include "Texture.hh"
 #include "Types.hh"
 
-static constexpr char DRAWING_COMPONENT_NAME[] = "DrawingComponent";
+static constexpr char DRAWING_COMPONENT_NAME[] = "GraphicsComponent2D";
 
 typedef double Angle;
-typedef int DrawingLayer;
+typedef int GraphicsLayer;
 
 class Actor;
 
-class DrawingComponent : public Component {
+class GraphicsComponent2D : public Component {
  public:
-  DrawingComponent(const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
-  ~DrawingComponent() override;
+  GraphicsComponent2D(const std::shared_ptr<Texture> texture = nullptr, const SDL_RendererFlip flip = SDL_FLIP_NONE);
+  ~GraphicsComponent2D() override;
 
   std::string toString() const override;
   void managerRegister() override;

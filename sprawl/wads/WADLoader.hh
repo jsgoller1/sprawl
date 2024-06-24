@@ -11,8 +11,8 @@ class ActorManager;
 class BehaviorManager;
 class CollisionComponent;
 class CollisionManager;
-class DrawingComponent;
-class DrawingManager;
+class GraphicsComponent2D;
+class GraphicsManager2D;
 struct GraphicsSettings;
 class PositionComponent;
 class PhysicsManager;
@@ -41,14 +41,14 @@ class WADLoader {
   GraphicsSettings loadGraphicsSettings(const nlohmann::json& jsonBody) const;
 
   void loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager, CollisionManager& collisionManager,
-                    DrawingManager& drawingManager, PhysicsManager& physicsManager) const;
+                    GraphicsManager2D& graphicsManager2D, PhysicsManager& physicsManager) const;
   void loadActors(ActorManager& actorManager) const;
 
  private:
   void loadActor(ActorManager& actorManager, const std::string sceneID, const nlohmann::json& jsonBody) const;
   void loadBehaviorComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
-  void loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
+  void loadGraphicsComponent2D(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadPositionComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
   void loadPhysicsComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const;
 

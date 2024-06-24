@@ -1,12 +1,11 @@
-#include "DrawingManager.hh"
-
 #include "Actor.hh"
-#include "DrawingComponent.hh"
+#include "GraphicsComponent2D.hh"
+#include "GraphicsManager2D.hh"
 #include "GraphicsSettings.hh"
 #include "Logging.hh"
 #include "Texture.hh"
 
-void DrawingManager::initialize(const GraphicsSettings& graphicsSettings) {
+void GraphicsManager2D::initialize(const GraphicsSettings& graphicsSettings) {
   this->_screenWidth = graphicsSettings.screenWidth;
   this->_screenHeight = graphicsSettings.screenHeight;
   this->_useHardwareAcceleration = graphicsSettings.useHardwareAcceleration;
@@ -32,12 +31,12 @@ void DrawingManager::initialize(const GraphicsSettings& graphicsSettings) {
   }
 }
 
-DrawingManager::~DrawingManager() {
+GraphicsManager2D::~GraphicsManager2D() {
   SDL_DestroyWindow(this->_window);
   SDL_Quit();
 }
 
-void DrawingManager::gameLoopUpdate(const time_ms duration) {
+void GraphicsManager2D::gameLoopUpdate(const time_ms duration) {
   // TODO: Duration parameter exists for the sake of API consistency
   // even though we don't need it yet; we will use it for animation (probably)
   (void)duration;
@@ -45,18 +44,18 @@ void DrawingManager::gameLoopUpdate(const time_ms duration) {
   this->clear();
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
-  std::shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<GraphicsComponent2D> graphicsComponent2D;
   for (auto& pair : this->managedActors) {
     std::shared_ptr<Actor> actor = pair.second;
     positionComponent = actor->getComponent<PositionComponent>();
-    drawingComponent = actor->getComponent<DrawingComponent>();
-    this->prepare(*positionComponent, *drawingComponent);
+    graphicsComponent2D = actor->getComponent<GraphicsComponent2D>();
+    this->prepare(*positionComponent, *graphicsComponent2D);
   }
   SDL_RenderPresent(this->_renderer);
 }
 
-void DrawingManager::prepare(const PositionComponent& positionComponent, const DrawingComponent& drawable) const {
-  /* Takes a DrawingComponent and prepares it off-screen for rendering.*/
+void GraphicsManager2D::prepare(const PositionComponent& positionComponent, const GraphicsComponent2D& drawable) const {
+  /* Takes a GraphicsComponent2D and prepares it off-screen for rendering.*/
   Vect2D drawPoint = this->toScreenCoordinates(this->getDrawPoint(positionComponent));
 
   SDL_FRect renderQuad = {
@@ -70,7 +69,7 @@ void DrawingManager::prepare(const PositionComponent& positionComponent, const D
 
   if (SDL_RenderTextureRotated(this->_renderer, textureData, clip, &renderQuad, angle, &center, flip)) {
     LOG_ERROR_SYS(SDL,
-                  "Could not prepare texture: (derive DrawingComponent from  Component to "
+                  "Could not prepare texture: (derive GraphicsComponent2D from  Component to "
                   "get ID) {0}",
                   Logging::getSDLError());
   }
@@ -82,19 +81,19 @@ void DrawingManager::prepare(const PositionComponent& positionComponent, const D
   SDL_DestroyTexture(textureData);
 }
 
-void DrawingManager::clear() const { SDL_RenderClear(this->_renderer); }
+void GraphicsManager2D::clear() const { SDL_RenderClear(this->_renderer); }
 
-SDL_Texture* DrawingManager::prepareTexture(const Texture& texture) const {
+SDL_Texture* GraphicsManager2D::prepareTexture(const Texture& texture) const {
   SDL_Surface* pixelData = texture.getPixelData();
   // TODO: Color key is static for now, might want to se it
-  // in drawingComponentonent
+  // in graphicsComponent2Donent
   SDL_SetSurfaceColorKey(pixelData, SDL_FALSE, SDL_MapRGB(pixelData->format, 0, 0xFF, 0xFF));
   SDL_Texture* sdlTexture = SDL_CreateTextureFromSurface(this->_renderer, pixelData);
   return sdlTexture;
 }
 
-Vect2D DrawingManager::getDrawPoint(const PositionComponent& positionComponent) const {
-  // Get the specific point SDL should use for drawing; SDL treats
+Vect2D GraphicsManager2D::getDrawPoint(const PositionComponent& positionComponent) const {
+  // Get the specific point SDL should use for graphics; SDL treats
   // this as the top left of the image and draws from there. We do not
   // need to account for other SDL specifics here (i.e. y-axis flip or top left
   // corner.)
@@ -102,7 +101,7 @@ Vect2D DrawingManager::getDrawPoint(const PositionComponent& positionComponent) 
   return positionComponent.getTopLeft();
 }
 
-Vect2D DrawingManager::toScreenCoordinates(const Vect2D& vect) const {
+Vect2D GraphicsManager2D::toScreenCoordinates(const Vect2D& vect) const {
   /*
    * SDL: (0,0) is the upper left of the display, (ScreenWidth, ScreenHeight) is
    * the bottom right. (100,100) is beneath (100,0)

@@ -38,7 +38,7 @@
             "background": {
                 "enabled": true,
                 "name": "MVP background",
-                "drawing": {
+                "graphics": {
                     "texturePath": "/textures/background.bmp"
                 },
                 "position": {
@@ -55,7 +55,7 @@
                     "enabled": true,
                     "name": "Player",
                     "isPlayerCharacter": true,
-                    "drawing": {
+                    "graphics": {
                         "texturePath": "/textures/player.bmp"
                     },
                     "position": {
@@ -87,7 +87,7 @@
                         "xOffset": 300
                     },
                     "isPlayerCharacter": false,
-                    "drawing": {
+                    "graphics": {
                         "texturePath": "/textures/wall-indestructible.bmp"
                     },
                     "position": {

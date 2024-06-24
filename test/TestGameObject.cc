@@ -6,6 +6,6 @@ TEST(GameObject, construction) {
   std::shared_ptr<Vect2D> center = std::shared_ptr<Vect2D>(new Vect2D());
   std::shared_ptr<Identity> name = std::shared_ptr<Identity>(new GameObjectID());
   GameObject obj = TestGameObject(center, name);
-  EXPECT_NE(obj.getDrawingComponent(), nullptr);
+  EXPECT_NE(obj.getGraphicsComponent2D(), nullptr);
   EXPECT_NE(obj.getPhysicsComponent(), nullptr);
 }

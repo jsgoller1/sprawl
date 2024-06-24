@@ -23,7 +23,7 @@
             "background": {
                 "enabled": true,
                 "name": "MVP background",
-                "drawing": {
+                "graphics": {
                     "texturePath": "/textures/background.bmp"
                 },
                 "position": {
@@ -40,7 +40,7 @@
                     "enabled": true,
                     "name": "Player",
                     "isPlayerCharacter": true,
-                    "drawing": {
+                    "graphics": {
                         "texturePath": "/textures/player.bmp"
                     },
                     "position": {
@@ -72,7 +72,7 @@
                     },
                     "name": "Enemy",
                     "isPlayerCharacter": false,
-                    "drawing": {
+                    "graphics": {
                         "texturePath": "/textures/enemy.bmp"
                     },
                     "position": {
@@ -100,7 +100,7 @@
                     "enabled": true,
                     "name": "LongFloorBoi",
                     "isPlayerCharacter": true,
-                    "drawing": {
+                    "graphics": {
                         "texturePath": "/textures/floor.bmp"
                     },
                     "position": {

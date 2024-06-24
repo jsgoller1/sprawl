@@ -21,7 +21,7 @@ Actor::Actor(const EntityName name) : Entity() { this->name = name; }
 
 /*
 void Actor::inferBoundingBoxFromTexture() {
-  std::shared_ptr<Texture> texture = this->drawingComponent->getTexture();
+  std::shared_ptr<Texture> texture = this->graphicsComponent2D->getTexture();
   this->collisionComponent->height(texture->getHeight());
   this->collisionComponent->width(texture->getWidth());
 }

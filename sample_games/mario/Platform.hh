@@ -11,6 +11,6 @@ class Platform : public GameObject {
   Platform(const EntityName& entityName, const std::shared_ptr<PositionComponent> positionComponent = nullptr,
            const std::shared_ptr<PhysicsComponent> physicsComponent = nullptr,
            const std::shared_ptr<CollisionComponent> collisionComponent = nullptr,
-           const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
+           const std::shared_ptr<GraphicsComponent2D> graphicsComponent2D = nullptr);
   virtual ~Platform() override;
 };

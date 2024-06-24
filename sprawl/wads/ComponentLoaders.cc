@@ -4,7 +4,7 @@
 #include "Actor.hh"
 #include "BehaviorComponentFactory.hh"
 #include "CollisionComponent.hh"
-#include "DrawingComponent.hh"
+#include "GraphicsComponent2D.hh"
 #include "IBehaviorComponent.hh"
 #include "Logging.hh"
 #include "PhysicsComponent.hh"
@@ -39,7 +39,7 @@ void WADLoader::loadCollisionComponent(std::shared_ptr<Actor> owner, const nlohm
   owner->addComponent(COLLISION_COMPONENT_NAME, component);
 }
 
-void WADLoader::loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
+void WADLoader::loadGraphicsComponent2D(std::shared_ptr<Actor> owner, const nlohmann::json& jsonBody) const {
   std::shared_ptr<Texture> texture;
   std::string texturePath = jsonBody.value("texturePath", "");
   if (texturePath != "") {
@@ -48,7 +48,8 @@ void WADLoader::loadDrawingComponent(std::shared_ptr<Actor> owner, const nlohman
     texture = nullptr;
     LOG_ERROR("No texture loaded.");
   }
-  std::shared_ptr<DrawingComponent> component = std::shared_ptr<DrawingComponent>(new DrawingComponent(texture));
+  std::shared_ptr<GraphicsComponent2D> component =
+      std::shared_ptr<GraphicsComponent2D>(new GraphicsComponent2D(texture));
   component->setOwner(owner);
   component->managerRegister();
   owner->addComponent(DRAWING_COMPONENT_NAME, component);

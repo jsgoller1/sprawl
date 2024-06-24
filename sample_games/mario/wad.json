@@ -31,7 +31,7 @@
     "background": {
         "enabled": false,
         "name": "MVP background",
-        "drawing": {
+        "graphics": {
             "texturePath": "/textures/background.bmp"
         },
         "position": {
@@ -48,7 +48,7 @@
             "enabled": true,
             "name": "Player",
             "isPlayerCharacter": true,
-            "drawing": {
+            "graphics": {
                 "texturePath": "/textures/smiley.png"
             },
             "position": {
@@ -76,7 +76,7 @@
             "enabled": true,
             "name": "Enemy",
             "isPlayerCharacter": false,
-            "drawing": {
+            "graphics": {
                 "texturePath": "/textures/enemy.bmp"
             },
             "position": {
@@ -105,7 +105,7 @@
                 "xOffset": 300
             },
             "isPlayerCharacter": false,
-            "drawing": {
+            "graphics": {
                 "texturePath": "/textures/wall-indestructible.bmp"
             },
             "position": {

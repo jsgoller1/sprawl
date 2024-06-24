@@ -7,7 +7,7 @@
 #include "BehaviorComponentFactory.hh"
 #include "CollisionManager.hh"
 #include "Component.hh"
-#include "DrawingManager.hh"
+#include "GraphicsManager2D.hh"
 #include "GraphicsSettings.hh"
 #include "IBehaviorComponent.hh"
 #include "Logging.hh"
@@ -33,14 +33,14 @@ WADLoader::WADLoader(const FilePath& wadDir) {
 nlohmann::json WADLoader::getJsonBody() const { return this->_jsonBody; }
 
 void WADLoader::loadSettings(ActorManager& actorManager, BehaviorManager& behaviorManager,
-                             CollisionManager& collisionManager, DrawingManager& drawingManager,
+                             CollisionManager& collisionManager, GraphicsManager2D& graphicsManager2D,
                              PhysicsManager& physicsManager) const {
   (void)actorManager;
   (void)behaviorManager;
   (void)collisionManager;
 
   nlohmann::json jsonData = this->getJsonBody();
-  drawingManager.initialize(this->loadGraphicsSettings(jsonData["graphics"]));
+  graphicsManager2D.initialize(this->loadGraphicsSettings(jsonData["graphics"]));
   if (jsonData.contains("physics")) {
     physicsManager.setGravityConstant(jsonData["physics"]["gravityConstant"]);
   }
@@ -88,8 +88,8 @@ void WADLoader::loadActor(ActorManager& actorManager, const std::string sceneID,
       this->loadPositionComponent(actor, componentJSON);
     } else if (typeName == "CollisionComponent") {
       this->loadCollisionComponent(actor, componentJSON);
-    } else if (typeName == "DrawingComponent") {
-      this->loadDrawingComponent(actor, componentJSON);
+    } else if (typeName == "GraphicsComponent2D") {
+      this->loadGraphicsComponent2D(actor, componentJSON);
     } else if (typeName == "PhysicsComponent") {
       this->loadPhysicsComponent(actor, componentJSON);
     } else {

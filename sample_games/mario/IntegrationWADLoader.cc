@@ -61,7 +61,7 @@ void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann:
   nlohmann::json nameConfig = jsonBody.value("name", "");
   nlohmann::json positionConfig = jsonBody.value("position", nlohmann::json("{}"));
   nlohmann::json physicsConfig = jsonBody.value("physics", nlohmann::json("{}"));
-  nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
+  nlohmann::json graphicsConfig = jsonBody.value("graphics", nlohmann::json("{}"));
   nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
 
   EntityName name;
@@ -69,7 +69,7 @@ void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann:
   std::shared_ptr<Identity> identity;
   std::shared_ptr<PositionComponent> positionComponent;
   std::shared_ptr<PhysicsComponent> physicsComponent;
-  std::shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<GraphicsComponent2D> graphicsComponent2D;
   std::shared_ptr<CollisionComponent> collisionComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplication", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
@@ -78,11 +78,11 @@ void IntegrationWADLoader::loadPlatform(IntegrationWorld& world, const nlohmann:
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
 
     physicsComponent = this->loadRealisticPhysicsComponent(physicsConfig);
-    drawingComponent = this->loadDrawingComponent(drawingConfig);
+    graphicsComponent2D = this->loadGraphicsComponent2D(graphicsConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
     platform = std::shared_ptr<Platform>(
-        new Platform(name, positionComponent, physicsComponent, collisionComponent, drawingComponent));
+        new Platform(name, positionComponent, physicsComponent, collisionComponent, graphicsComponent2D));
     platform->inferBoundingBoxFromTexture();
 
     world.addGameObject(platform);
@@ -96,14 +96,14 @@ void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann
   nlohmann::json nameConfig = jsonBody.value("name", "");
   nlohmann::json positionConfig = jsonBody.value("position", nlohmann::json("{}"));
   nlohmann::json physicsConfig = jsonBody.value("physics", nlohmann::json("{}"));
-  nlohmann::json drawingConfig = jsonBody.value("drawing", nlohmann::json("{}"));
+  nlohmann::json graphicsConfig = jsonBody.value("graphics", nlohmann::json("{}"));
   nlohmann::json collisionsConfig = jsonBody.value("collisions", nlohmann::json("{}"));
 
   EntityName name;
   std::shared_ptr<Character> character;
   std::shared_ptr<PositionComponent> positionComponent;
   std::shared_ptr<CharacterPhysicsComponent> characterPhysicsComponent;
-  std::shared_ptr<DrawingComponent> drawingComponent;
+  std::shared_ptr<GraphicsComponent2D> graphicsComponent2D;
   std::shared_ptr<CollisionComponent> collisionComponent;
   for (DuplicationBehavior duplication = DuplicationBehavior(jsonBody.value("duplicate", nlohmann::json({})));
        !duplication.done(); duplication.next()) {
@@ -113,11 +113,11 @@ void IntegrationWADLoader::loadCharacter(IntegrationWorld& world, const nlohmann
     positionComponent->move(duplication.getOffset() * duplication.getCurr());
 
     characterPhysicsComponent = this->loadCharacterPhysicsComponent(physicsConfig);
-    drawingComponent = this->loadDrawingComponent(drawingConfig);
+    graphicsComponent2D = this->loadGraphicsComponent2D(graphicsConfig);
     collisionComponent = this->loadCollisionComponent(collisionsConfig, positionComponent);
 
     character = std::shared_ptr<Character>(
-        new Character(name, positionComponent, collisionComponent, characterPhysicsComponent, drawingComponent));
+        new Character(name, positionComponent, collisionComponent, characterPhysicsComponent, graphicsComponent2D));
     character->inferBoundingBoxFromTexture();
     (jsonBody.value("isPlayerCharacter", false)) ? world.addPlayerCharacter(character) : world.addGameObject(character);
   }

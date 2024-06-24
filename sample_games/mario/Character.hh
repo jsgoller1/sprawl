@@ -19,7 +19,7 @@ class Character : public GameObject {
             const std::shared_ptr<PositionComponent> positionComponent = nullptr,
             const std::shared_ptr<CollisionComponent> collisionComponent = nullptr,
             const std::shared_ptr<CharacterPhysicsComponent> cphysicsComponent = nullptr,
-            const std::shared_ptr<DrawingComponent> drawingComponent = nullptr);
+            const std::shared_ptr<GraphicsComponent2D> graphicsComponent2D = nullptr);
   void move(const GameAction& action);
   void jump();
 
