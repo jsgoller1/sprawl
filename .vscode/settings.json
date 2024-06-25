@@ -102,6 +102,7 @@
         "span": "cpp",
         "stack": "cpp",
         "typeindex": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "ranges": "cpp"
     },
 }

@@ -26,10 +26,23 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   GraphicsManager3D& operator=(const GraphicsManager3D&) = delete;
 
   void createVulkanInstance();
+  bool checkVulkanValidationLayerSupport();
+  void setupDebugMessenger();
+  static VKAPI_ATTR VkBool32 VKAPI_CALL vulkanDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
+                                                            VkDebugUtilsMessageTypeFlagsEXT messageType,
+                                                            const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
+                                                            void* pUserData);
+
+  VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo,
+                                        const VkAllocationCallbacks* pAllocator,
+                                        VkDebugUtilsMessengerEXT* pDebugMessenger);
+  void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger,
+                                     const VkAllocationCallbacks* pAllocator);
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
   SDL_Window* _window;
 
   VkInstance _instance;
+  VkDebugUtilsMessengerEXT _debugMessenger;
 };

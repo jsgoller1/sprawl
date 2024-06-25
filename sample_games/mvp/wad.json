@@ -7,7 +7,7 @@
         "defaultLogLevel": "WARN",
         "overrides": [
             {
-                "system": "WADLOADER",
+                "system": "RENDERING",
                 "logLevel": "DEBUG"
             }
         ]
