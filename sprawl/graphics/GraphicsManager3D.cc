@@ -8,9 +8,13 @@ const std::vector<const char*> VALIDATION_LAYERS = {"VK_LAYER_KHRONOS_validation
 static const char* VK_DEBUG_UTILS_EXTENSION = "VK_EXT_debug_utils";
 
 GraphicsManager3D::~GraphicsManager3D() {
+  LOG_DEBUG_SYS(RENDERING, "Shutting down renderer...");
   DestroyDebugUtilsMessengerEXT(this->_instance, this->_debugMessenger, nullptr);
+  LOG_DEBUG_SYS(RENDERING, "Destroyed debug messenger.");
   vkDestroyInstance(this->_instance, nullptr);
+  LOG_DEBUG_SYS(RENDERING, "Destroyed Vulkan instance.");
   SDL_DestroyWindow(this->_window);
+  LOG_DEBUG_SYS(RENDERING, "Destroyed SDL window.");
   SDL_Quit();
 }
 
@@ -37,6 +41,7 @@ void GraphicsManager3D::initialize(const GraphicsSettings& graphicsSettings) {
   }
   createVulkanInstance();
   setupDebugMessenger();
+  pickPhysicalDevice();
 }
 
 void GraphicsManager3D::gameLoopUpdate(const time_ms duration) { (void)duration; }
@@ -154,6 +159,7 @@ VkResult GraphicsManager3D::CreateDebugUtilsMessengerEXT(VkInstance instance,
                                                          VkDebugUtilsMessengerEXT* pDebugMessenger) {
   auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
   if (func != nullptr) {
+    LOG_DEBUG_SYS(RENDERING, "Vulkan: Creating debug messenger.");
     return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
   } else {
     LOG_FATAL_SYS(RENDERING, "Vulkan: Could not create debug messenger function!");
@@ -167,4 +173,48 @@ void GraphicsManager3D::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDeb
   if (func != nullptr) {
     func(instance, debugMessenger, pAllocator);
   }
+}
+
+void GraphicsManager3D::pickPhysicalDevice() {
+  uint32_t deviceCount = 0;
+  vkEnumeratePhysicalDevices(this->_instance, &deviceCount, nullptr);
+  if (deviceCount == 0) {
+    throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+  }
+  std::vector<VkPhysicalDevice> devices(deviceCount);
+  vkEnumeratePhysicalDevices(this->_instance, &deviceCount, devices.data());
+
+  for (const auto& device : devices) {
+    if (isDeviceSuitable(device)) {
+      this->_physicalDevice = device;
+      return;
+    }
+  }
+
+  throw std::runtime_error("Failed to find a suitable GPU!");
+}
+
+bool GraphicsManager3D::isDeviceSuitable(VkPhysicalDevice device) {
+  QueueFamilyIndices indices = this->findQueueFamilies(device);
+  return indices.isComplete();
+}
+
+QueueFamilyIndices GraphicsManager3D::findQueueFamilies(VkPhysicalDevice device) {
+  QueueFamilyIndices indices;
+  uint32_t queueFamilyCount = 0;
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
+
+  std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
+  vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
+
+  int i = 0;
+  for (const auto& queueFamily : queueFamilies) {
+    if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+      indices.graphicsFamily = i;
+    }
+
+    i++;
+  }
+
+  return indices;
 }

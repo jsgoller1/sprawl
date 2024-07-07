@@ -14,6 +14,7 @@ enum LoggingSubsystem {
   COLLISIONS,
   INPUT,
   LOGGING,
+  MAIN,
   MATH,
   PHYSICS,
   RENDERING,

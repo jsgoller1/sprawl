@@ -9,6 +9,10 @@
             {
                 "system": "RENDERING",
                 "logLevel": "DEBUG"
+            },
+            {
+                "system": "MAIN",
+                "logLevel": "DEBUG"
             }
         ]
     },

@@ -19,7 +19,11 @@ int main(int argc, char* argv[]) {
   if (args.shouldQuit()) {
     return args.getReturnCode();
   }
+  // TODO: Leave this here for now; construction initializes
+  // the logger.
+  WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
 
+  LOG_DEBUG_SYS(MAIN, "Initializing managers...");
   ActorManager& actorManager = ActorManager::instance();
   BehaviorManager& behaviorManager = BehaviorManager::instance();
   CollisionManager& collisionManager = CollisionManager::instance();
@@ -29,14 +33,15 @@ int main(int argc, char* argv[]) {
   EventBusPublisher& eventBusPublisher = EventBusPublisher::instance();
   InputManager& inputManager = InputManager::instance();
   SystemProxy& systemProxy = SystemProxy::instance();
+  LOG_DEBUG_SYS(MAIN, "manager initialization complete.");
 
-  WADLoader wadLoader = WADLoader(FilePath(args.getWADDir()));
   wadLoader.loadSettings(actorManager, behaviorManager, collisionManager, graphicsManager3D, physicsManager);
   wadLoader.loadActors(actorManager);
 
   Timer timer = Timer();
   bool should_quit = false;
 
+  LOG_DEBUG_SYS(MAIN, "Game loop starting.");
   while (!should_quit) {
     time_ms duration = timer.tick();
 
@@ -56,5 +61,6 @@ int main(int argc, char* argv[]) {
     // due to pressing the X button on the window)
     should_quit = systemProxy.getQuit() || inputManager.getQuit();
   }
+  LOG_DEBUG_SYS(MAIN, "Game loop completed. Sprawl shutting down...");
   return 0;
 }
