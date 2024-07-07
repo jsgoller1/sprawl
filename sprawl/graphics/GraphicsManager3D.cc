@@ -53,9 +53,9 @@ void GraphicsManager3D::createVulkanInstance() {
 
   VkApplicationInfo appInfo{};
   appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-  appInfo.pApplicationName = "Hello Triangle";
+  appInfo.pApplicationName = "Sprawl Engine (3D)";
   appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-  appInfo.pEngineName = "No Engine";
+  appInfo.pEngineName = "Sprawl Engine (3D)";
   appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
   appInfo.apiVersion = VK_API_VERSION_1_0;
 
@@ -69,26 +69,20 @@ void GraphicsManager3D::createVulkanInstance() {
   if (instance_extensions == nullptr) {
     throw std::runtime_error("failed to get extensions!");
   }
-
-  // +1 for adding VK_EXT_debug_utils
-  Uint32 count_extensions = extensionCount + 1;
-  const char** extensions = (const char**)SDL_malloc((count_extensions) * sizeof(const char*));
-  // TODO: This creates a memory error where we are attempting to free the static memory
-  // associated with VK_DEBUG_UTILS_EXTENSION; it happens after shutdown so we don't care right now.
-  extensions[0] = VK_EXT_DEBUG_REPORT_EXTENSION_NAME;
-  extensions[1] = VK_DEBUG_UTILS_EXTENSION;
-  SDL_memcpy(&extensions[2], instance_extensions, extensionCount * sizeof(const char*));
+  std::vector<const char*> extensions(instance_extensions, instance_extensions + extensionCount);
+  extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
+  extensions.push_back(VK_DEBUG_UTILS_EXTENSION);
 
   LOG_DEBUG_SYS(RENDERING, "Vulkan extensions enabled:");
-  for (uint32_t i = 0; i < extensionCount; ++i) {
-    LOG_DEBUG_SYS(RENDERING, extensions[i]);
+  for (auto extension : extensions) {
+    LOG_DEBUG_SYS(RENDERING, extension);
   }
 
   VkInstanceCreateInfo createInfo{};
   createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   createInfo.pApplicationInfo = &appInfo;
-  createInfo.enabledExtensionCount = extensionCount;
-  createInfo.ppEnabledExtensionNames = extensions;
+  createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
+  createInfo.ppEnabledExtensionNames = extensions.data();
   createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
   createInfo.ppEnabledLayerNames = VALIDATION_LAYERS.data();
 
@@ -100,7 +94,7 @@ void GraphicsManager3D::createVulkanInstance() {
   }
   LOG_DEBUG_SYS(RENDERING, "Created Vulkan instance!");
 
-  SDL_free(extensions);
+  // SDL_free(extensions);
 }
 
 bool GraphicsManager3D::checkVulkanValidationLayerSupport() {
@@ -129,7 +123,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL GraphicsManager3D::vulkanDebugCallback(
   (void)messageType;
   (void)pUserData;
 
-  LOG_DEBUG_SYS(RENDERING, "Vulkan validation layer message: {0}", pCallbackData->pMessage);
+  LOG_DEBUG_SYS(VULKAN, pCallbackData->pMessage);
   return VK_FALSE;
 }
 
@@ -159,10 +153,10 @@ VkResult GraphicsManager3D::CreateDebugUtilsMessengerEXT(VkInstance instance,
                                                          VkDebugUtilsMessengerEXT* pDebugMessenger) {
   auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
   if (func != nullptr) {
-    LOG_DEBUG_SYS(RENDERING, "Vulkan: Creating debug messenger.");
+    LOG_DEBUG_SYS(VULKAN, "Creating debug messenger.");
     return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
   } else {
-    LOG_FATAL_SYS(RENDERING, "Vulkan: Could not create debug messenger function!");
+    LOG_FATAL_SYS(VULKAN, "Could not create debug messenger function!");
     return VK_ERROR_EXTENSION_NOT_PRESENT;
   }
 }
@@ -172,6 +166,7 @@ void GraphicsManager3D::DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDeb
   auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
   if (func != nullptr) {
     func(instance, debugMessenger, pAllocator);
+    LOG_DEBUG_SYS(VULKAN, "Destroyed debug messenger.");
   }
 }
 

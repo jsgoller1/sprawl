@@ -11,6 +11,10 @@
                 "logLevel": "DEBUG"
             },
             {
+                "system": "VULKAN",
+                "logLevel": "DEBUG"
+            },
+            {
                 "system": "MAIN",
                 "logLevel": "DEBUG"
             }

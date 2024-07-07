@@ -9,17 +9,6 @@
 #define TEXT_COLOR_PINK "35m"
 #define TEXT_COLOR_BROWN "33m"
 
-enum LoggingSubsystem {
-  NONE,
-  COLLISIONS,
-  INPUT,
-  LOGGING,
-  MAIN,
-  MATH,
-  PHYSICS,
-  RENDERING,
-  SDL,
-  WADLOADER,
-};
+enum LoggingSubsystem { NONE, COLLISIONS, INPUT, LOGGING, MAIN, MATH, PHYSICS, RENDERING, SDL, WADLOADER, VULKAN };
 
 enum LogLevel { FATAL = 4, ERROR = 3, WARN = 2, INFO = 1, DEBUG = 0 };

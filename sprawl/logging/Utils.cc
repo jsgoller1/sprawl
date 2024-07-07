@@ -15,7 +15,8 @@ static std::map<LoggingSubsystem, std::string> subsystemNames =
                                             {INPUT, "INPUT"},     {LOGGING, "LOGGING"},
                                             {MATH, "MATH"},       {MAIN, "MAIN"},
                                             {PHYSICS, "PHYSICS"}, {RENDERING, "RENDERING"},
-                                            {SDL, "SDL"},         {WADLOADER, "WADLOADER"}};
+                                            {SDL, "SDL"},         {WADLOADER, "WADLOADER"},
+                                            {VULKAN, "VULKAN"}};
 
 std::string Logging::getName(const LoggingSubsystem& subsystem) { return subsystemNames[subsystem]; }
 std::string Logging::getName(const LogLevel& level) { return logLevelNames[level]; }
