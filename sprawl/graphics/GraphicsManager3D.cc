@@ -1,5 +1,6 @@
 #include "GraphicsManager3D.hh"
 
+#include <set>
 #include <vector>
 
 #include "Logging.hh"
@@ -9,6 +10,10 @@ static const char* VK_DEBUG_UTILS_EXTENSION = "VK_EXT_debug_utils";
 
 GraphicsManager3D::~GraphicsManager3D() {
   LOG_DEBUG_SYS(RENDERING, "Shutting down renderer...");
+  vkDestroySurfaceKHR(this->_instance, this->_surface, nullptr);
+  LOG_DEBUG_SYS(RENDERING, "Destroyed rendering surface.");
+  vkDestroyDevice(this->_device, nullptr);
+  LOG_DEBUG_SYS(RENDERING, "Destroyed logical device...");
   DestroyDebugUtilsMessengerEXT(this->_instance, this->_debugMessenger, nullptr);
   LOG_DEBUG_SYS(RENDERING, "Destroyed debug messenger.");
   vkDestroyInstance(this->_instance, nullptr);
@@ -34,14 +39,17 @@ void GraphicsManager3D::initialize(const GraphicsSettings& graphicsSettings) {
     LOG_FATAL_SYS(SDL, "Could not init SDL; {0}", Logging::getSDLError());
     throw;
   }
-  this->_window = SDL_CreateWindow("Sprawl Engine (3D)", int(this->_screenWidth), int(this->_screenHeight), 0);
+  this->_window =
+      SDL_CreateWindow("Sprawl Engine (3D)", int(this->_screenWidth), int(this->_screenHeight), SDL_WINDOW_VULKAN);
   if (this->_window == nullptr) {
     LOG_FATAL_SYS(SDL, "Window could not be created! {0}", Logging::getSDLError());
     throw;
   }
   createVulkanInstance();
   setupDebugMessenger();
+  createSurface();
   pickPhysicalDevice();
+  createLogicalDevice();
 }
 
 void GraphicsManager3D::gameLoopUpdate(const time_ms duration) { (void)duration; }
@@ -202,14 +210,71 @@ QueueFamilyIndices GraphicsManager3D::findQueueFamilies(VkPhysicalDevice device)
   std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
   vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
-  int i = 0;
-  for (const auto& queueFamily : queueFamilies) {
-    if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+  VkBool32 presentSupport = false;
+
+  for (uint32_t i = 0; i < queueFamilies.size(); i++) {
+    VkQueueFlags flags = queueFamilies[i].queueFlags;
+    if (flags & VK_QUEUE_GRAPHICS_BIT) {
       indices.graphicsFamily = i;
     }
 
-    i++;
+    vkGetPhysicalDeviceSurfaceSupportKHR(device, i, this->_surface, &presentSupport);
+    if (presentSupport) {
+      indices.presentFamily = i;
+    }
   }
 
   return indices;
+}
+
+void GraphicsManager3D::createLogicalDevice() {
+  // TODO: This is redundant since we're doing it above during physical device selection
+  // (copy/pasted tutorial code).
+  QueueFamilyIndices indices = findQueueFamilies(this->_physicalDevice);
+
+  std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+  std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+
+  float queuePriority = 1.0f;
+
+  for (uint32_t queueFamily : uniqueQueueFamilies) {
+    VkDeviceQueueCreateInfo queueCreateInfo{};
+    queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    queueCreateInfo.queueFamilyIndex = queueFamily;
+    queueCreateInfo.queueCount = 1;
+    queueCreateInfo.pQueuePriorities = &queuePriority;
+    queueCreateInfos.push_back(queueCreateInfo);
+    LOG_DEBUG_SYS(RENDERING, "Added queue creation request for family {0}", queueFamily);
+  }
+
+  // No special device features needed for now
+  VkPhysicalDeviceFeatures deviceFeatures{};
+
+  VkDeviceCreateInfo createInfo{};
+  createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+  createInfo.pQueueCreateInfos = queueCreateInfos.data();
+  createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+
+  createInfo.pEnabledFeatures = &deviceFeatures;
+  createInfo.enabledExtensionCount = 0;
+
+  // TODO: This should be configurable (if validation is enabled)
+  createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
+  createInfo.ppEnabledLayerNames = VALIDATION_LAYERS.data();
+
+  if (vkCreateDevice(this->_physicalDevice, &createInfo, nullptr, &this->_device) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create logical device!");
+  }
+  vkGetDeviceQueue(this->_device, indices.graphicsFamily.value(), 0, &this->_graphicsQueue);
+  vkGetDeviceQueue(this->_device, indices.presentFamily.value(), 0, &this->_presentQueue);
+}
+
+void GraphicsManager3D::createSurface() {
+  SDL_bool res = SDL_Vulkan_CreateSurface(this->_window, this->_instance, nullptr, &this->_surface);
+  // NOTE: Confusingly SDL_TRUE is 1 and also the value returned on correct exit;
+  // not the same as most other return codes which are 0 on correct exit.
+  if (res != SDL_TRUE) {
+    LOG_FATAL_SYS(RENDERING, SDL_GetError());
+    throw std::runtime_error("failed to create rendering surface!");
+  }
 }

@@ -16,7 +16,9 @@ struct GraphicsSettings;
 
 typedef struct QueueFamilyIndices {
   std::optional<uint32_t> graphicsFamily;
-  bool isComplete() { return graphicsFamily.has_value(); }
+  std::optional<uint32_t> presentFamily;
+
+  bool isComplete() { return graphicsFamily.has_value() && presentFamily.has_value(); }
 } QueueFamilyIndices;
 
 class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsManager3D> {
@@ -47,12 +49,18 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   void pickPhysicalDevice();
   bool isDeviceSuitable(VkPhysicalDevice device);
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
+  void createLogicalDevice();
+  void createSurface();
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
   SDL_Window* _window;
+  VkDebugUtilsMessengerEXT _debugMessenger;
 
   VkInstance _instance;
   VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
-  VkDebugUtilsMessengerEXT _debugMessenger;
+  VkDevice _device;
+  VkQueue _graphicsQueue;
+  VkQueue _presentQueue;
+  VkSurfaceKHR _surface;
 };
