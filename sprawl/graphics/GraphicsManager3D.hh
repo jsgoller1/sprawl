@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <vector>
 
 #include "ComponentManager.hh"
 #include "SDL3/SDL.h"
@@ -20,6 +21,12 @@ typedef struct QueueFamilyIndices {
 
   bool isComplete() { return graphicsFamily.has_value() && presentFamily.has_value(); }
 } QueueFamilyIndices;
+
+typedef struct SwapChainSupportDetails {
+  VkSurfaceCapabilitiesKHR capabilities;
+  std::vector<VkSurfaceFormatKHR> formats;
+  std::vector<VkPresentModeKHR> presentModes;
+} SwapChainSupportDetails;
 
 class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsManager3D> {
  public:
@@ -51,6 +58,10 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   QueueFamilyIndices findQueueFamilies(VkPhysicalDevice device);
   void createLogicalDevice();
   void createSurface();
+  bool checkDeviceExtensionSupport(VkPhysicalDevice device);
+  SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice candidateDevice);
+  VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
+  VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -60,6 +71,9 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkInstance _instance;
   VkPhysicalDevice _physicalDevice = VK_NULL_HANDLE;
   VkDevice _device;
+  std::vector<const char*> _instanceExtensions = {VK_EXT_DEBUG_REPORT_EXTENSION_NAME, "VK_EXT_debug_utils"};
+  std::vector<const char*> _deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
   VkQueue _graphicsQueue;
   VkQueue _presentQueue;
   VkSurfaceKHR _surface;

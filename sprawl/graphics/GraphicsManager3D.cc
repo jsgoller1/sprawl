@@ -1,12 +1,10 @@
 #include "GraphicsManager3D.hh"
 
 #include <set>
-#include <vector>
 
 #include "Logging.hh"
 
 const std::vector<const char*> VALIDATION_LAYERS = {"VK_LAYER_KHRONOS_validation"};
-static const char* VK_DEBUG_UTILS_EXTENSION = "VK_EXT_debug_utils";
 
 GraphicsManager3D::~GraphicsManager3D() {
   LOG_DEBUG_SYS(RENDERING, "Shutting down renderer...");
@@ -72,25 +70,25 @@ void GraphicsManager3D::createVulkanInstance() {
 
   // Retrieve Vulkan instance extensions
   unsigned int extensionCount = 0;
-  const char* const* instance_extensions = SDL_Vulkan_GetInstanceExtensions(&extensionCount);
+  const char* const* SDLExtensions = SDL_Vulkan_GetInstanceExtensions(&extensionCount);
 
-  if (instance_extensions == nullptr) {
+  if (SDLExtensions == nullptr) {
     throw std::runtime_error("failed to get extensions!");
   }
-  std::vector<const char*> extensions(instance_extensions, instance_extensions + extensionCount);
-  extensions.push_back(VK_EXT_DEBUG_REPORT_EXTENSION_NAME);
-  extensions.push_back(VK_DEBUG_UTILS_EXTENSION);
+  for (unsigned int i = 0; i < extensionCount; i++) {
+    this->_instanceExtensions.push_back(SDLExtensions[i]);
+  }
 
-  LOG_DEBUG_SYS(RENDERING, "Vulkan extensions enabled:");
-  for (auto extension : extensions) {
+  LOG_DEBUG_SYS(RENDERING, "Vulkan instance extensions enabled:");
+  for (auto extension : this->_instanceExtensions) {
     LOG_DEBUG_SYS(RENDERING, extension);
   }
 
   VkInstanceCreateInfo createInfo{};
   createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
   createInfo.pApplicationInfo = &appInfo;
-  createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
-  createInfo.ppEnabledExtensionNames = extensions.data();
+  createInfo.enabledExtensionCount = static_cast<uint32_t>(this->_instanceExtensions.size());
+  createInfo.ppEnabledExtensionNames = this->_instanceExtensions.data();
   createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
   createInfo.ppEnabledLayerNames = VALIDATION_LAYERS.data();
 
@@ -101,8 +99,6 @@ void GraphicsManager3D::createVulkanInstance() {
     throw std::runtime_error("failed to create instance!");
   }
   LOG_DEBUG_SYS(RENDERING, "Created Vulkan instance!");
-
-  // SDL_free(extensions);
 }
 
 bool GraphicsManager3D::checkVulkanValidationLayerSupport() {
@@ -199,7 +195,32 @@ void GraphicsManager3D::pickPhysicalDevice() {
 
 bool GraphicsManager3D::isDeviceSuitable(VkPhysicalDevice device) {
   QueueFamilyIndices indices = this->findQueueFamilies(device);
-  return indices.isComplete();
+  bool extensionsSupported = checkDeviceExtensionSupport(device);
+
+  bool swapChainAdequate = false;
+  if (extensionsSupported) {
+    SwapChainSupportDetails swapChainSupport = querySwapChainSupport(device);
+    swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+  }
+
+  return indices.isComplete() && extensionsSupported && swapChainAdequate;
+}
+
+bool GraphicsManager3D::checkDeviceExtensionSupport(VkPhysicalDevice device) {
+  uint32_t extensionCount;
+  vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, nullptr);
+
+  std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+  vkEnumerateDeviceExtensionProperties(device, nullptr, &extensionCount, availableExtensions.data());
+
+  std::set<std::string> requiredExtensions(this->_deviceExtensions.begin(), this->_deviceExtensions.end());
+
+  for (const auto& extension : availableExtensions) {
+    LOG_DEBUG_SYS(RENDERING, "Required device extenion found: {0}", extension.extensionName);
+    requiredExtensions.erase(extension.extensionName);
+  }
+
+  return requiredExtensions.empty();
 }
 
 QueueFamilyIndices GraphicsManager3D::findQueueFamilies(VkPhysicalDevice device) {
@@ -254,9 +275,9 @@ void GraphicsManager3D::createLogicalDevice() {
   createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
   createInfo.pQueueCreateInfos = queueCreateInfos.data();
   createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
-
+  createInfo.enabledExtensionCount = static_cast<uint32_t>(this->_deviceExtensions.size());
+  createInfo.ppEnabledExtensionNames = this->_deviceExtensions.data();
   createInfo.pEnabledFeatures = &deviceFeatures;
-  createInfo.enabledExtensionCount = 0;
 
   // TODO: This should be configurable (if validation is enabled)
   createInfo.enabledLayerCount = static_cast<uint32_t>(VALIDATION_LAYERS.size());
@@ -278,3 +299,51 @@ void GraphicsManager3D::createSurface() {
     throw std::runtime_error("failed to create rendering surface!");
   }
 }
+
+SwapChainSupportDetails GraphicsManager3D::querySwapChainSupport(VkPhysicalDevice candidateDevice) {
+  SwapChainSupportDetails details;
+  vkGetPhysicalDeviceSurfaceCapabilitiesKHR(candidateDevice, this->_surface, &details.capabilities);
+
+  uint32_t formatCount;
+  vkGetPhysicalDeviceSurfaceFormatsKHR(candidateDevice, this->_surface, &formatCount, nullptr);
+
+  if (formatCount != 0) {
+    details.formats.resize(formatCount);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(candidateDevice, this->_surface, &formatCount, details.formats.data());
+  }
+
+  uint32_t presentModeCount;
+  vkGetPhysicalDeviceSurfacePresentModesKHR(candidateDevice, this->_surface, &presentModeCount, nullptr);
+
+  if (presentModeCount != 0) {
+    details.presentModes.resize(presentModeCount);
+    vkGetPhysicalDeviceSurfacePresentModesKHR(candidateDevice, this->_surface, &presentModeCount,
+                                              details.presentModes.data());
+  }
+
+  return details;
+}
+
+VkSurfaceFormatKHR GraphicsManager3D::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
+  // https://stackoverflow.com/questions/12524623/what-are-the-practical-differences-when-working-with-colors-in-a-linear-vs-a-no
+  for (const auto& availableFormat : availableFormats) {
+    if (availableFormat.format == VK_FORMAT_B8G8R8A8_SRGB &&
+        availableFormat.colorSpace == VK_COLOR_SPACE_SRGB_NONLINEAR_KHR) {
+      return availableFormat;
+    }
+  }
+  return availableFormats[0];
+}
+
+VkPresentModeKHR GraphicsManager3D::chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes) {
+  for (const auto& availablePresentMode : availablePresentModes) {
+    // Prefer mailbox mode for triple buffering, otherwise just use
+    // FIFO mode to force vsync
+    if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+      return availablePresentMode;
+    }
+  }
+  return VK_PRESENT_MODE_FIFO_KHR;
+}
+
+VkExtent2D GraphicsManager3D::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {}
