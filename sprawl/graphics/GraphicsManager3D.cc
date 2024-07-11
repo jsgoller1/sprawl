@@ -1,5 +1,8 @@
 #include "GraphicsManager3D.hh"
 
+#include <algorithm>
+#include <cstdint>
+#include <limits>
 #include <set>
 
 #include "Logging.hh"
@@ -48,6 +51,7 @@ void GraphicsManager3D::initialize(const GraphicsSettings& graphicsSettings) {
   createSurface();
   pickPhysicalDevice();
   createLogicalDevice();
+  createSwapChain();
 }
 
 void GraphicsManager3D::gameLoopUpdate(const time_ms duration) { (void)duration; }
@@ -346,4 +350,71 @@ VkPresentModeKHR GraphicsManager3D::chooseSwapPresentMode(const std::vector<VkPr
   return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-VkExtent2D GraphicsManager3D::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {}
+VkExtent2D GraphicsManager3D::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities) {
+  if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
+    return capabilities.currentExtent;
+  } else {
+    int width, height;
+    SDL_GetWindowSizeInPixels(this->_window, &width, &height);
+
+    VkExtent2D actualExtent = {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
+    actualExtent.width =
+        std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);
+    actualExtent.height =
+        std::clamp(actualExtent.height, capabilities.minImageExtent.height, capabilities.maxImageExtent.height);
+
+    return actualExtent;
+  }
+}
+
+void GraphicsManager3D::createSwapChain() {
+  SwapChainSupportDetails swapChainSupport = querySwapChainSupport(this->_physicalDevice);
+
+  this->_swapChainImageFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+  VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
+  this->_swapChainExtent = chooseSwapExtent(swapChainSupport.capabilities);
+
+  // One more than the minimum so we aren't stuck waiting on the driver to complete before we can aquire
+  // another image.
+  uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
+  if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) {
+    imageCount = swapChainSupport.capabilities.maxImageCount;
+  }
+
+  VkSwapchainCreateInfoKHR createInfo{};
+  createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
+  createInfo.surface = this->_surface;
+  createInfo.minImageCount = imageCount;
+  createInfo.imageFormat = this->_swapChainImageFormat.format;
+  createInfo.imageColorSpace = this->_swapChainImageFormat.colorSpace;
+  createInfo.imageExtent = this->_swapChainExtent;
+  createInfo.imageArrayLayers = 1;
+  createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+
+  // Determine how swap chain images are used across multiple queues (if queues differ)
+  QueueFamilyIndices indices = findQueueFamilies(this->_physicalDevice);
+  uint32_t queueFamilyIndices[] = {indices.graphicsFamily.value(), indices.presentFamily.value()};
+  if (indices.graphicsFamily != indices.presentFamily) {
+    createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+    createInfo.queueFamilyIndexCount = 2;
+    createInfo.pQueueFamilyIndices = queueFamilyIndices;
+  } else {
+    createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    createInfo.queueFamilyIndexCount = 0;      // Optional
+    createInfo.pQueueFamilyIndices = nullptr;  // Optional
+  }
+  createInfo.preTransform = swapChainSupport.capabilities.currentTransform;  // Don't transform image
+  createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;             // Ignore alpha, don't blend
+  createInfo.presentMode = presentMode;
+  createInfo.clipped = VK_TRUE;
+  createInfo.oldSwapchain = VK_NULL_HANDLE;
+
+  if (vkCreateSwapchainKHR(this->_device, &createInfo, nullptr, &this->_swapChain) != VK_SUCCESS) {
+    throw std::runtime_error("failed to create swap chain!");
+  }
+
+  // Example of how to get swapchain images; remove this later.
+  vkGetSwapchainImagesKHR(this->_device, this->_swapChain, &imageCount, nullptr);
+  this->_swapChainImages.resize(imageCount);
+  vkGetSwapchainImagesKHR(this->_device, this->_swapChain, &imageCount, this->_swapChainImages.data());
+}

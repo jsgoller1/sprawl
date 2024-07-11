@@ -62,6 +62,8 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   SwapChainSupportDetails querySwapChainSupport(VkPhysicalDevice candidateDevice);
   VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);
   VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
+  VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
+  void createSwapChain();
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -77,4 +79,8 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkQueue _graphicsQueue;
   VkQueue _presentQueue;
   VkSurfaceKHR _surface;
+  VkSwapchainKHR _swapChain;
+  std::vector<VkImage> _swapChainImages;
+  VkSurfaceFormatKHR _swapChainImageFormat;
+  VkExtent2D _swapChainExtent;
 };
