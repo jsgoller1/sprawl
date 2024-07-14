@@ -64,6 +64,7 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR>& availablePresentModes);
   VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
   void createSwapChain();
+  void createImageViews();
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -83,4 +84,5 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   std::vector<VkImage> _swapChainImages;
   VkSurfaceFormatKHR _swapChainImageFormat;
   VkExtent2D _swapChainExtent;
+  std::vector<VkImageView> _swapChainImageViews;
 };

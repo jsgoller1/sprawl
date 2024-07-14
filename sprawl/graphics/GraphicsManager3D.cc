@@ -10,6 +10,10 @@
 const std::vector<const char*> VALIDATION_LAYERS = {"VK_LAYER_KHRONOS_validation"};
 
 GraphicsManager3D::~GraphicsManager3D() {
+  for (auto imageView : this->_swapChainImageViews) {
+    vkDestroyImageView(this->_device, imageView, nullptr);
+  }
+
   LOG_DEBUG_SYS(RENDERING, "Shutting down renderer...");
   vkDestroySurfaceKHR(this->_instance, this->_surface, nullptr);
   LOG_DEBUG_SYS(RENDERING, "Destroyed rendering surface.");
@@ -417,4 +421,28 @@ void GraphicsManager3D::createSwapChain() {
   vkGetSwapchainImagesKHR(this->_device, this->_swapChain, &imageCount, nullptr);
   this->_swapChainImages.resize(imageCount);
   vkGetSwapchainImagesKHR(this->_device, this->_swapChain, &imageCount, this->_swapChainImages.data());
+}
+
+void GraphicsManager3D::createImageViews() {
+  this->_swapChainImageViews.resize(this->_swapChainImages.size());
+  for (size_t i = 0; i < this->_swapChainImages.size(); i++) {
+    VkImageViewCreateInfo createInfo{};
+    createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    createInfo.image = this->_swapChainImages[i];
+    createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    createInfo.format = this->_swapChainImageFormat.format;
+    createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+    createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    createInfo.subresourceRange.baseMipLevel = 0;
+    createInfo.subresourceRange.levelCount = 1;
+    createInfo.subresourceRange.baseArrayLayer = 0;
+    createInfo.subresourceRange.layerCount = 1;
+
+    if (vkCreateImageView(this->_device, &createInfo, nullptr, &this->_swapChainImageViews[i]) != VK_SUCCESS) {
+      throw std::runtime_error("failed to create image views!");
+    }
+  }
 }
