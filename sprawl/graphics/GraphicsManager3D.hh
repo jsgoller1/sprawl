@@ -65,6 +65,10 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkExtent2D chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilities);
   void createSwapChain();
   void createImageViews();
+  void createGraphicsPipelineLayout();
+  VkShaderModule createShaderModule(const std::vector<char>& code);
+  void createGraphicsPipeline();
+  void createRenderPass();
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -85,4 +89,10 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkSurfaceFormatKHR _swapChainImageFormat;
   VkExtent2D _swapChainExtent;
   std::vector<VkImageView> _swapChainImageViews;
+  VkShaderModule _vertShaderModule;
+  VkShaderModule _fragShaderModule;
+  VkPipelineShaderStageCreateInfo _shaderStages[2];
+  VkRenderPass _renderPass;
+  VkPipelineLayout _pipelineLayout;
+  VkPipeline _graphicsPipeline;
 };

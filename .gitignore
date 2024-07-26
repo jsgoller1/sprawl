@@ -39,3 +39,6 @@ bin/**
 
 # MacOS files
 **/.DS_Store
+
+# SPIR-V shaders
+**/*.spv

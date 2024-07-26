@@ -12,6 +12,8 @@ all: sprawl mvp
 sprawl:  
 	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk deps 
 	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk build 
+	$(MAKE) -j -f $(MAKEFILE_DIR)/sprawl.mk shaders
+
 
 # Runs sprawl MVP demonstrating basic functionality
 mvp: sprawl
