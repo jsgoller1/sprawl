@@ -70,6 +70,9 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   void createGraphicsPipeline();
   void createRenderPass();
   void createFramebuffers();
+  void createCommandPool();
+  void createCommandBuffer();
+  void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -97,4 +100,6 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkPipelineLayout _pipelineLayout;
   VkPipeline _graphicsPipeline;
   std::vector<VkFramebuffer> _swapChainFramebuffers;
+  VkCommandPool _commandPool;
+  VkCommandBuffer _commandBuffer;
 };
