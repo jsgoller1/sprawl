@@ -11,6 +11,11 @@
 const std::vector<const char*> VALIDATION_LAYERS = {"VK_LAYER_KHRONOS_validation"};
 
 GraphicsManager3D::~GraphicsManager3D() {
+  LOG_DEBUG_SYS(RENDERING, "Destroying framebuffers...");
+  for (auto framebuffer : this->_swapChainFramebuffers) {
+    vkDestroyFramebuffer(this->_device, framebuffer, nullptr);
+  }
+
   LOG_DEBUG_SYS(RENDERING, "Destroying pipeline...");
   vkDestroyPipeline(this->_device, this->_graphicsPipeline, nullptr);
 
@@ -76,6 +81,7 @@ void GraphicsManager3D::initialize(const GraphicsSettings& graphicsSettings) {
   createGraphicsPipelineLayout();
   createRenderPass();
   createGraphicsPipeline();
+  createFramebuffers();
 }
 
 void GraphicsManager3D::gameLoopUpdate(const time_ms duration) { (void)duration; }
@@ -675,5 +681,25 @@ void GraphicsManager3D::createGraphicsPipeline() {
   if (vkCreateGraphicsPipelines(this->_device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &this->_graphicsPipeline) !=
       VK_SUCCESS) {
     throw std::runtime_error("failed to create graphics pipeline!");
+  }
+}
+
+void GraphicsManager3D::createFramebuffers() {
+  this->_swapChainFramebuffers.resize(this->_swapChainImageViews.size());
+  for (size_t i = 0; i < this->_swapChainImageViews.size(); i++) {
+    VkImageView attachments[] = {this->_swapChainImageViews[i]};
+
+    VkFramebufferCreateInfo framebufferInfo{};
+    framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+    framebufferInfo.renderPass = this->_renderPass;
+    framebufferInfo.attachmentCount = 1;
+    framebufferInfo.pAttachments = attachments;
+    framebufferInfo.width = this->_swapChainExtent.width;
+    framebufferInfo.height = this->_swapChainExtent.height;
+    framebufferInfo.layers = 1;
+
+    if (vkCreateFramebuffer(this->_device, &framebufferInfo, nullptr, &this->_swapChainFramebuffers[i]) != VK_SUCCESS) {
+      throw std::runtime_error("failed to create framebuffer!");
+    }
   }
 }

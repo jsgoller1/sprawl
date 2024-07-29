@@ -69,6 +69,7 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkShaderModule createShaderModule(const std::vector<char>& code);
   void createGraphicsPipeline();
   void createRenderPass();
+  void createFramebuffers();
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -95,4 +96,5 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   VkRenderPass _renderPass;
   VkPipelineLayout _pipelineLayout;
   VkPipeline _graphicsPipeline;
+  std::vector<VkFramebuffer> _swapChainFramebuffers;
 };
