@@ -73,6 +73,8 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   void createCommandPool();
   void createCommandBuffer();
   void recordCommandBuffer(VkCommandBuffer commandBuffer, uint32_t imageIndex);
+  void createSyncObjects();
+  void drawFrame();
 
   ScreenWidth _screenWidth;
   ScreenHeight _screenHeight;
@@ -102,4 +104,8 @@ class GraphicsManager3D : public ComponentManager, public Singleton<GraphicsMana
   std::vector<VkFramebuffer> _swapChainFramebuffers;
   VkCommandPool _commandPool;
   VkCommandBuffer _commandBuffer;
+
+  VkSemaphore _imageAvailableSemaphore;
+  VkSemaphore _renderFinishedSemaphore;
+  VkFence _inFlightFence;
 };
